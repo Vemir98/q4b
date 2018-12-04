@@ -1,0 +1,34 @@
+{
+  "items": {
+    "projectStage": [
+      "pr_stage_1",
+      "pr_stage_2",
+      "pr_stage_3",
+      "pr_stage_4",
+      "pr_stage_5",
+      "pr_stage_6"
+    ],
+    "qualityControlConditionLevel": [
+      "not_compatible_with_craft",
+      "not_standard",
+      "does_not_match",
+      "not_compatible_with_plan"
+    ],
+    "qualityControlConditionList": [
+      "for_immediate_treatment",
+      "do_not_go_th_stage",
+      "do_not_prc_without_suv_approve"
+    ],
+    "qualityControlApproveStatus": [
+      "waiting",
+      "for_repair",
+      "approved"
+    ],
+    "qualityControlStatus": [
+      "existing",
+      "normal",
+      "invalid",
+      "repaired"
+    ]
+  }
+}

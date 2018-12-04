@@ -1,0 +1,45 @@
+{
+  "items": [
+    {
+      "id": "8",
+      "cmpId": "12",
+      "clientId": "14",
+      "imgId": "26",
+      "name": "אייקון טאוור בוטיק- קריית אונו",
+      "address": "יצחק רבין 6, קריית אונו",
+      "projectId": "3",
+      "owner": "מגאד קבלן  מבצע [ראשי]",
+      "description": "בנין מגורים על גבי חניון",
+      "status": "active",
+      "startDate": "1478019487",
+      "endDate": "1541091487",
+      "createdBy": "1",
+      "updatedBy": "1",
+      "createdAt": "1502638824",
+      "updatedAt": "1502639887"
+    },
+    {
+      "id": "11",
+      "cmpId": "11",
+      "clientId": "14",
+      "imgId": "30",
+      "name": "דרך השלום  73-75",
+      "address": "דרך השלום 75",
+      "projectId": "3",
+      "owner": "בעלי דירות",
+      "description": "פינוי בינוי  - יזם אפריקה התחדשות עירונית",
+      "status": "active",
+      "startDate": "1496334967",
+      "endDate": "1654101367",
+      "createdBy": "1",
+      "updatedBy": "1",
+      "createdAt": "1502642158",
+      "updatedAt": "1502642167"
+    },
+    {
+      "id": 811,
+      "status": "deleted"
+    }
+  ],
+  "updated": 1525675036
+}

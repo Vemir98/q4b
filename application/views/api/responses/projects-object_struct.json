@@ -1,0 +1,584 @@
+{
+  "items": [
+    {
+      "id": "427",
+      "number": "0",
+      "places": [
+        {
+          "id": "1492",
+          "name": "ציבורי",
+          "icon": "q4bikon-floor",
+          "type": "public",
+          "number": "1",
+          "customNumber": null,
+          "ordering": "1",
+          "spaces": [
+            {
+              "id": "1492",
+              "description": null,
+              "type": "space"
+            }
+          ]
+        },
+        {
+          "id": "1525",
+          "name": "חזיתות בניין",
+          "icon": "q4bikon-playground",
+          "type": "public",
+          "number": "2",
+          "customNumber": null,
+          "ordering": "2",
+          "spaces": [
+            {
+              "id": "1525",
+              "description": "",
+              "type": "space"
+            }
+          ]
+        },
+        {
+          "id": "1526",
+          "name": "BK-1",
+          "icon": "q4bikon-shop",
+          "type": "private",
+          "number": "1",
+          "customNumber": null,
+          "ordering": "3",
+          "spaces": [
+            {
+              "id": "1526",
+              "description": "",
+              "type": "space"
+            }
+          ]
+        },
+        {
+          "id": "1527",
+          "name": "BK-2",
+          "icon": "q4bikon-shop",
+          "type": "private",
+          "number": "2",
+          "customNumber": null,
+          "ordering": "4",
+          "spaces": [
+            {
+              "id": "1527",
+              "description": "",
+              "type": "space"
+            }
+          ]
+        },
+        {
+          "id": "1528",
+          "name": "BK-3",
+          "icon": "q4bikon-shop",
+          "type": "private",
+          "number": "3",
+          "customNumber": null,
+          "ordering": "5",
+          "spaces": [
+            {
+              "id": "1528",
+              "description": "",
+              "type": "space"
+            }
+          ]
+        }
+      ],
+      "plans": [
+        "299",
+        "300",
+        "321",
+        "324",
+        "327",
+        "332",
+        "690"
+      ]
+    },
+    {
+      "id": "434",
+      "number": "1",
+      "places": [
+        {
+          "id": "1529",
+          "name": "ציבורי",
+          "icon": "q4bikon-floor",
+          "type": "public",
+          "number": "3",
+          "customNumber": null,
+          "ordering": "6",
+          "spaces": [
+            {
+              "id": "1529",
+              "description": "",
+              "type": "space"
+            }
+          ]
+        },
+        {
+          "id": "1531",
+          "name": "B1-1",
+          "icon": "q4bikon-shop",
+          "type": "private",
+          "number": "4",
+          "customNumber": null,
+          "ordering": "7",
+          "spaces": [
+            {
+              "id": "1531",
+              "description": "",
+              "type": "space"
+            }
+          ]
+        },
+        {
+          "id": "1532",
+          "name": "B1-2",
+          "icon": "q4bikon-shop",
+          "type": "private",
+          "number": "5",
+          "customNumber": null,
+          "ordering": "8",
+          "spaces": [
+            {
+              "id": "1532",
+              "description": "",
+              "type": "space"
+            }
+          ]
+        },
+        {
+          "id": "1533",
+          "name": "B1-3",
+          "icon": "q4bikon-shop",
+          "type": "private",
+          "number": "6",
+          "customNumber": null,
+          "ordering": "9",
+          "spaces": [
+            {
+              "id": "1533",
+              "description": "",
+              "type": "space"
+            }
+          ]
+        },
+        {
+          "id": "1534",
+          "name": "B1-4",
+          "icon": "q4bikon-shop",
+          "type": "private",
+          "number": "7",
+          "customNumber": null,
+          "ordering": "10",
+          "spaces": [
+            {
+              "id": "1534",
+              "description": "",
+              "type": "space"
+            }
+          ]
+        }
+      ],
+      "plans": [
+        "294",
+        "321",
+        "324",
+        "327",
+        "332",
+        "691"
+      ]
+    },
+    {
+      "id": "435",
+      "number": "2",
+      "places": [
+        {
+          "id": "1535",
+          "name": "ציבורי",
+          "icon": "q4bikon-floor",
+          "type": "public",
+          "number": "4",
+          "customNumber": null,
+          "ordering": "11",
+          "spaces": [
+            {
+              "id": "1535",
+              "description": "",
+              "type": "space"
+            }
+          ]
+        },
+        {
+          "id": "1536",
+          "name": "B2-1",
+          "icon": "q4bikon-shop",
+          "type": "private",
+          "number": "8",
+          "customNumber": null,
+          "ordering": "12",
+          "spaces": [
+            {
+              "id": "1536",
+              "description": "",
+              "type": "space"
+            }
+          ]
+        },
+        {
+          "id": "1537",
+          "name": "B2-2",
+          "icon": "q4bikon-shop",
+          "type": "private",
+          "number": "9",
+          "customNumber": null,
+          "ordering": "13",
+          "spaces": [
+            {
+              "id": "1537",
+              "description": "",
+              "type": "space"
+            }
+          ]
+        },
+        {
+          "id": "1538",
+          "name": "B2-3",
+          "icon": "q4bikon-shop",
+          "type": "private",
+          "number": "10",
+          "customNumber": null,
+          "ordering": "14",
+          "spaces": [
+            {
+              "id": "1538",
+              "description": "",
+              "type": "space"
+            }
+          ]
+        },
+        {
+          "id": "1539",
+          "name": "B2-4",
+          "icon": "q4bikon-shop",
+          "type": "private",
+          "number": "11",
+          "customNumber": null,
+          "ordering": "15",
+          "spaces": [
+            {
+              "id": "1539",
+              "description": "",
+              "type": "space"
+            }
+          ]
+        }
+      ],
+      "plans": [
+        "293",
+        "321",
+        "324",
+        "327",
+        "332",
+        "692"
+      ]
+    },
+    {
+      "id": "436",
+      "number": "3",
+      "places": [
+        {
+          "id": "1540",
+          "name": "ציבורי",
+          "icon": "q4bikon-floor",
+          "type": "public",
+          "number": "5",
+          "customNumber": null,
+          "ordering": "16",
+          "spaces": [
+            {
+              "id": "1540",
+              "description": "",
+              "type": "space"
+            }
+          ]
+        },
+        {
+          "id": "1541",
+          "name": "B3-1",
+          "icon": "q4bikon-shop",
+          "type": "private",
+          "number": "12",
+          "customNumber": null,
+          "ordering": "17",
+          "spaces": [
+            {
+              "id": "1541",
+              "description": "",
+              "type": "space"
+            }
+          ]
+        },
+        {
+          "id": "1542",
+          "name": "B3-2",
+          "icon": "q4bikon-shop",
+          "type": "private",
+          "number": "13",
+          "customNumber": null,
+          "ordering": "18",
+          "spaces": [
+            {
+              "id": "1542",
+              "description": "",
+              "type": "space"
+            }
+          ]
+        },
+        {
+          "id": "1543",
+          "name": "B3-3",
+          "icon": "q4bikon-shop",
+          "type": "private",
+          "number": "14",
+          "customNumber": null,
+          "ordering": "19",
+          "spaces": [
+            {
+              "id": "1543",
+              "description": "",
+              "type": "space"
+            }
+          ]
+        },
+        {
+          "id": "1544",
+          "name": "B3-4",
+          "icon": "q4bikon-shop",
+          "type": "private",
+          "number": "15",
+          "customNumber": null,
+          "ordering": "20",
+          "spaces": [
+            {
+              "id": "1544",
+              "description": "",
+              "type": "space"
+            }
+          ]
+        }
+      ],
+      "plans": [
+        "295",
+        "321",
+        "324",
+        "327",
+        "332",
+        "693"
+      ]
+    },
+    {
+      "id": "437",
+      "number": "4",
+      "places": [
+        {
+          "id": "1545",
+          "name": "ציבורי",
+          "icon": "q4bikon-floor",
+          "type": "public",
+          "number": "6",
+          "customNumber": null,
+          "ordering": "21",
+          "spaces": [
+            {
+              "id": "1545",
+              "description": "",
+              "type": "space"
+            }
+          ]
+        },
+        {
+          "id": "1546",
+          "name": "B4-1",
+          "icon": "q4bikon-shop",
+          "type": "private",
+          "number": "16",
+          "customNumber": null,
+          "ordering": "22",
+          "spaces": [
+            {
+              "id": "1546",
+              "description": "",
+              "type": "space"
+            }
+          ]
+        },
+        {
+          "id": "1547",
+          "name": "B4-2",
+          "icon": "q4bikon-shop",
+          "type": "private",
+          "number": "17",
+          "customNumber": null,
+          "ordering": "23",
+          "spaces": [
+            {
+              "id": "1547",
+              "description": "",
+              "type": "space"
+            }
+          ]
+        },
+        {
+          "id": "1548",
+          "name": "B4-3",
+          "icon": "q4bikon-shop",
+          "type": "private",
+          "number": "18",
+          "customNumber": null,
+          "ordering": "24",
+          "spaces": [
+            {
+              "id": "1548",
+              "description": "",
+              "type": "space"
+            }
+          ]
+        },
+        {
+          "id": "1549",
+          "name": "B4-4",
+          "icon": "q4bikon-shop",
+          "type": "private",
+          "number": "19",
+          "customNumber": null,
+          "ordering": "25",
+          "spaces": [
+            {
+              "id": "1549",
+              "description": "",
+              "type": "space"
+            }
+          ]
+        }
+      ],
+      "plans": [
+        "296",
+        "321",
+        "324",
+        "327",
+        "332",
+        "694"
+      ]
+    },
+    {
+      "id": "438",
+      "number": "5",
+      "places": [
+        {
+          "id": "1550",
+          "name": "ציבורי",
+          "icon": "q4bikon-floor",
+          "type": "public",
+          "number": "7",
+          "customNumber": null,
+          "ordering": "26",
+          "spaces": [
+            {
+              "id": "1550",
+              "description": "",
+              "type": "space"
+            }
+          ]
+        },
+        {
+          "id": "1551",
+          "name": "B5-1",
+          "icon": "q4bikon-shop",
+          "type": "private",
+          "number": "20",
+          "customNumber": null,
+          "ordering": "27",
+          "spaces": [
+            {
+              "id": "1551",
+              "description": "",
+              "type": "space"
+            }
+          ]
+        },
+        {
+          "id": "1552",
+          "name": "B5-2",
+          "icon": "q4bikon-shop",
+          "type": "private",
+          "number": "21",
+          "customNumber": null,
+          "ordering": "28",
+          "spaces": [
+            {
+              "id": "1552",
+              "description": "",
+              "type": "space"
+            }
+          ]
+        },
+        {
+          "id": "1553",
+          "name": "B5-3",
+          "icon": "q4bikon-shop",
+          "type": "private",
+          "number": "22",
+          "customNumber": null,
+          "ordering": "29",
+          "spaces": [
+            {
+              "id": "1553",
+              "description": "",
+              "type": "space"
+            }
+          ]
+        }
+      ],
+      "plans": [
+        "297",
+        "321",
+        "324",
+        "327",
+        "332",
+        "695"
+      ]
+    },
+    {
+      "id": "439",
+      "number": "6",
+      "places": [
+        {
+          "id": "1555",
+          "name": "גג ציבורי",
+          "icon": "q4bikon-floor",
+          "type": "public",
+          "number": "8",
+          "customNumber": null,
+          "ordering": "30",
+          "spaces": [
+            {
+              "id": "1555",
+              "description": "",
+              "type": "space"
+            }
+          ]
+        }
+      ],
+      "plans": [
+        "298",
+        "321",
+        "324",
+        "327",
+        "332",
+        "696"
+      ]
+    }
+  ],
+  "updated": 1525671195
+}

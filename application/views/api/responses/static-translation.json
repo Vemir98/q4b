@@ -1,0 +1,46 @@
+{
+  "items": {
+    "he": {
+      "Update Company": "עדכון חברה",
+      "alpha": "Alpha",
+      "alpha_dash": "יכול להכיל רק ספרות, אותיות וקווים :field השדה",
+      "alpha_numeric": "יכול להכיל רק אותיות ומספרים:field השדה",
+      "color": "צריך להיות צבע :field השדה",
+      "credit_card": "צריך להיות מספר כרטיס אשראי :field השדה",
+      "date": "צריך להיות תאריך :field השדה",
+      "decimal": "מקומות :param2 צריך להיות עשרוני עם :field השדה",
+      "digit": "צריך להיות ספרה :field השדה",
+      "email": "צריך להיות כתובת דואר אלקטרוני :field השדה",
+      "email_domain": "חייב להכיל דומיין דוא\"ל חוקי :field השדה",
+
+    },
+    "en": {
+      "Update Company": "Update Company",
+      "alpha": "Alpha",
+      "alpha_dash": ":field must contain only numbers, letters and dashes",
+      "alpha_numeric": ":field must contain only letters and numbers",
+      "color": ":field must be a color",
+      "credit_card": ":field must be a credit card number",
+      "date": ":field must be a date",
+      "decimal": ":field must be a decimal with :param2 places",
+      "digit": ":field must be a digit",
+      "email": ":field must be an email address",
+      "email_domain": ":field must contain a valid email domain",
+
+    },
+    "ru": {
+      "Update Company": "Обновить компанию",
+      "alpha": "Прозрачность",
+      "alpha_dash": ":Поле должно содержать только числа, буквы и тире",
+      "alpha_numeric": ":Поле должно содержать только буквы и цифры",
+      "color": ":Поле должно быть цветом",
+      "credit_card": ":Поле должно быть номером кредитной карты",
+      "date": ":Поле должно быть датой",
+      "decimal": ":Поле должно быть десятичным с :param2 позициями",
+      "digit": ":Поле должно быть цифрой",
+      "email": ":Поле должно быть адресом электронной почты",
+      "email_domain": ":Поле должно содержать правильный домен электронной почты",
+
+    }
+  }
+}

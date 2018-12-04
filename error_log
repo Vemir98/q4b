@@ -1,0 +1,124 @@
+[15-Mar-2018 12:30:04 UTC] PHP Fatal error:  Uncaught exception 'ImagickException' with message 'Postscript delegate failed `/home/horizor0/public_html/q4u/1.pdf': No such file or directory @ error/pdf.c/ReadPDFImage/678' in /home/horizor0/public_html/q4u/Pdf.php:37
+Stack trace:
+#0 /home/horizor0/public_html/q4u/Pdf.php(37): Imagick->__construct('/home/horizor0/...')
+#1 /home/horizor0/public_html/q4u/Pdf.php(215): Pdf->__construct('/home/horizor0/...')
+#2 {main}
+  thrown in /home/horizor0/public_html/q4u/Pdf.php on line 37
+[15-Mar-2018 12:30:36 UTC] PHP Fatal error:  Uncaught exception 'ImagickException' with message 'Postscript delegate failed `/home/horizor0/public_html/q4u/1.pdf': No such file or directory @ error/pdf.c/ReadPDFImage/678' in /home/horizor0/public_html/q4u/Pdf.php:37
+Stack trace:
+#0 /home/horizor0/public_html/q4u/Pdf.php(37): Imagick->__construct('/home/horizor0/...')
+#1 /home/horizor0/public_html/q4u/Pdf.php(215): Pdf->__construct('/home/horizor0/...')
+#2 {main}
+  thrown in /home/horizor0/public_html/q4u/Pdf.php on line 37
+[15-Mar-2018 12:31:35 UTC] PHP Fatal error:  Uncaught exception 'ImagickException' with message 'Postscript delegate failed `/home/horizor0/public_html/q4u/1.pdf': No such file or directory @ error/pdf.c/ReadPDFImage/678' in /home/horizor0/public_html/q4u/pdf.php:37
+Stack trace:
+#0 /home/horizor0/public_html/q4u/pdf.php(37): Imagick->__construct('/home/horizor0/...')
+#1 /home/horizor0/public_html/q4u/pdf.php(215): Pdf->__construct('/home/horizor0/...')
+#2 {main}
+  thrown in /home/horizor0/public_html/q4u/pdf.php on line 37
+[15-Mar-2018 12:42:38 UTC] PHP Fatal error:  Uncaught exception 'ImagickException' with message 'Postscript delegate failed `/home/horizor0/public_html/q4u/1.pdf': No such file or directory @ error/pdf.c/ReadPDFImage/678' in /home/horizor0/public_html/q4u/pdf.php:39
+Stack trace:
+#0 /home/horizor0/public_html/q4u/pdf.php(39): Imagick->readimage('/home/horizor0/...')
+#1 /home/horizor0/public_html/q4u/pdf.php(217): Pdf->__construct('/home/horizor0/...')
+#2 {main}
+  thrown in /home/horizor0/public_html/q4u/pdf.php on line 39
+[15-Mar-2018 12:43:19 UTC] PHP Fatal error:  Uncaught exception 'ImagickException' with message 'Postscript delegate failed `/home/horizor0/public_html/q4u/1.pdf': No such file or directory @ error/pdf.c/ReadPDFImage/678' in /home/horizor0/public_html/q4u/pdf.php:40
+Stack trace:
+#0 /home/horizor0/public_html/q4u/pdf.php(40): Imagick->readimage('/home/horizor0/...')
+#1 /home/horizor0/public_html/q4u/pdf.php(218): Pdf->__construct('/home/horizor0/...')
+#2 {main}
+  thrown in /home/horizor0/public_html/q4u/pdf.php on line 40
+[15-Mar-2018 12:43:21 UTC] PHP Fatal error:  Uncaught exception 'ImagickException' with message 'Postscript delegate failed `/home/horizor0/public_html/q4u/1.pdf': No such file or directory @ error/pdf.c/ReadPDFImage/678' in /home/horizor0/public_html/q4u/pdf.php:40
+Stack trace:
+#0 /home/horizor0/public_html/q4u/pdf.php(40): Imagick->readimage('/home/horizor0/...')
+#1 /home/horizor0/public_html/q4u/pdf.php(218): Pdf->__construct('/home/horizor0/...')
+#2 {main}
+  thrown in /home/horizor0/public_html/q4u/pdf.php on line 40
+[15-Mar-2018 12:47:18 UTC] PHP Fatal error:  Uncaught exception 'ImagickException' with message 'Postscript delegate failed `/home/horizor0/public_html/q4u/1.pdf': No such file or directory @ error/pdf.c/ReadPDFImage/678' in /home/horizor0/public_html/q4u/pdf.php:40
+Stack trace:
+#0 /home/horizor0/public_html/q4u/pdf.php(40): Imagick->readimage('/home/horizor0/...')
+#1 /home/horizor0/public_html/q4u/pdf.php(218): Pdf->__construct('/home/horizor0/...')
+#2 {main}
+  thrown in /home/horizor0/public_html/q4u/pdf.php on line 40
+[15-Mar-2018 12:47:52 UTC] PHP Fatal error:  Uncaught exception 'ImagickException' with message 'Postscript delegate failed `./1.pdf': No such file or directory @ error/pdf.c/ReadPDFImage/678' in /home/horizor0/public_html/q4u/pdf.php:40
+Stack trace:
+#0 /home/horizor0/public_html/q4u/pdf.php(40): Imagick->readimage('./1.pdf')
+#1 /home/horizor0/public_html/q4u/pdf.php(218): Pdf->__construct('./1.pdf')
+#2 {main}
+  thrown in /home/horizor0/public_html/q4u/pdf.php on line 40
+[15-Mar-2018 12:49:15 UTC] PHP Warning:  file_put_contents(/home/horizor0/public_html/q4u/result/sdf-.jpg): failed to open stream: No such file or directory in /home/horizor0/public_html/q4u/pdf.php on line 110
+[15-Mar-2018 12:49:16 UTC] PHP Warning:  file_put_contents(/home/horizor0/public_html/q4u/result/sdf-2.jpg): failed to open stream: No such file or directory in /home/horizor0/public_html/q4u/pdf.php on line 110
+[15-Mar-2018 12:49:17 UTC] PHP Warning:  file_put_contents(/home/horizor0/public_html/q4u/result/sdf-3.jpg): failed to open stream: No such file or directory in /home/horizor0/public_html/q4u/pdf.php on line 110
+[15-Mar-2018 12:49:18 UTC] PHP Warning:  file_put_contents(/home/horizor0/public_html/q4u/result/sdf-4.jpg): failed to open stream: No such file or directory in /home/horizor0/public_html/q4u/pdf.php on line 110
+[15-Mar-2018 12:49:19 UTC] PHP Warning:  file_put_contents(/home/horizor0/public_html/q4u/result/sdf-5.jpg): failed to open stream: No such file or directory in /home/horizor0/public_html/q4u/pdf.php on line 110
+[15-Mar-2018 12:49:20 UTC] PHP Warning:  file_put_contents(/home/horizor0/public_html/q4u/result/sdf-6.jpg): failed to open stream: No such file or directory in /home/horizor0/public_html/q4u/pdf.php on line 110
+[15-Mar-2018 12:49:21 UTC] PHP Warning:  file_put_contents(/home/horizor0/public_html/q4u/result/sdf-7.jpg): failed to open stream: No such file or directory in /home/horizor0/public_html/q4u/pdf.php on line 110
+[15-Mar-2018 12:49:21 UTC] PHP Warning:  file_put_contents(/home/horizor0/public_html/q4u/result/sdf-8.jpg): failed to open stream: No such file or directory in /home/horizor0/public_html/q4u/pdf.php on line 110
+[15-Mar-2018 12:49:22 UTC] PHP Warning:  file_put_contents(/home/horizor0/public_html/q4u/result/sdf-9.jpg): failed to open stream: No such file or directory in /home/horizor0/public_html/q4u/pdf.php on line 110
+[15-Mar-2018 12:49:24 UTC] PHP Warning:  file_put_contents(/home/horizor0/public_html/q4u/result/sdf-10.jpg): failed to open stream: No such file or directory in /home/horizor0/public_html/q4u/pdf.php on line 110
+[15-Mar-2018 12:49:25 UTC] PHP Warning:  file_put_contents(/home/horizor0/public_html/q4u/result/sdf-11.jpg): failed to open stream: No such file or directory in /home/horizor0/public_html/q4u/pdf.php on line 110
+[15-Mar-2018 12:50:52 UTC] PHP Fatal error:  Uncaught exception 'ImagickException' with message 'Postscript delegate failed `./1.pdf': No such file or directory @ error/pdf.c/ReadPDFImage/678' in /home/horizor0/public_html/q4u/pdf.php:40
+Stack trace:
+#0 /home/horizor0/public_html/q4u/pdf.php(40): Imagick->readimage('./1.pdf')
+#1 /home/horizor0/public_html/q4u/pdf.php(218): Pdf->__construct('./1.pdf')
+#2 {main}
+  thrown in /home/horizor0/public_html/q4u/pdf.php on line 40
+[15-Mar-2018 12:52:48 UTC] PHP Fatal error:  Uncaught exception 'ImagickException' with message 'Postscript delegate failed `./1.pdf': No such file or directory @ error/pdf.c/ReadPDFImage/678' in /home/horizor0/public_html/q4u/pdf.php:217
+Stack trace:
+#0 /home/horizor0/public_html/q4u/pdf.php(217): Imagick->__construct('./1.pdf')
+#1 {main}
+  thrown in /home/horizor0/public_html/q4u/pdf.php on line 217
+[15-Mar-2018 12:59:06 UTC] PHP Fatal error:  Uncaught exception 'ImagickException' with message 'unable to open image `./3.pdf': No such file or directory @ error/blob.c/OpenBlob/2643' in /home/horizor0/public_html/q4u/pdf.php:217
+Stack trace:
+#0 /home/horizor0/public_html/q4u/pdf.php(217): Imagick->__construct('./3.pdf')
+#1 {main}
+  thrown in /home/horizor0/public_html/q4u/pdf.php on line 217
+[15-Mar-2018 12:59:32 UTC] PHP Fatal error:  Uncaught exception 'ImagickException' with message 'unable to open image `./4.pdf': No such file or directory @ error/blob.c/OpenBlob/2643' in /home/horizor0/public_html/q4u/pdf.php:217
+Stack trace:
+#0 /home/horizor0/public_html/q4u/pdf.php(217): Imagick->__construct('./4.pdf')
+#1 {main}
+  thrown in /home/horizor0/public_html/q4u/pdf.php on line 217
+[15-Mar-2018 12:59:56 UTC] PHP Fatal error:  Uncaught exception 'Exception' with message 'Pdf does not exists' in /home/horizor0/public_html/q4u/pdf.php:35
+Stack trace:
+#0 /home/horizor0/public_html/q4u/pdf.php(217): Pdf->__construct('./3.pdf')
+#1 {main}
+  thrown in /home/horizor0/public_html/q4u/pdf.php on line 35
+[15-Mar-2018 13:00:16 UTC] PHP Fatal error:  Uncaught exception 'Exception' with message 'Pdf does not exists' in /home/horizor0/public_html/q4u/pdf.php:35
+Stack trace:
+#0 /home/horizor0/public_html/q4u/pdf.php(217): Pdf->__construct('./3.pdf')
+#1 {main}
+  thrown in /home/horizor0/public_html/q4u/pdf.php on line 35
+[15-Mar-2018 13:00:38 UTC] PHP Fatal error:  Uncaught exception 'ImagickException' with message 'Postscript delegate failed `./3.pdf': No such file or directory @ error/pdf.c/ReadPDFImage/678' in /home/horizor0/public_html/q4u/pdf.php:40
+Stack trace:
+#0 /home/horizor0/public_html/q4u/pdf.php(40): Imagick->readimage('./3.pdf')
+#1 /home/horizor0/public_html/q4u/pdf.php(217): Pdf->__construct('./3.pdf')
+#2 {main}
+  thrown in /home/horizor0/public_html/q4u/pdf.php on line 40
+[15-Mar-2018 13:00:51 UTC] PHP Fatal error:  Uncaught exception 'ImagickException' with message 'Postscript delegate failed `./4.pdf': No such file or directory @ error/pdf.c/ReadPDFImage/678' in /home/horizor0/public_html/q4u/pdf.php:40
+Stack trace:
+#0 /home/horizor0/public_html/q4u/pdf.php(40): Imagick->readimage('./4.pdf')
+#1 /home/horizor0/public_html/q4u/pdf.php(217): Pdf->__construct('./4.pdf')
+#2 {main}
+  thrown in /home/horizor0/public_html/q4u/pdf.php on line 40
+[15-Mar-2018 13:02:02 UTC] PHP Warning:  file_put_contents(/home/horizor0/public_html/q4u/result/sdf-.jpg): failed to open stream: Permission denied in /home/horizor0/public_html/q4u/pdf.php on line 110
+[15-Mar-2018 13:02:03 UTC] PHP Warning:  file_put_contents(/home/horizor0/public_html/q4u/result/sdf-2.jpg): failed to open stream: Permission denied in /home/horizor0/public_html/q4u/pdf.php on line 110
+[15-Mar-2018 13:02:04 UTC] PHP Warning:  file_put_contents(/home/horizor0/public_html/q4u/result/sdf-3.jpg): failed to open stream: Permission denied in /home/horizor0/public_html/q4u/pdf.php on line 110
+[15-Mar-2018 13:02:05 UTC] PHP Warning:  file_put_contents(/home/horizor0/public_html/q4u/result/sdf-4.jpg): failed to open stream: Permission denied in /home/horizor0/public_html/q4u/pdf.php on line 110
+[15-Mar-2018 13:02:05 UTC] PHP Warning:  file_put_contents(/home/horizor0/public_html/q4u/result/sdf-5.jpg): failed to open stream: Permission denied in /home/horizor0/public_html/q4u/pdf.php on line 110
+[15-Mar-2018 13:02:07 UTC] PHP Warning:  file_put_contents(/home/horizor0/public_html/q4u/result/sdf-6.jpg): failed to open stream: Permission denied in /home/horizor0/public_html/q4u/pdf.php on line 110
+[15-Mar-2018 13:02:07 UTC] PHP Warning:  file_put_contents(/home/horizor0/public_html/q4u/result/sdf-7.jpg): failed to open stream: Permission denied in /home/horizor0/public_html/q4u/pdf.php on line 110
+[15-Mar-2018 13:02:08 UTC] PHP Warning:  file_put_contents(/home/horizor0/public_html/q4u/result/sdf-8.jpg): failed to open stream: Permission denied in /home/horizor0/public_html/q4u/pdf.php on line 110
+[15-Mar-2018 13:02:09 UTC] PHP Warning:  file_put_contents(/home/horizor0/public_html/q4u/result/sdf-9.jpg): failed to open stream: Permission denied in /home/horizor0/public_html/q4u/pdf.php on line 110
+[15-Mar-2018 13:02:10 UTC] PHP Warning:  file_put_contents(/home/horizor0/public_html/q4u/result/sdf-10.jpg): failed to open stream: Permission denied in /home/horizor0/public_html/q4u/pdf.php on line 110
+[15-Mar-2018 13:02:11 UTC] PHP Warning:  file_put_contents(/home/horizor0/public_html/q4u/result/sdf-11.jpg): failed to open stream: Permission denied in /home/horizor0/public_html/q4u/pdf.php on line 110
+[15-Mar-2018 13:04:08 UTC] PHP Fatal error:  Uncaught exception 'ImagickException' with message 'Postscript delegate failed `./5.pdf': No such file or directory @ error/pdf.c/ReadPDFImage/678' in /home/horizor0/public_html/q4u/pdf.php:40
+Stack trace:
+#0 /home/horizor0/public_html/q4u/pdf.php(40): Imagick->readimage('./5.pdf')
+#1 /home/horizor0/public_html/q4u/pdf.php(217): Pdf->__construct('./5.pdf')
+#2 {main}
+  thrown in /home/horizor0/public_html/q4u/pdf.php on line 40
+[16-Mar-2018 10:44:22 UTC] PHP Fatal error:  Uncaught exception 'Exception' with message 'Pdf does not exists' in /home/horizor0/public_html/q4u/Pdf.php:35
+Stack trace:
+#0 /home/horizor0/public_html/q4u/Pdf.php(215): Pdf->__construct('/home/horizor0/...')
+#1 {main}
+  thrown in /home/horizor0/public_html/q4u/Pdf.php on line 35

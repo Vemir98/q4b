@@ -1,0 +1,273 @@
+/*
+
+* numericOnly jquery plugin
+
+*/
+
+
+
+
+
+/* Arrow icon fonts */
+
+@font-face {
+
+    font-family: 'numericOnly';
+
+    src:  url('../fonts/numericOnly.eot?1z456b');
+
+    src:  url('../fonts/numericOnly.eot?1z456b#iefix') format('embedded-opentype'),
+
+    url('../fonts/numericOnly.ttf?1z456b') format('truetype'),
+
+    url('../fonts/numericOnly.woff?1z456b') format('woff'),
+
+    url('../fonts/numericOnly.svg?1z456b#numericOnly') format('svg');
+
+    font-weight: normal;
+
+    font-style: normal;
+
+}
+
+
+
+[class^="no-"], [class*=" no-"] {
+
+    /* use !important to prevent issues with browser extensions that change fonts */
+
+    font-family: 'numericOnly' !important;
+
+    speak: none;
+
+    font-style: normal;
+
+    font-weight: normal;
+
+    font-variant: normal;
+
+    text-transform: none;
+
+    line-height: 1;
+
+
+
+    /* Better Font Rendering =========== */
+
+    -webkit-font-smoothing: antialiased;
+
+    -moz-osx-font-smoothing: grayscale;
+
+}
+
+
+
+.no-arrow_bottom:before {
+
+    content: "\e900";
+
+}
+
+.no-arrow_top:before {
+
+    content: "\e901";
+
+}
+
+
+
+/* Markup Styles */
+
+.element-container{
+
+    margin: 20px auto;
+
+    padding: 20px;
+
+    text-align: center;
+
+    -webkit-box-sizing: border-box;
+
+    -moz-box-sizing: border-box;
+
+    box-sizing: border-box;
+
+}
+
+.inline-box{
+
+    display: inline-block;
+
+    vertical-align: middle;
+
+    text-align: center;
+
+    width: 50%;
+
+    -webkit-box-sizing: border-box;
+
+    -moz-box-sizing: border-box;
+
+    box-sizing: border-box;
+
+}
+
+.inline-box:last-child{
+
+    margin-left: -5px;
+
+}
+
+.wrap-number{
+
+    position: relative;
+
+    font-size: 0;
+
+    -webkit-box-sizing: border-box;
+
+    -moz-box-sizing: border-box;
+
+    box-sizing: border-box;
+
+}
+
+.wrap-number > input[type="text"]{
+
+    display: inline-block;
+
+    vertical-align: middle;
+
+    width: 50px;
+
+    height: 34px;
+
+    padding: 6px 3px;
+
+    font-size: 14px;
+
+    line-height: 1.42857143;
+
+    color: #555;
+
+    background-color: #fff;
+
+    background-image: none;
+
+    border: 1px solid #D4E1EA;
+
+    border-radius: 0;
+
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+
+    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+
+    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+
+    -webkit-box-sizing: border-box;
+
+    -moz-box-sizing: border-box;
+
+    box-sizing: border-box;
+
+}
+
+.wrap-number .arrows{
+
+    display: inline-block;
+
+    vertical-align: middle;
+
+    height: 34px;
+
+    color: #1ebae5;
+
+    border-top: 1px solid #D4E1EA;
+
+    border-right: 1px solid #D4E1EA;
+
+    border-bottom: 1px solid #D4E1EA;
+
+    border-left: 1px solid transparent;
+
+    -webkit-box-sizing: border-box;
+
+    -moz-box-sizing: border-box;
+
+    box-sizing: border-box;
+
+}
+
+.wrap-number .arrow{
+
+    display: block;
+
+    height: 16px;
+
+    line-height: 17px;
+
+    width: 20px;
+
+    background: #ffffff;
+
+    color: #1ebae5;
+
+    text-align: center;
+
+    font-size: 8px;
+
+    cursor: pointer;
+
+    -webkit-box-sizing: border-box;
+
+    -moz-box-sizing: border-box;
+
+    box-sizing: border-box;
+
+}
+
+.wrap-number .arrow:hover{
+
+    background: #f2f3f8;
+
+    color: #003a63;
+
+}
+
+
+
+/* Responsive layout */
+
+@media only screen and (max-width: 992px) {
+
+    .wrap-number .arrows{
+
+        font-size: 0;
+
+        border: none;
+
+    }
+
+    .wrap-number .arrow{
+
+        display: inline-block;
+
+        vertical-align: middle;
+
+        height: 34px;
+
+        line-height: 34px;
+
+        width: 32px;
+
+        font-size: 12px;
+
+        border: 1px solid #D4E1EA;
+
+    }
+
+}

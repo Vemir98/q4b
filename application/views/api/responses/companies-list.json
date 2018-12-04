@@ -1,0 +1,41 @@
+{
+  "items":[
+    {
+      "id":"10",
+      "name":"שהם ואב-גיא   ניהול פרויקטים בע&quot;מ ",
+      "address":"משכית 6 הרצליה ",
+      "description":"חברת שהם &amp; אב-גיא ניהול פרוייקטים בע&quot;מ מתמחה בניהול פרויקטים בסטנדרטים גבוהים. החל משלב התכנון דרך ניהול ובקרה, עבודה מול הרשויות, ניהול מכרזים, בחירת אנשי מקצוע, וכלה בניהול ביצוע, פיקוח ובקרת איכות.",
+      "status":"active",
+      "logo":"https://constructmngr/media/data/companies/logos/59906d28dfbb8.jpg",
+      "companyId":"5144149498",
+      "createdAt":"1502637130",
+      "updatedAt":"1524795702",
+      "clientType":"company",
+      "createdBy":"david@horizondvp.com",
+      "updatedBy":"sur-ser@mail.ru"
+    },
+    {
+      "id":"11",
+      "name":"ים אחזקות ניהול איכות 2016 בע&quot;מ ",
+      "address":"הרצליה פיתוח",
+      "description":"חברה לניהול  והבטחת איכות בענף הבניה ",
+      "status":"active",
+      "logo":"https://constructmngr/media/data/companies/logos/59906f82e9259.jpg",
+      "companyId":"515543122",
+      "createdAt":"1502637936",
+      "updatedAt":"1502637954",
+      "clientType":"company",
+      "createdBy":"yair@sh-av.co.il",
+      "updatedBy":"yair@sh-av.co.il"
+    },
+    {
+      "id":1333,
+      "status":"deleted"
+    },
+    {
+      "id":1334,
+      "status":"deleted"
+    }
+  ],
+  "updated":1525671051
+}

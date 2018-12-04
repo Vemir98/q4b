@@ -1,0 +1,23 @@
+{
+  "items": [
+    {
+      "id": "25",
+      "name": " חניון ",
+      "projId": "8",
+      "type": "Parking",
+      "smallerFloor": "-3",
+      "biggerFloor": "-1",
+      "placesCount": "8",
+      "startDate": "1478018528",
+      "endDate": "1541090528",
+      "createdAt": "1502638868",
+      "updatedAt": "1502638928",
+      "state": "approved"
+    },
+    {
+      "id": 26,
+      "status": "deleted"
+    }
+  ],
+  "updated": 1525671204
+}

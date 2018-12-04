@@ -1,0 +1,67 @@
+{
+  "professions": [
+    {
+      "professionId": "76",
+      "cmpId": "11",
+      "name": " מהנדס /קבלן ראשי",
+      "catalogNumber": "04",
+      "status": "enabled"
+    },
+    {
+      "professionId": "77",
+      "cmpId": "11",
+      "name": " מנהל פרויקט קבלן ראשי ",
+      "catalogNumber": "03",
+      "status": "enabled"
+    },
+    {
+      "professionId": "78",
+      "cmpId": "11",
+      "name": " מפקח  ",
+      "catalogNumber": "02",
+      "status": "enabled"
+    }
+  ],
+  "crafts": [
+    {
+      "craftId": "77",
+      "cmpId": "11",
+      "name": "עבודות חיפוי וריצוף פנים ",
+      "catalogNumber": "10",
+      "status": "enabled"
+    },
+    {
+      "craftId": "78",
+      "cmpId": "11",
+      "name": "עבודות טיח  פנים וחוץ ",
+      "catalogNumber": "09",
+      "status": "enabled"
+    },
+    {
+      "craftId": "79",
+      "cmpId": "11",
+      "name": " מתקני חשמל , תקשורת ומתח נמוך ",
+      "catalogNumber": "08",
+      "status": "enabled"
+    }
+  ],
+  "relation": [
+    {
+      "professionId": "76",
+      "craftId": "77"
+    },
+    {
+      "professionId": "76",
+      "craftId": "78"
+    },
+    {
+      "professionId": "76",
+      "craftId": "79"
+    },
+    {
+      "professionId": "76",
+      "craftId": "80"
+    }
+  ],
+  "updated": 1526640118
+}

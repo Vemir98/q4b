@@ -1,0 +1,109 @@
+{
+  "items": [
+    {
+      "id": "391",
+      "name": "תכנית מטבח חתומה 04.pdf",
+      "file": "/media/data/projects/6/plans/59a56b3257bed.jpg",
+      "createdAt": "1504013106",
+      "createdBy": "bat-chen@sh-av.co.il",
+      "updatedAt": null,
+      "updatedBy": null,
+      "approvedAt": null,
+      "approvedBy": null,
+      "approvalStatus": "waiting",
+      "date": "1485527106",
+      "description": "",
+      "edition": "0",
+      "scale": "1:25",
+      "placeId": "0",
+      "objectId": "16",
+      "professionId": "79",
+      "status": "to_execute",
+      "crafts": [],
+      "floors": [
+        {
+          "id": "65"
+        }
+      ]
+    },
+    {
+      "id": "392",
+      "name": "תכנית בינוי דירה 4.pdf",
+      "file": "/media/data/projects/6/plans/59a56bb385efb.jpg",
+      "createdAt": "1504013133",
+      "createdBy": "bat-chen@sh-av.co.il",
+      "updatedAt": "1504013235",
+      "updatedBy": "bat-chen@sh-av.co.il",
+      "approvedAt": null,
+      "approvedBy": null,
+      "approvalStatus": "waiting",
+      "date": "1486045635",
+      "description": "",
+      "edition": "1",
+      "scale": "1:50",
+      "placeId": "0",
+      "objectId": "16",
+      "professionId": "79",
+      "status": "to_execute",
+      "crafts": [],
+      "floors": [
+        {
+          "id": "65"
+        }
+      ]
+    },
+    {
+      "id": "393",
+      "name": "תכנית אינסטלציה דירה 4.pdf",
+      "file": "/media/data/projects/6/plans/59a56c24d6573.jpg",
+      "createdAt": "1504013295",
+      "createdBy": "bat-chen@sh-av.co.il",
+      "updatedAt": "1504013348",
+      "updatedBy": "bat-chen@sh-av.co.il",
+      "approvedAt": null,
+      "approvedBy": null,
+      "approvalStatus": "waiting",
+      "date": "1486045748",
+      "description": "",
+      "edition": "1",
+      "scale": "1:50",
+      "placeId": "0",
+      "objectId": "16",
+      "professionId": "94",
+      "status": "to_execute",
+      "crafts": [],
+      "floors": [
+        {
+          "id": "65"
+        }
+      ]
+    },
+    {
+      "id": "394",
+      "name": "תכנית מיזוג והנמכות דירה 4.pdf",
+      "file": "/media/data/projects/6/plans/59a56cff1ed9d.jpg",
+      "createdAt": "1504013510",
+      "createdBy": "bat-chen@sh-av.co.il",
+      "updatedAt": "1504013567",
+      "updatedBy": "bat-chen@sh-av.co.il",
+      "approvedAt": null,
+      "approvedBy": null,
+      "approvalStatus": "waiting",
+      "date": "1486045967",
+      "description": "",
+      "edition": "1",
+      "scale": "1:50",
+      "placeId": "0",
+      "objectId": "16",
+      "professionId": "100",
+      "status": "to_execute",
+      "crafts": [],
+      "floors": [
+        {
+          "id": "65"
+        }
+      ]
+    }
+  ],
+  "updated": 1525671222
+}
