@@ -45,7 +45,7 @@ define('EXT', '.php');
  * deprecated notices. Disable with: E_ALL & ~E_DEPRECATED
  */
 error_reporting(E_ALL | E_STRICT);
-//error_reporting(0);
+//error_reporting(0); // todo:: Uncomment
 
 /**
  * End of standard configuration! Changing any of the code below should only be
