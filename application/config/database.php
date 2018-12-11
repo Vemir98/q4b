@@ -78,8 +78,8 @@ return array
  		'connection' => array(
  			'hostname'   => 'localhost',
  			'database'   => 'horizor0_q4u',
- 			'username'   => 'horizor0_q4u',
- 			'password'   => 'p@ssword1',
+ 			'username'   => 'root',
+ 			'password'   => '',
  			'persistent' => FALSE,
  			'ssl'        => NULL,
  		),
