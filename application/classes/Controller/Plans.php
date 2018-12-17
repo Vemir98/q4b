@@ -1726,7 +1726,7 @@ class Controller_Plans extends HDVP_Controller_Template
         }
         $query->order_by('created_at','DESC');
         $paginationSettings = [
-            'items_per_page' => 15,
+            'items_per_page' => 9999,
             'view'              => 'pagination/project',
             'current_page'      => ['source' => 'route', 'key'    => 'page'],
         ];
