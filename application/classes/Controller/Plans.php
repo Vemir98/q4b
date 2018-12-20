@@ -6,7 +6,7 @@
  * Date: 03.12.2016
  * Time: 5:53
  */
-class Controller_Projects extends HDVP_Controller_Template
+class Controller_Plans extends HDVP_Controller_Template
 {
     protected $_actions_perms = [
         'list,company,property_item_quality_control_list,plans_list,tracking_list,get_custom_number,plan_list_search' => [
@@ -133,7 +133,7 @@ class Controller_Projects extends HDVP_Controller_Template
             foreach ($result['items'] as $item){
                 $projectIds [] = $item->id;
             }
-            $this->template->content = View::make('projects/list', $result + ['filterProjects' => $filterProjects, 'projectsEmptyPlans' => Model_Project::getProjectsWithoutPlansSpecialities($projectIds)]);
+            $this->template->content = View::make('plans/project-list', $result + ['filterProjects' => $filterProjects, 'projectsEmptyPlans' => Model_Project::getProjectsWithoutPlansSpecialities($projectIds)]);
         }
     }
 
@@ -470,12 +470,8 @@ class Controller_Projects extends HDVP_Controller_Template
                 $companies = ORM::factory('Company')->find_all();
             }
             Breadcrumbs::add(Breadcrumb::factory()->set_title($this->project->name));
-            $this->template->content = View::make('projects/update')
-                ->set('companies',$companies)
-                ->set('objectsCount',$projectObjectsCount)
-                ->set('users',$this->project->users->find_all())
-                ->set('tasks',$this->project->tasks->order_by('id','DESC')->find_all())
-                ->set('plansView',View::make('projects/plans/list',
+            $this->template->content = View::make('plans/update')
+                ->set('plansView',View::make('plans/plans/list',
                     $this->_getPlanListPaginatedData($this->project)
                 ));
         }
@@ -1576,7 +1572,7 @@ class Controller_Projects extends HDVP_Controller_Template
         }
     }
 
-    public function action_update_plan_list(){ // todo:: not used
+    public function action_update_plan_list(){
         if(($this->request->method() != HTTP_Request::POST) OR !(int)$this->request->param('id')){
             throw new HTTP_Exception_404;
         }
@@ -1730,7 +1726,7 @@ class Controller_Projects extends HDVP_Controller_Template
         }
         $query->order_by('created_at','DESC');
         $paginationSettings = [
-            'items_per_page' => 15,
+            'items_per_page' => 9999,
             'view'              => 'pagination/project',
             'current_page'      => ['source' => 'route', 'key'    => 'page'],
         ];

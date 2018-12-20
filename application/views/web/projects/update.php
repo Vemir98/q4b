@@ -237,14 +237,16 @@
                 </div>
             </li>
         <?endif;?>
-        <li class="tab_panel">
-            <div class="panel_header">
-                <span class="sign"><i class="panel_header_icon q4bikon-plus"></i></span><h2><?=__('Plans')?></h2>
-            </div>
-            <div class="panel_content">
-                <?=$plansView?>
-            </div><!--panel_content-->
-        </li>
+
+<!--        <li class="tab_panel">-->
+<!--            <div class="panel_header">-->
+<!--                <span class="sign"><i class="panel_header_icon q4bikon-plus"></i></span><h2>--><?//=__('Plans')?><!--</h2>-->
+<!--            </div>-->
+<!--            <div class="panel_content">-->
+<!--                --><?//=$plansView?>
+<!--            </div>-->
+<!--        </li>-->
+
         <?if(!Auth::instance()->get_user()->is('project_adviser')):?>
             <li class="tab_panel">
                 <div class="panel_header">

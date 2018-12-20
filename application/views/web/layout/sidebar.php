@@ -15,47 +15,49 @@ $items = [
         'icon' => 'q4bikon-uncheked',
         'resource' => 'Controller_Dashboard',
         'priority' => Enum_UserPriorityLevel::Project
-    ],[
+    ], [
         'slug' => 'companies',
         'text' => 'Companies',
         'tooltip' => 'Companies',
         'icon' => 'q4bikon-companies',
         'resource' => 'Controller_Companies',
         'priority' => Enum_UserPriorityLevel::Corporate
-    ],
-    [
+    ], [
         'slug' => 'projects',
         'text' => 'Menu _Projects',
         'tooltip' => 'Tooltip _Projects',
         'icon' => 'q4bikon-project',
         'resource' => 'Controller_Projects',
         'priority' => Enum_UserPriorityLevel::Project
-    ],
-    [
+    ], [
+        'slug' => 'plans',
+        'text' => 'Plans',
+        'tooltip' => 'Plans',
+        'icon' => 'q4bikon-file',
+        'resource' => 'Controller_Plans',
+        'priority' => Enum_UserPriorityLevel::Project
+    ], [
         'slug' => 'reports',
         'text' => 'Reports',
         'tooltip' => 'Reports',
         'icon' => 'q4bikon-reports',
         'resource' => 'Controller_Reports',
         'priority' => Enum_UserPriorityLevel::Project
-    ],
-    [
+    ], [
        'slug' => 'consultants',
        'text' => 'Menu_Consultants And Auditors',
        'tooltip' => 'Tooltip_Consultants And Auditors',
        'icon' => 'q4bikon-public',
        'resource' => 'Controller_Consultants',
        'priority' => Enum_UserPriorityLevel::Company
-    ],
-    [
+    ], [
         'slug' => 'settings',
         'text' => 'Settings',
         'tooltip' => 'Settings',
         'icon' => 'q4bikon-settings2',
         'resource' => 'Controller_Settings',
         'priority' => Enum_UserPriorityLevel::General
-    ],
-    [
+    ], [
         'slug' => '',
         'text' => 'Archive',
         'icon' => 'q4bikon-archive',
