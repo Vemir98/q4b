@@ -522,7 +522,7 @@ if($_USER->is('project_supervisor')){//запрет на изменение ст
                                 <i class="q4bikon-property"></i>
                                 <?=__('Property')?>:
                             </span>
-                            <span><strong><?=$printableItem->object->type->name?></strong></span>
+                            <span><strong><?=$printableItem->object->type->name?> - <?=$printableItem->object->name?> </strong></span>
                         </li>
                         <li>
                             <span>
