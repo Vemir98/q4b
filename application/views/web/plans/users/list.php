@@ -11,14 +11,19 @@
     <div class="panel_body container-fluid">
         <div class="row">
             <div class="col-lg-12">
-                <div class=" panel-options">
-                    <div class="wrap_delete_users hide">
-                        <span><?=__('Delete users')?></span>
-                        <span class="delete_user" data-toggle="modal" data-target="#confirmation-modal-delete"><i class="q4bikon-delete"></i></span>
-                    </div>
+                <div class="panel-options">
+                    <span class="inline-options">
+                        <div class="wrap_delete_users hide">
+                            <span class="plans-inline-icon"><?=__('Delete users')?></span>
+                            <span class="delete_user" data-toggle="modal" data-target="#confirmation-modal-delete"><i class="q4bikon-delete"></i></span>
+                        </div>
+                    </span>
 
-                    <span ><?=__('Add new user')?></span>
-                    <a class="orange_plus_small" data-toggle="modal" data-target="#users-list-modal"><i class="plus q4bikon-plus"></i></a>
+                    <span class="inline-options">
+                        <a class="orange_plus_small" data-toggle="modal" data-target="#users-list-modal"><i class="plus q4bikon-plus"></i></a>
+                        <span class="inline-options-text"><?=__('Add new user')?></span>
+                    </span>
+
                 </div>
 
                 <table class="rwd-table responsive_table table" data-toggle="table">

@@ -12,7 +12,7 @@
 
 
 <div  data-backdrop="static" data-keyboard="false" class="report-modal modal fade" role="dialog" data-qcid="<?=$item->id?>">
-    <div class="modal-dialog q4_project_modal quality-control-dialog">
+    <div class="modal-dialog q4_project_modal modal-dialog-1070">
 
             <input type="hidden" value="" name="x-form-secure-tkn"/>
             <div class="modal-content">
@@ -86,10 +86,10 @@
 					</div><!---.modal-body-->
 
 
-                <div class="panel-modal-footer">
+                <div class="modal-footer">
 
                 	<a class="inline_block_btn orange_button" data-dismiss="modal"><?=__('Close')?></a>
-                </div><!---.panel-modal-footer--->
+                </div><!---.modal-footer--->
 
 
             </div><!--.modal-content-->

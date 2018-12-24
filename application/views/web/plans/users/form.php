@@ -18,8 +18,13 @@
                         <span class="delete_user q4_form_submit"><i class="q4bikon-delete"></i></span>
                     </div>
 
-                    <span ><?=__('Add new user')?></span>
-                    <a class="orange_plus_small add-new-project-user" data-url="<?=URL::site('projects/assign_users/'.$_PROJECT->id)?>"><i class="plus q4bikon-plus"></i></a>
+                    <span class="inline-options">
+                        <a class="orange_plus_small add-new-project-user" data-url="<?=URL::site('projects/assign_users/'.$_PROJECT->id)?>">
+                            <i class="plus q4bikon-plus"></i>
+                        </a>
+                        <span class="inline-options-text"><?=__('Add new user')?></span>
+                    </span>
+
                 </div>
 
                 <table class="rwd-table responsive_table table" data-toggle="table">

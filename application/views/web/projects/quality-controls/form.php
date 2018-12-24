@@ -11,7 +11,7 @@
 ?>
 
 <div id="quality-control-modal" class="create-modal modal fade" data-backdrop="static" data-keyboard="false" role="dialog" data-qcid="<?=$item->id?>">
-    <div class="modal-dialog q4_project_modal quality-control-dialog">
+    <div class="modal-dialog q4_project_modal modal-dialog-1070">
         <form id="qc-form-id" class="q4_form" data-submit="false" action="<?=URL::site('/projects/quality_control/'.$item->id)?>"  data-ajax="true" method="post">
         <input type="hidden" value="" name="x-form-secure-tkn"/>
             <div class="modal-content">
@@ -311,7 +311,7 @@
                         </div>
                     </div>
                 </div>
-               <div class="panel-modal-footer text-right">
+               <div class="modal-footer text-align">
                 <div class="row">
                     <div class="col-sm-12">
                         <a href="#" class="inline_block_btn orange_button q4-form-submit q4_form_submit"><?=__('Create')?></a>
@@ -459,7 +459,7 @@
 
                         </div>
                     </div>
-                    <div class="panel-modal-footer text-right">
+                    <div class="modal-footer text-align">
                         <div class="row">
                             <div class="col-sm-12">
                                 <a href="#" class="inline_block_btn blue-light-button confirm-plan"><?=__('Confirm')?></a>

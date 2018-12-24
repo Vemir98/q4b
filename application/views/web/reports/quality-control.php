@@ -16,7 +16,7 @@ if($_USER->is('project_supervisor')){//запрет на изменение ст
 }
 ?>
 <div id="quality-control-modal" data-backdrop="static" data-keyboard="false" class="quality-control-modal modal fade" role="dialog" data-qcid="<?=$item->id?>">
-    <div class="modal-dialog q4_project_modal quality-control-dialog">
+    <div class="modal-dialog q4_project_modal modal-dialog-1070">
         <form id="qc-form-id" class="q4_form" action="<?=$formAction?>" data-ajax="true" data-submit="false" method="post">
             <input type="hidden" value="" name="x-form-secure-tkn"/>
             <div class="modal-content">
@@ -481,7 +481,7 @@ if($_USER->is('project_supervisor')){//запрет на изменение ст
                     </div>
                 </div>
                 </div>
-                <div class="panel-modal-footer text-align">
+                <div class="modal-footer text-align">
                     <div class="row">
                         <div class="col-sm-12">
                             <a href="#" class="q4-btn-lg light-blue-bg qc-to-print-btn panel-footer-first"><?=__('Proceed to print')?></a>
@@ -804,7 +804,7 @@ if($_USER->is('project_supervisor')){//запрет на изменение ст
 
                 </div>
             </div>
-            <div class="panel-modal-footer text-right">
+            <div class="modal-footer text-right">
                 <div class="row">
                     <div class="col-sm-12">
                         <a href="#" class="inline_block_btn blue-light-button confirm-plan"><?=__('Confirm')?></a>

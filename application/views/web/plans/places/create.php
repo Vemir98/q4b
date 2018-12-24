@@ -45,7 +45,7 @@ $icons = [
 ];
 ?>
 <div id="property-rooms-add-new-modal"  data-backdrop="static" data-keyboard="false" class="modal fade" role="dialog">
-    <div class="modal-dialog q4_project_modal property-rooms-add-new-dialog">
+    <div class="modal-dialog q4_project_modal modal-dialog-1070">
         <form action="<?=$action?>" data-ajax="true" method="post">
         <input type="hidden" value="" name="x-form-secure-tkn"/>
         <!-- Modal content-->
@@ -113,9 +113,11 @@ $icons = [
                 <div class="rooms-add-new-modal-bottom">
                     <div class="row">
                         <div class="col-md-12">
-                            <div class=" panel-options">
-                                <span><?=__('Add new item')?></span>
-                                <a class="orange_plus_small add-space"><i class="plus q4bikon-plus"></i></a>
+                            <div class="panel-options">
+                                <span class="inline-options">
+                                    <a class="orange_plus_small add-space"><i class="plus q4bikon-plus"></i></a>
+                                    <span class="inline-options-text"><?=__('Add new item')?></span>
+                                </span>
                             </div>
                             <table class="responsive-modal-table table rooms-clicked-table spaces-tbl">
                                 <thead>
@@ -155,7 +157,7 @@ $icons = [
 
                 </div>
             </div>
-            <div class="panel-modal-footer text-right">
+            <div class="modal-footer text-right">
                 <div class="row">
                     <div class="col-sm-12">
                         <a href="#" class="inline_block_btn light_blue_btn submit"><?=__('Create')?></a>

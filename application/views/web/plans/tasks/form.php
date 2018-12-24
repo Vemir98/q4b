@@ -16,8 +16,11 @@ $projectCrafts = $_PROJECT->company->craftsWithProfessionsFlag();
         <div class="row">
             <div class="col-lg-12">
                 <div class="panel-options">
-                    <span><?=__('Add new task')?></span>
-                    <a class="orange_plus_small add-task"><i class="plus q4bikon-plus"></i></a>
+                    <span class="inline-options">
+                        <a class="orange_plus_small add-task"><i class="plus q4bikon-plus"></i></a>
+                        <span class="inline-options-text"><?=__('Add new task')?></span>
+                    </span>
+
                 </div>
                 <div class="tasks-nested-tb">
                     <table class="responsive_table" data-toggle="table">

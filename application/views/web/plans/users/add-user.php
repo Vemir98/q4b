@@ -95,7 +95,7 @@
                     </div>
                 </div>
             </div>
-            <div class="panel-modal-footer text-right">
+            <div class="modal-footer text-align">
                 <div class="row">
                     <div class="col-sm-12">
                         <a href="#" class="inline_block_btn orange_button q4_form_submit"><?=__('Add to list')?></a>

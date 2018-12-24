@@ -9,7 +9,7 @@
 ?>
 <!-- Show details Modal -->
 <div class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false" role="dialog" aria-labelledby="modal_profile_window">
-    <div class="modal-dialog q4_project_modal modal_details-dialog" role="document">
+    <div class="modal-dialog q4_project_modal modal-dialog-1070" role="document">
         <div class="modal-content">
             <div class="modal-header q4_modal_header">
                 <div class="q4_modal_header-top">
@@ -95,7 +95,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="panel-modal-footer modal-footer text-align">
+                <div class="modal-footer text-align">
                     <?if($item->status == Enum_UserStatus::Pending):?>
                         <a href="#" class="q4-btn-lg light-blue-bg mr_30 invite-usr" data-url="<?=URL::site('companies/invite_user/'.$companyId.'/'.$item->id)?>"><?=__('Invite')?></a>
                     <?endif?>

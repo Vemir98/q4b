@@ -16,8 +16,11 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="panel-options">
-                    <span ><?=__('Add new type')?></span>
-                    <a class="circle-lg orange add-space-type" ><i class="plus q4bikon-plus"></i></a>
+                    <span class="inline-options">
+                        <a class="circle-lg orange add-space-type" ><i class="plus q4bikon-plus"></i></a>
+                        <span class="inline-options-text"><?=__('Add new type')?></span>
+                    </span>
+
                 </div>
             </div>
         </div>
@@ -88,7 +91,7 @@
             </div>
         </div>
     </div>
-    <div class="modal-footer q4-modal-footer-small">
+    <div class="modal-footer text-align q4-modal-footer-small">
         <a href="#" class="inline_block_btn orange_button  q4_form_submit"><?=__('Update')?></a>
     </div>
 </form>

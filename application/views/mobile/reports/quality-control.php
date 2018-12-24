@@ -385,7 +385,7 @@ if(Auth::instance()->get_user()->is('project_supervisor')){//запрет на �
 
                 </div>
 
-                <div class="panel-modal-footer text-align">
+                <div class="modal-footer text-align">
                     <div class="form-group">
                         <a href="#" class="q4-btn-lg light-blue-bg  qc-to-print-btn"><?=__('Proceed to print')?></a>
                     </div>

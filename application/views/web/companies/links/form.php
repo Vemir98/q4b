@@ -13,8 +13,11 @@
         <div class="row">
             <div class="col-md-12">
                 <div class=" panel-options">
-                    <span><?=__('Add new link')?></span>
-                    <a class="orange_plus_small add-link"><i class="plus q4bikon-plus"></i></a>
+                    <span class="inline-options">
+                        <a class="orange_plus_small add-link"><i class="plus q4bikon-plus"></i></a>
+                        <span class="panel-options-text"><?=__('Add new link')?></span>
+                    </span>
+
                 </div>
 
                 <table class="new_company_table responsive_table table" data-toggle="table">

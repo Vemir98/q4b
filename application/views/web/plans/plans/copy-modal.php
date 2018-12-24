@@ -20,7 +20,7 @@
                         <div class="clear"></div>
                     </div>
                     <div class="q4_modal_sub_header">
-                        <h3><?=__('Copy plan')?></h3>
+                        <h3><?=__('Copy plan')?> +++  </h3>
                     </div>
                 </div>
                 <div class="modal-body bb-modal"><br>
@@ -37,7 +37,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="panel-modal-footer text-right">
+                <div class="modal-footer text-align">
                     <div class="row">
                         <div class="col-sm-12">
                             <a href="#" class="inline_block_btn blue-light-button q4_form_submit"><?=__('Copy')?></a>

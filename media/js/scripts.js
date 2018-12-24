@@ -1820,7 +1820,7 @@ $(document).ready(function() {
 
         $(document).find('.send-email-ad').addClass('not-active');
 
-        $(document).find("#user-prf-modal .panel-modal-footer").prepend("<span class='user-prf-message'>" +
+        $(document).find("#user-prf-modal .modal-footer").prepend("<span class='user-prf-message'>" +
             "<span class='user-prf-m-tick'><i class='q4bikon-tick'></i></span>" +
             "<span class='user-prf-m-txt'>"+__('Profile updated successfully')+"</span>" +
         "</span>" );

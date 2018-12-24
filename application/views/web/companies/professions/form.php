@@ -13,10 +13,14 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="panel-options">
-                    <a class="call-professions-list-modal crafts-list-modal q4-link-b-blue" data-url="<?=URL::site('/companies/crafts_with_professions/'.$_COMPANY->id)?>"><?=__('Crafts List')?> </a>
+                    <a class="call-professions-list-modal crafts-list-modal q4-link-b-blue" data-url="<?=URL::site('/companies/crafts_with_professions/'.$_COMPANY->id)?>">
+                        <?=__('Crafts List')?>
+                    </a>
+                    <span class="inline-options">
+                        <span class="inline-options-text"><?=__('Add new profession')?></span>
+                        <a class="orange_plus_small add-profession"  id="new_profession"><i class="plus q4bikon-plus"></i></a>
+                    </span>
 
-                    <span ><?=__('Add new profession')?></span>
-                    <a class="orange_plus_small add-profession"  id="new_profession"><i class="plus q4bikon-plus"></i></a>
                 </div>
 
                 <table class="new_company_table responsive_table table" data-toggle="table">

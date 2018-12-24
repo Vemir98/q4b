@@ -10,7 +10,7 @@
 
 
 <div id="upload-plans-modal" class="modal fade" data-backdrop="static" data-keyboard="false" role="dialog">
-    <div class="modal-dialog q4_project_modal upload-plans-dialog">
+    <div class="modal-dialog q4_project_modal modal-dialog-740 ">
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header q4_modal_header">
@@ -112,7 +112,7 @@
                 </div>
             </div>
 
-            <div class="panel-modal-footer text-center">
+            <div class="modal-footer text-center">
                 <div class="row">
                     <div class="col-sm-12">
                         <a href="#" class="q4-btn-lg dark-blue-bg mr_30 cancel-upload-files" data-dismiss="modal"><?=__('Cancel')?></a>

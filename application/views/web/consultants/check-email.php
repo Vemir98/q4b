@@ -20,7 +20,7 @@
                     <label class="table_label"><?=__('Email')?></label>
                     <input type="text" name="email" class="q4-form-input q4_email" value="">
                 </div>
-                <div class="panel-modal-footer text-center">
+                <div class="modal-footer text-center">
                     <div class="row">
                         <div class="col-sm-12">
                             <a href="#" class="q4-btn-lg light-blue-bg q4-modal-dismiss check-email" data-toggle="modal" data-url="<?=URL::site('/consultants/check_email')?>"><?=__('Check and Continue')?></a>

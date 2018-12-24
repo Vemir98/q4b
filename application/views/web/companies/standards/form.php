@@ -11,8 +11,11 @@
     <input type="hidden" value="" name="x-form-secure-tkn"/>
     <div class="panel_body container-fluid">
         <div class=" panel-options">
-            <span><?=__('Add new standard')?></span>
-            <a class="orange_plus_small add-standard" id="new_standard"><i class="plus q4bikon-plus"></i></a>
+            <span class="inline-options">
+                <a class="orange_plus_small add-standard" id="new_standard"><i class="plus q4bikon-plus"></i></a>
+                <span class="inline-options-text"><?=__('Add new standard')?> </span>
+            </span>
+
         </div>
 
         <table class="new_company_table responsive_table table" data-toggle="table">

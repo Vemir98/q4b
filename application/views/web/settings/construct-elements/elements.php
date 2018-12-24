@@ -10,7 +10,7 @@
 
     <!-- property types Modal -->
 <div class="modal fade" class="construct-element-modal" id="construct-element-modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modal-property-types">
-    <div class="modal-dialog q4_project_modal modal-property-types-dialog" role="document">
+    <div class="modal-dialog q4_project_modal modal-property-740"  role="document">
         <div class="modal-content">
             <div class="modal-header q4_modal_header">
                 <div class="q4_modal_header-top">

@@ -150,7 +150,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="panel-modal-footer text-align">
+                <div class="modal-footer text-align">
                     <div class="row">
                         <div class="col-sm-12">
                             <a class="q4-btn-lg orange q4_form_submit create-consultant"><?=__('Save')?></a>

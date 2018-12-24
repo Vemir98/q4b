@@ -181,7 +181,7 @@
 
                 </div>
             </div>
-                <div class="panel-modal-footer text-align">
+                <div class="modal-footer text-align">
                     <div class="row">
                         <div class="col-sm-12">
                             <a href="#" class="q4-btn-lg orange q4_form_submit disabled-gray-button"><?=__('Update')?></a>

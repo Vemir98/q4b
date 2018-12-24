@@ -11,10 +11,10 @@
     <input type="hidden" value="" name="x-form-secure-tkn"/>
     <div class="panel_body container-fluid">
         <div class=" panel-options form_row">
-
-
-            <span><?=__('Add new certification')?></span>
-            <a class="orange_plus_small add-cert"><i class="plus q4bikon-plus"></i></a>
+            <span class="inline-options">
+                <a class="orange_plus_small add-cert"><i class="plus q4bikon-plus"></i></a>
+                <span class="inline-options-text"><?=__('Add new certification')?></span>
+            </span>
         </div>
         <div class="scrollable-table">
 

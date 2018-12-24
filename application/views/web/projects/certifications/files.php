@@ -57,7 +57,7 @@
                 </table>
 
             </div>
-            <div class="modal-footer q4_modal_footer">
+            <div class="modal-footer text-align q4_modal_footer">
                 <form class="concrete-std-form cert-form" action="<?=$action?>" data-ajax="true" enctype="multipart/form-data">
                     <input type="hidden" value="" name="x-form-secure-tkn"/>
                     <div class="hide_upload">

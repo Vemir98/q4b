@@ -13,8 +13,10 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="panel-options">
-                    <span ><?=__('Add new user')?></span>
-                    <a class="orange_plus_small add-user"><i class="plus q4bikon-plus"></i></a>
+                    <span class="inline-options">
+                        <a class="orange_plus_small add-user"><i class="plus q4bikon-plus"></i></a>
+                        <span class="inline-options-text"><?=__('Add new user')?></span>
+                    </span>
                 </div>
 
                 <table class="rwd-table new_company_table responsive_table table" data-toggle="table">

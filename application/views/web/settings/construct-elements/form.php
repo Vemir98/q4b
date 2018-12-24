@@ -128,7 +128,7 @@ $icons = [
             </div>
         </div>
     </div>
-    <div class="modal-footer q4-modal-footer-small">
+    <div class="modal-footer text-align q4-modal-footer-small">
         <a href="#" class="inline_block_btn orange_button submit q4_form_submit">
             <?=__('Update')?>
         </a>

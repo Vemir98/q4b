@@ -140,7 +140,7 @@
 
 
             </div>
-            <div class="panel-modal-footer text-align">
+            <div class="modal-footer text-align">
                 <div class="row">
                     <div class="col-sm-12">
                         <!-- <a class="q4-btn-lg dark-blue-bg q4-modal-dismiss mr_30"><?=__('Reset Password')?></a> -->

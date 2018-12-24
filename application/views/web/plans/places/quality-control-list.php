@@ -68,7 +68,7 @@
                     </select>
 
                 </div>
-                <div class="modal-footer q4_modal_footer">
+                <div class="modal-footer text-align q4_modal_footer">
 
                     <a href="#" class="inline_block_btn orange_button submit"><?=__('Update')?></a>
                 </div>

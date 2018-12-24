@@ -1,6 +1,6 @@
 <?defined('SYSPATH') OR die('No direct script access.');?>
 <div id="tracking-details-modal" data-backdrop="static" data-keyboard="false" class="modal tracking-details-modal  fade" role="dialog">
-    <div class="modal-dialog q4_project_modal tracking-details-dialog">
+    <div class="modal-dialog q4_project_modal modal-dialog-1170 tracking-details-dialog">
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header q4_modal_header">
@@ -147,7 +147,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="panel-modal-footer text-align">
+                <div class="modal-footer text-align">
                     <div class="row">
                         <div class="col-sm-12">
                             <a href="#" class="q4-btn-lg orange q4_form_submit update-tracking-confirm"><?=__('Update')?></a>
