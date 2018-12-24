@@ -1,16 +1,8 @@
 <?defined('SYSPATH') OR die('No direct script access.');?>
-<?php
-/**
- * Created by PhpStorm.
- * User: SUR0
- * Date: 25.09.2017
- * Time: 14:34
- */
-?>
 
 <div id="consultants-user-detail" data-backdrop="static" data-keyboard="false" class="modal fade in" role="dialog">
 
-    <div class="modal-dialog q4_project_modal consultants-user-detail-dialog">
+    <div class="modal-dialog q4_project_modal modal-dialog-1170">
         <div class="modal-content">
             <form action="<?=URL::site('/consultants/update/'.$user->id)?>" method="post" class="q4_form"  data-ajax="true" enctype="multipart/form-data">
             <div class="modal-header q4_modal_header">
@@ -51,7 +43,7 @@
                                     <label class="table_label"><?=__('Email')?></label>
                                     <div class="form-group form_row">
                                         <i class="input_icon q4bikon-email"></i>
-                                        <input name="email" type="text" class="q4-form-input symbol form_input disabled-input q4_required" value="<?=$user->email?>"/>
+                                        <input name="email" type="text" class="q4-form-input symbol disabled-input q4_required" value="<?=$user->email?>"/>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6 rtl-float-right">
@@ -67,14 +59,14 @@
                                     <label class="table_label"><?=__('Name')?></label>
                                     <div class="form-group form_row">
                                         <i class="input_icon q4bikon-username"></i>
-                                        <input type="text" name="name" class="q4-form-input symbol form_input q4_required" value="<?=$user->name?>"/>
+                                        <input type="text" name="name" class="q4-form-input symbol q4_required" value="<?=$user->name?>"/>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6 rtl-float-right">
                                     <label class="table_label"><?=__('Phone')?></label>
                                     <div class="form-group form_row">
                                         <i class="input_icon q4bikon-phone"></i>
-                                        <input type="text" name="phone" class="q4-form-input symbol form_input" value="<?=$user->phone?>"/>
+                                        <input type="text" name="phone" class="q4-form-input symbol" value="<?=$user->phone?>"/>
                                     </div>
                                 </div>
                             </div>

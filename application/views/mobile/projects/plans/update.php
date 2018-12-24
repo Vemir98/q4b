@@ -10,7 +10,7 @@
 ?>
 <?$disabled = $item->hasQualityControl() ? ' disabled-input': ''?>
 <div id="update-plan-modal" class="modal fade" data-backdrop="static" data-keyboard="false" role="dialog">
-    <div class="modal-dialog q4_project_modal plans-details-dialog">
+    <div class="modal-dialog q4_project_modal modal-dialog-1170">
         <form class="q4_form" action="<?=$action?>" data-ajax="true" method="post">
         <input type="hidden" value="" name="x-form-secure-tkn"/>
             <!-- Modal content-->

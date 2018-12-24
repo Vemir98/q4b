@@ -668,11 +668,11 @@ if($_USER->is('project_supervisor')){//запрет на изменение ст
             <?endforeach?>
 
 
-    <!--  ****** end of PRINTABLE PART ******** -->
+    <!--  ****** end of PRINTABLE PART ********  -->
     </div>
 </div>
 <div id="choose-plan-modal" data-backdrop="static" data-keyboard="false" class="modal fade no-delete" role="dialog">
-    <div class="modal-dialog choose-plan-dialog">
+    <div class="modal-dialog modal-dialog-1170">
             <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header q4_modal_header">

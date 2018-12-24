@@ -45,7 +45,7 @@
                                         <label class="table_label"><?=__('Company name')?></label>
                                         <div class="form-group form_row">
                                             <i class="input_icon q4bikon-companies"></i>
-                                            <input type="text" class="q4-form-input symbol form_input q4_required" name="name" placeholder="<?=Faker\Factory::create('en_US')->company?>" required/>
+                                            <input type="text" class="q4-form-input symbol q4_required" name="name" placeholder="<?=Faker\Factory::create('en_US')->company?>" required/>
                                         </div>
                                     </div>
                                     <div class="col-lg-6 col-md-12 col-sm-12 rtl-float-right">
@@ -54,7 +54,7 @@
 
                                              <div class="select-wrapper select_large">
                                                 <i class="q4bikon-arrow_bottom"></i>
-                                                <select name="status" class="q4-select q4-form-input form_input disabled-input">
+                                                <select name="status" class="q4-select q4-form-input disabled-input">
                                                         <option value="<?=Enum_CompanyStatus::Active?>"><?=ucfirst(__(Enum_CompanyStatus::Active))?></option>
                                                 </select>
                                             </div>
@@ -68,7 +68,7 @@
                                         <div class="form-group form_row">
 
                                              <div class="select-wrapper select_large">
-                                                <?=Form::select('country_id',$countries,$clientCountryId,['class' => 'q4-select q4-form-input form_input q4_select select-icon-pd'])?>
+                                                <?=Form::select('country_id',$countries,$clientCountryId,['class' => 'q4-select q4-form-input q4_select select-icon-pd'])?>
                                             </div>
                                             <i class="input_icon q4bikon-country"></i>
                                         </div>
@@ -79,7 +79,7 @@
 
                                              <div class="select-wrapper select_large">
                                                 <i class="q4bikon-arrow_bottom"></i>
-                                                <select name="type" class="q4-select q4-form-input form_input select-icon-pd">
+                                                <select name="type" class="q4-select q4-form-input select-icon-pd">
                                                     <option value=""></option>
                                                     <?foreach(Enum_ClientType::toArray() as $val):?>
                                                         <option value="<?=$val?>"><?=__(ucfirst($val))?></option>
@@ -95,14 +95,14 @@
                                         <label class="table_label"><?=__('Address')?></label>
                                         <div class="form-group form_row">
                                             <i class="input_icon q4bikon-address"></i>
-                                            <input type="text" name="address" class="q4-form-input symbol form_input" placeholder="<?=Faker\Factory::create('en_US')->address?>" required/>
+                                            <input type="text" name="address" class="q4-form-input symbol" placeholder="<?=Faker\Factory::create('en_US')->address?>" required/>
                                         </div>
                                     </div>
                                     <div class="col-lg-6 col-md-12 col-sm-12 rtl-float-right">
                                         <label class="table_label"><?=__('Company ID')?></label>
                                         <div class="form-group form_row">
                                             <i class="input_icon q4bikon-password"></i>
-                                            <input type="text" name="company_id" class="q4-form-input symbol form_input" value=""/>
+                                            <input type="text" name="company_id" class="q4-form-input symbol" value=""/>
                                         </div>
                                     </div>
                                 </div>

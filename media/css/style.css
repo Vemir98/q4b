@@ -676,8 +676,6 @@ html.rtl {
     text-align: left; }
   .rtl .modal-footer.text-align {
     text-align: left; }
-  .rtl .form_input {
-    padding: 0 40px 0 0; }
   .rtl .table_input {
     padding: 0 6px 0 5px;
     direction: rtl; }
@@ -703,13 +701,7 @@ html.rtl {
   .rtl .login_input {
     padding: 0 40px 0 6px;
     text-align: right; }
-  .rtl .select_wrapper:before {
-    right: inherit;
-    left: 10px; }
-  .rtl .select_wrapper select {
-    padding: 0px 10px 0px 10px; }
-    .rtl .select_wrapper select.select-icon {
-      padding: 0px 45px 0px 10px; }
+
   .rtl .generate-reports .generate-reports-body .report-range-box .report-range-unit:first-child {
     padding-left: 0;
     padding-right: 80px; }
@@ -722,8 +714,7 @@ html.rtl {
     -o-transform: rotate(180deg);
     -ms-transform: rotate(180deg);
     transform: rotate(180deg); }
-  .rtl .generate-reports .generate-reports-body #advanced-reports .select_wrapper select.suppress {
-    padding: 0px 22px 0px 5px; }
+
   .rtl .generate-reports .generate-reports-footer {
     text-align: left; }
     .rtl .generate-reports .generate-reports-footer .clear-all-reports {
@@ -1998,31 +1989,6 @@ ul li.tab_panel {
   height: 55px;
   animation: spin 2s linear infinite; }
 
-/* Styling Select element */
-.select_wrapper {
-  background-color: #FFF;
-  display: block;
-  position: relative; }
-  .select_wrapper select {
-    padding: 0px 40px 0px 10px;
-    background-color: transparent;
-    -webkit-border-radius: 0;
-    -moz-border-radius: 0;
-    -ms-border-radius: 0;
-    border-radius: 0;
-    position: relative;
-    cursor: pointer;
-    z-index: 10;
-    -webkit-appearance: none;
-    -ms-appearance: none;
-    -moz-appearance: none;
-    appearance: none; }
-    .select_wrapper select.select-icon {
-      padding: 0px 40px 0px 30px; }
-    .select_wrapper select.select-icon-pd {
-      padding: 0px 35px 0px 35px; }
-    .select_wrapper select::-ms-expand {
-      display: none; }
 
 .send-out-button {
   display: inline-block;
@@ -3289,7 +3255,7 @@ label.q4-circle-checkbox {
     margin-top: 5px;
     margin-bottom: 5px;
     color: #708492;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: normal;
     font-style: normal;
     font-family: "proxima_nova_rgregular", Arial, Helvetica, sans-serif;
@@ -6032,19 +5998,6 @@ textarea.fixed-textarea {
     table .multi-select-box.comma .select-imitation-title {
       width: 100%; }
 
-  .responsive_table .select_wrapper {
-    display: inline-block;
-    vertical-align: middle;
-    width: 62%;
-    margin-left: -2px; }
-    .responsive_table .select_wrapper select {
-      width: 100%; }
-    .responsive_table .select_wrapper.select_large {
-      display: inline-block;
-      vertical-align: middle;
-      width: 100%;
-      margin-left: auto;
-      margin-right: auto; }
 
   .panel-options {
     margin-bottom: 8px; }
@@ -7540,7 +7493,6 @@ table.scrollable-tbody {
   margin-left: 15px;
   margin-right: 15px;
 }
-
 .hide_upload {
   width: 0;
   height: 0;
@@ -7563,53 +7515,8 @@ table.scrollable-tbody {
 .see-project-images-dialog {
   width: 1020px; }
 
-.users-list-dialog {
-  width: 1170px; }
-
-.tasks-quality-control-list-dialog {
-  width: 1170px; }
-
-.property-quality-control-dialog {
-  width: 1170px; }
-
 .plans-professions-list-dialog {
   width: 540px; }
-
-.plans-call-history-dialog {
-  width: 990px; }
-
-.plans-details-dialog {
-  width: 1170px; }
-
-.dash-plans-dialog {
-  width: 1170px; }
-
-.dash-certification-dialog {
-  width: 1170px; }
-
-.plans-to-send-dialog {
-  width: 1045px; }
-
-.plans-to-print-dialog {
-  width: 945px; }
-
-.plans-list-of-users-dialog {
-  width: 945px; }
-
-.qc-list-users-dialog {
-  width: 945px; }
-
-.plans-new-edition-dialog {
-  width: 1170px; }
-
-.choose-plan-dialog {
-  width: 1170px; }
-
-.consultants-user-detail-dialog {
-  width: 1170px; }
-
-.choose-sender-dialog {
-  width: 1045px; }
 
 .modal-dialog-1170{
   width: 1170px;
@@ -7617,31 +7524,9 @@ table.scrollable-tbody {
 .modal-dialog-1070{
   width: 1070px;
 }
-.modal-dialog-1070 {
-  width: 1070px; }
-
-.modal-dialog-1070 {
-  width: 1070px; }
-
-.modal-dialog-1070 {
-  width: 1070px; }
-
 .modal-dialog-740{
   width: 740px;
 }
-
-/*
-.plans-details-history-dialog {
-  width: 1000px; }
-
-.property-rooms-edit-el-dialog {
-  width: 1000px; }
-
-.tracking-details-dialog {
-  width: 1170px; }
-
-*/
-
 
 .modal-construction-elements-dialog {
   width: 840px; }
@@ -7685,12 +7570,6 @@ table.scrollable-tbody {
 .modal-report-status-dialog {
   width: 1000px; }
 
-.choose-plan-dialog-mobile .select_wrapper select {
-  color: #708492;
-  font-size: 18px;
-  font-weight: normal;
-  font-style: normal;
-  font-family: "proxima_nova_rgregular", Arial, Helvetica, sans-serif; }
 
 .choose-plan-mobile-list .confirm-plan-mobile {
   display: block;
@@ -8337,7 +8216,7 @@ a.present-modal {
 .print-selected-plans-scroll {
   max-height: 282px; }
 
-.plans-to-print-dialog .plans-modal-dialog-bottom .table-modal-label-h3 {
+.plans-modal-dialog-bottom .table-modal-label-h3 {
   margin-top: 0; }
 
 /***************************************
@@ -8571,8 +8450,7 @@ a.present-modal {
  *    Settings Page
  *
  ************************************** */
-#modal-edit-user-window .select_wrapper:after {
-  top: 12px; }
+
 #modal-edit-user-window .q4_modal_footer {
   text-align: center; }
 
@@ -9443,35 +9321,12 @@ ul.q4-unordered-list > li {
   .display-project-images {
     width: 100%; }
 
-  .plans-new-edition-dialog {
-    width: 95%; }
-
-  .choose-plan-dialog {
-    width: 95%; }
-
-  .consultants-user-detail-dialog {
-    width: 95%; }
-
-  .choose-sender-dialog {
-    width: 95%; }
-
-  .plans-details-dialog {
-    width: 95%; }
-
-  .dash-plans-dialog {
-    width: 95%; }
-
-  .dash-certification-dialog {
-    width: 95%; }
-
-  .tasks-quality-control-list-dialog {
-    width: 95%; }
-    .tasks-quality-control-list-dialog .tasks-full-description-box {
-      width: 100%; }
-
-  .modal-dialog-1070 {
-    width: 95%; }
-
+    .modal-dialog-1170 {
+        width: 95%;
+    }
+    .modal-dialog-1070 {
+        width: 95%;
+    }
 
   .modal-dialog-1070 .tasks-full-description-box {
     width: 100%; }
@@ -9680,8 +9535,13 @@ ul.q4-unordered-list > li {
   .send-form-right {
     border: 1px solid #d4e1ea; }
 
-  .plans-details-dialog {
-    width: 85%; }
+
+    .modal-dialog-1170 {
+        width: 85%;
+    }
+    .modal-dialog-1070 {
+        width: 85%;
+    }
 
   .upload-plans-box .load-files-date {
     margin: 0 3px 7px 3px; }
@@ -9690,6 +9550,7 @@ ul.q4-unordered-list > li {
     height: auto;
     line-height: 1;
     padding: 10px 15px 15px 15px; } }
+
 @media (max-width: 768px) {
   .q4_modal .q4_modal_sub_header {
     margin-top: 0; }
@@ -10552,9 +10413,6 @@ header {
     overflow: hidden; }
   .content .content-projects .content_companies_list .projects_list_group {
     overflow: hidden; }
-  .content .panel_content .panel_body {
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px; }
   .content .content-dashboard .table td a.viewed {
     color: purple;
     text-decoration: none; }
@@ -10882,8 +10740,7 @@ header {
       background: #f2faff;
       border: 1px solid #d4e1ea;
       font-size: 0; }
-      .generate-reports .generate-reports-body #advanced-reports .select_wrapper select.suppress {
-        padding: 0px 16px 0px 5px; }
+
       .generate-reports .generate-reports-body #advanced-reports .select-def-text {
         color: #708492; }
       .generate-reports .generate-reports-body #advanced-reports .multi-select-box .select-imitation-title {
@@ -12413,9 +12270,6 @@ header {
   .q4-list-item .q4-list-item-desc {
     height: 205px;
     max-height: 205px; }
-
-  .q4-page-filter ul.filter-buttons-list li .select_wrapper select.sort-by-option {
-    padding-left: 40%; }
 
   .multi-select-box .select-imitation-title {
     width: 340px; }

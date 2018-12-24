@@ -75,7 +75,6 @@ $icons = [
                                     <?endforeach;?>
                                 </select>
                             </div>
-                            <!-- <input class="table_input form_input" name="name" value="" type="text"> -->
 
                         </div>
                         <div class="col-md-2">

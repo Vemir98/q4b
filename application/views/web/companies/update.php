@@ -49,7 +49,7 @@
                                         <label class="table_label"><?=__('Company name')?></label>
                                         <div class="form-group form_row">
                                             <i class="input_icon q4bikon-companies"></i>
-                                            <input type="text" class="q4-form-input symbol form_input q4_required" name="name" value="<?=$company->name?>" required/>
+                                            <input type="text" class="q4-form-input symbol q4_required" name="name" value="<?=$company->name?>" required/>
                                         </div>
                                     </div>
                                     <div class="col-lg-6 col-md-12 col-sm-12">
@@ -58,7 +58,7 @@
                                              <div class="select-wrapper select_large">
                                                 <i class="q4bikon-arrow_bottom"></i>
 
-                                                <select name="status" class="q4-select q4-form-input form_input q4_select select-icon-pd">
+                                                <select name="status" class="q4-select q4-form-input q4_select select-icon-pd">
                                                     <?foreach(Enum_CompanyStatus::toArray() as $val):?>
                                                         <option value="<?=$val?>" <?=$val == $company->status ? 'selected="selected"' : null?>><?=ucfirst(__($val))?></option>
                                                     <?endforeach?>
@@ -74,7 +74,7 @@
                                         <label class="table_label"><?=__('Select Country')?></label>
                                         <div class="form-group form_row">
                                              <div class="select-wrapper select_large">
-                                                <?=Form::select('country_id',$countries,$clientCountryId,['class' => 'q4-select q4-form-input form_input q4_select select-icon-pd'])?>
+                                                <?=Form::select('country_id',$countries,$clientCountryId,['class' => 'q4-select q4-form-input q4_select select-icon-pd'])?>
                                             </div>
                                             <i class="input_icon q4bikon-country"></i>
                                         </div>
@@ -84,7 +84,7 @@
                                         <div class="form-group form_row">
                                              <div class="select-wrapper select_large">
                                                 <i class="q4bikon-arrow_bottom"></i>
-                                                <select name="type" class="q4-select q4-form-input form_input disable select-icon-pd">
+                                                <select name="type" class="q4-select q4-form-input disable select-icon-pd">
                                                     <option value=""><?=__(ucfirst($company->client->type))?></option>
                                                 </select>
                                             </div>
@@ -97,14 +97,14 @@
                                         <label class="table_label"><?=__('Address')?></label>
                                         <div class="form-group form_row">
                                             <i class="input_icon q4bikon-address"></i>
-                                            <input type="text" name="address" class="q4-form-input symbol form_input" value="<?=$company->address?>" required/>
+                                            <input type="text" name="address" class="q4-form-input symbol" value="<?=$company->address?>" required/>
                                         </div>
                                     </div>
                                     <div class="col-lg-6 col-md-12 col-sm-12">
                                         <label class="table_label"><?=__('Company ID')?></label>
                                         <div class="form-group form_row">
                                             <i class="input_icon q4bikon-password"></i>
-                                            <input type="text" name="company_id" class="q4-form-input symbol form_input" value="<?=$company->company_id?>"/>
+                                            <input type="text" name="company_id" class="q4-form-input symbol" value="<?=$company->company_id?>"/>
                                         </div>
                                     </div>
                                 </div>

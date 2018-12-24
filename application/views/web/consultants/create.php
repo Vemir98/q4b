@@ -12,7 +12,7 @@
 <div id="consultants-user-detail" class="modal fade in" role="dialog">
 <?//echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($user); echo "</pre>";?>
 
-    <div class="modal-dialog q4_project_modal consultants-user-detail-dialog">
+    <div class="modal-dialog q4_project_modal modal-dialog-1170">
         <form action="<?=URL::site('/consultants/create/')?>" data-submit="false" method="post" class="q4_form"  data-ajax="true" enctype="multipart/form-data">
 
             <div class="modal-content">
@@ -54,7 +54,7 @@
                                     <label class="table_label"><?=__('Email')?></label>
                                     <div class="form-group form_row">
                                         <i class="input_icon q4bikon-email"></i>
-                                        <input name="email" type="text" class="q4-form-input q4_required symbol form_input disabled-input" value="<?=$user->email?>"/>
+                                        <input name="email" type="text" class="q4-form-input q4_required symbol disabled-input" value="<?=$user->email?>"/>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6 rtl-float-right">
@@ -81,14 +81,14 @@
                                     <label class="table_label"><?=__('Name')?></label>
                                     <div class="form-group form_row">
                                         <i class="input_icon q4bikon-username"></i>
-                                        <input type="text" name="name" class="q4-form-input q4_required symbol form_input" value=""/>
+                                        <input type="text" name="name" class="q4-form-input q4_required symbol" value=""/>
                                     </div>
                                 </div>
                                 <div class="col-md-6 rtl-float-right">
                                     <label class="table_label"><?=__('Phone')?></label>
                                     <div class="form-group form_row">
                                         <i class="input_icon q4bikon-phone"></i>
-                                        <input type="text" name="phone" class="q4-form-input symbol form_input" value=""/>
+                                        <input type="text" name="phone" class="q4-form-input symbol" value=""/>
                                     </div>
                                 </div>
                             </div>

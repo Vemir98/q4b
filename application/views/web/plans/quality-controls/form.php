@@ -324,7 +324,7 @@
 </div>
 
     <div id="choose-plan-modal" class="choose-plan-modal modal no-delete" role="dialog">
-        <div class="modal-dialog choose-plan-dialog">
+        <div class="modal-dialog modal-dialog-1170">
             <form class="q4_form" action="<?=1?>" data-ajax="true" method="post">
                 <!-- Modal content-->
                 <div class="modal-content">
