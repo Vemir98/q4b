@@ -392,7 +392,7 @@ $icons = [
             <div class="row">
                 <div class="col-sm-12">
                     <a href="#" class="q4-btn-lg light-blue-bg disabled-gray-button plans-to-print-link" data-toggle="modal" data-target="#plans-to-print-modal"><?=__('Proceed to print')?></a>
-                    <a href="#" class="q4-btn-lg light-blue-bg disabled-gray-button plans-to-send" data-toggle="modal" data-id=<?=$_PROJECT->id?> data-url="<?=URL::site('projects/plans_mailing/'.$item->project_id)?>"><?=__('Proceed to send')?></a>
+                    <a href="#" class="q4-btn-lg light-blue-bg disabled-gray-button plans-to-send" data-toggle="modal" data-id=<?=$_PROJECT->id?> data-url="<?=URL::site('projects/plans_mailing/'.$_PROJECT->id)?>"><?=__('Proceed to send')?></a>
                     <a class="q4-btn-lg q4_form_submit orange update-plans"><?=__('Update')?></a>
                 </div>
             </div>
