@@ -21,21 +21,21 @@
                     <div class="panel_body container-fluid">
                         <div class="row">
                             <div class="col-lg-3">
-                                <div class="set-image-block centered" data-id="company">
-                                    <div class="upload-logo">
+                                <div class="set-image-block centered q4-file-upload" data-id="company">
+                                    <div class="upload-logo up-box">
                                         <div class="hide-upload">
                                             <input type="file" accept=".jpg,.jpe,.jpeg,.png,.gif,.tif,.tiff" class="upload-user-logo"  name="logo" />
                                         </div>
                                         <?if(empty($company->logo)):?>
-                                            <div class="camera-bg">
+                                            <div class="camera-bg camera-default-image">
                                                 <img src="/media/img/camera.png" class="camera" alt="camera">
                                             </div>
-                                            <img class="hidden preview-user-image" alt="preview user image">
+                                            <img class="hidden preview-user-image show-uploaded-image" alt="preview user image">
                                         <?else:?>
-                                            <img class="preview-user-image" alt="preview image" src="/<?=$company->logo?>">
+                                            <img class="preview-user-image show-uploaded-image" alt="preview image" src="/<?=$company->logo?>">
                                         <?endif?>
                                     </div>
-                                    <a href="#" class="form-control light_blue_btn set-image-link"><?=__('Browse company logo')?></a>
+                                    <a href="#" class="form-control light_blue_btn set-image-link trigger-image-upload"><?=__('Browse company logo')?></a>
                             <?if($company->projects->count_all()):?>
                             <div class="q4-list-item-info projects text-center"><a href="<?=URL::site('projects/company/'.$company->id)?>"><?=__('Projects')?>: <?=$company->projects->count_all()?></a></div>
                         <?endif?>

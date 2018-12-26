@@ -23,22 +23,22 @@
                         <div class="row">
 
                             <div class="col-lg-3">
-                                <div class="set-image-block centered" data-id="projects">
-                                    <div class="upload-logo">
+                                <div class="set-image-block centered q4-file-upload" data-id="projects">
+                                    <div class="upload-logo up-box">
                                         <div class="hide-upload">
                                             <input type="file" accept=".jpg,.jpe,.jpeg,.png,.gif,.tif,.tiff" class="upload-user-logo"  name="images" />
                                         </div>
                                         <?if(!$_PROJECT->image_id):?>
-                                            <div class="camera-bg">
+                                            <div class="camera-bg camera-default-image">
                                                 <img src="/media/img/camera.png" class="camera" alt="camera">
                                             </div>
-                                            <img class="hidden preview-user-image" alt="preview image">
+                                            <img class="hidden preview-user-image show-uploaded-image" alt="preview image">
                                         <?else:?>
-                                            <img  class="preview-user-image" src="<?=$_PROJECT->main_image->originalFilePath()?>" alt="preview user image">
+                                            <img  class="preview-user-image show-uploaded-image" src="<?=$_PROJECT->main_image->originalFilePath()?>" alt="preview user image">
                                         <?endif?>
                                     </div>
                                      <?if(!Auth::instance()->get_user()->is('project_admin')&&!Auth::instance()->get_user()->is('project_supervisor')&&!Auth::instance()->get_user()->is('project_adviser')&&!Auth::instance()->get_user()->is('project_visitor')):?>
-                                        <a href="#" class="form-control light_blue_btn set-image-link"><?=__('Load projects images')?></a>
+                                        <a href="#" class="form-control light_blue_btn set-image-link trigger-image-upload"><?=__('Load projects images')?></a>
                                         <a href="#" data-url="<?=URL::site('projects/get_images/'.$_PROJECT->id)?>" class="form-control dark_blue_button see-project-images" data-toggle="modal" data-target="#see-project-images-modal"><?=__('See projects images')?></a>
                                     <?endif; ?>
                                 </div>

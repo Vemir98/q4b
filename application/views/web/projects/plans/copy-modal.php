@@ -51,6 +51,7 @@
 
                         </div>
                         <div class="col-md-5 col-md-offset-1 rtl-float-right">
+
                             <div class="form-group">
                                 <label class="table_label">Project</label>
                                 <div class="select-wrapper"><i class="q4bikon-arrow_bottom"></i>
@@ -79,7 +80,7 @@
                 <div class="modal-footer text-align">
                     <div class="row">
                         <div class="col-sm-12">
-                            <span class="q4-btn-lg white"><?=__('Cancel')?></span>
+                            <span class="q4-btn-lg white close q4-close-modal" data-dismiss="modal"><?=__('Cancel')?></span>
                             <a href="#" class="inline_block_btn blue-light-button q4_form_submit"><?=__('Copy')?></a>
                         </div>
                     </div>
