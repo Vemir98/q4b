@@ -52,13 +52,62 @@ $(document).ready(function() {
                             '</div>' +
                         '</td>' +
                     '</tr>',
+            planMarkup:'<tr class="new-link">' +
+            '<td class="hidden">' +
+
+            '</td>' +
+            '<td class="rwd-td0" data-th="">' +
+                '<label  class="checkbox-wrapper">' +
+                    '<input type="checkbox">' +
+                    '<span class="checkbox-replace"></span><i class="checkbox-tick q4bikon-tick"></i>' +
+                '</label>' +
+            '</td>' +
+            '<td class="rwd-td1" data-th="">' +
+                '<input type="text" class="table_input" name="" value="1">' +
+            '</td>' +
+            '<td class="rwd-td2"  data-col="structure" data-th=""> ' +
+                '<input type="text" class="table_input disabled-input" name="" value="2">' +
+            '</td>' +
+            '<td class="rwd-td3" data-th=""> ' +
+                '<input type="text" class="table_input" name="" value="3">' +
+            '</td>' +
+            '<td class="rwd-td4" data-th="">  ' +
+                '<input type="text" class="table_input" name="" value="4">' +
+            '</td>' +
+            '<td class="rwd-td5" data-th="">  ' +
+                '<input type="text" class="table_input" name="" value="5">' +
+            '</td>' +
+            '<td class="rwd-td6" data-th="">  ' +
+                '<input type="text" class="table_input" name="" value="6">' +
+            '</td>' +
+            '<td class="rwd-td7" data-th="">  ' +
+                '<input type="text" class="table_input" name="" value="7">' +
+            '</td>' +
+            '<td class="rwd-td8" data-th="">  ' +
+                '<input type="text" class="table_input" name="" value="8">' +
+            '</td>' +
+            '<td class="rwd-td9" data-th="">  ' +
+                '<input type="text" class="table_input" name="" value="9">' +
+            '</td>' +
+            '<td class="rwd-td10" data-th="">  ' +
+                '<input type="text" class="table_input" name="" value="10">' +
+            '</td>' +
+            '<td class="rwd-td11" data-th="">  ' +
+                '<input type="text" class="table_input" name="" value="11">' +
+            '</td>' +
+            '<td class="rwd-td12" data-th="">  ' +
+                '<input type="text" class="table_input" name="" value="12">' +
+            '</td>' +
+            '</tr>',
+            addPlanSelector: '.add-plan',
+
             addLinkSelector: '.add-link',
             linkFormClass: '.links-form',
             addTaskSelector: '.add-task',
             taskFormClass: '.tasks-form',
             addPropSelector: '.add-prop',
             propFormClass: '.props-form',
-            addPlanSelector: '.add-plan',
+
             certFormClass: '.certifications-form',
             addCertSelector: '.add-cert',
             qCListSelector: '.quality-control-list',
@@ -69,7 +118,8 @@ $(document).ready(function() {
             searchTracking:'.search-tracking',
             disabledGrayButton:'disabled-gray-button'
 
-        }
+        },
+
     });
 
     var currentPage = Q4U.pages.updatePage;
@@ -157,6 +207,9 @@ $(document).ready(function() {
         }
     });
 
+    $(document).on('click', currentPage.addPlan, function(e) {
+
+    });
     $(document).on('click', currentPage.filterPlans, function(e) {
         e.preventDefault();
         var current = $(this)
@@ -207,20 +260,19 @@ $(document).ready(function() {
         });
     });
 
+    var selectProfession;
+
     $(document).on('change','.select-structure, .select-profession',function(e){
 
         var current = $(this);
 
         var objectId = current.closest('form').find('[data-name="object"]').val();
-        var professionId = current.closest('form').find('[data-name="profession"]').val();
+        selectProfession = current.closest('form').find('[data-name="profession"]').val();
         var floors = current.closest('.plans-layout').find('.floors-filter').val();
         floors = floors ? '/floors/' + floors.join('_') + '/': '';
         var page = CURRENT_PLAN_PAGE ? '/page/'+CURRENT_PLAN_PAGE : '';
 
-        var url = current.closest('form').data('url') + '/object/' + objectId + '/professions/' + professionId + floors + page;
-
-        //http://q4bdev/plans/update/undefined/object/23/professions/0?_=1545819411834
-        //http://q4b.horizondvp.org/projects/6/plans_list/object/16/professions/77?_=1545810239158
+        var url = current.closest('form').data('url') + '/object/' + objectId + '/professions/' + selectProfession + floors + page;
 
         Q4U.ajaxGetRequest(url, {
             successCallback: function(data) {
@@ -262,7 +314,7 @@ $(document).ready(function() {
         });
 
     });
-    
+
 
     $(document).on('change','.selectpicker',function(e){
         var self = $(this);
@@ -293,6 +345,7 @@ $(document).ready(function() {
         self.removeClass('q4_required');
         self.removeClass('error');
     });
+
     $(document).on('click','.plans-layout .scrollable-table .checkbox-list-row',function (e) {
 
         var self = $(this);
@@ -1075,24 +1128,16 @@ $(document).ready(function() {
 
     $(document).on('click', currentPage.addPlanSelector, function(e) {
         e.preventDefault();
-        FILES_BUFFER = [];
-        Q4U.ajaxGetRequest($(this).data('url'), {
-            successCallback: function(data) {
-                if (data.getData().modal) {
-                    $(document).find('.modal').modal('hide');
-                    var modal = data.getData().modal;
-                    $('body').append(modal);
-                    $(document).find('.modal').modal('show');
 
-                    if($(document).find('html').hasClass('rtl'))
-                    {
-                        $(document).find('.date').datetimepicker({locale:'he'}).show();
-                    }else{
-                        $(document).find('.date').datetimepicker({locale:'en'}).show();
-                    }
-                }
-            }
-        });
+        var html = currentPage.planMarkup;
+        selectProfession = $(document).find('.select-profession option:selected').text();
+
+        console.log('selectProfession   ',selectProfession);
+
+        $(this).closest('.panel_body').find('table tbody:first').prepend(html);
+        $(this).closest('.panel_body').find('table tbody:first tr [data-col="structure"]')
+            .html('<span>' + selectProfession + '</span>');
+
     });
 
     $(document).on('click', '.copy-plan', function(e) {
