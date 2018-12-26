@@ -30,8 +30,7 @@ $icons = [
                         <div class="plans-border-bottom">
 
                             <span class="inline-options text-center">
-<!--                                <a data-url="--><?//=URL::site('plans/plans_professions_list/'.$_PROJECT->id)?><!--</a> ">-->
-                                <a data-url="<?=URL::site('plans/plans_professions_list/'.$_PROJECT->id)?>">
+                                <a class="plans-date-tracking" data-url="<?=URL::site('projects/tracking_list/'.$_PROJECT->id)?>">
                                     <span class="circle-sm blue">
                                         <i class="q4bikon-reports"></i>
                                     </span>
