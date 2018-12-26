@@ -69,7 +69,8 @@ $icons = [
                             </span>
                             <span class="inline-options">
                                  <span class="db text-center">
-                                    <a class="circle-sm orange add-plan" data-url="<?=URL::site('plans/create_plan/'.$_PROJECT->id)?>">
+                                     <!-- data-url="--><?//=URL::site('plans/create_plan/'.$_PROJECT->id)?><!--"-->
+                                    <a class="circle-sm orange add-plan">
                                         <i class="plus q4bikon-plus"></i>
                                     </a>
 <!--                                    <span class="inline-options-text">--><?//=__('Add new plan')?><!--</span>-->
@@ -220,20 +221,15 @@ $icons = [
                                 <th data-field="<?=__('Name')?>" class="td-200"><?=__('Name')?></th><!-- 4 -->
                                 <th data-field="<?=__('File')?>" class="td-25">File</th><!-- 5 -->
                                 <th data-field="<?=__('Floor')?>" class="td-25"><?=__('Floor')?></th><!-- 6 -->
-
                                 <th data-field="<?=__('Edition')?>" class="td-25"><?=__('Edition')?> </th><!-- 7 -->
-
                                 <th data-field="<?=__('Status')?>" class="td-75"><?=__('Status')?></th>  <!-- 8 -->
 
                                 <!-- <th data-field="<?=__('Element number')?>" class="td-100"><?=__('Element number')?></th>-->
                                 <!-- <th data-field="<?=__('Craft')?>" class="td-100"><?=__('Craft')?></th>-->
 
                                 <th data-field="<?=__('Updates note')?>" class="td-25"><?=__('Updates note')?> </th><!-- 9 -->
-
                                 <th data-field="<?=__('Upload date')?>" data-sortable="true" class="td-75"><?=__('Upload date')?></th>  <!-- 10 -->
-
                                 <th data-field="Delivered date" class="td-50">Delivered date</th><!-- 11 -->
-
                                 <th data-field="<?=__('Received date')?>" class="td-100"><?=__('Received date')?></th><!-- 12 -->
                             </tr>
                             </thead>
@@ -279,7 +275,7 @@ $icons = [
                                             </span>
                                         </div>
                                     </td>
-                                    <td class="rwd-td2" data-th="<?=__('Property')?>">
+                                    <td class="rwd-td2" data-th="<?=__('Property')?>" data-col="structure">
                                         <div class="select-wrapper" title="<?=$item->object->type->name?> - <?=$item->object->name?>">
                                             <select class="q4-select q4-form-input disabled-input">
                                                 <option value="Property name"><?=$item->object->name?></option>
