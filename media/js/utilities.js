@@ -454,20 +454,20 @@
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
 
-                $(element).closest('.hide-upload').siblings(".camera-bg").hide();
-                $(element).closest('.hide-upload').siblings(".preview-user-image").removeClass('hidden');
+                $(element).closest('.hide-upload').siblings(".camera-default-image").hide();
+                $(element).closest('.hide-upload').siblings(".show-uploaded-image").removeClass('hidden');
 
                 reader.onload = function(e) {
-                    $(element).closest('.hide-upload').siblings(".preview-user-image").attr('src', e.target.result);
+                    $(element).closest('.hide-upload').siblings(".show-uploaded-image").attr('src', e.target.result);
                 }
 
                 reader.readAsDataURL(input.files[0]);
 
             }
 
-            if ($(element).closest('.upload-logo').hasClass('error')) {
+            if ($(element).closest('.up-box').hasClass('error')) {
                 $(element).removeClass('error');
-                $(element).closest('.upload-logo').removeClass('error');
+                $(element).closest('.up-box').removeClass('error');
             }
 
 

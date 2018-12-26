@@ -2512,7 +2512,7 @@ $(document).ready(function() {
         var currentModal = self.closest('.modal');
         Q4U.ajaxGetRequest(self.data('url'), {
             successCallback: function(data) {
-                currentModal.find('.wrap-image-upload .preview-user-image').attr('src',"/media/img/camera.png");
+                currentModal.find('.wrap-image-upload .show-uploaded-image').attr('src',"/media/img/camera.png");
                 currentModal.find('.wrap-image-upload .upload-user-logo2').val('');
                 $(document).find('.modal .tracking-details-buttons .print-element').addClass(currentPage.disabledGrayButton)
                 $(document).find('.modal .tracking-details-buttons .delete-tracking-file').addClass(currentPage.disabledGrayButton)
@@ -2552,8 +2552,8 @@ $(document).ready(function() {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
 
-            $(element).closest('.hide-upload').siblings(".camera-bg").hide();
-            $(element).closest('.hide-upload').siblings(".preview-user-image").removeClass('hidden');
+            $(element).closest('.hide-upload').siblings(".camera-default-image").hide();
+            $(element).closest('.hide-upload').siblings(".show-uploaded-image").removeClass('hidden');
             var file_ext = input.files[0].type.split('/')[1].toLowerCase();
             var result = '';
 
@@ -2563,13 +2563,13 @@ $(document).ready(function() {
                 if(file_ext == 'pdf'){
 
                     result = '/media/img/pdf-icon.png';
-                    $(element).closest(".upload-tracking-img").find(".preview-user-image").addClass('pdf-icon');
+                    $(element).closest(".upload-tracking-img").find(".show-uploaded-image").addClass('pdf-icon');
                 } else {
                     result =  e.target.result;
-                    $(element).closest(".upload-tracking-img").find(".preview-user-image").removeClass('pdf-icon');
+                    $(element).closest(".upload-tracking-img").find(".show-uploaded-image").removeClass('pdf-icon');
                 }
 
-                $(element).closest(".upload-tracking-img").find(".preview-user-image").attr('src', result);
+                $(element).closest(".upload-tracking-img").find(".show-uploaded-image").attr('src', result);
                 $(element).closest(".upload-tracking-img").find(".print-dt-link").removeAttr('href');
 
             }
@@ -2589,7 +2589,7 @@ $(document).ready(function() {
 
     $(document).on('click', '.print-element', function() {
         $(document).find(".print-data-tracking").remove()
-        var printImageSrc = $(document).find('.upload-tracking-img .preview-user-image').attr('src');
+        var printImageSrc = $(document).find('.upload-tracking-img .show-uploaded-image').attr('src');
         if(printImageSrc == undefined){
             printImageSrc = $(this).data('imagesource');
 

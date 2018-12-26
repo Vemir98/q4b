@@ -33,18 +33,18 @@
                     <div class="row">
                      <div class="col-lg-3 col-sm-12 rtl-float-right">
                          <!--<div class="set-image-block centered" data-id="projects">
-                                <div class="upload-logo">
+                                <div class="upload-logo up-box">
                                     <div class="hide-upload">
                                         <input type="file" class="upload-user-logo" accept=".jpg,.jpe,.jpeg,.png,.gif,.tif,.tiff" name="logo"/>
                                     </div>
-                                    <div class="camera-bg">
+                                    <div class="camera-bg camera-default-image">
                                         <img src="/media/img/camera.png" class="camera" alt="camera">
                                     </div>
-                                    <img class="hidden preview-user-image" alt="preview user image">
+                                    <img class="hidden preview-user-image show-uploaded-image" alt="preview user image">
 
                                 </div>
 
-                                <a href="#" class="form-control light_blue_btn set-image-link"><?=__('Set your photo')?></a>
+                                <a href="#" class="form-control light_blue_btn set-image-link trigger-image-upload"><?=__('Set your photo')?></a>
                             </div>-->
                         </div>
                      <!--<div class="border_left col-lg-9 rtl-float-right">-->

@@ -160,8 +160,8 @@ $(document).ready(function() {
     $(document).on('click', currentPage.filterPlans, function(e) {
         e.preventDefault();
         var current = $(this)
-        var objectId = current.closest('form').find('[data-name="object"]').val()
-        var professionId = current.closest('form').find('[data-name="profession"]').val()
+        var objectId = current.closest('form').find('[data-name="object"]').val();
+        var professionId = current.closest('form').find('[data-name="profession"]').val();
         var floors = current.closest('.plans-layout').find('.floors-filter').val();
         floors = floors ? '/floors/' + floors.join('_') + '/': '';
         var page = CURRENT_PLAN_PAGE ? '/page/'+CURRENT_PLAN_PAGE : '';
@@ -206,6 +206,64 @@ $(document).ready(function() {
             }
         });
     });
+
+    $(document).on('change','.select-structure, .select-profession',function(e){
+
+        var current = $(this);
+
+        var objectId = current.closest('form').find('[data-name="object"]').val();
+        var professionId = current.closest('form').find('[data-name="profession"]').val();
+        var floors = current.closest('.plans-layout').find('.floors-filter').val();
+        floors = floors ? '/floors/' + floors.join('_') + '/': '';
+        var page = CURRENT_PLAN_PAGE ? '/page/'+CURRENT_PLAN_PAGE : '';
+
+        var url = current.closest('form').data('url') + '/object/' + objectId + '/professions/' + professionId + floors + page;
+
+        //http://q4bdev/plans/update/undefined/object/23/professions/0?_=1545819411834
+        //http://q4b.horizondvp.org/projects/6/plans_list/object/16/professions/77?_=1545810239158
+
+        Q4U.ajaxGetRequest(url, {
+            successCallback: function(data) {
+                if (data.getData()) {
+                    var printLandscape = $(document).find('.print-landscape-mode');
+                    printLandscape.find('.printable-table-other').empty();
+                    CHECKED_PLANS = {};
+                    if ($(document).find('.plans-list-layout').length && data.getData().plans != undefined){
+                        var currentModal = data.getData().plans;
+
+                        $(document).find('.plans-list-layout .scrollable-table').closest('div.row').replaceWith($(currentModal).find('.scrollable-table').closest('div.row'));
+                        $(document).find('.plans-list-layout .q4-carousel-table-wrap').closest('div.row').replaceWith($(currentModal).find('.q4-carousel-table-wrap').closest('div.row'));
+
+                    }
+
+                    var self = $(document).find('.plans-list-layout').closest('.tab_panel').find('.panel_header');
+
+
+                    var windowWidth = window.innerWidth;
+
+                    $.fn.utilities('setCarouselWidth', '.q4-carousel-table-wrap', window.innerWidth);
+                    $.fn.utilities('setScrollBarWidth', self.closest('.tab_panel').find('.scrollable-table'), windowWidth);
+
+                    var widthT = $.fn.utilities('measureHiddenTable', self.closest('.tab_panel').find('table.table'),false);
+
+
+                    setTimeout(function(){
+
+                        $.fn.utilities('updateContentOnChange');
+                        $('.selectpicker').selectpicker({size:3,dropupAuto:false})
+                    }, 300);
+                    current.closest('.panel_content').find('.panel_footer').find('.plans-to-print-link').addClass('disabled-gray-button');
+                    current.closest('.panel_content').find('.panel_footer').find('.plans-to-send').addClass('disabled-gray-button');
+
+                    $('[data-toggle="table"]').bootstrapTable();
+                    CURRENT_PLAN_PAGE = false;
+                }
+            }
+        });
+
+    });
+    
+
     $(document).on('change','.selectpicker',function(e){
         var self = $(this);
 
@@ -2512,7 +2570,7 @@ $(document).ready(function() {
         var currentModal = self.closest('.modal');
         Q4U.ajaxGetRequest(self.data('url'), {
             successCallback: function(data) {
-                currentModal.find('.wrap-image-upload .preview-user-image').attr('src',"/media/img/camera.png");
+                currentModal.find('.wrap-image-upload .show-uploaded-image').attr('src',"/media/img/camera.png");
                 currentModal.find('.wrap-image-upload .upload-user-logo2').val('');
                 $(document).find('.modal .tracking-details-buttons .print-element').addClass(currentPage.disabledGrayButton)
                 $(document).find('.modal .tracking-details-buttons .delete-tracking-file').addClass(currentPage.disabledGrayButton)
@@ -2552,8 +2610,8 @@ $(document).ready(function() {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
 
-            $(element).closest('.hide-upload').siblings(".camera-bg").hide();
-            $(element).closest('.hide-upload').siblings(".preview-user-image").removeClass('hidden');
+            $(element).closest('.hide-upload').siblings(".camera-default-image").hide();
+            $(element).closest('.hide-upload').siblings(".show-uploaded-image").removeClass('hidden');
             var file_ext = input.files[0].type.split('/')[1].toLowerCase();
             var result = '';
 
@@ -2563,13 +2621,13 @@ $(document).ready(function() {
                 if(file_ext == 'pdf'){
 
                     result = '/media/img/pdf-icon.png';
-                    $(element).closest(".upload-tracking-img").find(".preview-user-image").addClass('pdf-icon');
+                    $(element).closest(".upload-tracking-img").find(".show-uploaded-image").addClass('pdf-icon');
                 } else {
                     result =  e.target.result;
-                    $(element).closest(".upload-tracking-img").find(".preview-user-image").removeClass('pdf-icon');
+                    $(element).closest(".upload-tracking-img").find(".show-uploaded-image").removeClass('pdf-icon');
                 }
 
-                $(element).closest(".upload-tracking-img").find(".preview-user-image").attr('src', result);
+                $(element).closest(".upload-tracking-img").find(".show-uploaded-image").attr('src', result);
                 $(element).closest(".upload-tracking-img").find(".print-dt-link").removeAttr('href');
 
             }
@@ -2589,7 +2647,7 @@ $(document).ready(function() {
 
     $(document).on('click', '.print-element', function() {
         $(document).find(".print-data-tracking").remove()
-        var printImageSrc = $(document).find('.upload-tracking-img .preview-user-image').attr('src');
+        var printImageSrc = $(document).find('.upload-tracking-img .show-uploaded-image').attr('src');
         if(printImageSrc == undefined){
             printImageSrc = $(this).data('imagesource');
 

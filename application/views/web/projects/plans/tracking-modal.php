@@ -95,17 +95,17 @@
                                             <input type="file" accept=".jpg,.jpe,.jpeg,.png,.gif,.tif,.tiff,.pdf" class="upload-user-logo2"  name="file" />
                                         </div>
                                         <?if(!$item->file):?>
-                                            <div class="camera-bg">
+                                            <div class="camera-bg camera-default-image">
                                                 <img src="/media/img/camera.png" class="camera" alt="camera">
                                             </div>
-                                            <img class="hidden preview-user-image" alt="preview image">
+                                            <img class="hidden preview-user-image show-uploaded-image" alt="preview image">
                                         <?else:?>
                                             <a class="print-dt-link" target="_blank" href="/<?=$item->file?>">
                                                     <?if(strtolower(end(explode('.',$item->file)))=='pdf'):?>
-                                                    <img src="/media/img/pdf-icon.png" class="preview-user-image pdf-icon" alt="pdf">
+                                                    <img src="/media/img/pdf-icon.png" class="preview-user-image show-uploaded-image pdf-icon" alt="pdf">
 
                                                 <?else:?>
-                                                    <img src="/<?=$item->file?>" class="preview-user-image" alt="preview user image">
+                                                    <img src="/<?=$item->file?>" class="preview-user-image show-uploaded-image" alt="preview user image">
                                                 <?endif;?>
                                             </a>
 

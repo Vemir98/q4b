@@ -2106,6 +2106,41 @@ ul li.tab_panel {
     color: #ffffff;
     text-decoration: none; }
 
+.upload-icon-box {
+    position: relative;
+    width: 25px;
+    height: 23px;
+    display: inline-block;
+}
+.upload-icon {
+    width: 100%;
+    height: 21px;
+    line-height: 20px;
+    display: inline-block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 20;
+    cursor: pointer;
+}
+.upload-icon .attention-bg img {
+    width: 100%;
+}
+.upload-icon .substitude-icon {
+    width: 100%;
+}
+
+.upload-icon-box .call-icon {
+    width: 25px;
+    height: 23px;
+    display: inline-block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 20;
+    cursor: pointer;
+}
+
 .see-project-images {
   width: 172px;
   font-size: 14px;
@@ -4597,6 +4632,47 @@ ul.pagination li {
       border: 1px solid #093049;
       color: #ffffff;
       text-decoration: none; }
+
+.btn-warning {
+    background: #f99c19;
+    color: #ffffff;
+    border: 1px solid #f99c19;
+    text-decoration: none;
+}
+.btn-warning:hover {
+    background: #df8200;
+    border: 1px solid #df8200;
+    color: #ffffff;
+    text-decoration: none;
+}
+.btn {
+    font-weight: normal;
+    font-style: normal;
+    font-family: "proxima_nova_rgregular", Arial, Helvetica, sans-serif;
+}
+.btn-info {
+    background: #1ebae5;
+    color: #ffffff;
+    border: 1px solid #1ebae5;
+    text-decoration: none
+}
+.btn-info:hover {
+    background: #003a63;
+    border: 1px solid #003a63;
+    color: #ffffff;
+    text-decoration: none
+}
+.btn-primary {
+    background: #003a63;
+    color: #ffffff;
+    border: 1px solid #003a63;
+}
+.btn-primary:hover {
+    background: #093049;
+    border: 1px solid #093049;
+    color: #ffffff;
+    text-decoration: none;
+}
 
 .select-wrapper {
   background-color: #ffffff;

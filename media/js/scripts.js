@@ -1091,21 +1091,22 @@ $(document).ready(function() {
     });
 
 
-    $(document).on('click', '.set-image-link', function(e) {
+    $(document).on('click', '.trigger-image-upload', function(e) {
+
+        console.log('set-image-link ');
 
         e.stopPropagation();
         e.preventDefault();
 
-        $(this).closest('.set-image-block').find('.upload-user-logo').trigger('click');
+        $(this).closest('.q4-file-upload').find('.upload-user-logo').trigger('click');
 
     });
 
-    $(document).on('change','.set-image-block .upload-user-logo', function(e) {
+    $(document).on('change','.q4-file-upload .upload-user-logo', function(e) {
         e.stopImmediatePropagation();
         $.fn.utilities('setImageLink', this, $(this));
 
     });
-
 
     /* Styling Radio buttons */
     $(document).on('click', 'label.label_unchecked', function(e) {
