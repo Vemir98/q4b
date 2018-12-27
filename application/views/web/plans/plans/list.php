@@ -34,25 +34,25 @@ $icons = [
                                     <span class="circle-sm blue">
                                         <i class="q4bikon-reports"></i>
                                     </span>
-                                    <span class="inline-options-text">
-                                        <?=__('Tracking')?>
-                                    </span>
                                 </a>
+                                <span class="inline-options-text">
+                                    <?=__('Tracking')?>
+                                </span>
                             </span>
 
                             <span class="inline-options text-center">
-                                 <a class="plans-to-print-link" data-toggle="modal" data-target="#plans-to-print-modal">
+                                 <a class="plans-to-print-link db disabled-link" data-toggle="modal" data-target="#plans-to-print-modal">
                                    <span class="circle-sm orange">
                                         <i class="q4bikon-download"></i>
                                     </span>
-                                    <span class="inline-options-text">
-                                        <?=__('Delivery')?>
-                                    </span>
                                  </a>
+                                <span class="inline-options-text">
+                                    <?=__('Delivery')?>
+                                </span>
                             </span>
 
                             <span class="inline-options">
-                                 <a class="circle-sm red plans-to-send" data-id=<?=$_PROJECT->id?> data-url="<?=URL::site('plans/plans_mailing/'.$_PROJECT->id)?>">
+                                 <a class="circle-sm red plans-to-send disabled-link" data-id=<?=$_PROJECT->id?> data-url="<?=URL::site('plans/plans_mailing/'.$_PROJECT->id)?>">
                                     <i class="q4bikon-email"></i>
                                  </a>
                                  <span class="inline-options-text"><?=__('Send')?></span>

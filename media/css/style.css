@@ -3718,6 +3718,12 @@ label.q4-circle-checkbox {
   background: #1ebae5;
   color: #ffffff; }
 
+.disabled-link {
+  opacity: 0.75;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
 .disabled-input {
   background: #e8edf0 !important;
   color: #708492;
@@ -11548,7 +11554,7 @@ header {
   position: absolute;
   left: 215px;
   top: 28px; }
-
+/*
 .plans-to-print-link {
   position: absolute;
   left: 15px;
@@ -11566,7 +11572,8 @@ header {
   -moz-border-radius: 5px;
   -ms-border-radius: 5px;
   border-radius: 5px; }
-
+*/
+/*
 .plans-to-send {
   position: absolute;
   left: 215px;
@@ -11584,6 +11591,7 @@ header {
   -moz-border-radius: 5px;
   -ms-border-radius: 5px;
   border-radius: 5px; }
+*/
 
 .no-records-found {
   text-align: center;

@@ -1242,6 +1242,20 @@ $(document).ready(function() {
         });
     });
 
+    $(document).on('click', '.enable-plan-action > .checkbox-wrapper', function () {
+
+        var checked = $('table .enable-plan-action input[type=checkbox]:checked').length;
+
+        if(checked > 0){
+            $(document).find('.plans-to-print-link, .plans-to-send').removeClass('disabled-link');
+        } else {
+            $(document).find('.plans-to-print-link, .plans-to-send').addClass('disabled-link');
+
+        }
+
+    });
+
+
     $(document).on('click', '.copy-property', function(e) {
 
         Q4U.confirm(__('Are you sure, you want') + __('copy object?'), {
