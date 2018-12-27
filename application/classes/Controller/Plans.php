@@ -2194,7 +2194,7 @@ class Controller_Plans extends HDVP_Controller_Template
                 $autocompleteMailiList[$usr->email] = $usr->email;
             }
             $this->setResponseData('modal',
-                View::make('projects/plans/mailing',[
+                View::make('plans/plans/mailing',[
                     'items' => $this->project->users->find_all(),
                     'autocompleteMailList' => $autocompleteMailiList,
                     'secure_tkn' => AesCtr::encrypt($this->project->id,$this->project->id,192)]));
@@ -2263,7 +2263,7 @@ class Controller_Plans extends HDVP_Controller_Template
         $query = $query->order_by('plantracking.created_at','DESC')->distinct(true);
         $result = (new ORMPaginate($query))->getData();
         View::set_global('_PROJECT',$this->project);
-        $this->setResponseData('html',View::make('projects/plans/date-tracking',$result));
+        $this->setResponseData('html',View::make('plans/plans/date-tracking',$result));
 
         $this->auto_render = false;
         //var_dump(count($result['items']));

@@ -66,7 +66,7 @@
                         </div>
                         <div class="col-20 rtl-float-right">
                             <label class="table_label visibility-hidden"><?=__('Show')?></label>
-                            <a data-url="<?=URL::site('projects/tracking_list/'.$_PROJECT->id)?>" class="inline-block-btn-small dark_blue_button filter-tracking"><?=__('Show')?></a>
+                            <a data-url="<?=URL::site('plans/tracking_list/'.$_PROJECT->id)?>" class="inline-block-btn-small dark_blue_button filter-tracking"><?=__('Show')?></a>
                         </div>
                     </div>
                 </div>
@@ -78,7 +78,7 @@
                         <label class="table_label visibility-hidden"><?=__('Search')?></label>
                         <div class="search-input-wrapper block">
                             <input  type="search" class="search-input" value="">
-                            <a data-url="<?=URL::site('projects/tracking_list/'.$_PROJECT->id)?>" class="search-button search-tracking search-button-text"><?=__('Search')?></a>
+                            <a data-url="<?=URL::site('plans/tracking_list/'.$_PROJECT->id)?>" class="search-button search-tracking search-button-text"><?=__('Search')?></a>
                         </div>
                     </div>
                 </div>
@@ -105,7 +105,7 @@
                             <tr>
                                 <?foreach ($items as $item):?>
                                     <td class="rwd-td1 align-center-left" data-th="Details">
-                                        <a class="show_details tracking-details" data-url="<?=URL::site('projects/update_tracking/'.$item->id)?>"><i class="plus q4bikon-preview"></i></a>
+                                        <a class="show_details tracking-details" data-url="<?=URL::site('plans/update_tracking/'.$item->id)?>"><i class="plus q4bikon-preview"></i></a>
                                     </td>
                                     <td class="rwd-td2" data-th="Tracking ID">
                                         <input type="text" class="q4-form-input disabled-input" value="<?='#'.$item->id?>">
@@ -169,7 +169,7 @@
                                                     <i class="q4bikon-print"></i></a>
 
                                             <?endif?>
-                                            <span data-id=<?=$item->id?> class="delete_row circle-sm inliner red delete-tracking" data-url="<?=URL::site('projects/delete_tracking/'.$item->id)?>" title="Delete Row">
+                                            <span data-id=<?=$item->id?> class="delete_row circle-sm inliner red delete-tracking" data-url="<?=URL::site('plans/delete_tracking/'.$item->id)?>" title="Delete Row">
                                                 <i class="q4bikon-delete"></i>
                                             </span>
                                         </div>
