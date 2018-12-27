@@ -10557,6 +10557,11 @@ header {
     height: 30px; }
   .content .plans-add-edition-box {
     text-align: center; }
+  .content .plans-edition-number {
+      display: inline-block;
+      margin-left: 3px;
+      margin-right: 3px;
+  }
   .content .plans-add-edition {
     display: inline-block;
     vertical-align: middle;
