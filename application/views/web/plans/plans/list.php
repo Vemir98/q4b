@@ -30,7 +30,7 @@ $icons = [
                         <div class="plans-border-bottom">
 
                             <span class="inline-options text-center">
-                                <a class="plans-date-tracking" data-url="<?=URL::site('projects/tracking_list/'.$_PROJECT->id)?>">
+                                <a class="plans-date-tracking" data-url="<?=URL::site('plans/tracking_list/'.$_PROJECT->id)?>">
                                     <span class="circle-sm blue">
                                         <i class="q4bikon-reports"></i>
                                     </span>
@@ -41,7 +41,7 @@ $icons = [
                             </span>
 
                             <span class="inline-options text-center">
-                                 <a data-toggle="modal" data-target="#plans-to-print-modal" >
+                                 <a class="plans-to-print-link" data-toggle="modal" data-target="#plans-to-print-modal">
                                    <span class="circle-sm orange">
                                         <i class="q4bikon-download"></i>
                                     </span>
@@ -52,11 +52,10 @@ $icons = [
                             </span>
 
                             <span class="inline-options">
-<!--                                 <a class="circle-sm red"  data-toggle="modal" data-id=--><?//=$_PROJECT->id?><!-- data-url="--><?//=URL::site('plans/plans_mailing/'.$item->project_id)?><!--"></a>-->
-                                 <a class="circle-sm red">
+                                 <a class="circle-sm red plans-to-send" data-id=<?=$_PROJECT->id?> data-url="<?=URL::site('plans/plans_mailing/'.$_PROJECT->id)?>">
                                     <i class="q4bikon-email"></i>
                                  </a>
-                                 <span class="inline-options-text">Send</span>
+                                 <span class="inline-options-text"><?=__('Send')?></span>
                             </span>
 
                             <span class="inline-options">
