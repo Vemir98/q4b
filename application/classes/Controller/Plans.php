@@ -1803,13 +1803,13 @@ class Controller_Plans extends HDVP_Controller_Template
             }
 
         }else{
-            $this->setResponseData('modal',View::make('projects/plans/create',[
+            $this->setResponseData('modal',View::make('plans/plans/create',[
                 'professions' => $this->company->professions->where('status','=',Enum_Status::Enabled)->find_all(),
                 'objects' => $this->project->objects->find_all(),
                 'project' => ['id' => $this->project->id, 'name' => $this->project->name],
                 'company' => ['id' => $this->company->id, 'name' => $this->company->name],
                 'date' => date('d/m/Y H:i'),
-                'action' => URL::site('projects/create_plan/'.$this->project->id)
+                'action' => URL::site('plans/create_plan/'.$this->project->id)
             ]));
         }
     }
@@ -1905,7 +1905,7 @@ class Controller_Plans extends HDVP_Controller_Template
                     $plan->add('crafts',$this->post()['crafts']);
                 }
                 Database::instance()->commit();
-                $this->setResponseData('projectPlansForm',View::make('projects/plans/list',
+                $this->setResponseData('projectPlansForm',View::make('plans/plans/list',
                     [   'items' => $this->project->plans->order_by('created_at','Desc')->find_all(),
                         'secure_tkn' => AesCtr::encrypt($this->project->id.Text::random('alpha'),$this->project->id,192)
                     ]));
@@ -1923,9 +1923,9 @@ class Controller_Plans extends HDVP_Controller_Template
                 $this->_setErrors('Operation Error');
             }
         }else{
-            $this->setResponseData('modal',View::make('projects/plans/update',[
+            $this->setResponseData('modal',View::make('plans/plans/update',[
                 'professions' => $this->company->professions->where('status','=',Enum_Status::Enabled)->with('crafts')->find_all(),
-                'action' => URL::site('projects/update_plan/'.$this->project->id.'/'.$plan->id),
+                'action' => URL::site('plans/update_plan/'.$this->project->id.'/'.$plan->id),
                 'item' => $plan,
                 'trackingItems' => $plan->trackings->order_by('created_at','DESC')->find_all()
             ]));

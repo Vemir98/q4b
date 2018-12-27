@@ -366,6 +366,7 @@ $icons = [
 
                                     </td>
                                     <td class="rwd-td7 align-center-left" data-th="<?=__('Edition')?>">
+                                        <span class="plans-edition-number">2</span>
                                         <span class="plans-add-edition add-plan-edition"
                                               data-toggle="modal" data-target="#plans-new-edition-modal"
                                               data-url="<?=URL::site('plans/add_edition/'.$item->project_id.'/'.$item->id)?>"  title="<?=__('Add Edition')?>">
@@ -383,6 +384,7 @@ $icons = [
                                             </select>
                                         </div>-->
                                     </td>
+
                                   <!--  <td class="rwd-td9" data-th="<?=__('Element number')?>">
                                         <? $placeNumber = !empty($item->place->custom_number) ? $item->place->custom_number : $item->place->number; ?>
                                         <input name="plan_<?=$item->id?>_custom_number" type="text" class="q4-form-input plan-place-custom-number<?=empty($item->place->custom_number) ? ' disabled-input':''?><?=$disabled?>" value="<?=$item->place->loaded() ? $placeNumber: ''?>">

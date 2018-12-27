@@ -21,7 +21,7 @@
                         <div class="clear"></div>
                     </div>
                     <div class="q4_modal_sub_header">
-                        <h3><?=__('Plan Details')?> | <?=__("File name")?>: <a href="<?=$item->file()->originalFilePath()?>" target="_blank"><?=$item->file()->original_name?></a></h3>
+                        <h3><?=__('Plan Details')?> | <?=__("File name")?>: <a href="<?=$item->file()->originalFilePath()?>" target="_blank"><?=$item->file()->original_name?></a> projects </h3>
                     </div>
                 </div>
                 <div class="modal-body bb-modal">

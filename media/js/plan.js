@@ -269,7 +269,6 @@ $(document).ready(function() {
         var objectId = current.closest('form').find('[data-name="object"]').val();
         var professionId = current.closest('form').find('[data-name="profession"]').val();
         selectProfession = $(this).find('option:selected').text();
-        console.log('selectProfession 2 ', selectProfession);
 
         var floors = current.closest('.plans-layout').find('.floors-filter').val();
         floors = floors ? '/floors/' + floors.join('_') + '/': '';
@@ -1133,12 +1132,9 @@ $(document).ready(function() {
         e.preventDefault();
 
         var html = currentPage.planMarkup;
-        selectProfession = $(document).find('.select-profession option:selected').text();
-
-        console.log('selectProfession addPlanSelector ',selectProfession);
 
         $(this).closest('.panel_body').find('table tbody:first').prepend(html);
-        $(this).closest('.panel_body').find('table tbody:first tr [data-col="structure"]')
+        $(this).closest('.panel_body').find('table tbody tr:first [data-col="structure"]')
             .html('<span>' + selectProfession + '</span>');
 
     });
