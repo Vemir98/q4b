@@ -365,11 +365,14 @@ $icons = [
                                     </td> -->
                                     <td class="rwd-td8 td-cell-120" data-th="<?=__('Action')?>">
                                         <div class="wrap-align-row">
-                                            <span class="plans-add-edition add-plan-edition" data-toggle="modal" data-target="#plans-new-edition-modal" data-url="<?=URL::site('projects/add_edition/'.$item->project_id.'/'.$item->id)?>"  title="<?=__('Add Edition')?>"><i class="plus q4bikon-plus"></i></span>
+                                            <span class="plans-add-edition add-plan-edition"
+                                                  data-toggle="modal" data-target="#plans-new-edition-modal"
+                                                  data-url="<?=URL::site('projects/add_edition/'.$item->project_id.'/'.$item->id)?>"  title="<?=__('Add Edition')?>"><i class="plus q4bikon-plus"></i>
+                                            </span>
                                             <span class="copy-element copy-plan" data-url="<?=URL::site('projects/copy_plan/'.$item->project_id.'/'.$item->id)?>" title="<?=__('Copy plan')?>">
                                                 <i class="q4bikon-copy"></i>
                                             </span>
-
+                                            + +
                                         </div>
                                     </td>
                                 </tr>

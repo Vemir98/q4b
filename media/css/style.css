@@ -821,9 +821,6 @@ html.rtl {
   .rtl .content .call-professions-list-modal {
     left: inherit;
     right: 15px; }
-  .rtl .content .plans-date-tracking {
-    left: inherit;
-    right: 185px; }
   .rtl .content .back-plans-list-layout .back-plans-list-layout-link i {
     -webkit-transform: rotate(180deg);
     -moz-transform: rotate(180deg);
@@ -10502,10 +10499,6 @@ header {
     font-family: "proxima_nova_rgregular", Arial, Helvetica, sans-serif; }
     .content .call-professions-list-modal:hover {
       color: #005c87; }
-  .content .plans-date-tracking {
-    position: absolute;
-    top: 10px;
-    left: 185px; }
     .content .plans-date-tracking:hover {
       color: #005c87; }
   .content .plans-border-bottom {

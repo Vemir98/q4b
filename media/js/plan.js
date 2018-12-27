@@ -267,12 +267,15 @@ $(document).ready(function() {
         var current = $(this);
 
         var objectId = current.closest('form').find('[data-name="object"]').val();
-        selectProfession = current.closest('form').find('[data-name="profession"]').val();
+        var professionId = current.closest('form').find('[data-name="profession"]').val();
+        selectProfession = $(this).find('option:selected').text();
+        console.log('selectProfession 2 ', selectProfession);
+
         var floors = current.closest('.plans-layout').find('.floors-filter').val();
         floors = floors ? '/floors/' + floors.join('_') + '/': '';
         var page = CURRENT_PLAN_PAGE ? '/page/'+CURRENT_PLAN_PAGE : '';
 
-        var url = current.closest('form').data('url') + '/object/' + objectId + '/professions/' + selectProfession + floors + page;
+        var url = current.closest('form').data('url') + '/object/' + objectId + '/professions/' + professionId + floors + page;
 
         Q4U.ajaxGetRequest(url, {
             successCallback: function(data) {
@@ -1132,7 +1135,7 @@ $(document).ready(function() {
         var html = currentPage.planMarkup;
         selectProfession = $(document).find('.select-profession option:selected').text();
 
-        console.log('selectProfession   ',selectProfession);
+        console.log('selectProfession addPlanSelector ',selectProfession);
 
         $(this).closest('.panel_body').find('table tbody:first').prepend(html);
         $(this).closest('.panel_body').find('table tbody:first tr [data-col="structure"]')
@@ -1305,6 +1308,7 @@ $(document).ready(function() {
     });
 
     $(document).on('change', '.plan-profession, .plan-craft', function() {
+
         if ($(this).hasClass('plan-profession')) {
             var needReselect = false;
             var attrs = ($(this).find('option:selected').data('crafts')).toString().split(',');
