@@ -11548,7 +11548,7 @@ header {
   position: absolute;
   left: 215px;
   top: 28px; }
-
+/*
 .plans-to-print-link {
   position: absolute;
   left: 15px;
@@ -11566,7 +11566,8 @@ header {
   -moz-border-radius: 5px;
   -ms-border-radius: 5px;
   border-radius: 5px; }
-
+*/
+/* 
 .plans-to-send {
   position: absolute;
   left: 215px;
@@ -11584,7 +11585,7 @@ header {
   -moz-border-radius: 5px;
   -ms-border-radius: 5px;
   border-radius: 5px; }
-
+*/
 .no-records-found {
   text-align: center;
   color: #005c87;
