@@ -85,12 +85,12 @@ $icons = [
 
             <div class="row">
                 <div class="col-md-3 rtl-float-right">
-                    <label class="table_label"><?=__('Property')?> ++ </label>
+                    <label class="table_label"><?=__('Property')?> </label>
                     <div class="relative">
                         <div class="select-wrapper">
                             <i class="q4bikon-arrow_bottom"></i>
                             <select data-name="object" class="q4-select q4-form-input select-icon-pd select-structure">
-                                <option value="0" selected="selected"><?=__('All')?> </option>
+                                <option value="0"><?=__('All')?> </option>
 
                                 <?if(isset($objects)):?>
                                     <?foreach ($objects as $object): ?>

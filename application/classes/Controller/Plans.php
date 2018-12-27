@@ -1541,7 +1541,7 @@ class Controller_Plans extends HDVP_Controller_Template
             });
         }
         View::set_global('_PROJECT', $this->project);
-        $this->setResponseData('plans',View::make('projects/plans/list',
+        $this->setResponseData('plans',View::make('plans/plans/list',
             $this->_getPlanListPaginatedData($this->project, isset($object) ? $object : null, !empty($professionIds) ? $professionIds : null, !empty($floorIds) ? $floorIds : null)
         ));
     }
