@@ -12,9 +12,15 @@
                         <button type="button" class="close q4-close-modal" data-dismiss="modal"><i class="q4bikon-close"></i></button>
                         <div class="clear"></div>
                     </div>
+
                     <div class="q4_modal_sub_header">
-                        <h3><?=__('Plan Details')?> | <?=__("File name")?>: <a href="<?=$item->file()->originalFilePath()?>" target="_blank"><?=$item->file()->original_name?></a> ++ </h3>
+                        <h3><?=__('Plan Details')?> | <?=__("File name")?>: <a href="<?=$item->file()->originalFilePath()?>" target="_blank"><?=$item->file()->original_name?></a> </h3>
+                        <div class="q4_modal_sub_header-right">
+                            <span><?=__('Upload date')?></span>
+                            <input type="text" class="table_input disabled-input" value="<?=date('d/m/Y',$item->created_at)?>">
+                        </div>
                     </div>
+
                 </div>
                 <div class="modal-body bb-modal">
                     <div class="plans-modal-dialog-top">
@@ -54,9 +60,9 @@
                                 </div>
                             </div>
                             <div class="form-group col-16 rtl-float-right">
-                                <label class="table_label"><?=__('Upload date')?></label>
+                                <label class="table_label">Sheet Number ++ </label>
                                 <div class="input-group form-group">
-                                    <input type="text" class="table_input disabled-input" value="<?=date('d/m/Y',$item->created_at)?>">
+                                    <input type="text" class="table_input disabled-input plans-sheet-number" value="">
                                 </div>
                             </div>
                         </div>

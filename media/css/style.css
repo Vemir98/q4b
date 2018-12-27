@@ -7479,6 +7479,7 @@ table.scrollable-tbody {
     font-style: normal;
     font-family: "proxima_nova_rgregular", Arial, Helvetica, sans-serif; }
   .q4_modal_sub_header h3 {
+    display: inline-block;
     color: #005c87;
     font-size: 18px;
     font-weight: normal;
@@ -7491,6 +7492,30 @@ table.scrollable-tbody {
       display: inline-block;
       vertical-align: middle;
       margin-left: 30px; }
+
+
+.q4_modal_sub_header-right{
+    float: right;
+    margin-top: 0px;
+    margin-right: 15px;
+}
+.q4_modal_sub_header-right span {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 3px;
+    margin-right: 3px;
+}
+.q4_modal_sub_header-right input {
+    display: inline-block;
+    vertical-align: middle;
+    width: 100px;
+}
+.rtl .q4_modal_sub_header-right {
+    float: left;
+    margin-left: 15px;
+    margin-right: 0px;
+}
+
 
 .q4_modal_body {
   padding: 30px 50px 30px 50px; }
@@ -9498,6 +9523,7 @@ ul.q4-unordered-list > li {
           font-family: "proxima_nova_rgregular", Arial, Helvetica, sans-serif;
           margin-left: 6px; } }
 @media (max-width: 992px) {
+
   .q4_modal {
     width: 85%;
     margin: 15px auto; }
@@ -9512,6 +9538,31 @@ ul.q4-unordered-list > li {
         font-size: 14px; }
         .q4_modal .q4_modal_footer .inline_block_btn:nth-child(2) {
           margin: 0 4%; }
+
+    .q4_modal_sub_header {
+        height: auto;
+        line-height: 1;
+        padding: 5px 15px; }
+    .q4_modal_sub_header h3 {
+        margin: 5px 0 5px 0; }
+    .q4_modal_sub_header h3.inline {
+        display: block;
+        line-height: 18px; }
+    .q4_modal_sub_header h3.inline-last {
+        display: block;
+        line-height: 18px;
+        margin-left: 0; }
+    .q4_modal_sub_header data {
+        float: none;
+    }
+    .q4_modal_sub_header-right {
+        float: none;
+        margin-right: 0px;
+    }
+    .rtl .q4_modal_sub_header-right {
+        margin-left: 0;
+        margin-right: 0px;
+    }
 
   .q4_project_modal {
     width: 75%;
@@ -9682,21 +9733,6 @@ ul.q4-unordered-list > li {
   .upload-plans-box .load-files-btn-wrap {
     float: none; } }
 @media (max-width: 640px) {
-  .q4_modal_sub_header {
-    height: 65px;
-    line-height: 1;
-    padding: 5px 15px; }
-    .q4_modal_sub_header h3 {
-      margin: 5px 0 5px 0; }
-    .q4_modal_sub_header h3.inline {
-      display: block;
-      line-height: 18px; }
-    .q4_modal_sub_header h3.inline-last {
-      display: block;
-      line-height: 18px;
-      margin-left: 0; }
-    .q4_modal_sub_header data {
-      float: none; }
 
   ul.q4-unordered-list > li .q4-unordered-list-text {
     height: auto;
