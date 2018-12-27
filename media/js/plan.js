@@ -1215,6 +1215,8 @@ $(document).ready(function() {
 
         e.preventDefault();
 
+        var currentSheetNumber = $(this).closest('tr').find('.plans-sheet-number-cell .plans-sheet-number-val').text();
+
         CURRENT_PLAN_PAGE = $(document).find('.plans-list-layout .pagination .active a').text();
         Q4U.ajaxGetRequest($(this).data('url'), {
             successCallback: function(data) {
@@ -1234,6 +1236,8 @@ $(document).ready(function() {
                     }
                     $('[data-toggle="table"]').bootstrapTable();
                 }
+
+                $(document).find('#update-plan-modal').find('.plans-sheet-number').val(currentSheetNumber);
             }
         });
     });

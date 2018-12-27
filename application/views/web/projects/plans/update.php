@@ -10,7 +10,7 @@
 ?>
 <?$disabled = $item->hasQualityControl() ? ' disabled-input': ''?>
 <div id="update-plan-modal" class="modal fade" data-backdrop="static" data-keyboard="false" role="dialog">
-    <div class="modal-dialog q4_project_modal modal-dialog-1170">
+    <div class="modal-dialog q4_project_modal plans-details-dialog">
         <form class="q4_form" action="<?=$action?>" data-ajax="true" method="post">
         <input type="hidden" value="" name="x-form-secure-tkn"/>
             <!-- Modal content-->
@@ -21,7 +21,7 @@
                         <div class="clear"></div>
                     </div>
                     <div class="q4_modal_sub_header">
-                        <h3><?=__('Plan Details')?> | <?=__("File name")?>: <a href="<?=$item->file()->originalFilePath()?>" target="_blank"><?=$item->file()->original_name?></a> projects </h3>
+                        <h3><?=__('Plan Details')?> | <?=__("File name")?>: <a href="<?=$item->file()->originalFilePath()?>" target="_blank"><?=$item->file()->original_name?></a></h3>
                     </div>
                 </div>
                 <div class="modal-body bb-modal">

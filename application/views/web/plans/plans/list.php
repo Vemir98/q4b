@@ -282,8 +282,8 @@ $icons = [
                                             </select>
                                         </div>
                                     </td>
-                                    <td class="rwd-td3" data-th="<?=__('Sheet Number')?>">
-                                        IKM01-A115-A4
+                                    <td class="rwd-td3 plans-sheet-number-cell" data-th="<?=__('Sheet Number')?>">
+                                        <span class="plans-sheet-number-val">IKM01-A115-A4-<?=$item->id;?></span>
                                     </td>
                                     <td class="rwd-td4 plan-name-field" data-th="<?=__('Name')?>">
                                         <?
