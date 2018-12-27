@@ -3721,7 +3721,8 @@ label.q4-circle-checkbox {
 .disabled-link {
   opacity: 0.75;
   pointer-events: none;
-  cursor: not-allowed; }
+  cursor: not-allowed;
+}
 
 .disabled-input {
   background: #e8edf0 !important;
