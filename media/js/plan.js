@@ -60,8 +60,35 @@ $(document).ready(function() {
                 '<td class="rwd-td4" data-th="">  ' +
                     '<input type="text" class="table_input" name="" value="4">' +
                 '</td>' +
-                '<td class="rwd-td6" data-th="">  ' +
-                    '<input type="text" class="table_input" name="" value="6">' +
+                '<td class="rwd-td6" data-th="Floor">  ' +
+                    '<div class="multi-select-box comma">' +
+                        '<div class="select-imitation q4-form-input floor-numbers<?=$item->place->loaded() ">' +
+                            '<span class="select-imitation-title"><?=$item->getFloorsAsString()?></span>' +
+                            '<div class="over-select"></div><i class="arrow-down q4bikon-arrow_bottom"></i>' +
+                        '</div>' +
+
+                        '<div class="checkbox-list-no-scroll hidden">' +
+
+                        '<div class="checkbox-list-row">' +
+                            '<span class="checkbox-text">' +
+                            '<label class="checkbox-wrapper-multiple inline" data-val="">' +
+                            '<span class="checkbox-replace"></span>' +
+                            '<i class="checkbox-list-tick q4bikon-tick"></i>' +
+                            '</label>' +
+                            '<span class="checkbox-text-content bidi-override">' +
+                            '</span>' +
+                            '</span>' +
+                        '</div>' +
+                    
+                        '</div>' +
+                        '<select class="hidden-select" name="plan_<?=$item->id?>_floors" multiple>' +
+
+                            '<option selected="selected"> value="1">1</option>' +
+                            '<option selected="selected"> value="2">2</option>' +
+                            '<option selected="selected"> value="3">3</option>' +
+
+                        '</select>' +
+                    '</div>' +
                 '</td>' +
                 '<td class="rwd-td12" data-th="Action"> ' +
                     '<div class="text-center">' +
