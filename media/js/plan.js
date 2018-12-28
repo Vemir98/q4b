@@ -53,53 +53,26 @@ $(document).ready(function() {
                         '</td>' +
                     '</tr>',
             planMarkup:'<tr class="new-link">' +
-            '<td class="hidden">' +
 
-            '</td>' +
-            '<td class="rwd-td0" data-th="">' +
-                '<label  class="checkbox-wrapper">' +
-                    '<input type="checkbox">' +
-                    '<span class="checkbox-replace"></span><i class="checkbox-tick q4bikon-tick"></i>' +
-                '</label>' +
-            '</td>' +
-            '<td class="rwd-td1" data-th="">' +
-                '<input type="text" class="table_input" name="" value="1">' +
-            '</td>' +
-            '<td class="rwd-td2"  data-col="structure" data-th=""> ' +
-                '<input type="text" class="table_input disabled-input" name="" value="2">' +
-            '</td>' +
-            '<td class="rwd-td3" data-th=""> ' +
-                '<input type="text" class="table_input" name="" value="3">' +
-            '</td>' +
-            '<td class="rwd-td4" data-th="">  ' +
-                '<input type="text" class="table_input" name="" value="4">' +
-            '</td>' +
-            '<td class="rwd-td5" data-th="">  ' +
-                '<input type="text" class="table_input" name="" value="5">' +
-            '</td>' +
-            '<td class="rwd-td6" data-th="">  ' +
-                '<input type="text" class="table_input" name="" value="6">' +
-            '</td>' +
-            '<td class="rwd-td7" data-th="">  ' +
-                '<input type="text" class="table_input" name="" value="7">' +
-            '</td>' +
-            '<td class="rwd-td8" data-th="">  ' +
-                '<input type="text" class="table_input" name="" value="8">' +
-            '</td>' +
-            '<td class="rwd-td9" data-th="">  ' +
-                '<input type="text" class="table_input" name="" value="9">' +
-            '</td>' +
-            '<td class="rwd-td10" data-th="">  ' +
-                '<input type="text" class="table_input" name="" value="10">' +
-            '</td>' +
-            '<td class="rwd-td11" data-th="">  ' +
-                '<input type="text" class="table_input" name="" value="11">' +
-            '</td>' +
-            '<td class="rwd-td12" data-th="">  ' +
-                '<input type="text" class="table_input" name="" value="12">' +
-            '</td>' +
+                '<td class="rwd-td3" data-th=""> ' +
+                    '<input type="text" class="table_input" name="" value="3">' +
+                '</td>' +
+                '<td class="rwd-td4" data-th="">  ' +
+                    '<input type="text" class="table_input" name="" value="4">' +
+                '</td>' +
+                '<td class="rwd-td6" data-th="">  ' +
+                    '<input type="text" class="table_input" name="" value="6">' +
+                '</td>' +
+                '<td class="rwd-td12" data-th="Action"> ' +
+                    '<div class="text-center">' +
+                        '<span class="delete_row delete-plan<?=$disabledButton?>" data-url="">' +
+                            '<i class="q4bikon-delete"></i>' +
+                        '</span>' +
+                    '</div>' +
+                '</td>' +
             '</tr>',
             addPlanSelector: '.add-plan',
+            addPlanSelectorModal: '.add-plan-modal',
 
             addLinkSelector: '.add-link',
             linkFormClass: '.links-form',
@@ -1127,16 +1100,38 @@ $(document).ready(function() {
     });
 
 
-
-    $(document).on('click', currentPage.addPlanSelector, function(e) {
+    $(document).on('click', '.add-plan', function(e) {
         e.preventDefault();
 
+        console.log('#add-plans-modal ');
         var html = currentPage.planMarkup;
 
-        $(this).closest('.panel_body').find('table tbody:first').prepend(html);
+        $(document).find('#add-plans-modal').find('table tbody:first').prepend(html);
         $(this).closest('.panel_body').find('table tbody tr:first [data-col="structure"]')
             .html('<span>' + selectProfession + '</span>');
 
+    });
+
+    $(document).on('click', currentPage.addPlanSelectorModal, function(e) {
+        e.preventDefault();
+        FILES_BUFFER = [];
+        Q4U.ajaxGetRequest($(this).data('url'), {
+            successCallback: function(data) {
+                if (data.getData().modal) {
+                    $(document).find('.modal').modal('hide');
+                    var modal = data.getData().modal;
+                    $('body').append(modal);
+                    $(document).find('.modal').modal('show');
+
+                    if($(document).find('html').hasClass('rtl'))
+                    {
+                        $(document).find('.date').datetimepicker({locale:'he'}).show();
+                    }else{
+                        $(document).find('.date').datetimepicker({locale:'en'}).show();
+                    }
+                }
+            }
+        });
     });
 
     $(document).on('click', '.copy-plan', function(e) {
