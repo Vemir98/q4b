@@ -79,7 +79,7 @@ $(document).ready(function() {
                             '</span>' +
                             '</span>' +
                         '</div>' +
-                    
+
                         '</div>' +
                         '<select class="hidden-select" name="plan_<?=$item->id?>_floors" multiple>' +
 
