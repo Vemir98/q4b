@@ -53,7 +53,7 @@ $icons = [
 
                             <span class="inline-options">
                                  <a class="circle-sm red plans-to-send disabled-link" data-id=<?=$_PROJECT->id?> data-url="<?=URL::site('plans/plans_mailing/'.$_PROJECT->id)?>">
-                                    <i class="q4bikon-email"></i>
+                                    <i class="q4bikon-arrow_left"></i>
                                  </a>
                                  <span class="inline-options-text"><?=__('Send')?></span>
                             </span>
@@ -69,7 +69,7 @@ $icons = [
                             <span class="inline-options">
                                  <span class="db text-center">
                                      <!-- data-url="--><?//=URL::site('plans/create_plan/'.$_PROJECT->id)?><!--"-->
-                                    <a class="circle-sm orange add-plan">
+                                    <a class="circle-sm orange add-plan-modal" data-url="<?=URL::site('plans/create_plan/'.$_PROJECT->id)?>">
                                         <i class="plus q4bikon-plus"></i>
                                     </a>
 <!--                                    <span class="inline-options-text">--><?//=__('Add new plan')?><!--</span>-->

@@ -372,7 +372,6 @@ $icons = [
                                             <span class="copy-element copy-plan" data-url="<?=URL::site('projects/copy_plan/'.$item->project_id.'/'.$item->id)?>" title="<?=__('Copy plan')?>">
                                                 <i class="q4bikon-copy"></i>
                                             </span>
-                                            + +
                                         </div>
                                     </td>
                                 </tr>

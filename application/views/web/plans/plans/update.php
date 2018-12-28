@@ -60,7 +60,7 @@
                                 </div>
                             </div>
                             <div class="form-group col-16 rtl-float-right">
-                                <label class="table_label">Sheet Number ++ </label>
+                                <label class="table_label">Sheet Number</label>
                                 <div class="input-group form-group">
                                     <input type="text" class="table_input disabled-input plans-sheet-number" value="">
                                 </div>
@@ -302,57 +302,7 @@
                                         <textarea class="modal-plans-details-textarea" name="description"><?=$item->description?></textarea>
                                     </div>
                                 </div>
-                                <div class="form-group col-md-6 rtl-float-right">
-                                <?$files = $item->extra_files->where('status','=',Enum_FileStatus::Active)->order_by("id","DESC")->find_all()?>
 
-                                    <div class="wrap-image-lists">
-                                        <div class="modal-images-list-box absoluted">
-                                            <a href="#" class="q4-btn-lg light-blue-bg modal-load-images"><?=__('Load files')?></a>
-                                            <div class="hide-upload">
-                                                <input type="file" class="load-images-input" data-id="<?=uniqid()?>" multiple name="images[]">
-                                            </div>
-                                        </div>
-                                        <div class="mt-15 mb-15">
-                                            <label class=" table_label"><?=__('File(s) list').'(<span class="count-fl-list">'.count($files).'</span>)';?></label>
-                                        </div>
-                                    </div>
-
-
-                                    <div id="new-plan-images-list" class="modal-images-list-table images-list"><!--details-images-list-->
-                                        <table>
-                                            <tbody>
-                                                <?$fileIterator = 1;?>
-                                                <?foreach ($files as $file):?>
-
-                                                <tr>
-                                                    <td data-th="<?=__('Image')?>">
-                                                            <span class="modal-tasks-image-action">
-                                                                <a href="<?=$file->originalFilePath()?>" title="<?=$file->original_name?>" target="_blank">
-                                                                    <span class="modal-tasks-image-number"><?=$fileIterator++?>.</span>
-                                                                    <span class="modal-tasks-image-name"><?=$file->original_name?></span>
-                                                                    <span class="modal-img-upload-date">(<?=__('uploaded')?>: <?=date('d.m.Y H:i',$file->created_at)?>)</span>
-                                                                </a>
-                                                            </span>
-                                                    </td>
-                                                    <td data-th="<?=__('Download')?>" class="modal-tasks-image-option">
-                                                        <span class="modal-tasks-image-action">
-                                                            <a href="<?=$file->originalFilePath()?>" class="download_file" download="<?=$file->original_name?>">
-                                                                <i class="q4bikon-download"></i>
-                                                            </a>
-                                                        </span>
-                                                    </td>
-                                                    <td data-th="<?=__('Delete')?>" class="modal-tasks-image-option">
-                                                        <span class="modal-tasks-image-action">
-                                                            <span class="delete_row" data-url="<?=URL::site('/projects/delete_plans_file/'.$_PROJECT->id).'/'.$item->id.'/'.$file->token?>"><i class="q4bikon-delete"></i></span>
-                                                        </span>
-                                                    </td>
-
-                                                </tr>
-                                                <?endforeach;?>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
                             </div>
 
                         </div>

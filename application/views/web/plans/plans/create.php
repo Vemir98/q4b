@@ -9,8 +9,8 @@
 ?>
 
 
-<div id="upload-plans-modal" class="modal fade" data-backdrop="static" data-keyboard="false" role="dialog">
-    <div class="modal-dialog q4_project_modal modal-dialog-740 ">
+<div id="add-plans-modal" class="modal fade" data-backdrop="static" data-keyboard="false" role="dialog">
+    <div class="modal-dialog q4_project_modal modal-dialog-1070">
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header q4_modal_header">
@@ -70,43 +70,35 @@
                     </div>
                 </form>
                 <div class="plans-modal-dialog-bottom">
-                    <div class="upload-plans-box">
-                        <div class="upload-plans-title">
-                            <h3>
-                                <span class="q4-plans-list"><?=__('File(s) list')?></span>
-                                <span class="q4-plans-count"></span>
-                            </h3>
-                            <div class="load-files-btn-wrap">
-                                <div class="load-files-date hidden">
-                                    <?=__('Upload date')?>:
-                                    <span class="load-files-date-num"><?=date("d/m/Y")?></span>
-                                    <span class="load-files-date-time"><?=date("H:i")?></span>
-                                </div>
-                                <a href="#" class="q4-btn-lg light-blue-bg load-files-btn load-plan-files"><?=__('Load files')?></a>
-                            </div>
 
-                            <div class="hide-upload">
-                                <input type="file" class="load-images-input" data-id="<?=uniqid()?>" multiple id="tasks-load-new-images" name="file">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="text-right-left">
+                                <a class="circle-sm orange add-plan" data-url="<?=URL::site('plans/create_plan/'.$_PROJECT->id)?>">
+                                    <i class="plus q4bikon-plus"></i>
+                                </a>
                             </div>
                         </div>
-                        <div class="upload-plans-wrapper">
-                            <div class="upload-plans-scroll">
-                                <ul>
+                    </div>
+                    <div class="row">
 
-                                </ul>
+                        <div class="col-lg-12">
+                            <div class="scrollable-table">
+                                <table class="rwd-table responsive_table table" data-toggle="table">
+                                    <thead>
+                                        <tr>
+                                            <th data-field="<?=__('Sheet Number')?>" class="td-100"><?=__('Sheet Number')?></th><!-- 3 -->
+                                            <th data-field="<?=__('Name')?>" class="td-200"><?=__('Name')?></th><!-- 4 -->
+                                            <th data-field="<?=__('Floor')?>" class="td-100"><?=__('Floor')?></th><!-- 6 -->
+                                            <th data-field="<?=__('Action')?>" class="td-50"><?=__('Action')?></th><!-- 12 -->
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+
+                                </table>
                             </div>
-                            <div class="modal-progress-bg">
-                                <div class="modal-progress-bar">
-                                    <span class="progress-bar-text"></span>
-                                    <div class="modal-progress">
-                                        <div class="modal-bar"></div>
-                                    </div>
-                                    <span class="progress-bar-status"><?=__('loading')?></span>
-                                </div>
-                            </div>
-                            <span class="empty-list" style="display: inline-block; height: 25px;width: 200px;text-align: center;line-height: 25px;position: absolute;top: 0;left: 0;right: 0;bottom: 0;margin: auto;color: #1ebae5;font-size: 18px;font-weight: normal;font-style: normal; font-family: 'proxima_nova_rgregular', Arial, Helvetica, sans-serif;">
-                                <?=__('Empty list')?>
-                            </span>
                         </div>
                     </div>
                 </div>
@@ -115,7 +107,7 @@
             <div class="modal-footer text-center">
                 <div class="row">
                     <div class="col-sm-12">
-                        <a href="#" class="q4-btn-lg dark-blue-bg mr_30 cancel-upload-files" data-dismiss="modal"><?=__('Cancel')?></a>
+                        <a href="#" class="q4-btn-lg white mr_30 cancel-upload-files" data-dismiss="modal"><?=__('Cancel')?></a>
                         <a href="#" class="q4-btn-lg orange upload-plans disabled-gray-button"><?=__('Upload')?></a>
                     </div>
                 </div>
