@@ -184,19 +184,25 @@ $icons = [
                     </div>
                 </div>
                 <div class="col-md-2 col-sm-12 rtl-float-right">
-                    <div class="form-group">
-                        <div class="btn btn-primary db">All (231)</div>
-                    </div>
+                    <a href="#">
+                        <div class="form-group">
+                            <div class="btn btn-primary db">All (231)</div>
+                        </div>
+                    </a>
                 </div>
                 <div class="col-md-2 col-sm-12 rtl-float-right">
-                    <div class="form-group">
-                        <div class="btn btn-info db">With a file (201)</div>
-                    </div>
+                    <a href="#">
+                        <div class="form-group">
+                            <div class="btn btn-info db">With a file (201)</div>
+                        </div>
+                    </a>
                 </div>
                 <div class="col-md-2 col-sm-12 rtl-float-right">
-                    <div class="form-group">
-                        <div class="btn btn-warning db">Without a file (201)</div>
-                    </div>
+                    <a href="#">
+                        <div class="form-group">
+                            <div class="btn btn-warning db">Without a file (201)</div>
+                        </div>
+                    </a>
                 </div>
 
             </div>
