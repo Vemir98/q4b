@@ -86,15 +86,60 @@
                             <div class="scrollable-table">
                                 <table class="rwd-table responsive_table table" data-toggle="table">
                                     <thead>
-                                        <tr>
-                                            <th data-field="<?=__('Sheet Number')?>" class="td-100"><?=__('Sheet Number')?></th><!-- 3 -->
-                                            <th data-field="<?=__('Name')?>" class="td-200"><?=__('Name')?></th><!-- 4 -->
-                                            <th data-field="<?=__('Floor')?>" class="td-100"><?=__('Floor')?></th><!-- 6 -->
-                                            <th data-field="<?=__('Action')?>" class="td-50"><?=__('Action')?></th><!-- 12 -->
-                                        </tr>
+                                    <tr>
+                                        <th data-field="<?=__('Sheet Number')?>" class="td-100"><?=__('Sheet Number')?></th><!-- 3 -->
+                                        <th data-field="<?=__('Name')?>" class="td-200"><?=__('Name')?></th><!-- 4 -->
+                                        <th data-field="<?=__('Floor')?>" class="td-100"><?=__('Floor')?></th><!-- 6 -->
+                                        <th data-field="<?=__('Action')?>" class="td-50"><?=__('Action')?></th><!-- 12 -->
+                                    </tr>
                                     </thead>
                                     <tbody>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th>
+                                            <div class="multi-select-box comma">
+<!--                                                <div class="select-imitation q4-form-input floor-numbers--><?//=$item->place->loaded() ? ' disabled-input' : ''?><!----><?//=$disabled?><!--">-->
+<!--                                                    <span class="select-imitation-title">--><?//=$item->getFloorsAsString()?><!--</span>-->
+<!---->
+<!--                                                    <div class="over-select"></div><i class="arrow-down q4bikon-arrow_bottom"></i>-->
+<!--                                                </div>-->
 
+<!--                                                <div class="checkbox-list-no-scroll hidden">-->
+<!---->
+<!--                                                    --><?//for($i = $item->object->smaller_floor; $i <= $item->object->bigger_floor; $i++):?>
+<!--                                                        <div class="checkbox-list-row">-->
+<!--                                                        <span class="checkbox-text">-->
+<!--                                                            <label class="checkbox-wrapper-multiple inline" data-val="--><?//=$i?><!--">-->
+<!--                                                                <span class="checkbox-replace"></span>-->
+<!--                                                                <i class="checkbox-list-tick q4bikon-tick"></i>-->
+<!--                                                            </label>-->
+<!--                                                            <span class="checkbox-text-content bidi-override">-->
+<!---->
+<!--                                                                --><?//=$i?>
+<!---->
+<!--                                                            </span>-->
+<!--                                                        </span>-->
+<!--                                                        </div>-->
+<!--                                                    --><?//endfor?>
+<!---->
+<!--                                                </div>-->
+<!--                                                <select class="hidden-select" name="plan_--><?//=$item->id?><!--_floors" multiple>-->
+                                                <select class="hidden-select" name="plan_6_floors" multiple>
+
+<!--                                                    --><?//for($i = $item->object->smaller_floor; $i <= $item->object->bigger_floor; $i++):?>
+<!--                                                        <option value="--><?//=$i?><!--">--><?//=$i?><!--</option>-->
+<!--                                                    --><?//endfor?>
+
+                                                    <?for($i = 1; $i <= 6; $i++):?>
+                                                        <option value="<?=$i?>"><?=$i?></option>
+                                                    <?endfor?>
+
+                                                </select>
+                                            </div>
+                                        </th>
+                                        <th></th>
+                                    </tr>
                                     </tbody>
 
                                 </table>
