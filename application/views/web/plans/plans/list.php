@@ -282,40 +282,43 @@ $icons = [
                                         </div>
                                     </td>
                                     <td class="rwd-td3 plans-sheet-number-cell" data-th="<?=__('Sheet Number')?>">
-                                        <span class="plans-sheet-number-val">IKM01-A115-A4-<?=$item->id;?></span>
+                                        <span class="plans-sheet-number-val"><?=$item->file()->sheet_number?></span>
                                     </td>
                                     <td class="rwd-td4 plan-name-field" data-th="<?=__('Name')?>">
+
                                         <?
-                                            $name = $item->file() ? $item->file()->getName()  : $item->name;
-                                            $mime = $item->file() ? strtolower($item->file()->ext) : 'unknown';
+                                            $name = $item->file()->loaded() ? $item->file()->getName()  : $item->name;
+                                            $mime = $item->file()->loaded() ? strtolower($item->file()->ext) : 'unknown';
                                         ?>
 
                                         <input type="text" name="plan_<?=$item->id?>_name" class="q4-form-input q4_required<?=$disabled?>" value="<?=$name ?>">
                                         <input type="hidden" name="plan_<?=$item->id?>_id" value="<?=$item->id?>">
                                     </td>
                                     <td class="rwd-td5 align-center-left">
-                                        <!-- <span class="plans-inline-icon">
-                                            <a target="_blank" href="<?=$item->file()->originalFilePath()?>" class="<?=$mime=='unknown'? 'disabled-input': ''?>">
-                                                <img src="/media/img/choose-format/format-<?=$mime?>.png" title="<?=$name?>" alt="<?=$name?>">
-                                            </a>
-                                        </span>-->
 
-                                        <div class="upload-icon-box q4-file-upload">
-                                            <span class="upload-icon up-box">
-                                                <div class="hide-upload">
-                                                    <input type="file" class="upload-user-logo" accept=".jpg,.jpe,.jpeg,.png,.gif,.tif,.tiff" name="logo"/>
-                                                </div>
-                                                <?if(empty($company->logo)):?>
+                                        <? if ($item->file()->loaded()): ?>
+                                            <span class="plans-inline-icon">
+                                                <a target="_blank" href="<?=$item->file()->originalFilePath()?>" class="<?=$mime== 'unknown' ? 'disabled-input' : ''?>">
+                                                    <img src="/media/img/choose-format/format-<?=$mime?>.png" title="<?=$name?>" alt="<?=$name?>">
+                                                </a>
+                                            </span>
+                                        <? else: ?>
+                                            <div class="upload-icon-box q4-file-upload">
+                                                <span class="upload-icon up-box">
+                                                    <div class="hide-upload">
+                                                        <input type="file" class="upload-user-logo" accept=".jpg,.jpe,.jpeg,.png,.gif,.tif,.tiff" name="logo"/>
+                                                    </div>
+
                                                     <div class="attention-bg camera-default-image">
                                                         <img src="/media/img/attention.png" alt="attention">
                                                     </div>
                                                     <img class="hidden show-uploaded-image substitude-icon" alt="preview user image">
-                                                <?else:?>
-                                                    <img class="show-uploaded-image substitude-icon" alt="preview image" src="/<?=$company->logo?>">
-                                                <?endif?>
-                                            </span>
-                                            <a href="#" class="call-icon trigger-image-upload"></a>
-                                        </div>
+
+                                                </span>
+                                                <a href="#" class="call-icon trigger-image-upload"></a>
+                                            </div>
+                                        <? endif ?>
+
                                     </td>
                                     <td class="rwd-td6" data-th="<?=__('Floor')?>">
 
@@ -365,7 +368,7 @@ $icons = [
 
                                     </td>
                                     <td class="rwd-td7 align-center-left" data-th="<?=__('Edition')?>">
-                                        <span class="plans-edition-number">2</span>
+                                        <input name="plan_<?=$item->id?>_edition" type="text" class="q4-form-input<?=$disabled?>" value="<?=$item->edition ?: null?>">
                                         <span class="plans-add-edition add-plan-edition"
                                               data-toggle="modal" data-target="#plans-new-edition-modal"
                                               data-url="<?=URL::site('plans/add_edition/'.$item->project_id.'/'.$item->id)?>"  title="<?=__('Add Edition')?>">
