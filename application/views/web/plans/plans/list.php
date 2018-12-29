@@ -220,13 +220,13 @@ $icons = [
                                         <span class="checkbox-replace"></span><i class="checkbox-tick q4bikon-tick"></i>
                                     </label>
                                 </th>
-                                <th class="td-50"></th><!-- 1 -->
+                                <th class="td-50"></th> <!-- 1 -->
                                 <th data-field="<?=__('Structure')?>" class="td-100"><?=__('Structure')?></th><!-- 2 -->
                                 <th data-field="<?=__('Sheet Number')?>" class="td-100"><?=__('Sheet Number')?></th><!-- 3 -->
                                 <th data-field="<?=__('Name')?>" class="td-200"><?=__('Name')?></th><!-- 4 -->
                                 <th data-field="<?=__('File')?>" class="td-25">File</th><!-- 5 -->
                                 <th data-field="<?=__('Floor')?>" class="td-25"><?=__('Floor')?></th><!-- 6 -->
-                                <th data-field="<?=__('Edition')?>" class="td-25"><?=__('Edition')?> </th><!-- 7 -->
+                                <th data-field="<?=__('Edition')?>" class="td-100"><?=__('Edition')?> </th><!-- 7 -->
                                 <th data-field="<?=__('Status')?>" class="td-75"><?=__('Status')?></th>  <!-- 8 -->
 
                                 <!-- <th data-field="<?=__('Element number')?>" class="td-100"><?=__('Element number')?></th>-->
@@ -374,7 +374,11 @@ $icons = [
 
                                     </td>
                                     <td class="rwd-td7 align-center-left" data-th="<?=__('Edition')?>">
-                                        <input name="plan_<?=$item->id?>_edition" type="text" class="q4-form-input<?=$disabled?>" value="<?=$item->edition ?: null?>">
+
+                                        <div class="wrap-number inline-pickers">
+<!--                                            <input type="text" class="numeric-input" value="3">-->
+                                            <input name="plan_<?=$item->id?>_edition" type="text" class="numeric-input <?=$disabled?>" value="<?=$item->edition ?: null?>">
+                                        </div>
                                         <span class="plans-add-edition add-plan-edition"
                                               data-toggle="modal" data-target="#plans-new-edition-modal"
                                               data-url="<?=URL::site('plans/add_edition/'.$item->project_id.'/'.$item->id)?>"  title="<?=__('Add Edition')?>">
