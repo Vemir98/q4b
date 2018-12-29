@@ -99,6 +99,7 @@
                                         <th></th>
                                         <th>
                                             <div class="multi-select-box comma">
+
 <!--                                                <div class="select-imitation q4-form-input floor-numbers--><?//=$item->place->loaded() ? ' disabled-input' : ''?><!----><?//=$disabled?><!--">-->
 <!--                                                    <span class="select-imitation-title">--><?//=$item->getFloorsAsString()?><!--</span>-->
 <!---->
