@@ -98,45 +98,33 @@
                                         <th></th>
                                         <th></th>
                                         <th>
-                                            <div class="multi-select-box comma">
-<!--                                                <div class="select-imitation q4-form-input floor-numbers--><?//=$item->place->loaded() ? ' disabled-input' : ''?><!----><?//=$disabled?><!--">-->
-<!--                                                    <span class="select-imitation-title">--><?//=$item->getFloorsAsString()?><!--</span>-->
-<!---->
-<!--                                                    <div class="over-select"></div><i class="arrow-down q4bikon-arrow_bottom"></i>-->
-<!--                                                </div>-->
 
-<!--                                                <div class="checkbox-list-no-scroll hidden">-->
-<!---->
-<!--                                                    --><?//for($i = $item->object->smaller_floor; $i <= $item->object->bigger_floor; $i++):?>
-<!--                                                        <div class="checkbox-list-row">-->
-<!--                                                        <span class="checkbox-text">-->
-<!--                                                            <label class="checkbox-wrapper-multiple inline" data-val="--><?//=$i?><!--">-->
-<!--                                                                <span class="checkbox-replace"></span>-->
-<!--                                                                <i class="checkbox-list-tick q4bikon-tick"></i>-->
-<!--                                                            </label>-->
-<!--                                                            <span class="checkbox-text-content bidi-override">-->
-<!---->
-<!--                                                                --><?//=$i?>
-<!---->
-<!--                                                            </span>-->
-<!--                                                        </span>-->
-<!--                                                        </div>-->
-<!--                                                    --><?//endfor?>
-<!---->
-<!--                                                </div>-->
-<!--                                                <select class="hidden-select" name="plan_--><?//=$item->id?><!--_floors" multiple>-->
-                                                <select class="hidden-select" name="plan_6_floors" multiple>
+                                            <div class="checkbox-list-no-scroll hidden">
 
-<!--                                                    --><?//for($i = $item->object->smaller_floor; $i <= $item->object->bigger_floor; $i++):?>
-<!--                                                        <option value="--><?//=$i?><!--">--><?//=$i?><!--</option>-->
-<!--                                                    --><?//endfor?>
+                                                <?for($i = $item->object->smaller_floor; $i <= $item->object->bigger_floor; $i++):?>
+                                                    <div class="checkbox-list-row">
+                                                        <span class="checkbox-text">
+                                                            <label class="checkbox-wrapper-multiple inline <?=in_array($i,$floorNumbers) ? 'checked' : ''?>" data-val="<?=$i?>">
+                                                                <span class="checkbox-replace"></span>
+                                                                <i class="checkbox-list-tick q4bikon-tick"></i>
+                                                            </label>
+                                                            <span class="checkbox-text-content bidi-override">
 
-                                                    <?for($i = 1; $i <= 6; $i++):?>
-                                                        <option value="<?=$i?>"><?=$i?></option>
-                                                    <?endfor?>
+                                                                <?=$i?>
 
-                                                </select>
+                                                            </span>
+                                                        </span>
+                                                    </div>
+                                                <?endfor?>
+
                                             </div>
+                                            <select class="hidden-select" name="plan_<?=$item->id?>_floors" multiple>
+
+                                                <?for($i = $item->object->smaller_floor; $i <= $item->object->bigger_floor; $i++):?>
+                                                    <option <?=in_array($i,$floorNumbers) ? 'selected="selected"' : ''?> value="<?=$i?>"><?=$i?></option>
+                                                <?endfor?>
+
+                                            </select>
                                         </th>
                                         <th></th>
                                     </tr>

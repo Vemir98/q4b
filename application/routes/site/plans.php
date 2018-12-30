@@ -26,8 +26,8 @@ Route::set('site.plans.toggleNotifications','plans/toggle_notifications/<project
 //        'controller' => 'plans',
 //        'action' => 'plans_list'
 //    ]);
-Route::set('site.plans.plansList','plans/<project_id>/plans_list(/object/<object_id>)(/professions/<professions>)(/floors/<floors>)(/page/<page>)',
-    ['project_id' => '[0-9]+','professions' => '[0-9-]+','object_id' => '[0-9]+', 'floors' => '[0-9-_]+','page' => '[0-9]+'])
+Route::set('site.plans.plansList','plans/<project_id>/plans_list(/object/<object_id>)(/professions/<professions>)(/floors/<floors>)(/with_file/<with_file>)(/page/<page>)',
+    ['project_id' => '[0-9]+','professions' => '[0-9-]+','object_id' => '[0-9]+', 'floors' => '[0-9-_]+','with_file' => '[/-1-1]+','page' => '[0-9]+'])
     ->defaults([
         'controller' => 'plans',
         'action' => 'plans_list'

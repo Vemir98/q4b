@@ -210,6 +210,8 @@ $(document).ready(function() {
     $(document).on('click', currentPage.addPlan, function(e) {
 
     });
+
+    // todo:: not used
     $(document).on('click', currentPage.filterPlans, function(e) {
         e.preventDefault();
         var current = $(this)
@@ -2834,7 +2836,65 @@ $(document).ready(function() {
 
     });
 
+    $(document).on('click','.ev-with-file',function(e){
+        var current = $(this);
+        var objectId = current.closest('form').find('[data-name="object"]').val();
+        var professionId = current.closest('form').find('[data-name="profession"]').val();
+        selectProfession = $(this).find('option:selected').text();
+
+        var floors = current.closest('.plans-layout').find('.floors-filter').val();
+        floors = floors ? '/floors/' + floors.join('_') + '/': '';
+
+        current.addClass('active');
+
+        var withFile = '';
+        var withFileAtrr = current.data('with-file');
+
+        if (typeof withFileAtrr !== typeof undefined && withFileAtrr !== false) {
+            withFile += '/with_file/' + withFileAtrr;
+        }
+
+        var page = CURRENT_PLAN_PAGE ? '/page/' + CURRENT_PLAN_PAGE : '';
+
+        var url = current.closest('form').data('url') + '/object/' + objectId + '/professions/' + professionId + floors + withFile + page;
+
+        Q4U.ajaxGetRequest(url, {
+            successCallback: function(data) {
+                if (data.getData()) {
+                    var printLandscape = $(document).find('.print-landscape-mode');
+                    printLandscape.find('.printable-table-other').empty();
+                    CHECKED_PLANS = {};
+                    if ($(document).find('.plans-list-layout').length && data.getData().plans != undefined){
+                        var currentModal = data.getData().plans;
+
+                        $(document).find('.plans-list-layout .scrollable-table').closest('div.row').replaceWith($(currentModal).find('.scrollable-table').closest('div.row'));
+                        $(document).find('.plans-list-layout .q4-carousel-table-wrap').closest('div.row').replaceWith($(currentModal).find('.q4-carousel-table-wrap').closest('div.row'));
+
+                    }
+
+                    var self = $(document).find('.plans-list-layout').closest('.tab_panel').find('.panel_header');
 
 
+                    var windowWidth = window.innerWidth;
 
+                    $.fn.utilities('setCarouselWidth', '.q4-carousel-table-wrap', window.innerWidth);
+                    $.fn.utilities('setScrollBarWidth', self.closest('.tab_panel').find('.scrollable-table'), windowWidth);
+
+                    var widthT = $.fn.utilities('measureHiddenTable', self.closest('.tab_panel').find('table.table'),false);
+
+
+                    setTimeout(function(){
+
+                        $.fn.utilities('updateContentOnChange');
+                        $('.selectpicker').selectpicker({size:3,dropupAuto:false})
+                    }, 300);
+                    current.closest('.panel_content').find('.panel_footer').find('.plans-to-print-link').addClass('disabled-gray-button');
+                    current.closest('.panel_content').find('.panel_footer').find('.plans-to-send').addClass('disabled-gray-button');
+
+                    $('[data-toggle="table"]').bootstrapTable();
+                    CURRENT_PLAN_PAGE = false;
+                }
+            }
+        });
+    });
 });

@@ -184,23 +184,23 @@ $icons = [
                     </div>
                 </div>
                 <div class="col-md-2 col-sm-12 rtl-float-right">
-                    <a href="#">
+                    <a href="#" class="ev-with-file" data-with-file="0">
                         <div class="form-group">
-                            <div class="btn btn-primary db">All (231)</div>
+                            <div class="btn btn-primary db">All</div>
                         </div>
                     </a>
                 </div>
                 <div class="col-md-2 col-sm-12 rtl-float-right">
-                    <a href="#">
+                    <a href="#" class="ev-with-file" data-with-file="1">
                         <div class="form-group">
-                            <div class="btn btn-info db">With a file (201)</div>
+                            <div class="btn btn-info db">With a file</div>
                         </div>
                     </a>
                 </div>
                 <div class="col-md-2 col-sm-12 rtl-float-right">
-                    <a href="#">
+                    <a href="#" class="ev-with-file" data-with-file="-1">
                         <div class="form-group">
-                            <div class="btn btn-warning db">Without a file (201)</div>
+                            <div class="btn btn-warning db">Without a file</div>
                         </div>
                     </a>
                 </div>
@@ -312,7 +312,7 @@ $icons = [
                                             <div class="upload-icon-box q4-file-upload">
                                                 <span class="upload-icon up-box">
                                                     <div class="hide-upload">
-                                                        <input type="file" class="upload-user-logo" accept=".jpg,.jpe,.jpeg,.png,.gif,.tif,.tiff" name="logo"/>
+                                                        <input type="file" class="upload-user-logo" accept=".jpg,.jpe,.jpeg,.png,.gif,.tif,.tiff" name="plan_<?=$item->id?>_file"/>
                                                     </div>
 
                                                     <div class="attention-bg camera-default-image">
@@ -466,7 +466,7 @@ $icons = [
                                         </div>
                                     </td>
                                     <td class="rwd-td11" data-th="Delivered date">
-                                        <span>02/05/2018</span>
+                                        <span>02/05/2018</span> <?//todo:: Set this property (Set costume Fields)?>
 
                                         <!--<div class="select-wrapper" title="<?=$item->profession->name?>">
                                             <i class="q4bikon-arrow_bottom"></i>
@@ -476,7 +476,7 @@ $icons = [
                                         </div>-->
                                     </td>
                                     <td class="rwd-td12 td-50" data-th="<?=__('Received date')?>">
-                                        <span>03/05/2017</span>
+                                        <span>03/05/2017</span> <?//todo:: Set this property (Set costume Fields)?>
                                     </td>
                                 </tr>
                             <?endforeach;?>
