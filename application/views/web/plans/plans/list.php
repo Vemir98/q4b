@@ -186,21 +186,21 @@ $icons = [
                 <div class="col-md-2 col-sm-12 rtl-float-right">
                     <a href="#" class="ev-with-file" data-with-file="0">
                         <div class="form-group">
-                            <div class="btn btn-primary db">All</div>
+                            <div class="btn btn-primary db">All (<?=$planCount?>)</div>
                         </div>
                     </a>
                 </div>
                 <div class="col-md-2 col-sm-12 rtl-float-right">
                     <a href="#" class="ev-with-file" data-with-file="1">
                         <div class="form-group">
-                            <div class="btn btn-info db">With a file</div>
+                            <div class="btn btn-info db">With a file (<?=$withFileCount?>)</div>
                         </div>
                     </a>
                 </div>
                 <div class="col-md-2 col-sm-12 rtl-float-right">
                     <a href="#" class="ev-with-file" data-with-file="-1">
                         <div class="form-group">
-                            <div class="btn btn-warning db">Without a file</div>
+                            <div class="btn btn-warning db">Without a file (<?=$withoutFileCount?>)</div>
                         </div>
                     </a>
                 </div>
@@ -302,7 +302,7 @@ $icons = [
                                     </td>
                                     <td class="rwd-td5 align-center-left">
 
-                                        <? if ($item->file()->loaded()): ?>
+                                        <? if ($item->file()->loaded() and $item->has_file): ?>
                                             <span class="plans-inline-icon">
                                                 <a target="_blank" href="<?=$item->file()->originalFilePath()?>" class="<?=$mime== 'unknown' ? 'disabled-input' : ''?>">
                                                     <img src="/media/img/choose-format/format-<?=$mime?>.png" title="<?=$name?>" alt="<?=$name?>">
@@ -466,7 +466,7 @@ $icons = [
                                         </div>
                                     </td>
                                     <td class="rwd-td11" data-th="Delivered date">
-                                        <span>02/05/2018</span> <?//todo:: Set this property (Set costume Fields)?>
+                                        <input type="text" value="<?=$item->delivered_at?>" name="plan_<?=$item->id?>_delivered_at">
 
                                         <!--<div class="select-wrapper" title="<?=$item->profession->name?>">
                                             <i class="q4bikon-arrow_bottom"></i>
@@ -476,7 +476,8 @@ $icons = [
                                         </div>-->
                                     </td>
                                     <td class="rwd-td12 td-50" data-th="<?=__('Received date')?>">
-                                        <span>03/05/2017</span> <?//todo:: Set this property (Set costume Fields)?>
+                                        <input type="text" value="<?=$item->received_at?>" name="plan_<?=$item->id?>_received_at">
+
                                     </td>
                                 </tr>
                             <?endforeach;?>

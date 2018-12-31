@@ -837,13 +837,14 @@ $(document).ready(function() {
             processData: false,
         });
 
-        // if(res){
-        //     modal.find('.modal-progress-bg').fadeOut()
-        //     $('.upload-plans-title').find('.q4-plans-count').html('')
-        //     modal.find('.upload-plans').text(__('Done')).removeClass('upload-plans').addClass("close-upload-plans-modal").removeClass(currentPage.disabledGrayButton)
-        //
-        //     LOADER = true;
-        // }
+        if(res){
+            modal.find('.modal-progress-bg').fadeOut()
+            $('.upload-plans-title').find('.q4-plans-count').html('')
+            modal.find('.upload-plans').text(__('Done')).removeClass('upload-plans').addClass("close-upload-plans-modal").removeClass(currentPage.disabledGrayButton)
+            modal.modal('hide');
+
+            LOADER = true;
+        }
 
         // if(res.errors) {
         //     modal.find('.modal-progress-bg').fadeOut()

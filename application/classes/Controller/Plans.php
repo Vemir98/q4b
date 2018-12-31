@@ -1662,6 +1662,9 @@ class Controller_Plans extends HDVP_Controller_Template
                         $planFile->customName(Arr::get($c,'name'));
                     }
 
+                    $plan->delivered_at = Arr::get($c,'delivered_at');
+                    $plan->received_at = Arr::get($c,'received_at');
+
                     if(Arr::get($c,'edition') !== ''){
                         $plan->edition = Arr::get($c,'edition');
                     }
@@ -1778,18 +1781,25 @@ class Controller_Plans extends HDVP_Controller_Template
             $query->and_where('profession_id','IN',DB::expr('('.implode(',',$professions).')'));
         }
 
+        $withFileCount = clone($query);
+        $withFileCount = $withFileCount->and_where('prplan.has_file','=',1)->find_all()->count();
+        $withoutFileCount = clone($query);
+        $withoutFileCount = $withoutFileCount->and_where('prplan.has_file','=',0)->find_all()->count();
+
         if(!empty($withFile)){
             if($withFile == 1){
-                $query
-                    ->join(['pr_plans_files','ppf'])
-                    ->on('prplan.id','=','ppf.plan_id')
-                    ->group_by('prplan.id');
+//                $query
+//                    ->join(['pr_plans_files','ppf'])
+//                    ->on('prplan.id','=','ppf.plan_id')
+//                    ->group_by('prplan.id');
+                $query->and_where('prplan.has_file','=',1);
             }else{
-                $query
-                    ->join(['pr_plans_files','ppf'], 'left outer')
-                    ->on('prplan.id','=','ppf.plan_id')
-                    ->group_by('prplan.id')
-                    ->where('ppf.plan_id', '=', null);
+//                $query
+//                    ->join(['pr_plans_files','ppf'], 'left outer')
+//                    ->on('prplan.id','=','ppf.plan_id')
+//                    ->group_by('prplan.id')
+//                    ->where('ppf.plan_id', '=', null);
+                $query->and_where('prplan.has_file','=',0);
             }
         }
 
@@ -1814,7 +1824,10 @@ class Controller_Plans extends HDVP_Controller_Template
             'objects' => $this->project->objects->find_all(),
             'professions' => $this->project->company->professions->where('status','=',Enum_Status::Enabled)->order_by('cmpprofession.name','ASC')->find_all(),
             'floorsFilter' => $this->project->getObjectsBiggerAndSmallerFloors(),
-            'secure_tkn' => AesCtr::encrypt($this->project->id.Text::random('alpha'),$project->id,192)
+            'secure_tkn' => AesCtr::encrypt($this->project->id.Text::random('alpha'),$project->id,192),
+            'withFileCount' => $withFileCount,
+            'withoutFileCount' => $withoutFileCount,
+            'planCount' => $withoutFileCount + $withFileCount,
         ];
     }
     public function action_create_plan(){
@@ -2116,6 +2129,11 @@ class Controller_Plans extends HDVP_Controller_Template
 
     public function action_copy_plan(){
         $this->_checkForAjaxOrDie();
+        
+        echo "<pre>";
+        var_dump($this->request->param('param1'));
+        echo "</pre>";
+        die;
         $this->project = ORM::factory('Project',(int)$this->request->param('param1'));
         if( ! $this->project->loaded() OR !$this->_user->canUseProject($this->project)){
             throw new HTTP_Exception_404;
