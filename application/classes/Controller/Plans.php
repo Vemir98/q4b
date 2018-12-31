@@ -1832,40 +1832,54 @@ class Controller_Plans extends HDVP_Controller_Template
         View::set_global('_COMPANY', $this->company);
         if($this->request->method() == Request::POST){
             $data = Arr::extract($this->post(),['object_id','profession_id','project_id','company_id']);
+
+            $plansData = [];
+            foreach ($this->post() as $key => $value){
+                if(preg_match('~plan_(?<isNew>\+)?(?<id>[0-9]+)_(?<field>[a-z_]+)~',$key,$matches)){
+                    if($matches['isNew']){
+                        $plansData['new_'.$matches['id']][$matches['field']] = $value;
+                    }else{
+                        $plansData[$matches['id']][$matches['field']] = $value;
+                    }
+                }
+            }
+
+            //удаляем явно не валидные новые профессии
+            foreach ($plansData as $key => $val){
+                if(!trim($val['name']) AND !is_numeric($key)){
+                    unset($plansData[$key]);
+                }
+            }
+
             try{
                 if($data['project_id'] != $this->project->id OR $data['company_id'] != $this->company->id){
                     throw new HDVP_Exception('Invalid data');
                 }
 
-                if(!isset($_FILES['file'])){
-                    throw new HDVP_Exception('Plan must have a file');
-                }else{
-                    $this->project->makeProjectPaths();
-                }
-
-                $fileData = [
-                    'name' => str_replace($this->project->plansPath().DS,'',Upload::save($_FILES['file'],null,$this->project->plansPath())),
-                    'original_name' => $_FILES['file']['name'],
-                    'ext' => Model_File::getFileExt($_FILES['file']['name']),
-                    'mime' => $_FILES['file']['type'],
-                    'path' => str_replace(DOCROOT,'',$this->project->plansPath()),
-                    'token' => md5($_FILES['file']['name']).base_convert(microtime(false), 10, 36),
-                ];
-
+                $this->project->makeProjectPaths();
                 Database::instance()->begin();
 
-                $data['date'] = time();//DateTime::createFromFormat('d/m/Y',$data['date'])->getTimestamp();
-                $plan = ORM::factory('PrPlan')->values($data);
-                $plan->scope = Model_PrPlan::getNewScope();
-                $plan->project_id = $this->project->id;
-                $plan->save();
+                foreach($plansData as $pid => $c) {
+                    $fileData = [
+                        'sheet_number' => Arr::get($c,'sheet'),
+                        'path' => str_replace(DOCROOT,'',$this->project->plansPath()),
+                    ];
 
-                $file = ORM::factory('PlanFile')->values($fileData)->save();
-                $plan->add('files', $file->pk());
-                Event::instance()->fire('onPlanFileAdded',['sender' => $this,'item' => $file]);
-                $this->setResponseData('triggerEvent','projectPlanCreated');
-                $this->setResponseData('id',$plan->id);
-                Event::instance()->fire('onItemAdded',['sender' => $this,'item' => $plan]);
+                    $data['date'] = time();//DateTime::createFromFormat('d/m/Y',$data['date'])->getTimestamp();
+                    $plan = ORM::factory('PrPlan')->values($data);
+                    $plan->scope = Model_PrPlan::getNewScope();
+                    $plan->project_id = $this->project->id;
+                    $plan->save();
+
+                    $file = ORM::factory('PlanFile')->values($fileData)->save();
+                    $plan->add('files', $file->pk());
+                    $file->customName(Arr::get($c,'name'));
+
+                    $this->setResponseData('triggerEvent','projectPlanCreated');
+                    $this->setResponseData('id',$plan->id);
+                    Event::instance()->fire('onItemAdded',['sender' => $this,'item' => $plan]);
+                }
+
                 Database::instance()->commit();
             }catch (ORM_Validation_Exception $e){
                 Database::instance()->rollback();
@@ -1876,7 +1890,6 @@ class Controller_Plans extends HDVP_Controller_Template
             }catch (Exception $e){
                 Database::instance()->rollback();
                 $this->_setErrors('Operation Error');
-
             }
 
         }else{

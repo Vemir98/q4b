@@ -98,7 +98,7 @@ $(document).ready(function() {
                     '</div>' +
                 '</td>' +
             '</tr>',
-            addPlanSelector: '.add-plan',
+            addPlanSelector: '.add-plan', // todo:: Not used
             addPlanSelectorModal: '.add-plan-modal',
 
             addLinkSelector: '.add-link',
@@ -816,100 +816,146 @@ $(document).ready(function() {
         e.preventDefault();
         LOADER = false;
         var modal = $(this).closest('.modal')
-        var currentForm = modal.find('form');
+        var currentForm = $(document).find('.modal').find('form');
         var urlPost = currentForm.attr('action');
-        modal.find('.modal-progress-bg').show();
-        var uploads = modal.find('.upload-plans-title .hide-upload')
+        // modal.find('.modal-progress-bg').show();
 
-        var plansCount = 0;
-        for(var key in FILES_BUFFER){
-            plansCount++;
-        }
-        var length = modal.find('.upload-plans-scroll ul').find('li').length;
-        var elem = modal.find(".modal-bar");
-        var addWidth = parseInt(100 *parseFloat(1/(plansCount)));
-        var width = 0;
-        var i = 1;
-        var reject = 0;
-        var deleteKey = '';
-        (async () => {
+        var formData = new FormData();
+        var data = getFormData(currentForm);
 
-            for(var key in FILES_BUFFER){
-                deleteKey = key;
-                var formData = new FormData();
-                var data = getFormData(currentForm);
-                modal.find('.upload-plans').addClass(currentPage.disabledGrayButton)
-                data["csrf"] = Q4U.getCsrfToken();
-                formData.append("Data", JSON.stringify(data));
+        modal.find('.upload-plans').addClass(currentPage.disabledGrayButton);
+        data["csrf"] = Q4U.getCsrfToken();
+        formData.append("Data", JSON.stringify(data));
 
-                if(FILES_BUFFER[key]!=undefined){
-                    formData.append('file',FILES_BUFFER[key]);
-                    var res = await $.ajax({//можно использовать только асинхронные функции
-                        url: urlPost,
-                        type: 'POST',
-                        data:formData,
-                        dataType: 'json',
-                        cache: false,
-                        contentType: false,
-                        processData: false,
-                    });
+        var res = $.ajax({
+            url: urlPost,
+            type: 'POST',
+            data: JSON.stringify(data),
+            dataType: 'json',
+            cache: false,
+            contentType: "application/json",
+            processData: false,
+        });
 
-                    if(res){
-                            width =  (plansCount == i) ? 100 : width + addWidth;
-                            $('.upload-plans-title').find('.q4-plans-count').html('('+plansCount+')')
+        // if(res){
+        //     modal.find('.modal-progress-bg').fadeOut()
+        //     $('.upload-plans-title').find('.q4-plans-count').html('')
+        //     modal.find('.upload-plans').text(__('Done')).removeClass('upload-plans').addClass("close-upload-plans-modal").removeClass(currentPage.disabledGrayButton)
+        //
+        //     LOADER = true;
+        // }
 
-                            elem.css('width', width + '%');
-                            elem.closest('.modal-progress-bar').find('.progress-bar-text').html(__("Load") + ' ' + i + ' ' +__("from") + ' ' +  plansCount);
-                            elem.closest('.modal-progress-bar').find('.progress-bar-status').html(__("loading") +' ('+ FILES_BUFFER[key].name +')');
-
-
-                        if(res.errors){
-                            reject++;
-                        }else{
-                            modal.find('.upload-plans-wrapper').find('li.'+deleteKey).remove();
-                        }
-                        if(i==plansCount){
-                            modal.find('.modal-progress-bg').fadeOut()
-                            $('.upload-plans-title').find('.q4-plans-count').html('')
-                            modal.find('.upload-plans').text(__('Done')).removeClass('upload-plans').addClass("close-upload-plans-modal").removeClass(currentPage.disabledGrayButton)
-                            FILES_BUFFER = [];
-                            LOADER = true;
-
-                            if(reject > 0){
-                                Q4U.alert(__('You have $s rejected files').replace(/%s/g, reject), {
-                                    type: "danger",
-                                    confirmText: __("OK")
-                                });
-                            }
-                        }
-                        i++;
-                    }
-
-                }
-
-        }
-
-        })().catch((err) => {
-
-            reject++;
-            if(i==plansCount){
-                modal.find('.modal-progress-bg').fadeOut()
-                $('.upload-plans-title').find('.q4-plans-count').html('')
-                modal.find('.upload-plans').text(__('Done')).removeClass('upload-plans').addClass("close-upload-plans-modal").removeClass(currentPage.disabledGrayButton)
-                FILES_BUFFER = [];
-                LOADER = true;
-
-                if(reject > 0){
-                    Q4U.alert(__('You have $s rejected files').replace(/%s/g, reject), {
-                        type: "danger",
-                        confirmText: __("OK")
-                    });
-                }
-            }
-            i++;
-        })
-
+        // if(res.errors) {
+        //     modal.find('.modal-progress-bg').fadeOut()
+        //     $('.upload-plans-title').find('.q4-plans-count').html('')
+        //     modal.find('.upload-plans').text(__('Done')).removeClass('upload-plans').addClass("close-upload-plans-modal").removeClass(currentPage.disabledGrayButton)
+        //     LOADER = true;
+        //
+        //     Q4U.alert(__('You have $s rejected files'), {
+        //         type: "danger",
+        //         confirmText: __("OK")
+        //     });
+        // }
     });
+
+    // $(document).on('click', '.__upload-plans', function(e) {
+    //     e.preventDefault();
+    //     LOADER = false;
+    //     var modal = $(this).closest('.modal')
+    //     var currentForm = modal.find('form');
+    //     var urlPost = currentForm.attr('action');
+    //     modal.find('.modal-progress-bg').show();
+    //     var uploads = modal.find('.upload-plans-title .hide-upload')
+    //
+    //     var plansCount = 0;
+    //     for(var key in FILES_BUFFER){
+    //         plansCount++;
+    //     }
+    //     var length = modal.find('.upload-plans-scroll ul').find('li').length;
+    //     var elem = modal.find(".modal-bar");
+    //     var addWidth = parseInt(100 *parseFloat(1/(plansCount)));
+    //     var width = 0;
+    //     var i = 1;
+    //     var reject = 0;
+    //     var deleteKey = '';
+    //     (async () => {
+    //
+    //         for(var key in FILES_BUFFER){
+    //             deleteKey = key;
+    //             var formData = new FormData();
+    //             var data = getFormData(currentForm);
+    //             modal.find('.upload-plans').addClass(currentPage.disabledGrayButton)
+    //             data["csrf"] = Q4U.getCsrfToken();
+    //             formData.append("Data", JSON.stringify(data));
+    //
+    //             if(FILES_BUFFER[key]!=undefined){
+    //                 formData.append('file',FILES_BUFFER[key]);
+    //                 var res = await $.ajax({//можно использовать только асинхронные функции
+    //                     url: urlPost,
+    //                     type: 'POST',
+    //                     data:formData,
+    //                     dataType: 'json',
+    //                     cache: false,
+    //                     contentType: false,
+    //                     processData: false,
+    //                 });
+    //
+    //                 if(res){
+    //                         width =  (plansCount == i) ? 100 : width + addWidth;
+    //                         $('.upload-plans-title').find('.q4-plans-count').html('('+plansCount+')')
+    //
+    //                         elem.css('width', width + '%');
+    //                         elem.closest('.modal-progress-bar').find('.progress-bar-text').html(__("Load") + ' ' + i + ' ' +__("from") + ' ' +  plansCount);
+    //                         elem.closest('.modal-progress-bar').find('.progress-bar-status').html(__("loading") +' ('+ FILES_BUFFER[key].name +')');
+    //
+    //
+    //                     if(res.errors){
+    //                         reject++;
+    //                     }else{
+    //                         modal.find('.upload-plans-wrapper').find('li.'+deleteKey).remove();
+    //                     }
+    //                     if(i==plansCount){
+    //                         modal.find('.modal-progress-bg').fadeOut()
+    //                         $('.upload-plans-title').find('.q4-plans-count').html('')
+    //                         modal.find('.upload-plans').text(__('Done')).removeClass('upload-plans').addClass("close-upload-plans-modal").removeClass(currentPage.disabledGrayButton)
+    //                         FILES_BUFFER = [];
+    //                         LOADER = true;
+    //
+    //                         if(reject > 0){
+    //                             Q4U.alert(__('You have $s rejected files').replace(/%s/g, reject), {
+    //                                 type: "danger",
+    //                                 confirmText: __("OK")
+    //                             });
+    //                         }
+    //                     }
+    //                     i++;
+    //                 }
+    //
+    //             }
+    //
+    //     }
+    //
+    //     })().catch((err) => {
+    //
+    //         reject++;
+    //         if(i==plansCount){
+    //             modal.find('.modal-progress-bg').fadeOut()
+    //             $('.upload-plans-title').find('.q4-plans-count').html('')
+    //             modal.find('.upload-plans').text(__('Done')).removeClass('upload-plans').addClass("close-upload-plans-modal").removeClass(currentPage.disabledGrayButton)
+    //             FILES_BUFFER = [];
+    //             LOADER = true;
+    //
+    //             if(reject > 0){
+    //                 Q4U.alert(__('You have $s rejected files').replace(/%s/g, reject), {
+    //                     type: "danger",
+    //                     confirmText: __("OK")
+    //                 });
+    //             }
+    //         }
+    //         i++;
+    //     })
+    //
+    // });
 
     $(document).on('click', '.close-upload-plans-modal', function(e) {
         e.preventDefault();
@@ -1128,17 +1174,67 @@ $(document).ready(function() {
         });
     });
 
-
+    var planRows = 0;
     $(document).on('click', '.add-plan', function(e) {
         e.preventDefault();
 
-        console.log('#add-plans-modal ');
-        var html = currentPage.planMarkup;
+        var rowTemplate = $(document).find('.general-plan-row');
+        var sheetNumber = rowTemplate.find('.sheet-number').val();
+        var planName = rowTemplate.find('.plan-name').val();
 
-        $(document).find('#add-plans-modal').find('table tbody:first').prepend(html);
-        $(this).closest('.panel_body').find('table tbody tr:first [data-col="structure"]')
-            .html('<span>' + selectProfession + '</span>');
+        if (! sheetNumber) {
+            rowTemplate.addClass('warning');
+            Q4U.alert(__('Please check all rows'));
 
+            return false;
+        }
+
+        if (! planName) {
+            rowTemplate.addClass('warning');
+            Q4U.alert(__('Please check all rows'));
+
+            return false;
+        }
+
+        var newRowMarkup = '<tr>' +
+            '                   <td class="rwd-td1" data-th="">' +
+            '                       <input type="text" class="table_input sheet-number" value="'+ sheetNumber +'" name="plans['+ planRows +'][sheet_number]" disabled required>' +
+            '                   </td>' +
+            '                   <td class="rwd-td2" data-th="">' +
+            '                       <input type="text" class="table_input plan-name" value="'+ planName +'" name="plans['+ planRows +'][plan_name]" disabled required>' +
+            '                   </td>' +
+            '                   <td>' +
+            '                       <div class="text-right-left action-buttons">' +
+            '                           <a class="delete-plan">' +
+            '                               <span class="delete_row delete-plan">' +
+            '                                   <i class="q4bikon-delete"></i>' +
+            '                               </span>' +
+            '                           </a>' +
+            '                       </div>' +
+            '                   </td>' +
+            '               </tr>';
+
+        var input1 = document.createElement("input");
+        var input2 = document.createElement("input");
+
+        input1.type = "hidden";
+        input1.name = 'plan_'+ planRows +'_sheet';
+        input1.value = sheetNumber;
+
+        input2.type = "hidden";
+        input2.name = 'plan_'+ planRows +'_name';
+        input2.value = planName;
+
+        $(document).find('.upload-plans').removeClass('disabled-gray-button');
+
+        planRows++;
+
+        var container = document.getElementById("general-plan-row");
+
+        container.appendChild(input1);
+        container.appendChild(input2);
+
+        $(document).find('#add-plans-modal').find('table tbody:first').append(newRowMarkup);
     });
 
     $(document).on('click', currentPage.addPlanSelectorModal, function(e) {
