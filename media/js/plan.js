@@ -207,10 +207,6 @@ $(document).ready(function() {
         }
     });
 
-    $(document).on('click', currentPage.addPlan, function(e) {
-
-    });
-
     // todo:: not used
     $(document).on('click', currentPage.filterPlans, function(e) {
         e.preventDefault();
@@ -1260,6 +1256,21 @@ $(document).ready(function() {
         });
     });
 
+    $(document).on('change', '.select-project-get-objects', function(e) {
+        e.preventDefault();
+
+        var url = $(this).data('url') +'/'+ $(this).find('option:selected').val()
+
+        Q4U.ajaxGetRequest(url, {
+            successCallback: function(data) {
+                if (data.getData().objects) {
+                    var objects = data.getData().objects;
+                    $(document).find('.modal .select-objects-for-copy').html(objects);
+                }
+            }
+        });
+    });
+
     $(document).on('click', '.copy-plan', function(e) {
         e.preventDefault();
 
@@ -1272,7 +1283,6 @@ $(document).ready(function() {
                 }
             }
         });
-
     });
 
     $(document).on('click', '.delete-plan', function(e) {

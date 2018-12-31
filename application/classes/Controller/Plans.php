@@ -30,7 +30,7 @@ class Controller_Plans extends HDVP_Controller_Template
         'certification_files,download_certification_file,plan_history' => [
             'GET' => 'read'
         ],
-        'set_image,copy_property,floor_copy,place_copy,place_create,place_update,copy_plan,certification_files,create_plan,update_plan,add_edition,toggle_notifications' => [
+        'set_image,copy_property,floor_copy,place_copy,place_create,place_update,copy_plan,project_objects,certification_files,create_plan,update_plan,add_edition,toggle_notifications' => [
             'GET' => 'update'
         ],
         'delete_image,remove_users,delete_property,floor_delete,place_delete,delete_link,delete_plans_file,delete_certification_file,delete_quality_control_file,plan_delete,delete_tracking,delete_tracking_file,delete_space,quality_control_delete' => [
@@ -1417,6 +1417,7 @@ class Controller_Plans extends HDVP_Controller_Template
 
     public function action_plans_professions_list(){
         $this->_checkForAjaxOrDie();
+
         $this->project = ORM::factory('Project',(int)$this->request->param('id'));
         if( ! $this->project->loaded() OR !$this->_user->canUseProject($this->project)){
             throw new HTTP_Exception_404;
@@ -1430,7 +1431,7 @@ class Controller_Plans extends HDVP_Controller_Template
         $plans = $this->project->plans->find_all();
         foreach($plans as $plan){
             if( ! in_array($plan->profession_id,$professions)){
-                $professions [] = $plan->profession_id;
+                $professions[] = $plan->profession_id;
             }
         }
 
@@ -2129,12 +2130,20 @@ class Controller_Plans extends HDVP_Controller_Template
 
     public function action_copy_plan(){
         $this->_checkForAjaxOrDie();
-        
-        echo "<pre>";
-        var_dump($this->request->param('param1'));
-        echo "</pre>";
-        die;
-        $this->project = ORM::factory('Project',(int)$this->request->param('param1'));
+
+        $projectId = (int) $this->request->param('project_id');
+        $this->project = ORM::factory('Project',$projectId);
+
+        $projects = ORM::factory('Project');
+        if($this->_user->getRelevantRole('outspread') != Enum_UserOutspread::General){
+            $projects->where('client_id','=',$this->_user->client_id);
+        }
+        if( ! $this->_user->priorityLevelIn(Enum_UserPriorityLevel::Company) AND $this->_user->priorityLevelIn(Enum_UserPriorityLevel::Project)){
+            $projects = $this->_user->projects;
+        }
+
+        $projects = $projects->order_by('name','ASC')->find_all();
+
         if( ! $this->project->loaded() OR !$this->_user->canUseProject($this->project)){
             throw new HTTP_Exception_404;
         }
@@ -2142,24 +2151,53 @@ class Controller_Plans extends HDVP_Controller_Template
         if( ! $this->company->loaded()){
             throw new HTTP_Exception_404;
         }
+
+        $professions = [];
+        $plans = $this->project->plans->find_all();
+
+        foreach($plans as $plan){
+            if( ! in_array($plan->profession_id,$professions)){
+                $professions[$plan->profession_id] = $plan->getProfession()->name;
+            }
+        }
+
         View::set_global('_PROJECT', $this->project);
         View::set_global('_COMPANY', $this->company);
-        $plan = ORM::factory('PrPlan',(int)$this->request->param('param2'));
 
         if($this->request->method() == Request::POST){
-            $object_id = (int)Arr::get($this->post(),'object_id');
-            $object = $this->project->objects->where('id','=',$object_id)->find();
-            if( ! $object->loaded()){
+            $copyToProjectId = (int)Arr::get($this->post(),'project_id');
+            $copyToObjectId = (int)Arr::get($this->post(),'object_id');
+            $copyToProfessions = Arr::get($this->post(),'professions');
+
+            $copyToProject = ORM::factory('Project', $copyToProjectId);
+            $copyToObject = $copyToProject->objects->where('id', '=', $copyToObjectId)->find();
+
+            if(! $copyToObject->loaded()){
                 throw new HTTP_Exception_404;
             }
+
             try{
                 Database::instance()->begin();
-                $plan->cloneIntoObject($object);
+
+                if(! is_array($copyToProfessions)){
+                    $copyToProfessions = [$copyToProfessions];
+                }
+
+                $professionsIds = '('.implode(',',$copyToProfessions).')';
+                
+                $copyToPlans = $this->project->plans->where('profession_id', 'IN', DB::expr($professionsIds))->find_all();
+
+                foreach ($copyToPlans as $copyToPlan) {
+                    $copyToPlan->cloneIntoObject($copyToObject);
+                }
+
                 Database::instance()->commit();
+                
                 $this->setResponseData('projectPlansForm',View::make('projects/plans/list',
                     $this->_getPlanListPaginatedData($this->project, isset($object) ? $object : null, !empty($professionIds) ? $professionIds : null)
                     ));
                 $this->setResponseData('triggerEvent','projectPlansUpdated');
+                
                 Event::instance()->fire('onPlanCopy',['sender' => $this,'item' => $plan]);
             }catch (Exception $e){
                 Database::instance()->rollback();
@@ -2167,14 +2205,32 @@ class Controller_Plans extends HDVP_Controller_Template
             }
 
         }else{
-            $this->setResponseData('modal',View::make('projects/plans/copy-modal',[
+            $this->setResponseData('modal',View::make('plans/plans/copy-modal',[
+                'professions' => $professions,
+                'projects' => $projects,
                 'objects' => $this->project->objects->find_all(),
-                'action' => URL::site('projects/copy_plan/'.$this->project->id.'/'.$plan->id)
+                'action' => URL::site('plans/copy_plan/'. $projectId)
             ]));
+        }
+    }
 
+    public function action_project_objects(){
+        $this->_checkForAjaxOrDie();
+
+        $projectId = (int) $this->request->param('project_id');
+        $this->project = ORM::factory('Project',$projectId);
+
+        if( ! $this->project->loaded() OR !$this->_user->canUseProject($this->project)){
+            throw new HTTP_Exception_404;
         }
 
+        $objects = $this->project->objects->find_all();
 
+        View::set_global('_PROJECT', $this->project);
+
+        $this->setResponseData('objects',View::make('plans/plans/project-objects-select-options',[
+            'objects' => $objects,
+        ]));
     }
 
     public function action_plan_history(){
