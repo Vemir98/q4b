@@ -288,7 +288,7 @@ $icons = [
                                         </div>
                                     </td>
                                     <td class="rwd-td3 plans-sheet-number-cell" data-th="<?=__('Sheet Number')?>">
-                                        <span class="plans-sheet-number-val"><?=$item->file()->sheet_number?></span>
+                                        <input type="text" value="<?=$item->file()->sheet_number?>" name="plan_<?=$item->id?>_sheet_number" class="q4-form-input plans-sheet-number-val<?=$disabled?>">
                                     </td>
                                     <td class="rwd-td4 plan-name-field" data-th="<?=__('Name')?>">
 
@@ -466,17 +466,10 @@ $icons = [
                                         </div>
                                     </td>
                                     <td class="rwd-td11" data-th="Delivered date">
-                                        <input type="text" value="<?=$item->delivered_at?>" name="plan_<?=$item->id?>_delivered_at">
-
-                                        <!--<div class="select-wrapper" title="<?=$item->profession->name?>">
-                                            <i class="q4bikon-arrow_bottom"></i>
-                                            <select class="q4-select q4-form-input disabled-input">
-                                                <option value="Property name"><?=$item->profession->name?></option>
-                                            </select>
-                                        </div>-->
+                                        <input type="text" value="<?=$item->delivered_at?>" name="plan_<?=$item->id?>_delivered_at" class="q4-form-input<?=$disabled?>">
                                     </td>
                                     <td class="rwd-td12 td-50" data-th="<?=__('Received date')?>">
-                                        <input type="text" value="<?=$item->received_at?>" name="plan_<?=$item->id?>_received_at">
+                                        <input type="text" value="<?=$item->received_at?>" name="plan_<?=$item->id?>_received_at" class="q4-form-input<?=$disabled?>">
 
                                     </td>
                                 </tr>

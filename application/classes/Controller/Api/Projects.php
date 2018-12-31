@@ -403,7 +403,11 @@ class Controller_Api_Projects extends HDVP_Controller_API
         $filename[] = 'jpg';
         $filename = implode('.',$filename);
         if(!file_exists(DOCROOT.implode('/',[$plan['filePath'],$filename]))){
-            $filename = $plan['fileName'];
+            $filename = preg_replace('~.jpg$~','.png',$filename);
+            if(!file_exists(DOCROOT.implode('/',[$plan['filePath'],$filename]))){
+                $filename = $plan['fileName'];
+            }
+
         }
 
         return '/'.implode('/',[$plan['filePath'],$filename]);
@@ -647,25 +651,33 @@ class Controller_Api_Projects extends HDVP_Controller_API
         }
 
         $projects = ORM::factory('Project')->where('id','IN',DB::expr($cmpIds))->find_all();
-        if(count($projects)){
-            foreach ($projects as $p){
-                $prjIds[] = $p->id;
-            }
-            $prjIds = '('.implode(',',$prjIds).')';
-        }
-        $qc = ORM::factory('QualityControl')->where('project_id','IN',DB::expr($prjIds))->and_where('status','=',Enum_QualityControlStatus::Invalid)->find_all();
+        $usrProjects = ORM::factory('UserProjectsRelation')->getProjectIdsForUser($this->_user->id);
+//        if(count($projects)){
+//            foreach ($projects as $p){
+//                $prjIds[] = $p->id;
+//            }
+//            $prjIds = Arr::merge($prjIds,$usrProjects);
+//            $prjIds = array_unique($prjIds);
+//            $prjIds = '('.implode(',',$prjIds).')';
+//        }
+        $qc = ORM::factory('QualityControl')
+            ->with('project')
+//            ->where('qualitycontrol.project_id','IN',DB::expr($prjIds))
+            ->where('qualitycontrol.status','=',Enum_QualityControlStatus::Invalid)->find_all();
         $qcIds = [];
         foreach ($qc as $q){
             $qcIds[] = $q->id;
             $this->_responseData['items'][] = [
                 'id' => $q->id,
                 'projId' => $q->project_id,
+                'cmpID' => $q->project->company_id,
                 'objId' => $q->object_id,
                 'floorId' => $q->floor_id,
                 'placeId' => $q->place_id,
                 'spaceId' => $q->space_id,
                 'planId' => $q->plan_id,
                 'tasks' => [],
+                'files' => $this->getQualityControlImages($q),
                 'professionId' => $q->profession_id,
                 'craftId' => $q->craft_id,
                 'placeType' => $q->place_type,
@@ -698,7 +710,39 @@ class Controller_Api_Projects extends HDVP_Controller_API
                         $this->_responseData['items'][$i]['tasks'] = $qcIds[$this->_responseData['items'][$i]['id']];
                     }
                 }
+
+
+                if($this->_user->getRelevantRole('priority') > Enum_UserPriorityLevel::Corporate){
+                    //если компании
+                    if($this->_user->getRelevantRole('priority') <= Enum_UserPriorityLevel::Company){
+                        foreach($this->_responseData['items'] as $key => $item){
+                            if($item['cmpId'] != $this->_user->company_id){
+                                if(!in_array($item['projId'],$usrProjects)){
+                                    unset($this->_responseData['items'][$key]);
+                                }
+                            }
+                        }
+                    }else{//если проект
+                        foreach($this->_responseData['items'] as $key => $item){
+                            if(!in_array($item['projId'],$usrProjects)){
+                                unset($this->_responseData['items'][$key]);
+                            }
+                        }
+                    }
+
+                }
             }
         }
+    }
+
+    private function getQualityControlImages($qc)
+    {
+        $output = [];
+
+        foreach($qc->images->find_all() as $f){
+            $output []= URL::base('https').implode('/',[$f->path, $f->name]);
+        }
+        return $output;
+
     }
 }

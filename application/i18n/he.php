@@ -620,7 +620,9 @@ return [
 
 "Crop" => "חיתוך",
 
+"Field Invalid Condition Is Required" => "נדרש למלא שדה רשימת התניות",
 
+"Field Invalid Severity Is Required" => "נדרש למלא שדה דרגות חומרה",
 
 
 

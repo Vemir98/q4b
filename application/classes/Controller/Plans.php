@@ -1585,6 +1585,7 @@ class Controller_Plans extends HDVP_Controller_Template
         if( ! $this->project->loaded() OR empty($this->post()) OR !$this->_user->canUseProject($this->project)){
             throw new HTTP_Exception_404;
         }
+        
         $plansData = [];
         foreach ($this->post() as $key => $value){
             if(preg_match('~plan_(?<isNew>\+)?(?<id>[0-9]+)_(?<field>[a-z_]+)~',$key,$matches))
@@ -1632,11 +1633,13 @@ class Controller_Plans extends HDVP_Controller_Template
             try{
                 Database::instance()->begin();
                 $objects = [];
+
                 foreach($plansData as $pid => $c){
                     $plan = $this->project->plans->where('id','=',$this->getUIntParamOrDie($pid))->find();
                     if(! $plan->loaded()){
                         throw new HDVP_Exception('Incorrect plan identifier');
                     }
+
                     if($plan->hasQualityControl()) continue;
 
                     if(isset($plansFilesData[$this->getUIntParamOrDie($pid)])){
@@ -1661,6 +1664,10 @@ class Controller_Plans extends HDVP_Controller_Template
 
                     if($planFile->loaded()){
                         $planFile->customName(Arr::get($c,'name'));
+
+                        $planFile->sheet_number = Arr::get($c,'sheet_number');
+                        $planFile->save();
+
                     }
 
                     $plan->delivered_at = Arr::get($c,'delivered_at');

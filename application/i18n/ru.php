@@ -609,6 +609,8 @@ return [
     "Rotate" => "Повернуть",
 
     "Crop" => "Обрезать",
+    "Field Invalid Condition Is Required" => "Поле Список условий обязательно к заполнению",
+    "Field Invalid Severity Is Required" => "Поле Уровень проблемы обязательно к заполнению",
 
 
 

@@ -637,6 +637,8 @@ return [
 "Rotate" => "Rotate",
 
 "Crop" => "Crop",
+"Field Invalid Condition Is Required" => "Field Conditions list Is Required",
+"Field Invalid Severity Is Required" => "Field Severity level Is Required",
 
 
 
