@@ -1667,7 +1667,6 @@ class Controller_Plans extends HDVP_Controller_Template
 
                         $planFile->sheet_number = Arr::get($c,'sheet_number');
                         $planFile->save();
-
                     }
 
                     $plan->delivered_at = Arr::get($c,'delivered_at');
@@ -1915,7 +1914,7 @@ class Controller_Plans extends HDVP_Controller_Template
 
         }else{
             $this->setResponseData('modal',View::make('plans/plans/create',[
-                'professions' => $this->company->professions->where('status','=',Enum_Status::Enabled)->find_all(),
+                'professions' => $this->company->professions->where('status','=',Enum_Status::Enabled)->order_by('cmpprofession.name','ASC')->find_all(),
                 'objects' => $this->project->objects->find_all(),
                 'project' => ['id' => $this->project->id, 'name' => $this->project->name],
                 'company' => ['id' => $this->company->id, 'name' => $this->company->name],
@@ -1949,7 +1948,7 @@ class Controller_Plans extends HDVP_Controller_Template
         if($this->request->method() == Request::POST){
             try{
                 Database::instance()->begin();
-                $data = Arr::extract($this->post(),['name','edition','description','object_id','date','profession_id','scale','status']);
+                $data = Arr::extract($this->post(),['name','edition','description','object_id','date','profession_id','scale','status','sheet_number']);
                 $data['place_id'] = 0;
                 if(Arr::get($this->post(),'place_number')){
                     $placeData = Arr::extract($this->post(),['place_number','place_type']);
@@ -1971,6 +1970,9 @@ class Controller_Plans extends HDVP_Controller_Template
                 $f = $plan->file();
                 if($f->loaded()){
                     $f->customName($data['name']);
+
+                    $f->sheet_number = Arr::get($data,'sheet_number');
+                    $f->save();
                 }
                 if( ! $plan->place_id){
                     if(!isset($this->post()['floors']) OR (empty($this->post()['floors']) AND $this->post()['floors'] !== '0')){
@@ -2020,9 +2022,19 @@ class Controller_Plans extends HDVP_Controller_Template
                     $plan->add('crafts',$this->post()['crafts']);
                 }
                 Database::instance()->commit();
+
+                $query = clone($this->project->plans);
+                $withFileCount = clone($query);
+                $withFileCount = $withFileCount->and_where('prplan.has_file','=',1)->find_all()->count();
+                $withoutFileCount = clone($query);
+                $withoutFileCount = $withoutFileCount->and_where('prplan.has_file','=',0)->find_all()->count();
+
                 $this->setResponseData('projectPlansForm',View::make('plans/plans/list',
                     [   'items' => $this->project->plans->order_by('created_at','Desc')->find_all(),
-                        'secure_tkn' => AesCtr::encrypt($this->project->id.Text::random('alpha'),$this->project->id,192)
+                        'secure_tkn' => AesCtr::encrypt($this->project->id.Text::random('alpha'),$this->project->id,192),
+                        'withFileCount' => $withFileCount,
+                        'withoutFileCount' => $withoutFileCount,
+                        'planCount' => $withoutFileCount + $withFileCount,
                     ]));
                 $this->setResponseData('triggerEvent','projectPlansUpdated');
                 Event::instance()->fire('onItemUpdated',['sender' => $this,'item' => $plan]);
@@ -2067,7 +2079,7 @@ class Controller_Plans extends HDVP_Controller_Template
             }
             try{
                 Database::instance()->begin();
-                $data = Arr::extract($this->post(),['edition','description','date','scale','status']);
+                $data = Arr::extract($this->post(),['edition','description','date','scale','status','sheet_number']);
                 $data['date'] = DateTime::createFromFormat('d/m/Y',$data['date'])->getTimestamp();
                 $newPlan = ORM::factory('PrPlan')->values($data);
                 $newPlan->name = $plan->name;
@@ -2107,6 +2119,11 @@ class Controller_Plans extends HDVP_Controller_Template
                     if($f->hasCustomName()){
                         $file->customName($f->customName());
                     }
+
+                    if($file->loaded()){
+                        $file->sheet_number = Arr::get($data,'sheet_number');
+                        $file->save();
+                    }
                 }
                 Database::instance()->commit();
             }catch (ORM_Validation_Exception $e){
@@ -2120,14 +2137,14 @@ class Controller_Plans extends HDVP_Controller_Template
                 $this->_setErrors('Operation Error');
             }
 
-            $this->setResponseData('projectPlansForm',View::make('projects/plans/list',
+            $this->setResponseData('projectPlansForm',View::make('plans/plans/list',
                 $this->_getPlanListPaginatedData($this->project)));
             $this->setResponseData('triggerEvent','projectPlansUpdated');
             Event::instance()->fire('onItemUpdated',['sender' => $this,'item' => $plan]);
         }else{
-            $this->setResponseData('modal',View::make('projects/plans/add-edition',[
+            $this->setResponseData('modal',View::make('plans/plans/add-edition',[
                 'professions' => $this->company->professions->where('status','=',Enum_Status::Enabled)->with('crafts')->find_all(),
-                'action' => URL::site('projects/add_edition/'.$this->project->id.'/'.$plan->id),
+                'action' => URL::site('plans/add_edition/'.$this->project->id.'/'.$plan->id),
                 'item' => $plan,
                 'historyItems' => ORM::factory('PrPlan')->where('scope','=',$plan->scope)->and_where('id','<>',$plan->id)->order_by('created_at','DESC')->find_all(),
 
