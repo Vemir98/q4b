@@ -62,7 +62,7 @@
                             <div class="form-group col-16 rtl-float-right">
                                 <label class="table_label">Sheet Number</label>
                                 <div class="input-group form-group">
-                                    <input type="text" class="table_input disabled-input plans-sheet-number" value="">
+                                    <input type="text" class="table_input" name="sheet_number" value="<?=$item->file()->sheet_number?>">
                                 </div>
                             </div>
                         </div>
@@ -294,7 +294,7 @@
 
                         <div class="row">
                             <div class="form_row">
-                                <div class="form-group col-md-6 rtl-float-right">
+                                <div class="form-group col-md-12 rtl-float-right">
                                     <div class="mt-15 mb-15">
                                         <label class="table_label"><?=__('Description')?></label>
                                     </div>

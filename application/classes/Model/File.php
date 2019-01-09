@@ -63,39 +63,39 @@ abstract class Model_File extends MORM
     {
         return [
             'name' => [
-                ['not_empty'],
+//                ['not_empty'],
             ],
             'original_name' => [
-                ['not_empty'],
+//                ['not_empty'],
             ],
             'token' => [
-                ['not_empty'],
+//                ['not_empty'],
             ],
             'mime' => [
-                ['not_empty'],
-                [
-                    function( Validation $valid){
-                        $mimes = Kohana::$config->load('mimes.'.strtolower($this->ext));
-                        if(empty($mimes) OR !in_array($this->mime,$mimes)){
-                            $valid->error('mime', 'invalid_mime_type');
-                        }
-                    },
-                    [':validation']
-                ]
+//                ['not_empty'],
+//                [
+//                    function( Validation $valid){
+//                        $mimes = Kohana::$config->load('mimes.'.strtolower($this->ext));
+//                        if(empty($mimes) OR !in_array($this->mime,$mimes)){
+//                            $valid->error('mime', 'invalid_mime_type');
+//                        }
+//                    },
+//                    [':validation']
+//                ]
             ],
             'ext' => [
-                ['not_empty'],
-                [
-                    function( Validation $valid){;
-                        if(!in_array(strtolower($this->ext),$this->_allowed_ext)){
-                            $valid->error('ext', 'invalid_file_ext');
-                        }
-                    },
-                    [':validation']
-                ]
+//                ['not_empty'],
+//                [
+//                    function( Validation $valid){;
+//                        if(!in_array(strtolower($this->ext),$this->_allowed_ext)){
+//                            $valid->error('ext', 'invalid_file_ext');
+//                        }
+//                    },
+//                    [':validation']
+//                ]
             ],
             'path' => [
-                ['not_empty'],
+//                ['not_empty'],
             ]
         ];
     }

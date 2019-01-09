@@ -26,8 +26,8 @@ Route::set('site.plans.toggleNotifications','plans/toggle_notifications/<project
 //        'controller' => 'plans',
 //        'action' => 'plans_list'
 //    ]);
-Route::set('site.plans.plansList','plans/<project_id>/plans_list(/object/<object_id>)(/professions/<professions>)(/floors/<floors>)(/page/<page>)',
-    ['project_id' => '[0-9]+','professions' => '[0-9-]+','object_id' => '[0-9]+', 'floors' => '[0-9-_]+','page' => '[0-9]+'])
+Route::set('site.plans.plansList','plans/<project_id>/plans_list(/object/<object_id>)(/professions/<professions>)(/floors/<floors>)(/with_file/<with_file>)(/page/<page>)',
+    ['project_id' => '[0-9]+','professions' => '[0-9-]+','object_id' => '[0-9]+', 'floors' => '[0-9-_]+','with_file' => '[/-1-1]+','page' => '[0-9]+'])
     ->defaults([
         'controller' => 'plans',
         'action' => 'plans_list'
@@ -43,6 +43,16 @@ Route::set('site.plans.trackingList2','plans/tracking_list/<id>(/filter/<filter>
         'controller' => 'plans',
         'action' => 'tracking_list',
         'page' => 1,
+    ]);
+Route::set('site.plans.copy','plans/copy_plan/<project_id>',['project_id' => '[0-9]+'])
+    ->defaults([
+        'controller' => 'plans',
+        'action' => 'copy_plan',
+    ]);
+Route::set('site.plans.projectObjects','plans/project_objects/<project_id>',['project_id' => '[0-9]+'])
+    ->defaults([
+        'controller' => 'plans',
+        'action' => 'project_objects',
     ]);
 Route::set('site.plans','plans(/<action>(/<id>))',['action' => '[a-z0-9_]+', 'id' => '[0-9]+'])
     ->defaults([

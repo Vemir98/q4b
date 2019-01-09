@@ -122,9 +122,7 @@ $icons = [
                         <i class="input_icon q4bikon-position"></i>
                     </div>
                 </div>
-
                 <div class="col-md-3 rtl-float-right multi-select-col">
-
                     <div class="col-md-8 rtl-float-right">
                         <label class="visibility-hidden table_label">Search</label>
                         <div class="search-input-wrapper block">
@@ -134,47 +132,7 @@ $icons = [
                             </a>
                         </div>
                     </div>
-
-                    <!--<label class="table_label">
-                        <?=__('Floor')?>
-                        <span class="check-all-links" data-seltxt="<?=__('select all')?>" data-unseltxt="<?=__('unselect all')?>"><?=__('select all')?></span>
-                    </label>
-                    <div class="multi-select-box comma">
-                        <div class="select-imitation q4-form-input floor-numbers">
-                            <span class="select-imitation-title"></span>
-
-                            <div class="over-select"></div><i class="arrow-down q4bikon-arrow_bottom"></i>
-                        </div>
-                        <div class="checkbox-list">
-
-                            <?for($i = $floorsFilter['min']; $i <= $floorsFilter['max']; $i++):?>
-                                <div class="checkbox-list-row">
-                                    <span class="checkbox-text">
-                                        <label class="checkbox-wrapper-multiple inline" data-val="<?=$i?>">
-                                            <span class="checkbox-replace"></span>
-                                            <i class="checkbox-list-tick q4bikon-tick"></i>
-                                        </label>
-                                        <span class="checkbox-text-content bidi-override">
-                                            <?=$i?>
-                                        </span>
-                                    </span>
-                                </div>
-                            <?endfor?>
-
-                        </div>
-                        <select class="hidden-select floors-filter" multiple>
-
-                            <?for($i = $floorsFilter['min']; $i <= $floorsFilter['max']; $i++):?>
-                                <option value="<?=$i?>"><?=$i?></option>
-                            <?endfor?>
-
-                        </select>
-                    </div>-->
                 </div>
-                <!--<div class="col-md-2 form-group rtl-float-right">
-                    <label class="table_label visibility-hidden"><?=__('Show')?></label>
-                    <input data-url="<?=URL::site('/plans/'.$_PROJECT->id.'/plans_list/')?>" class="inline-block-btn-small light_blue_btn filter-plans" type="submit" value="<?=__('Show')?>">
-                </div>-->
             </div>
             <div class="row">
                 <div class="col-md-1 rtl-float-right">
@@ -184,19 +142,25 @@ $icons = [
                     </div>
                 </div>
                 <div class="col-md-2 col-sm-12 rtl-float-right">
-                    <div class="form-group">
-                        <div class="btn btn-primary db">All (231)</div>
-                    </div>
+                    <a href="#" class="ev-with-file" data-with-file="0">
+                        <div class="form-group">
+                            <div class="btn btn-primary db">All (<?=$planCount?>)</div>
+                        </div>
+                    </a>
                 </div>
                 <div class="col-md-2 col-sm-12 rtl-float-right">
-                    <div class="form-group">
-                        <div class="btn btn-info db">With a file (201)</div>
-                    </div>
+                    <a href="#" class="ev-with-file" data-with-file="1">
+                        <div class="form-group">
+                            <div class="btn btn-info db">With a file (<?=$withFileCount?>)</div>
+                        </div>
+                    </a>
                 </div>
                 <div class="col-md-2 col-sm-12 rtl-float-right">
-                    <div class="form-group">
-                        <div class="btn btn-warning db">Without a file (201)</div>
-                    </div>
+                    <a href="#" class="ev-with-file" data-with-file="-1">
+                        <div class="form-group">
+                            <div class="btn btn-warning db">Without a file (<?=$withoutFileCount?>)</div>
+                        </div>
+                    </a>
                 </div>
 
             </div>
@@ -221,7 +185,7 @@ $icons = [
                                 <th data-field="<?=__('File')?>" class="td-25">File</th><!-- 5 -->
                                 <th data-field="<?=__('Floor')?>" class="td-25"><?=__('Floor')?></th><!-- 6 -->
                                 <th data-field="<?=__('Edition')?>" class="td-100"><?=__('Edition')?> </th><!-- 7 -->
-                                <th data-field="<?=__('Status')?>" class="td-75"><?=__('Status')?></th>  <!-- 8 -->
+                                <th data-field="<?=__('Status')?>" class="td-100"><?=__('Status')?></th>  <!-- 8 -->
 
                                 <!-- <th data-field="<?=__('Element number')?>" class="td-100"><?=__('Element number')?></th>-->
                                 <!-- <th data-field="<?=__('Craft')?>" class="td-100"><?=__('Craft')?></th>-->
@@ -282,7 +246,7 @@ $icons = [
                                         </div>
                                     </td>
                                     <td class="rwd-td3 plans-sheet-number-cell" data-th="<?=__('Sheet Number')?>">
-                                        <span class="plans-sheet-number-val"><?=$item->file()->sheet_number?></span>
+                                        <input type="text" value="<?=$item->file()->sheet_number?>" name="plan_<?=$item->id?>_sheet_number" class="q4-form-input plans-sheet-number-val<?=$disabled?>">
                                     </td>
                                     <td class="rwd-td4 plan-name-field" data-th="<?=__('Name')?>">
 
@@ -296,7 +260,7 @@ $icons = [
                                     </td>
                                     <td class="rwd-td5 align-center-left">
 
-                                        <? if ($item->file()->loaded()): ?>
+                                        <? if ($item->file()->loaded() and $item->has_file): ?>
                                             <span class="plans-inline-icon">
                                                 <a target="_blank" href="<?=$item->file()->originalFilePath()?>" class="<?=$mime== 'unknown' ? 'disabled-input' : ''?>">
                                                     <img src="/media/img/choose-format/format-<?=$mime?>.png" title="<?=$name?>" alt="<?=$name?>">
@@ -306,7 +270,7 @@ $icons = [
                                             <div class="upload-icon-box q4-file-upload">
                                                 <span class="upload-icon up-box">
                                                     <div class="hide-upload">
-                                                        <input type="file" class="upload-user-logo" accept=".jpg,.jpe,.jpeg,.png,.gif,.tif,.tiff" name="logo"/>
+                                                        <input type="file" class="upload-user-logo" accept=".jpg,.jpe,.jpeg,.png,.gif,.tif,.tiff" name="plan_<?=$item->id?>_file"/>
                                                     </div>
 
                                                     <div class="attention-bg camera-default-image">
@@ -380,79 +344,11 @@ $icons = [
                                         </span>
                                     </td>
                                     <td class="rwd-td8" data-th="<?=__('Status')?>">
-                                        To execute
-                                        <!--<div class="choose-icons<?=$disabled?>">
-                                            <i class="q4bikon-arrow_bottom"></i>
-                                            <select class="selectpicker" name="plan_<?=$item->id?>_place_type">
-                                                <option value="0" data-icon="" <?=!$item->place->loaded() ? 'selected="selected"' : ''?>><?=__(" ")?></option>
-                                                <option value="public" data-icon="q4bikon-public" <?=$item->place->loaded() && $item->place->type == "public" ? 'selected="selected"' : ''?> ></option>
-                                                <option value="private" data-icon="q4bikon-private" <?=$item->place->loaded() && $item->place->type == "private" ? 'selected="selected"' : ''?>></option>
-                                            </select>
-                                        </div>-->
+                                        <input name="plan_<?=$item->id?>_status" type="text" class="q4-form-input disabled-input" value="<?=$item->status ?: null?>">
                                     </td>
 
-                                  <!--  <td class="rwd-td9" data-th="<?=__('Element number')?>">
-                                        <? $placeNumber = !empty($item->place->custom_number) ? $item->place->custom_number : $item->place->number; ?>
-                                        <input name="plan_<?=$item->id?>_custom_number" type="text" class="q4-form-input plan-place-custom-number<?=empty($item->place->custom_number) ? ' disabled-input':''?><?=$disabled?>" value="<?=$item->place->loaded() ? $placeNumber: ''?>">
-                                    </td>-->
-                                    <!--<td class="rwd-td10 table-craft-selector" data-th="<?=__('Craft')?>">
-
-                                        <?
-                                        $selectedCrafts = $item->crafts->find_all();
-                                        $selCraftArray = [];
-                                        foreach ($selectedCrafts as $craft) {
-                                            $selCraftArray[$craft->id] = $craft->name;
-                                        }
-                                        ?>
-
-                                        <div class="multi-select-box multi-select-col">
-                                            <div class="select-imitation<?=$disabled?>">
-                                                <span class="select-imitation-title">
-                                                    <?if(isset($selCraftArray) AND $selCraftArray):?>
-                                                        <?foreach ($selCraftArray as $craft) {
-                                                            echo $craft.',';
-                                                        } ?>
-                                                    <?else:?>
-                                                        <span class="select-def-text"><?=__('Please select')?></span>
-                                                    <?endif?>
-                                                </span>
-                                                <div class="over-select"></div>
-                                                <i class="arrow-down q4bikon-arrow_bottom"></i>
-                                            </div>
-                                            <div class="checkbox-list-no-scroll hidden">
-                                                <span class="check-all-links" data-seltxt="<?=__('select all')?>" data-unseltxt="<?=__('unselect all')?>"><?=__('select all')?></span>
-
-                                                <?
-                                                $crafts = $item->profession->crafts->where('status','=',Enum_Status::Enabled)->order_by('name','ASC')->find_all();
-                                                foreach ($crafts as $cr):?>
-                                                    <div class="checkbox-list-row" data-profession=<?=$item->profession->id?>>
-                                                                <span class="checkbox-text">
-                                                                    <label data-val="<?=$cr->id?>" class="checkbox-wrapper-multiple inline <?=in_array($cr->id,array_keys($selCraftArray)) ? 'checked' : ''?>">
-                                                                        <span class="checkbox-replace"></span>
-                                                                        <i class="checkbox-list-tick q4bikon-tick"></i>
-                                                                    </label>
-                                                                    <?=$cr->name?>
-                                                                </span>
-                                                    </div>
-                                                <?endforeach; ?>
-                                            </div>
-                                            <select name="plan_<?=$item->id?>_crafts" class="hidden-select" multiple>
-
-                                                <?
-                                                $crafts = $item->profession->crafts->where('status','=',Enum_Status::Enabled)->find_all();
-                                                $c = [];
-                                                foreach ($crafts as $cr):?>
-                                                    <?$craftsArray[$cr->id]=$cr->id?>
-                                                    <option value="<?=$cr->id?>" <?=in_array($cr->id,array_keys($selCraftArray)) ? ' selected="selected"':''?> data-profession="<?=$item->profession->id?>"><?=__($cr->name)?></option>
-                                                <?endforeach; ?>
-
-                                            </select>
-                                        </div>
-
-                                    </td>-->
                                     <td class="rwd-td9" data-th="Updates note">
-<!--                                        <input name="plan_--><?//=$item->id?><!--_edition" type="text" class="q4-form-input--><?//=$disabled?><!--" value="--><?//=$item->edition ?: null?><!--">-->
-                                        Addition of levels
+                                        <input name="plan_<?=$item->id?>_description" type="text" class="q4-form-input disabled-input" value="<?=$item->description ?: null?>">
                                     </td>
                                     <td class="rwd-td10 align-center-left" data-th="<?=__('Upload date')?>">
                                         <div class="div-cell">
@@ -460,17 +356,11 @@ $icons = [
                                         </div>
                                     </td>
                                     <td class="rwd-td11" data-th="Delivered date">
-                                        <span>02/05/2018</span>
-
-                                        <!--<div class="select-wrapper" title="<?=$item->profession->name?>">
-                                            <i class="q4bikon-arrow_bottom"></i>
-                                            <select class="q4-select q4-form-input disabled-input">
-                                                <option value="Property name"><?=$item->profession->name?></option>
-                                            </select>
-                                        </div>-->
+                                        <input type="text" value="<?=$item->delivered_at?>" name="plan_<?=$item->id?>_delivered_at" class="q4-form-input<?=$disabled?>">
                                     </td>
                                     <td class="rwd-td12 td-50" data-th="<?=__('Received date')?>">
-                                        <span>03/05/2017</span>
+                                        <input type="text" value="<?=$item->received_at?>" name="plan_<?=$item->id?>_received_at" class="q4-form-input<?=$disabled?>">
+
                                     </td>
                                 </tr>
                             <?endforeach;?>

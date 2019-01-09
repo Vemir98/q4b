@@ -30,7 +30,7 @@ class Controller_Plans extends HDVP_Controller_Template
         'certification_files,download_certification_file,plan_history' => [
             'GET' => 'read'
         ],
-        'set_image,copy_property,floor_copy,place_copy,place_create,place_update,copy_plan,certification_files,create_plan,update_plan,add_edition,toggle_notifications' => [
+        'set_image,copy_property,floor_copy,place_copy,place_create,place_update,copy_plan,project_objects,certification_files,create_plan,update_plan,add_edition,toggle_notifications' => [
             'GET' => 'update'
         ],
         'delete_image,remove_users,delete_property,floor_delete,place_delete,delete_link,delete_plans_file,delete_certification_file,delete_quality_control_file,plan_delete,delete_tracking,delete_tracking_file,delete_space,quality_control_delete' => [
@@ -1417,6 +1417,7 @@ class Controller_Plans extends HDVP_Controller_Template
 
     public function action_plans_professions_list(){
         $this->_checkForAjaxOrDie();
+
         $this->project = ORM::factory('Project',(int)$this->request->param('id'));
         if( ! $this->project->loaded() OR !$this->_user->canUseProject($this->project)){
             throw new HTTP_Exception_404;
@@ -1430,7 +1431,7 @@ class Controller_Plans extends HDVP_Controller_Template
         $plans = $this->project->plans->find_all();
         foreach($plans as $plan){
             if( ! in_array($plan->profession_id,$professions)){
-                $professions [] = $plan->profession_id;
+                $professions[] = $plan->profession_id;
             }
         }
 
@@ -1507,6 +1508,7 @@ class Controller_Plans extends HDVP_Controller_Template
         $projectId = (int)$this->request->param('project_id');
         $objectId = (int)$this->request->param('object_id');
         $professionIds = $this->request->param('professions');
+        $withFile = (int)$this->request->param('with_file');
         $floorIds = $this->request->param('floors');
         $this->project = ORM::factory('Project',$projectId);
 
@@ -1540,9 +1542,11 @@ class Controller_Plans extends HDVP_Controller_Template
                 $item = (int)$item;
             });
         }
+
         View::set_global('_PROJECT', $this->project);
+
         $this->setResponseData('plans',View::make('plans/plans/list',
-            $this->_getPlanListPaginatedData($this->project, isset($object) ? $object : null, !empty($professionIds) ? $professionIds : null, !empty($floorIds) ? $floorIds : null)
+            $this->_getPlanListPaginatedData($this->project, isset($object) ? $object : null, !empty($professionIds) ? $professionIds : null, !empty($floorIds) ? $floorIds : null, null, !empty($withFile) ? $withFile : null)
         ));
     }
 
@@ -1581,6 +1585,7 @@ class Controller_Plans extends HDVP_Controller_Template
         if( ! $this->project->loaded() OR empty($this->post()) OR !$this->_user->canUseProject($this->project)){
             throw new HTTP_Exception_404;
         }
+        
         $plansData = [];
         foreach ($this->post() as $key => $value){
             if(preg_match('~plan_(?<isNew>\+)?(?<id>[0-9]+)_(?<field>[a-z_]+)~',$key,$matches))
@@ -1589,7 +1594,6 @@ class Controller_Plans extends HDVP_Controller_Template
                 }else{
                     $plansData[$matches['id']][$matches['field']] = $value;
                 }
-
         }
 
         //удаляем явно не валидные новые профессии
@@ -1599,6 +1603,24 @@ class Controller_Plans extends HDVP_Controller_Template
             }
         }
 
+        $plansFilesData = [];
+        foreach ($_FILES as $key => $value){
+            if(preg_match('~plan_(?<isNew>\+)?(?<id>[0-9]+)_(?<field>[a-z_]+)~',$key,$fileMatches))
+            {
+                if($fileMatches['isNew']){
+                    $plansFilesData['new_'.$fileMatches['id']][$fileMatches['field']] = $value;
+                }else{
+                    $plansFilesData[$fileMatches['id']][$fileMatches['field']] = $value;
+                }
+            }
+        }
+
+        //удаляем явно не валидные
+        foreach ($plansFilesData as $key => $val){
+            if(empty($val['file']) AND !is_numeric($key)){
+                unset($plansFilesData[$key]);
+            }
+        }
 
         if($this->project->id != (int)AesCtr::decrypt(Arr::get($this->post(),'secure_tkn'),$this->project->id,192)){
             $this->_setErrors('Invalid request');
@@ -1611,18 +1633,48 @@ class Controller_Plans extends HDVP_Controller_Template
             try{
                 Database::instance()->begin();
                 $objects = [];
+
                 foreach($plansData as $pid => $c){
                     $plan = $this->project->plans->where('id','=',$this->getUIntParamOrDie($pid))->find();
                     if(! $plan->loaded()){
                         throw new HDVP_Exception('Incorrect plan identifier');
                     }
+
                     if($plan->hasQualityControl()) continue;
+
+                    if(isset($plansFilesData[$this->getUIntParamOrDie($pid)])){
+                        $fileInfo = $plansFilesData[$this->getUIntParamOrDie($pid)]['file'];
+
+                        $this->project->makeProjectPaths();
+
+                        $fileData = [
+                            'name' => str_replace($this->project->plansPath().DS,'',Upload::save($fileInfo,null,$this->project->plansPath())),
+                            'original_name' => $fileInfo['name'],
+                            'ext' => Model_File::getFileExt($fileInfo['name']),
+                            'mime' => $fileInfo['type'],
+                            'path' => str_replace(DOCROOT,'',$this->project->plansPath()),
+                            'token' => md5($fileInfo['name']).base_convert(microtime(false), 10, 36),
+                        ];
+                        $file = ORM::factory('PlanFile')->values($fileData)->save();
+                        $plan->add('files', $file->pk());
+                        Event::instance()->fire('onPlanFileAdded',['sender' => $this,'item' => $file]);
+                    }
+
                     $planFile = $plan->file();
+
                     if($planFile->loaded()){
                         $planFile->customName(Arr::get($c,'name'));
-                    }
-                    $plan->edition = Arr::get($c,'edition');
 
+                        $planFile->sheet_number = Arr::get($c,'sheet_number');
+                        $planFile->save();
+                    }
+
+                    $plan->delivered_at = Arr::get($c,'delivered_at');
+                    $plan->received_at = Arr::get($c,'received_at');
+
+                    if(Arr::get($c,'edition') !== ''){
+                        $plan->edition = Arr::get($c,'edition');
+                    }
 
                     if(!empty($c['place_type'])){
                         $place = ORM::factory('PrPlace',['object_id' => $plan->object_id,'object_id','custom_number' => $c['custom_number'], 'type' => $c['place_type']]);
@@ -1635,49 +1687,55 @@ class Controller_Plans extends HDVP_Controller_Template
                     }
 
                     $plan->save();
-                    $plan->remove('floors');
-                    if(!$plan->place_id){
-                        if(!empty($c['floors']) OR $c['floors'] == '0'){
-                            if(isset($objects[$plan->object_id])){
-                                $object = $objects[$plan->object_id];
-                            }else{
-                                $object = ORM::factory('PrObject',$plan->object_id);
-                                $objects[$object->id] = $object;
-                            }
-                            if(!is_array($c['floors'])){
-                                $c['floors'] = [$c['floors']];
-                            }
-                            $floors = $object->floors->where('number','IN',DB::expr('('.implode(',',$c['floors']).')'))->find_all();
-                            if(count($floors) != count($c['floors'])){
-                                throw new HDVP_Exception('Incorrect floor numbers');
-                            }
-                            foreach ($floors as $floor){
-                                $plan->add('floors',$floor);
+
+                    if(isset($c['floors'])){
+                        $plan->remove('floors');
+                        if(!$plan->place_id){
+                            if(!empty($c['floors']) OR $c['floors'] == '0'){
+                                if(isset($objects[$plan->object_id])){
+                                    $object = $objects[$plan->object_id];
+                                }else{
+                                    $object = ORM::factory('PrObject',$plan->object_id);
+                                    $objects[$object->id] = $object;
+                                }
+                                if(!is_array($c['floors'])){
+                                    $c['floors'] = [$c['floors']];
+                                }
+                                $floors = $object->floors->where('number','IN',DB::expr('('.implode(',',$c['floors']).')'))->find_all();
+                                if(count($floors) != count($c['floors'])){
+                                    throw new HDVP_Exception('Incorrect floor numbers');
+                                }
+                                foreach ($floors as $floor){
+                                    $plan->add('floors',$floor);
+                                }
                             }
                         }
+                        
                     }
 
-                    if(!empty($c['crafts']) OR $c['crafts'] == '0'){
-                        if(empty($this->company)){
-                            $this->company = $this->project->company;
-                        }
-                        $plan->remove('crafts');
-                        if(!is_array($c['crafts'])){
-                            $c['crafts'] = [$c['crafts']];
-                        }
-
-                        $crafts = $this->company->crafts->where('id','IN',DB::expr('('.implode(',',$c['crafts']).')'))->find_all();
-
-                        if(count($crafts) != count($c['crafts'])){
-                            throw new HDVP_Exception('Incorrect crafts');
-                        }
-                        foreach ($crafts as $craft){
-                            $plan->add('crafts',$craft);
-                        }
-                    }
+                    // Disabled on Plans LIST
+//                    if(!empty($c['crafts']) OR $c['crafts'] == '0'){
+//                        if(empty($this->company)){
+//                            $this->company = $this->project->company;
+//                        }
+//                        $plan->remove('crafts');
+//                        if(!is_array($c['crafts'])){
+//                            $c['crafts'] = [$c['crafts']];
+//                        }
+//
+//                        $crafts = $this->company->crafts->where('id','IN',DB::expr('('.implode(',',$c['crafts']).')'))->find_all();
+//
+//                        if(count($crafts) != count($c['crafts'])){
+//                            throw new HDVP_Exception('Incorrect crafts');
+//                        }
+//                        foreach ($crafts as $craft){
+//                            $plan->add('crafts',$craft);
+//                        }
+//                    }
 
                     $plansArr[] = $plan;
                 }
+
                 //выстреливаем события
                 foreach ($plansArr as $item){
                     Event::instance()->fire('onItemUpdated',['sender' => $this,'item' => $item]);
@@ -1701,8 +1759,9 @@ class Controller_Plans extends HDVP_Controller_Template
         }
     }
 
-    protected function _getPlanListPaginatedData($project,$object = null, array $professions = null, array $floors = null, $place_custom_number = null){
+    protected function _getPlanListPaginatedData($project,$object = null, array $professions = null, array $floors = null, $place_custom_number = null, $withFile = null){
         $query = $project->plans;
+
         if(!empty($floors)){
             $query
                 ->join(['pr_floors_pr_plans','pfpp'])
@@ -1711,33 +1770,71 @@ class Controller_Plans extends HDVP_Controller_Template
                 ->on('pfpp.floor_id','=','pf.id')
                 ->and_where('pf.number','IN',DB::expr('('.implode(',',$floors).')'));
         }
+
         if(!empty($place_custom_number)){
             $query
                 ->join(['pr_places','ppl'])
                 ->on('prplan.place_id','=','ppl.id')
                 ->and_where('ppl.custom_number','=',$place_custom_number);
         }
+
         $query->where('prplan.id','IN',DB::expr(' (SELECT max(pp.id) id FROM pr_plans pp WHERE pp.project_id='.$project->id.' GROUP BY pp.scope ORDER BY pp.id DESC)'));
+
         if(!empty($object)){
             $query->and_where('prplan.object_id','=',$object->id);
         }
+
         if(!empty($professions)){
             $query->and_where('profession_id','IN',DB::expr('('.implode(',',$professions).')'));
         }
+
+        $withFileCount = clone($query);
+        $withFileCount = $withFileCount->and_where('prplan.has_file','=',1)->find_all()->count();
+        $withoutFileCount = clone($query);
+        $withoutFileCount = $withoutFileCount->and_where('prplan.has_file','=',0)->find_all()->count();
+
+        if(!empty($withFile)){
+            if($withFile == 1){
+//                $query
+//                    ->join(['pr_plans_files','ppf'])
+//                    ->on('prplan.id','=','ppf.plan_id')
+//                    ->group_by('prplan.id');
+                $query->and_where('prplan.has_file','=',1);
+            }else{
+//                $query
+//                    ->join(['pr_plans_files','ppf'], 'left outer')
+//                    ->on('prplan.id','=','ppf.plan_id')
+//                    ->group_by('prplan.id')
+//                    ->where('ppf.plan_id', '=', null);
+                $query->and_where('prplan.has_file','=',0);
+            }
+        }
+
         $query->order_by('created_at','DESC');
+
         $paginationSettings = [
             'items_per_page' => 9999,
             'view'              => 'pagination/project',
             'current_page'      => ['source' => 'route', 'key'    => 'page'],
         ];
-        $query->distinct(true);
+
+        // DISTINCT NOT WORKING IF HAVE A 2 GROUP BY
+        if(empty($withFile)){
+            $query->distinct(true);
+        }
+
         $result = (new ORMPaginate($query,null,$paginationSettings))->getData();
-        return [   'items' => $result['items'],
+
+        return [
+            'items' => $result['items'],
             'pagination' => $result['pagination'],
             'objects' => $this->project->objects->find_all(),
             'professions' => $this->project->company->professions->where('status','=',Enum_Status::Enabled)->order_by('cmpprofession.name','ASC')->find_all(),
             'floorsFilter' => $this->project->getObjectsBiggerAndSmallerFloors(),
-            'secure_tkn' => AesCtr::encrypt($this->project->id.Text::random('alpha'),$project->id,192)
+            'secure_tkn' => AesCtr::encrypt($this->project->id.Text::random('alpha'),$project->id,192),
+            'withFileCount' => $withFileCount,
+            'withoutFileCount' => $withoutFileCount,
+            'planCount' => $withoutFileCount + $withFileCount,
         ];
     }
     public function action_create_plan(){
@@ -1755,40 +1852,54 @@ class Controller_Plans extends HDVP_Controller_Template
         View::set_global('_COMPANY', $this->company);
         if($this->request->method() == Request::POST){
             $data = Arr::extract($this->post(),['object_id','profession_id','project_id','company_id']);
+
+            $plansData = [];
+            foreach ($this->post() as $key => $value){
+                if(preg_match('~plan_(?<isNew>\+)?(?<id>[0-9]+)_(?<field>[a-z_]+)~',$key,$matches)){
+                    if($matches['isNew']){
+                        $plansData['new_'.$matches['id']][$matches['field']] = $value;
+                    }else{
+                        $plansData[$matches['id']][$matches['field']] = $value;
+                    }
+                }
+            }
+
+            //удаляем явно не валидные новые профессии
+            foreach ($plansData as $key => $val){
+                if(!trim($val['name']) AND !is_numeric($key)){
+                    unset($plansData[$key]);
+                }
+            }
+
             try{
                 if($data['project_id'] != $this->project->id OR $data['company_id'] != $this->company->id){
                     throw new HDVP_Exception('Invalid data');
                 }
 
-                if(!isset($_FILES['file'])){
-                    throw new HDVP_Exception('Plan must have a file');
-                }else{
-                    $this->project->makeProjectPaths();
-                }
-
-                $fileData = [
-                    'name' => str_replace($this->project->plansPath().DS,'',Upload::save($_FILES['file'],null,$this->project->plansPath())),
-                    'original_name' => $_FILES['file']['name'],
-                    'ext' => Model_File::getFileExt($_FILES['file']['name']),
-                    'mime' => $_FILES['file']['type'],
-                    'path' => str_replace(DOCROOT,'',$this->project->plansPath()),
-                    'token' => md5($_FILES['file']['name']).base_convert(microtime(false), 10, 36),
-                ];
-
+                $this->project->makeProjectPaths();
                 Database::instance()->begin();
 
-                $data['date'] = time();//DateTime::createFromFormat('d/m/Y',$data['date'])->getTimestamp();
-                $plan = ORM::factory('PrPlan')->values($data);
-                $plan->scope = Model_PrPlan::getNewScope();
-                $plan->project_id = $this->project->id;
-                $plan->save();
+                foreach($plansData as $pid => $c) {
+                    $fileData = [
+                        'sheet_number' => Arr::get($c,'sheet'),
+                        'path' => str_replace(DOCROOT,'',$this->project->plansPath()),
+                    ];
 
-                $file = ORM::factory('PlanFile')->values($fileData)->save();
-                $plan->add('files', $file->pk());
-                Event::instance()->fire('onPlanFileAdded',['sender' => $this,'item' => $file]);
-                $this->setResponseData('triggerEvent','projectPlanCreated');
-                $this->setResponseData('id',$plan->id);
-                Event::instance()->fire('onItemAdded',['sender' => $this,'item' => $plan]);
+                    $data['date'] = time();//DateTime::createFromFormat('d/m/Y',$data['date'])->getTimestamp();
+                    $plan = ORM::factory('PrPlan')->values($data);
+                    $plan->scope = Model_PrPlan::getNewScope();
+                    $plan->project_id = $this->project->id;
+                    $plan->save();
+
+                    $file = ORM::factory('PlanFile')->values($fileData)->save();
+                    $plan->add('files', $file->pk());
+                    $file->customName(Arr::get($c,'name'));
+
+                    $this->setResponseData('triggerEvent','projectPlanCreated');
+                    $this->setResponseData('id',$plan->id);
+                    Event::instance()->fire('onItemAdded',['sender' => $this,'item' => $plan]);
+                }
+
                 Database::instance()->commit();
             }catch (ORM_Validation_Exception $e){
                 Database::instance()->rollback();
@@ -1799,12 +1910,11 @@ class Controller_Plans extends HDVP_Controller_Template
             }catch (Exception $e){
                 Database::instance()->rollback();
                 $this->_setErrors('Operation Error');
-
             }
 
         }else{
             $this->setResponseData('modal',View::make('plans/plans/create',[
-                'professions' => $this->company->professions->where('status','=',Enum_Status::Enabled)->find_all(),
+                'professions' => $this->company->professions->where('status','=',Enum_Status::Enabled)->order_by('cmpprofession.name','ASC')->find_all(),
                 'objects' => $this->project->objects->find_all(),
                 'project' => ['id' => $this->project->id, 'name' => $this->project->name],
                 'company' => ['id' => $this->company->id, 'name' => $this->company->name],
@@ -1814,6 +1924,10 @@ class Controller_Plans extends HDVP_Controller_Template
         }
     }
 
+    /**
+     * @throws HTTP_Exception_404
+     * @throws Kohana_Exception
+     */
     public function action_update_plan(){
         $this->_checkForAjaxOrDie();
         $this->project = ORM::factory('Project',(int)$this->request->param('param1'));
@@ -1834,7 +1948,7 @@ class Controller_Plans extends HDVP_Controller_Template
         if($this->request->method() == Request::POST){
             try{
                 Database::instance()->begin();
-                $data = Arr::extract($this->post(),['name','edition','description','object_id','date','profession_id','scale','status']);
+                $data = Arr::extract($this->post(),['name','edition','description','object_id','date','profession_id','scale','status','sheet_number']);
                 $data['place_id'] = 0;
                 if(Arr::get($this->post(),'place_number')){
                     $placeData = Arr::extract($this->post(),['place_number','place_type']);
@@ -1856,6 +1970,9 @@ class Controller_Plans extends HDVP_Controller_Template
                 $f = $plan->file();
                 if($f->loaded()){
                     $f->customName($data['name']);
+
+                    $f->sheet_number = Arr::get($data,'sheet_number');
+                    $f->save();
                 }
                 if( ! $plan->place_id){
                     if(!isset($this->post()['floors']) OR (empty($this->post()['floors']) AND $this->post()['floors'] !== '0')){
@@ -1905,9 +2022,19 @@ class Controller_Plans extends HDVP_Controller_Template
                     $plan->add('crafts',$this->post()['crafts']);
                 }
                 Database::instance()->commit();
+
+                $query = clone($this->project->plans);
+                $withFileCount = clone($query);
+                $withFileCount = $withFileCount->and_where('prplan.has_file','=',1)->find_all()->count();
+                $withoutFileCount = clone($query);
+                $withoutFileCount = $withoutFileCount->and_where('prplan.has_file','=',0)->find_all()->count();
+
                 $this->setResponseData('projectPlansForm',View::make('plans/plans/list',
                     [   'items' => $this->project->plans->order_by('created_at','Desc')->find_all(),
-                        'secure_tkn' => AesCtr::encrypt($this->project->id.Text::random('alpha'),$this->project->id,192)
+                        'secure_tkn' => AesCtr::encrypt($this->project->id.Text::random('alpha'),$this->project->id,192),
+                        'withFileCount' => $withFileCount,
+                        'withoutFileCount' => $withoutFileCount,
+                        'planCount' => $withoutFileCount + $withFileCount,
                     ]));
                 $this->setResponseData('triggerEvent','projectPlansUpdated');
                 Event::instance()->fire('onItemUpdated',['sender' => $this,'item' => $plan]);
@@ -1952,7 +2079,7 @@ class Controller_Plans extends HDVP_Controller_Template
             }
             try{
                 Database::instance()->begin();
-                $data = Arr::extract($this->post(),['edition','description','date','scale','status']);
+                $data = Arr::extract($this->post(),['edition','description','date','scale','status','sheet_number']);
                 $data['date'] = DateTime::createFromFormat('d/m/Y',$data['date'])->getTimestamp();
                 $newPlan = ORM::factory('PrPlan')->values($data);
                 $newPlan->name = $plan->name;
@@ -1992,6 +2119,11 @@ class Controller_Plans extends HDVP_Controller_Template
                     if($f->hasCustomName()){
                         $file->customName($f->customName());
                     }
+
+                    if($file->loaded()){
+                        $file->sheet_number = Arr::get($data,'sheet_number');
+                        $file->save();
+                    }
                 }
                 Database::instance()->commit();
             }catch (ORM_Validation_Exception $e){
@@ -2005,14 +2137,14 @@ class Controller_Plans extends HDVP_Controller_Template
                 $this->_setErrors('Operation Error');
             }
 
-            $this->setResponseData('projectPlansForm',View::make('projects/plans/list',
+            $this->setResponseData('projectPlansForm',View::make('plans/plans/list',
                 $this->_getPlanListPaginatedData($this->project)));
             $this->setResponseData('triggerEvent','projectPlansUpdated');
             Event::instance()->fire('onItemUpdated',['sender' => $this,'item' => $plan]);
         }else{
-            $this->setResponseData('modal',View::make('projects/plans/add-edition',[
+            $this->setResponseData('modal',View::make('plans/plans/add-edition',[
                 'professions' => $this->company->professions->where('status','=',Enum_Status::Enabled)->with('crafts')->find_all(),
-                'action' => URL::site('projects/add_edition/'.$this->project->id.'/'.$plan->id),
+                'action' => URL::site('plans/add_edition/'.$this->project->id.'/'.$plan->id),
                 'item' => $plan,
                 'historyItems' => ORM::factory('PrPlan')->where('scope','=',$plan->scope)->and_where('id','<>',$plan->id)->order_by('created_at','DESC')->find_all(),
 
@@ -2022,7 +2154,20 @@ class Controller_Plans extends HDVP_Controller_Template
 
     public function action_copy_plan(){
         $this->_checkForAjaxOrDie();
-        $this->project = ORM::factory('Project',(int)$this->request->param('param1'));
+
+        $projectId = (int) $this->request->param('project_id');
+        $this->project = ORM::factory('Project',$projectId);
+
+        $projects = ORM::factory('Project');
+        if($this->_user->getRelevantRole('outspread') != Enum_UserOutspread::General){
+            $projects->where('client_id','=',$this->_user->client_id);
+        }
+        if( ! $this->_user->priorityLevelIn(Enum_UserPriorityLevel::Company) AND $this->_user->priorityLevelIn(Enum_UserPriorityLevel::Project)){
+            $projects = $this->_user->projects;
+        }
+
+        $projects = $projects->order_by('name','ASC')->find_all();
+
         if( ! $this->project->loaded() OR !$this->_user->canUseProject($this->project)){
             throw new HTTP_Exception_404;
         }
@@ -2030,24 +2175,53 @@ class Controller_Plans extends HDVP_Controller_Template
         if( ! $this->company->loaded()){
             throw new HTTP_Exception_404;
         }
+
+        $professions = [];
+        $plans = $this->project->plans->find_all();
+
+        foreach($plans as $plan){
+            if( ! in_array($plan->profession_id,$professions)){
+                $professions[$plan->profession_id] = $plan->getProfession()->name;
+            }
+        }
+
         View::set_global('_PROJECT', $this->project);
         View::set_global('_COMPANY', $this->company);
-        $plan = ORM::factory('PrPlan',(int)$this->request->param('param2'));
 
         if($this->request->method() == Request::POST){
-            $object_id = (int)Arr::get($this->post(),'object_id');
-            $object = $this->project->objects->where('id','=',$object_id)->find();
-            if( ! $object->loaded()){
+            $copyToProjectId = (int)Arr::get($this->post(),'project_id');
+            $copyToObjectId = (int)Arr::get($this->post(),'object_id');
+            $copyToProfessions = Arr::get($this->post(),'professions');
+
+            $copyToProject = ORM::factory('Project', $copyToProjectId);
+            $copyToObject = $copyToProject->objects->where('id', '=', $copyToObjectId)->find();
+
+            if(! $copyToObject->loaded()){
                 throw new HTTP_Exception_404;
             }
+
             try{
                 Database::instance()->begin();
-                $plan->cloneIntoObject($object);
+
+                if(! is_array($copyToProfessions)){
+                    $copyToProfessions = [$copyToProfessions];
+                }
+
+                $professionsIds = '('.implode(',',$copyToProfessions).')';
+                
+                $copyToPlans = $this->project->plans->where('profession_id', 'IN', DB::expr($professionsIds))->find_all();
+
+                foreach ($copyToPlans as $copyToPlan) {
+                    $copyToPlan->cloneIntoObject($copyToObject);
+                }
+
                 Database::instance()->commit();
+                
                 $this->setResponseData('projectPlansForm',View::make('projects/plans/list',
                     $this->_getPlanListPaginatedData($this->project, isset($object) ? $object : null, !empty($professionIds) ? $professionIds : null)
                     ));
                 $this->setResponseData('triggerEvent','projectPlansUpdated');
+                
                 Event::instance()->fire('onPlanCopy',['sender' => $this,'item' => $plan]);
             }catch (Exception $e){
                 Database::instance()->rollback();
@@ -2055,14 +2229,32 @@ class Controller_Plans extends HDVP_Controller_Template
             }
 
         }else{
-            $this->setResponseData('modal',View::make('projects/plans/copy-modal',[
+            $this->setResponseData('modal',View::make('plans/plans/copy-modal',[
+                'professions' => $professions,
+                'projects' => $projects,
                 'objects' => $this->project->objects->find_all(),
-                'action' => URL::site('projects/copy_plan/'.$this->project->id.'/'.$plan->id)
+                'action' => URL::site('plans/copy_plan/'. $projectId)
             ]));
+        }
+    }
 
+    public function action_project_objects(){
+        $this->_checkForAjaxOrDie();
+
+        $projectId = (int) $this->request->param('project_id');
+        $this->project = ORM::factory('Project',$projectId);
+
+        if( ! $this->project->loaded() OR !$this->_user->canUseProject($this->project)){
+            throw new HTTP_Exception_404;
         }
 
+        $objects = $this->project->objects->find_all();
 
+        View::set_global('_PROJECT', $this->project);
+
+        $this->setResponseData('objects',View::make('plans/plans/project-objects-select-options',[
+            'objects' => $objects,
+        ]));
     }
 
     public function action_plan_history(){

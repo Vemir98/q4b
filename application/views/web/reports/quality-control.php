@@ -16,7 +16,7 @@ if($_USER->is('project_supervisor')){//запрет на изменение ст
 }
 ?>
 <div id="quality-control-modal" data-backdrop="static" data-keyboard="false" class="quality-control-modal modal fade" role="dialog" data-qcid="<?=$item->id?>">
-    <div class="modal-dialog q4_project_modal modal-dialog-1070">
+    <div class="modal-dialog q4_project_modal quality-control-dialog">
         <form id="qc-form-id" class="q4_form" action="<?=$formAction?>" data-ajax="true" data-submit="false" method="post">
             <input type="hidden" value="" name="x-form-secure-tkn"/>
             <div class="modal-content">
@@ -481,7 +481,7 @@ if($_USER->is('project_supervisor')){//запрет на изменение ст
                     </div>
                 </div>
                 </div>
-                <div class="modal-footer text-align">
+                <div class="panel-modal-footer text-align">
                     <div class="row">
                         <div class="col-sm-12">
                             <a href="#" class="q4-btn-lg light-blue-bg qc-to-print-btn panel-footer-first"><?=__('Proceed to print')?></a>
@@ -522,7 +522,7 @@ if($_USER->is('project_supervisor')){//запрет на изменение ст
                                 <i class="q4bikon-property"></i>
                                 <?=__('Property')?>:
                             </span>
-                            <span><strong><?=$printableItem->object->type->name?></strong></span>
+                            <span><strong><?=$printableItem->object->type->name?> - <?=$printableItem->object->name?> </strong></span>
                         </li>
                         <li>
                             <span>
@@ -621,12 +621,12 @@ if($_USER->is('project_supervisor')){//запрет на изменение ст
                 <?if(strlen($printableItem->description)>1):?>
                 <div class="form-group">
                     <label class="table_label"><?=__('Description')?></label>
-                    <div class="textarea-div small">
+
                         <?$desc = explode("\n",$printableItem->description);
                         foreach ($desc as $line) {?>
                             <p><?=$line?></p>
                         <?}?>
-                    </div>
+
                 </div>
                 <?endif?>
             <div class="q4-copyright">
@@ -668,11 +668,11 @@ if($_USER->is('project_supervisor')){//запрет на изменение ст
             <?endforeach?>
 
 
-    <!--  ****** end of PRINTABLE PART ********  -->
+    <!--  ****** end of PRINTABLE PART ******** -->
     </div>
 </div>
 <div id="choose-plan-modal" data-backdrop="static" data-keyboard="false" class="modal fade no-delete" role="dialog">
-    <div class="modal-dialog modal-dialog-1170">
+    <div class="modal-dialog choose-plan-dialog">
             <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header q4_modal_header">
@@ -804,7 +804,7 @@ if($_USER->is('project_supervisor')){//запрет на изменение ст
 
                 </div>
             </div>
-            <div class="modal-footer text-right">
+            <div class="panel-modal-footer text-right">
                 <div class="row">
                     <div class="col-sm-12">
                         <a href="#" class="inline_block_btn blue-light-button confirm-plan"><?=__('Confirm')?></a>

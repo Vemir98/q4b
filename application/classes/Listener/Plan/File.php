@@ -18,4 +18,17 @@ class Listener_Plan_File
         if($file->ext == 'pdf')
         Queue::enqueue('pdfToImage','Job_Plan_PdfToImageConverter',['fileId' => $file->id],Carbon::now()->addSeconds(30)->timestamp);
     }
+
+    /**
+     * @param $event
+     * @param $sender
+     * @param Model_PlanFile $file
+     */
+    public static function attachFileToPlan($event,$sender,Model_PlanFile $file){
+        $plan = $file->getPlan();
+
+        $plan->has_file = 1;
+
+        $plan->save();
+    }
 }

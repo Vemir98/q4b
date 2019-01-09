@@ -23,7 +23,8 @@ return [
         'Listener_Report_QueryToken::registerExpiresCheckJob'
     ],
     'onPlanFileAdded' => [
-        'Listener_Plan_File::pdfToImage'
+        'Listener_Plan_File::pdfToImage',
+        'Listener_Plan_File::attachFileToPlan',
     ],
     'onCraftAdded' => [
         'Listener_Settings_Craft::added'

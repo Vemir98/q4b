@@ -86,6 +86,12 @@
                                 </div>
                             </div>
 
+                            <div class="form-group col-16 rtl-float-right">
+                                <label class="table_label">Sheet Number</label>
+                                <div class="input-group form-group">
+                                    <input type="text" class="table_input plans-sheet-number" value="" name="sheet_number">
+                                </div>
+                            </div>
                         </div>
 
                         <div class="row">
