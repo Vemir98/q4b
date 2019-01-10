@@ -239,7 +239,7 @@ $(document).ready(function() {
 
         var self = $(this);
 
-
+        console.log('BBBB ');
 
         var currentCheckbox = self.closest('tr').find('.selectable-column').find('input[type=checkbox]')
 
@@ -313,7 +313,7 @@ $(document).ready(function() {
 
 
                     setTimeout(function(){
-                        self.closest('.tab_panel').find('table.table').closest('.mCSB_container').width(widthT);
+                        // self.closest('.tab_panel').find('table.table').closest('.mCSB_container').width(widthT);
 
                         $.fn.utilities('updateContentOnChange');
                         $('.selectpicker').selectpicker({size:3,dropupAuto:false})
@@ -383,7 +383,7 @@ $(document).ready(function() {
 
 
                     setTimeout(function(){
-                        self.closest('.tab_panel').find('table.table').closest('.mCSB_container').width(widthT);
+                        // self.closest('.tab_panel').find('table.table').closest('.mCSB_container').width(widthT);
 
                         $.fn.utilities('updateContentOnChange');
                     }, 300);
@@ -422,7 +422,7 @@ $(document).ready(function() {
 
 
                     setTimeout(function(){
-                        self.closest('.tab_panel').find('table.table').closest('.mCSB_container').width(widthT);
+                        // self.closest('.tab_panel').find('table.table').closest('.mCSB_container').width(widthT);
 
                         $.fn.utilities('updateContentOnChange');
                     }, 300);
@@ -474,7 +474,7 @@ $(document).ready(function() {
                     var widthT = $.fn.utilities('measureHiddenTable', self.closest('.tab_panel').find('table.table'),false);
 
                     setTimeout(function(){
-                        self.closest('.tab_panel').find('table.table').closest('.mCSB_container').width(widthT);
+                        // self.closest('.tab_panel').find('table.table').closest('.mCSB_container').width(widthT);
 
                         $.fn.utilities('updateContentOnChange');
                     }, 300);
@@ -574,7 +574,7 @@ $(document).ready(function() {
                     var widthT = $.fn.utilities('measureHiddenTable', self.closest('.tab_panel').find('table.table'),false);
 
                     setTimeout(function(){
-                        self.closest('.tab_panel').find('table.table').closest('.mCSB_container').width(widthT);
+                        // self.closest('.tab_panel').find('table.table').closest('.mCSB_container').width(widthT);
 
                         $.fn.utilities('updateContentOnChange');
                     }, 300);
@@ -635,7 +635,7 @@ $(document).ready(function() {
                     var widthT = $.fn.utilities('measureHiddenTable', self.closest('.tab_panel').find('table.table'),false);
 
                     setTimeout(function(){
-                        self.closest('.tab_panel').find('table.table').closest('.mCSB_container').width(widthT);
+                        // self.closest('.tab_panel').find('table.table').closest('.mCSB_container').width(widthT);
 
                         $.fn.utilities('updateContentOnChange');
                         currentTab.find('.total-res-selected').html($.fn.utilities('getObjectLength',CHECKED_PLANS));
@@ -1196,7 +1196,7 @@ $(document).ready(function() {
         }
 
         select.html(option);
-        select.closest('.multi-select-box').find('.checkbox-list .mCSB_container').html(optMarckup);
+        // select.closest('.multi-select-box').find('.checkbox-list .mCSB_container').html(optMarckup);
 
 
     });
@@ -1310,6 +1310,8 @@ $(document).ready(function() {
 
     // Check all rows in table
     $(document).on('change', '.check-all-column input[type=checkbox]', function () {
+
+        console.log('AAAAA');
 
         var self =  $(this);
         var label =self.closest('label');
@@ -1952,7 +1954,7 @@ $(document).ready(function() {
                 $.fn.utilities('setScrollBarWidth', $(document).find('.panel_content.open').find('.scrollable-table'), window.innerWidth);
                 var widthT = $.fn.utilities('measureHiddenTable', $(document).find('.panel_content.open').find('table.table'));
 
-                $(document).find('.panel_content.open').find('table.table').closest('.mCSB_container').width(widthT);
+                // $(document).find('.panel_content.open').find('table.table').closest('.mCSB_container').width(widthT);
 
 
                 $('[data-toggle="table"]').bootstrapTable();

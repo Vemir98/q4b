@@ -136,7 +136,6 @@ $icons = [
             </div>
             <div class="row">
                 <div class="col-md-1 rtl-float-right">
-                    <!-- <label class="table_label visibility-hidden"><?=__('unselect all')?></label>  -->
                     <div class="form-group">
                         <a class="plans-deselect-all q4-link-b-blue"><?=__('unselect all')?></a>
                     </div>
@@ -186,10 +185,6 @@ $icons = [
                                 <th data-field="<?=__('Floor')?>" class="td-25"><?=__('Floor')?></th><!-- 6 -->
                                 <th data-field="<?=__('Edition')?>" class="td-100"><?=__('Edition')?> </th><!-- 7 -->
                                 <th data-field="<?=__('Status')?>" class="td-100"><?=__('Status')?></th>  <!-- 8 -->
-
-                                <!-- <th data-field="<?=__('Element number')?>" class="td-100"><?=__('Element number')?></th>-->
-                                <!-- <th data-field="<?=__('Craft')?>" class="td-100"><?=__('Craft')?></th>-->
-
                                 <th data-field="<?=__('Updates note')?>" class="td-25"><?=__('Updates note')?> </th><!-- 9 -->
                                 <th data-field="<?=__('Upload date')?>" data-sortable="true" class="td-75"><?=__('Upload date')?></th>  <!-- 10 -->
                                 <th data-field="Delivered date" class="td-50">Delivered date</th><!-- 11 -->

@@ -348,9 +348,9 @@ $(document).ready(function() {
 
     $(document).on('click','.plans-layout .scrollable-table .checkbox-list-row',function (e) {
 
+        console.log('checkbox');
+
         var self = $(this);
-
-
 
         var currentCheckbox = self.closest('tr').find('.selectable-column').find('input[type=checkbox]')
 
@@ -359,6 +359,8 @@ $(document).ready(function() {
 
         if(currentCheckbox.is(':checked') && !self.closest('.multi-select-box').hasClass('comma')){
 
+            console.log('checkbox');
+
             self.closest('.plans-layout').find('table .selectable-column input[type=checkbox]:checked').each(function(){
                 var current = $(this);
                 var cell = current.closest('tr').find('.multi-select-col');
@@ -366,7 +368,7 @@ $(document).ready(function() {
                 if(!disabledInput){
                     var planId =cell.closest('tr').data('planid');
 
-                    if(planId!=currentPlanId){
+                    if(planId!=currentPlanId) {
 
                              var currentCell = self.closest('td').html();
 
@@ -383,6 +385,7 @@ $(document).ready(function() {
             })
 
         }
+
 
         // }, 200);
     })
@@ -424,7 +427,7 @@ $(document).ready(function() {
 
 
                     setTimeout(function(){
-                        self.closest('.tab_panel').find('table.table').closest('.mCSB_container').width(widthT);
+                        //self.closest('.tab_panel').find('table.table').closest('.mCSB_container').width(widthT);
 
                         $.fn.utilities('updateContentOnChange');
                         $('.selectpicker').selectpicker({size:3,dropupAuto:false})
@@ -494,7 +497,7 @@ $(document).ready(function() {
 
 
                     setTimeout(function(){
-                        self.closest('.tab_panel').find('table.table').closest('.mCSB_container').width(widthT);
+                        // self.closest('.tab_panel').find('table.table').closest('.mCSB_container').width(widthT);
 
                         $.fn.utilities('updateContentOnChange');
                     }, 300);
@@ -533,7 +536,7 @@ $(document).ready(function() {
 
 
                     setTimeout(function(){
-                        self.closest('.tab_panel').find('table.table').closest('.mCSB_container').width(widthT);
+                        // self.closest('.tab_panel').find('table.table').closest('.mCSB_container').width(widthT);
 
                         $.fn.utilities('updateContentOnChange');
                     }, 300);
@@ -585,7 +588,7 @@ $(document).ready(function() {
                     var widthT = $.fn.utilities('measureHiddenTable', self.closest('.tab_panel').find('table.table'),false);
 
                     setTimeout(function(){
-                        self.closest('.tab_panel').find('table.table').closest('.mCSB_container').width(widthT);
+                        // self.closest('.tab_panel').find('table.table').closest('.mCSB_container').width(widthT);
 
                         $.fn.utilities('updateContentOnChange');
                     }, 300);
@@ -685,7 +688,7 @@ $(document).ready(function() {
                     var widthT = $.fn.utilities('measureHiddenTable', self.closest('.tab_panel').find('table.table'),false);
 
                     setTimeout(function(){
-                        self.closest('.tab_panel').find('table.table').closest('.mCSB_container').width(widthT);
+                        // self.closest('.tab_panel').find('table.table').closest('.mCSB_container').width(widthT);
 
                         $.fn.utilities('updateContentOnChange');
                     }, 300);
@@ -746,7 +749,7 @@ $(document).ready(function() {
                     var widthT = $.fn.utilities('measureHiddenTable', self.closest('.tab_panel').find('table.table'),false);
 
                     setTimeout(function(){
-                        self.closest('.tab_panel').find('table.table').closest('.mCSB_container').width(widthT);
+                        // self.closest('.tab_panel').find('table.table').closest('.mCSB_container').width(widthT);
 
                         $.fn.utilities('updateContentOnChange');
                         currentTab.find('.total-res-selected').html($.fn.utilities('getObjectLength',CHECKED_PLANS));
@@ -1447,7 +1450,7 @@ $(document).ready(function() {
         }
 
         select.html(option);
-        select.closest('.multi-select-box').find('.checkbox-list .mCSB_container').html(optMarckup);
+        // select.closest('.multi-select-box').find('.checkbox-list .mCSB_container').html(optMarckup);
 
 
     });
@@ -1563,6 +1566,8 @@ $(document).ready(function() {
     // Check all rows in table
     $(document).on('change', '.check-all-column input[type=checkbox]', function () {
 
+        console.log('.check-all-column');
+
         var self =  $(this);
         var label =self.closest('label');
         var checkedColumn = self.is(':checked');
@@ -1571,6 +1576,9 @@ $(document).ready(function() {
 
 
         self.closest('table').find('.selectable-column input[type=checkbox]').each(function(){
+
+            console.log('.check-all-column');
+
             var selfCheckbox = $(this);
             var disabled = selfCheckbox.closest('.selectable-column').hasClass('disabled-input');
             var checkedBox = selfCheckbox.is(':checked');
@@ -2204,7 +2212,7 @@ $(document).ready(function() {
                 $.fn.utilities('setScrollBarWidth', $(document).find('.panel_content.open').find('.scrollable-table'), window.innerWidth);
                 var widthT = $.fn.utilities('measureHiddenTable', $(document).find('.panel_content.open').find('table.table'));
 
-                $(document).find('.panel_content.open').find('table.table').closest('.mCSB_container').width(widthT);
+                // $(document).find('.panel_content.open').find('table.table').closest('.mCSB_container').width(widthT);
 
 
                 $('[data-toggle="table"]').bootstrapTable();
