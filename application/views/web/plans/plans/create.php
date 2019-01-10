@@ -34,8 +34,8 @@
                                     <select name="object_id" class="q4-select q4-form-input object-general-select" required>
                                         <option value=""><?=__('Please select')?></option>
 
-                                        <?foreach ($objects as $object): ?>
-                                            <option value="<?=$object->id?>"><?=$object->type->name.'-'.$object->name?></option>
+                                        <?foreach ($objects as $obj): ?>
+                                            <option value="<?=$obj->id?>" <?=($obj->id == $object->id) ? 'selected' : ''?>><?=$obj->type->name.'-'.$obj->name?></option>
                                         <?endforeach ?>
 
                                     </select>
@@ -50,7 +50,7 @@
                                         <option value=""><?=__('Please select')?></option>
 
                                         <?foreach ($professions as $profession): ?>
-                                            <option value="<?=$profession->id?>"><?=$profession->name?></option>
+                                            <option value="<?=$profession->id?>" <?=($profession->id == $professionId) ? 'selected' : ''?>><?=$profession->name?></option>
                                         <?endforeach ?>
 
                                     </select>
@@ -79,7 +79,7 @@
                                         <tr>
                                             <th data-field="<?=__('Sheet Number')?>" class="td-100"><?=__('Sheet Number')?></th><!-- 3 -->
                                             <th data-field="<?=__('Name')?>" class="td-200"><?=__('Name')?></th><!-- 4 -->
-<!--                                        <th data-field="--><?//=__('Floor')?><!--" class="td-100">--><?//=__('Floor')?>
+                                            <th data-field="<?=__('Floor')?>" class="td-100"><?=__('Floor')?></th>
                                             <th data-field="<?=__('Action')?>" class="td-50"><?=__('Action')?></th><!-- 12 -->
                                         </tr>
                                         </thead>
@@ -91,34 +91,38 @@
                                             <td class="rwd-td2" data-th="">
                                                 <input type="text" class="table_input plan-name">
                                             </td>
-<!--                                        <td>-->
-<!--                                            <div class="checkbox-list-no-scroll hidden">-->
-<!---->
-<!--                                                --><?//for($i = $item->object->smaller_floor; $i <= $item->object->bigger_floor; $i++):?>
-<!--                                                    <div class="checkbox-list-row">-->
-<!--                                                        <span class="checkbox-text">-->
-<!--                                                            <label class="checkbox-wrapper-multiple inline" data-val="--><?//=$i?><!--">-->
-<!--                                                                <span class="checkbox-replace"></span>-->
-<!--                                                                <i class="checkbox-list-tick q4bikon-tick"></i>-->
-<!--                                                            </label>-->
-<!--                                                            <span class="checkbox-text-content bidi-override">-->
-<!---->
-<!--                                                                --><?//=$i?>
-<!---->
-<!--                                                            </span>-->
-<!--                                                        </span>-->
-<!--                                                    </div>-->
-<!--                                                --><?//endfor?>
-<!---->
-<!--                                            </div>-->
-<!--                                            <select class="hidden-select" name="plan_--><?//=$item->id?><!--_floors" multiple>-->
-<!---->
-<!--                                                --><?//for($i = $item->object->smaller_floor; $i <= $item->object->bigger_floor; $i++):?>
-<!--                                                    <option value="--><?//=$i?><!--">--><?//=$i?><!--</option>-->
-<!--                                                --><?//endfor?>
-<!---->
-<!--                                            </select>-->
-<!--                                        </td>-->
+                                        <td>
+                                            <div class="select-imitation q4-form-input floor-numbers">
+                                                <span class="select-imitation-title"></span>
+                                                <div class="over-select"></div><i class="arrow-down q4bikon-arrow_bottom"></i>
+                                            </div>
+                                            <div class="checkbox-list-no-scroll hidden">
+
+                                                <?for($i = $object->smaller_floor; $i <= $object->bigger_floor; $i++):?>
+                                                    <div class="checkbox-list-row">
+                                                        <span class="checkbox-text">
+                                                            <label class="checkbox-wrapper-multiple inline" data-val="<?=$i?>">
+                                                                <span class="checkbox-replace"></span>
+                                                                <i class="checkbox-list-tick q4bikon-tick"></i>
+                                                            </label>
+                                                            <span class="checkbox-text-content bidi-override">
+
+                                                                <?=$i?>
+
+                                                            </span>
+                                                        </span>
+                                                    </div>
+                                                <?endfor?>
+
+                                            </div>
+                                            <select class="hidden-select" multiple>
+
+                                                <?for($i = $object->smaller_floor; $i <= $object->bigger_floor; $i++):?>
+                                                    <option value="<?=$i?>"><?=$i?></option>
+                                                <?endfor?>
+
+                                            </select>
+                                        </td>
                                             <td class="rwd-td12" data-th="Action">
                                                 <div class="text-right-left action-buttons">
                                                     <a class="circle-sm orange add-plan"">

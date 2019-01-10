@@ -1839,10 +1839,15 @@ class Controller_Plans extends HDVP_Controller_Template
     }
     public function action_create_plan(){
         $this->_checkForAjaxOrDie();
+
         $this->project = ORM::factory('Project',(int)$this->request->param('id'));
+        $object = ORM::factory('PrObject',(int)$this->request->param('object_id'));
+        $professionId = (int)$this->request->param('profession_id');
+
         if( ! $this->project->loaded() OR !$this->_user->canUseProject($this->project)){
             throw new HTTP_Exception_404;
         }
+
         $this->company = $this->project->company;
         if( ! $this->company->loaded()){
             throw new HTTP_Exception_404;
@@ -1919,7 +1924,9 @@ class Controller_Plans extends HDVP_Controller_Template
                 'project' => ['id' => $this->project->id, 'name' => $this->project->name],
                 'company' => ['id' => $this->company->id, 'name' => $this->company->name],
                 'date' => date('d/m/Y H:i'),
-                'action' => URL::site('plans/create_plan/'.$this->project->id)
+                'action' => URL::site('plans/create_plan/'.$this->project->id),
+                'object' => $object,
+                'professionId' => $professionId,
             ]));
         }
     }

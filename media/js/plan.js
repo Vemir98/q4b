@@ -1240,7 +1240,20 @@ $(document).ready(function() {
     $(document).on('click', currentPage.addPlanSelectorModal, function(e) {
         e.preventDefault();
         FILES_BUFFER = [];
-        Q4U.ajaxGetRequest($(this).data('url'), {
+
+        var current = $(this);
+        var url = current.data('url');
+        var objectId = current.closest('form').find('[data-name="object"]').val();
+        var professionId = current.closest('form').find('[data-name="profession"]').val();
+
+        if(objectId){
+            url += '/object/' + objectId;
+        }
+        if(professionId){
+            url += '/profession/' + professionId;
+        }
+
+        Q4U.ajaxGetRequest(url, {
             successCallback: function(data) {
                 if (data.getData().modal) {
                     $(document).find('.modal').modal('hide');
@@ -2529,7 +2542,7 @@ $(document).ready(function() {
 
     $(document).on('click','.go-to-place-button', function(){
         var url = $(this).data('url');
-        var structureId = $(document).find('.select-structure').val()
+        var structureId = $(document).find('.select-structure').val();
         var selectedFloor = $(document).find('.select-go-to-floor').val();
         var selectedPlaceNumber = $(document).find('.go-to-place-number').val().toLowerCase();
 
