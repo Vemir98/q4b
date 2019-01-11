@@ -211,9 +211,9 @@
                                 <label class="table_label"><?=__('Scale')?></label>
                                 <input type="text" class="table_input<?=$disabled?>" name="scale" value="<?=$item->scale?>">
                             </div>
-                            <div class="form-group col-14 rtl-float-right">
+                            <div class="form-group col-14 rtl-float-right relative">
                                 <label class="table_label"><?=__('Edition')?></label>
-                                <input type="text" class="table_input<?=$disabled?>" name="edition" value="<?=$item->edition?>">
+                                <input type="text" class="table_input<?=$disabled?> q4_required " name="edition" value="<?=$item->edition?>">
                             </div>
                             <div class="form-group col-28 rtl-float-right">
                                 <label class="table_label"><?=__('Status')?></label>
@@ -226,7 +226,6 @@
                             </div>
                         </div>
                     </div>
-
 
 
                     <div class="plans-modal-dialog-bottom">

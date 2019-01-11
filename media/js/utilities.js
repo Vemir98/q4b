@@ -70,6 +70,8 @@
 
         validateForm:function (form){
 
+            console.log('validateForm : ', form);
+
             var is_valid = true;
             var errorText = '';
 
@@ -105,6 +107,8 @@
 
             form.find('select.q4_select').each(function() {
                 var element = $(this);
+                console.log('element.val() ', element.val());
+
                 if (!element.val()) {
                     element.addClass('error');
                     errorText = empty_select[_current_lang];
@@ -153,6 +157,20 @@
                 element.parent().append('<div class="q4_error_message">' +
                 message +
                 '</div>');
+            }
+        },
+
+        validateSelect:function(element, message){
+
+            if(element.closest('.select-wrapper').length == 1){
+                element.closest('.select-wrapper').append('<div class="q4_error_message">' +
+                    message +
+                    '</div>');
+            }
+            if(element.closest('td').length == 1){
+                element.closest('td').append('<div class="q4_error_message">' +
+                    message +
+                    '</div>');
             }
         },
 

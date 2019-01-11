@@ -123,11 +123,14 @@ function getFormData(form){
 
 $(document).on('click', 'form a.q4-form-submit', function(e) {
     e.preventDefault();
-    var self = $(this)
+    var self = $(this);
     var urlPost = self.closest('form').attr('action');
     var currentForm = self.closest('form');
 
-    var valid = $.fn.utilities('validateForm',self.closest('form'));
+    console.log('q4-form-submit');
+
+    var valid = $.fn.utilities('validateForm', self.closest('form'));
+console.log('valid', valid);
 
     if(valid.valid){
 
@@ -189,7 +192,7 @@ $(document).on('click', 'form a.q4-form-submit', function(e) {
 
         }else{
 
-            currentForm.submit();
+            // currentForm.submit();
 
         }
     }else{
