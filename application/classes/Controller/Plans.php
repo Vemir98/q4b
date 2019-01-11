@@ -451,12 +451,14 @@ class Controller_Plans extends HDVP_Controller_Template
                 $this->_setErrors($e->getMessage());
             }
         }else{
-
             $this->company = $this->project->company;
+            $professionId = [$this->project->company->professions->where('status','=',Enum_Status::Enabled)->order_by('cmpprofession.name','ASC')->find()->id];
+
             View::set_global('_PROJECT', $this->project);
 
             $objects = $this->project->objects->order_by('id','DESC')->find_all();
             $objectTypes = ORM::factory('PrObjectType')->find_all()->as_array('id','alias');
+
             foreach ($objectTypes as $ot){
                 $projectObjectsCount[$ot] = 0;
             }
@@ -464,20 +466,20 @@ class Controller_Plans extends HDVP_Controller_Template
             foreach ($objects as $o){
                 $projectObjectsCount[$objectTypes[$o->type_id]]++;
             }
+
             if($this->_user->getRelevantRole('outspread') != Enum_UserOutspread::General){
                 $companies = $this->_user->client->companies->find_all();
             }else{
                 $companies = ORM::factory('Company')->find_all();
             }
+
             Breadcrumbs::add(Breadcrumb::factory()->set_title($this->project->name));
+
             $this->template->content = View::make('plans/update')
-                ->set('plansView',View::make('plans/plans/list',
-                    $this->_getPlanListPaginatedData($this->project)
+                ->set('plansView', View::make('plans/plans/list',
+                    $this->_getPlanListPaginatedData($this->project, null, $professionId)
                 ));
         }
-
-
-
     }
 
     public function action_get_images(){
@@ -1837,6 +1839,7 @@ class Controller_Plans extends HDVP_Controller_Template
             'planCount' => $withoutFileCount + $withFileCount,
         ];
     }
+
     public function action_create_plan(){
         $this->_checkForAjaxOrDie();
 

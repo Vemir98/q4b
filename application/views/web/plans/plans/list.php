@@ -109,11 +109,15 @@ $icons = [
                         <div class="select-wrapper">
                             <i class="q4bikon-arrow_bottom"></i>
                             <select data-name="profession" class="q4-select q4-form-input select-icon-pd select-profession">
-                                <option value="0" selected="selected"><?=__('All')?> </option>
+                                <option value="0"><?=__('All')?> </option>
 
                                 <?if(isset($professions)):?>
                                     <?foreach ($professions as $profession): ?>
-                                        <option value="<?=$profession->id?>"><?=$profession->name?></option>
+                                        <? if (current($professions) == 1): ?>
+                                            <option value="<?=$profession->id?>" selected><?=$profession->name?></option>
+                                        <? else: ?>
+                                            <option value="<?=$profession->id?>"><?=$profession->name?></option>
+                                        <? endif ?>
                                     <?endforeach ?>
                                 <?endif?>
 
