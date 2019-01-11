@@ -4387,6 +4387,7 @@ ul.pagination li {
   border-radius: 16px;
   cursor: pointer;
   font-size: 16px;
+  line-height: 1;
 }
   .circle-sm.orange {
     background: #f99c19;
@@ -5219,6 +5220,10 @@ ul.q4-pagination {
   position: relative; }
   .qc-plan-details.visible {
     display: block; }
+
+.add-plan {
+    line-height: 0.8;
+}
 
 .qc-change-plan {
   position: absolute;

@@ -140,7 +140,6 @@ $icons = [
             </div>
             <div class="row">
                 <div class="col-md-1 rtl-float-right">
-                    <!-- <label class="table_label visibility-hidden"><?=__('unselect all')?></label>  -->
                     <div class="form-group">
                         <a class="plans-deselect-all q4-link-b-blue"><?=__('unselect all')?></a>
                     </div>
@@ -176,11 +175,11 @@ $icons = [
                             <thead>
                             <tr>
                                 <th class="hidden w-25"></th><!--  -->
-                                <th class="w-25 check-all-column disabled-input"><!-- 0 -->
-                                    <label class="checkbox-wrapper" title="<?=__('select all on page')?>">
-                                        <input type="checkbox">
-                                        <span class="checkbox-replace"></span><i class="checkbox-tick q4bikon-tick"></i>
-                                    </label>
+                                <th class="w-25"><!-- 0 -->
+<!--                                    <label class="checkbox-wrapper" title="--><?//=__('select all on page')?><!--">-->
+<!--                                        <input type="checkbox">-->
+<!--                                        <span class="checkbox-replace"></span><i class="checkbox-tick q4bikon-tick"></i>-->
+<!--                                    </label>-->
                                 </th>
                                 <th class="td-50"></th> <!-- 1 -->
                                 <th data-field="<?=__('Structure')?>" class="td-100"><?=__('Structure')?></th><!-- 2 -->
@@ -190,10 +189,6 @@ $icons = [
                                 <th data-field="<?=__('Floor')?>" class="td-25"><?=__('Floor')?></th><!-- 6 -->
                                 <th data-field="<?=__('Edition')?>" class="td-100"><?=__('Edition')?> </th><!-- 7 -->
                                 <th data-field="<?=__('Status')?>" class="td-100"><?=__('Status')?></th>  <!-- 8 -->
-
-                                <!-- <th data-field="<?=__('Element number')?>" class="td-100"><?=__('Element number')?></th>-->
-                                <!-- <th data-field="<?=__('Craft')?>" class="td-100"><?=__('Craft')?></th>-->
-
                                 <th data-field="<?=__('Updates note')?>" class="td-25"><?=__('Updates note')?> </th><!-- 9 -->
                                 <th data-field="<?=__('Upload date')?>" data-sortable="true" class="td-75"><?=__('Upload date')?></th>  <!-- 10 -->
                                 <th data-field="Delivered date" class="td-50">Delivered date</th><!-- 11 -->

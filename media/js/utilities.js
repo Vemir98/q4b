@@ -105,6 +105,7 @@
 
             form.find('select.q4_select').each(function() {
                 var element = $(this);
+
                 if (!element.val()) {
                     element.addClass('error');
                     errorText = empty_select[_current_lang];
@@ -153,6 +154,20 @@
                 element.parent().append('<div class="q4_error_message">' +
                 message +
                 '</div>');
+            }
+        },
+
+        validateSelect:function(element, message){
+
+            if(element.closest('.select-wrapper').length == 1){
+                element.closest('.select-wrapper').append('<div class="q4_error_message">' +
+                    message +
+                    '</div>');
+            }
+            if(element.closest('td').length == 1){
+                element.closest('td').append('<div class="q4_error_message">' +
+                    message +
+                    '</div>');
             }
         },
 
@@ -683,6 +698,46 @@
             self.siblings('.panel_content').slideToggle(300);
         },
 
+        generateMultiSelectFloor: function (min, max) {
+            // var minF = min<=max ?  min : max;
+            // var maxF = min>=max ?  max : min;
+
+
+            var html = '<div class="multi-select-box comma">'  +
+                '<div class="select-imitation q4-form-input floor-numbers">'  +
+                '<span class="select-imitation-title"></span>'  +
+
+                '<div class="over-select"></div><i class="arrow-down q4bikon-arrow_bottom"></i>'  +
+                '</div>'  +
+                '<div class="checkbox-list-no-scroll hidden">'  ;
+            var select ='<select class="hidden-select" multiple>';
+
+            for(var i = min; i <= max; i++){
+                html +=
+                '<div class="checkbox-list-row">'  +
+                        '<span class="checkbox-text">'  +
+                        '<label class="checkbox-wrapper-multiple inline" data-val="'+i+'">'  +
+                        '<span class="checkbox-replace"></span>'  +
+                        '<i class="checkbox-list-tick q4bikon-tick"></i>'  +
+                        '</label>'  +
+                        '<span class="checkbox-text-content bidi-override">'  +
+
+                   i+
+
+                '</span>'  +
+                    '</span></div>';
+
+                select += '<option value="'+i+'">'+i+'</option>';
+
+
+            }
+            html +=
+                '</div>';
+
+            select +='</select>';
+
+            return html +select + '</div>';
+        }
 
     };
 
