@@ -4387,6 +4387,7 @@ ul.pagination li {
   border-radius: 16px;
   cursor: pointer;
   font-size: 16px;
+  line-height: 1;
 }
   .circle-sm.orange {
     background: #f99c19;

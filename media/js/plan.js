@@ -248,8 +248,8 @@ $(document).ready(function() {
                         $.fn.utilities('updateContentOnChange');
                         $('.selectpicker').selectpicker({size:3,dropupAuto:false})
                     }, 300);
-                    current.closest('.panel_content').find('.panel_footer').find('.plans-to-print-link').addClass('disabled-gray-button');
-                    current.closest('.panel_content').find('.panel_footer').find('.plans-to-send').addClass('disabled-gray-button');
+                    // current.closest('.panel_content').find('.panel_footer').find('.plans-to-print-link').addClass('disabled-gray-button');
+                    // current.closest('.panel_content').find('.panel_footer').find('.plans-to-send').addClass('disabled-gray-button');
 
                     $('[data-toggle="table"]').bootstrapTable();
                     CURRENT_PLAN_PAGE = false;
@@ -304,8 +304,8 @@ $(document).ready(function() {
                         $.fn.utilities('updateContentOnChange');
                         $('.selectpicker').selectpicker({size:3,dropupAuto:false})
                     }, 300);
-                    current.closest('.panel_content').find('.panel_footer').find('.plans-to-print-link').addClass('disabled-gray-button');
-                    current.closest('.panel_content').find('.panel_footer').find('.plans-to-send').addClass('disabled-gray-button');
+                    // current.closest('.panel_content').find('.panel_footer').find('.plans-to-print-link').addClass('disabled-gray-button');
+                    // current.closest('.panel_content').find('.panel_footer').find('.plans-to-send').addClass('disabled-gray-button');
 
                     $('[data-toggle="table"]').bootstrapTable();
                     CURRENT_PLAN_PAGE = false;
@@ -432,14 +432,15 @@ $(document).ready(function() {
                         $.fn.utilities('updateContentOnChange');
                         $('.selectpicker').selectpicker({size:3,dropupAuto:false})
                     }, 300);
-                    current.closest('.panel_content').find('.panel_footer').find('.plans-to-print-link').addClass('disabled-gray-button');
-                    current.closest('.panel_content').find('.panel_footer').find('.plans-to-send').addClass('disabled-gray-button');
+                    // current.closest('.panel_content').find('.panel_footer').find('.plans-to-print-link').addClass('disabled-gray-button');
+                    // current.closest('.panel_content').find('.panel_footer').find('.plans-to-send').addClass('disabled-gray-button');
 
                     $('[data-toggle="table"]').bootstrapTable();
                 }
             }
         });
     });
+    /*
     $(document).on('click', '.plans-deselect-all', function(e) {
         e.preventDefault();
         var printLandscape = $(document).find('.print-landscape-mode');
@@ -458,7 +459,8 @@ $(document).ready(function() {
         $(this).closest('.panel_content').find('.panel_footer').find('.plans-to-send').addClass('disabled-gray-button');
 
 
-    });
+    }); */
+
     $(document).on('click', currentPage.filterTracking, function(e) {
         e.preventDefault();
         var current = $(this)
@@ -757,12 +759,12 @@ $(document).ready(function() {
                     }, 300);
                     if($.fn.utilities('getObjectLength',CHECKED_PLANS)<1){
                         CURRENT_PROFFESION_ID = '';
-                        currentTab.find('.panel_footer').find('.plans-to-print-link').addClass('disabled-gray-button');
-                        currentTab.find('.panel_footer').find('.plans-to-send').addClass('disabled-gray-button');
+                        // currentTab.find('.panel_footer').find('.plans-to-print-link').addClass('disabled-gray-button');
+                        // currentTab.find('.panel_footer').find('.plans-to-send').addClass('disabled-gray-button');
                     }else{
 
                         $.fn.utilities('checkCurrentProffesion',CURRENT_PROFFESION_ID,true);
-                        $(document).find('.check-all-column').removeClass('disabled-input');
+                        // $(document).find('.check-all-column').removeClass('disabled-input');
                     }
 
                     $('[data-toggle="table"]').bootstrapTable();
@@ -1577,8 +1579,9 @@ $(document).ready(function() {
     });
 
     // Check all rows in table
-    $(document).on('change', '.check-all-column input[type=checkbox]', function () {
 
+    /*
+    $(document).on('change', '.check-all-column input[type=checkbox]', function () {
         console.log('.check-all-column');
 
         var self =  $(this);
@@ -1608,7 +1611,7 @@ $(document).ready(function() {
             }
         })
 
-    });
+    }); */
 
 
 
@@ -1656,8 +1659,8 @@ $(document).ready(function() {
             }
 
             self.closest('.panel_content').find('.wrap_delete_users').removeClass('hide');
-            self.closest('.panel_content').find('.panel_footer').find('.plans-to-print-link').removeClass('disabled-gray-button');
-            self.closest('.panel_content').find('.panel_footer').find('.plans-to-send').removeClass('disabled-gray-button');
+            // self.closest('.panel_content').find('.panel_footer').find('.plans-to-print-link').removeClass('disabled-gray-button');
+            // self.closest('.panel_content').find('.panel_footer').find('.plans-to-send').removeClass('disabled-gray-button');
 
         }else{
             delete CHECKED_PLANS['plans_' + tablePrintTd.data('planid') + '_id'];
@@ -1672,6 +1675,9 @@ $(document).ready(function() {
                 self.closest('.panel_body').find('.wrap_delete_users').removeClass('hide');
             }
         }
+
+        /*
+
         var plansJson = JSON.stringify(CHECKED_PLANS)
         $(document).find('.selected-plans').val(plansJson)
 
@@ -1690,9 +1696,7 @@ $(document).ready(function() {
 
             $(this).closest('.panel_content').find('.panel_footer').find('.plans-to-print-link').addClass('disabled-gray-button');
             $(this).closest('.panel_content').find('.panel_footer').find('.plans-to-send').addClass('disabled-gray-button');
-        }
-
-
+        } */
 
     });
 
@@ -1709,8 +1713,11 @@ $(document).ready(function() {
         var trackingId = '';
         var urlTracking = $(document).find('.plans-list-layout').data('trackingurl');
 
+        var selectedProfessionId = $('.plans-layout .select-profession').val();
+        console.log('selectedProfessionId', selectedProfessionId);
+
         var fPage = firstPage.clone();
-        var profession =  $(document).find('.plans-list-layout [data-professionid='+CURRENT_PROFFESION_ID+']:first').data('profession')
+        var profession =  $(document).find('.plans-list-layout [data-professionid='+selectedProfessionId+']:first').data('profession')
         $(document).find('.print-landscape-mode').removeClass('page-break').find('.first-page').replaceWith(fPage.removeClass('hidden'))
         var firstTable = $('.print-landscape-mode table')[1];
         $(firstTable).closest('.page-break').find('.printable-logo').remove();
@@ -1720,6 +1727,17 @@ $(document).ready(function() {
         var formData = new FormData();
         formData["csrf"] = Q4U.getCsrfToken();
         formData["x-form-secure-tkn"] = "";
+
+        // $('.enable-plan-action .checkbox-wrapper input[type=checkbox]').each(function(i, el){
+        //
+        //     var self = $(el);
+        //     var planID = self.closest('tr').data('planid');
+        //     CHECKED_PLANS['plans_'+planID+'_id']= planID;
+        //
+        // });
+
+        console.log('CHECKED_PLANS ', CHECKED_PLANS);
+
         for(var key in CHECKED_PLANS){
             formData[key] = CHECKED_PLANS[key];
         }
@@ -1739,7 +1757,7 @@ $(document).ready(function() {
                     setTimeout(function(){
                         if(trackingId>0){
                             $(printLandscape).find('.pr-tracking-val').text(trackingId);
-                            var content = printLandscape.clone()
+                            var content = printLandscape.clone();
                             $('body').append(content);
                             window.print();
                             $('body>.print-landscape-mode').remove();
@@ -1779,7 +1797,8 @@ $(document).ready(function() {
                     $(document).find('#choose-sender-modal').find('form').append('<input type="hidden" name="project_id" value="'+id+'">')
                     $(document).find('#choose-sender-modal').find('form .plans-tosend').remove();
                     for(var key in CHECKED_PLANS){
-                       $(document).find('#choose-sender-modal').find('form').append('<input type="hidden" class="plans-tosend" name="plans_'+CHECKED_PLANS[key]+'_id" value="'+CHECKED_PLANS[key]+'">') ;
+                       $(document).find('#choose-sender-modal').find('form').append(
+                           '<input type="hidden" class="plans-tosend" name="plans_'+CHECKED_PLANS[key]+'_id" value="'+CHECKED_PLANS[key]+'">') ;
                     }
                     $("#users-mails").select2({
                         width: "100%",
@@ -3016,8 +3035,8 @@ $(document).ready(function() {
                         $.fn.utilities('updateContentOnChange');
                         $('.selectpicker').selectpicker({size:3,dropupAuto:false})
                     }, 300);
-                    current.closest('.panel_content').find('.panel_footer').find('.plans-to-print-link').addClass('disabled-gray-button');
-                    current.closest('.panel_content').find('.panel_footer').find('.plans-to-send').addClass('disabled-gray-button');
+                    // current.closest('.panel_content').find('.panel_footer').find('.plans-to-print-link').addClass('disabled-gray-button');
+                    // current.closest('.panel_content').find('.panel_footer').find('.plans-to-send').addClass('disabled-gray-button');
 
                     $('[data-toggle="table"]').bootstrapTable();
                     CURRENT_PLAN_PAGE = false;

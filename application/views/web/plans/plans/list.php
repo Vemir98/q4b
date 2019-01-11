@@ -171,11 +171,11 @@ $icons = [
                             <thead>
                             <tr>
                                 <th class="hidden w-25"></th><!--  -->
-                                <th class="w-25 check-all-column disabled-input"><!-- 0 -->
-                                    <label class="checkbox-wrapper" title="<?=__('select all on page')?>">
-                                        <input type="checkbox">
-                                        <span class="checkbox-replace"></span><i class="checkbox-tick q4bikon-tick"></i>
-                                    </label>
+                                <th class="w-25"><!-- 0 -->
+<!--                                    <label class="checkbox-wrapper" title="--><?//=__('select all on page')?><!--">-->
+<!--                                        <input type="checkbox">-->
+<!--                                        <span class="checkbox-replace"></span><i class="checkbox-tick q4bikon-tick"></i>-->
+<!--                                    </label>-->
                                 </th>
                                 <th class="td-50"></th> <!-- 1 -->
                                 <th data-field="<?=__('Structure')?>" class="td-100"><?=__('Structure')?></th><!-- 2 -->
