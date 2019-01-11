@@ -5221,6 +5221,10 @@ ul.q4-pagination {
   .qc-plan-details.visible {
     display: block; }
 
+.add-plan {
+    line-height: 0.8;
+}
+
 .qc-change-plan {
   position: absolute;
   top: -25px;

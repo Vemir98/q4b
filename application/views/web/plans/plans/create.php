@@ -33,11 +33,11 @@
                                     <label class="table_label"><?=__('Property')?></label>
                                     <div class="select-wrapper">
                                         <i class="q4bikon-arrow_bottom"></i>
-                                        <select name="object_id" class="q4-select q4_select q4-form-input object-general-select" required>
+                                        <select name="object_id" id="plans-select-prof" class="q4-select q4_select q4-form-input object-general-select" required>
                                             <option value=""><?=__('Please select')?></option>
 
                                             <?foreach ($objects as $obj): ?>
-                                                <option value="<?=$obj->id?>" <?=($obj->id == $object->id) ? 'selected' : ''?>><?=$obj->type->name.'-'.$obj->name?></option>
+                                                <option data-minfloor="<?=$obj->smaller_floor?>" data-maxfloor="<?=$obj->bigger_floor?>" value="<?=$obj->id?>" <?=($obj->id == $object->id) ? 'selected' : ''?>><?=$obj->type->name.'-'.$obj->name?></option>
                                             <?endforeach ?>
 
                                         </select>
@@ -93,7 +93,7 @@
                                                 <td class="rwd-td2" data-th="">
                                                     <input type="text" class="table_input plan-name">
                                                 </td>
-                                            <td>
+                                            <td class="floors-select">
                                                 <div class="multi-select-box comma">
                                                     <div class="select-imitation q4-form-input floor-numbers">
                                                         <span class="select-imitation-title"></span>
@@ -129,41 +129,10 @@
                                                     </select>
                                                 </div>
 
-                                                <!-- <div class="select-imitation q4-form-input floor-numbers">
-                                                    <span class="select-imitation-title"></span>
-                                                    <div class="over-select"></div><i class="arrow-down q4bikon-arrow_bottom"></i>
-                                                </div>
-                                                <div class="checkbox-list-no-scroll hidden">
-
-                                                    <?for($i = $object->smaller_floor; $i <= $object->bigger_floor; $i++):?>
-                                                        <div class="checkbox-list-row">
-                                                            <span class="checkbox-text">
-                                                                <label class="checkbox-wrapper-multiple inline" data-val="<?=$i?>">
-                                                                    <span class="checkbox-replace"></span>
-                                                                    <i class="checkbox-list-tick q4bikon-tick"></i>
-                                                                </label>
-                                                                <span class="checkbox-text-content bidi-override">
-
-                                                                    <?=$i?>
-
-                                                                </span>
-                                                            </span>
-                                                        </div>
-                                                    <?endfor?>
-
-                                                </div>
-                                                <select class="hidden-select" multiple>
-
-                                                    <?for($i = $object->smaller_floor; $i <= $object->bigger_floor; $i++):?>
-                                                        <option value="<?=$i?>"><?=$i?></option>
-                                                    <?endfor?>
-
-                                                </select>-->
-
                                             </td>
                                                 <td class="rwd-td12" data-th="Action">
                                                     <div class="text-right-left action-buttons">
-                                                        <a class="circle-sm orange add-plan"">
+                                                        <a class="circle-sm orange add-plan disabled-link">
                                                             <i class="plus q4bikon-plus"></i>
                                                         </a>
                                                     </div>

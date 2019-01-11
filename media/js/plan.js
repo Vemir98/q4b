@@ -124,7 +124,30 @@ $(document).ready(function() {
 
     var currentPage = Q4U.pages.updatePage;
 
+    $(document).on('change','#plans-select-prof', function(){
 
+        var self = $(this);
+        var $this = $(this).val();
+        var minFloor = $(this).find('option:selected').data('minfloor');
+        var maxFloor = $(this).find('option:selected').data('maxfloor');
+        console.log('$this :  ', $this);
+
+        if($this > 0){
+            self.closest('#add-plans-modal').find('.add-plan').removeClass('disabled-link');
+
+            var floorsRange = $.fn.utilities('generateMultiSelectFloor', minFloor, maxFloor);
+
+            console.log('floorsRange', floorsRange);
+
+            self.closest('#add-plans-modal').find('.floors-select').empty().append(floorsRange);
+
+        } else {
+
+            self.closest('#add-plans-modal').find('.add-plan').addClass('disabled-link');
+            self.closest('#add-plans-modal').find('.floors-select').empty();
+        }
+
+    });
     $(document).on('click', currentPage.struct.addEditSpace.addSpaceSelector, function(e) {
         e.preventDefault();
         var Id = Q4U.timestamp();
@@ -348,8 +371,6 @@ $(document).ready(function() {
 
     $(document).on('click','.plans-layout .scrollable-table .checkbox-list-row',function (e) {
 
-        console.log('checkbox');
-
         var self = $(this);
 
         var currentCheckbox = self.closest('tr').find('.selectable-column').find('input[type=checkbox]')
@@ -358,8 +379,6 @@ $(document).ready(function() {
         var selection = self.closest('td').find('.multi-select-col .hidden-select').val();
 
         if(currentCheckbox.is(':checked') && !self.closest('.multi-select-box').hasClass('comma')){
-
-            console.log('checkbox');
 
             self.closest('.plans-layout').find('table .selectable-column input[type=checkbox]:checked').each(function(){
                 var current = $(this);
@@ -389,7 +408,6 @@ $(document).ready(function() {
 
         // }, 200);
     })
-
 
 
     $(document).on('click', '.search-plans', function(e) {
@@ -820,7 +838,7 @@ $(document).ready(function() {
         var valid = $.fn.utilities('validateForm', $(this).closest('form'));
 
         if(valid.valid){
-            var modal = $(this).closest('.modal')
+            var modal = $(this).closest('.modal');
             var currentForm = $(document).find('.modal').find('form');
             var urlPost = currentForm.attr('action');
             // modal.find('.modal-progress-bg').show();
@@ -843,9 +861,9 @@ $(document).ready(function() {
             });
 
             if(res){
-                modal.find('.modal-progress-bg').fadeOut()
-                $('.upload-plans-title').find('.q4-plans-count').html('')
-                modal.find('.upload-plans').text(__('Done')).removeClass('upload-plans').addClass("close-upload-plans-modal").removeClass(currentPage.disabledGrayButton)
+                modal.find('.modal-progress-bg').fadeOut();
+                $('.upload-plans-title').find('.q4-plans-count').html('');
+                modal.find('.upload-plans').text(__('Done')).removeClass('upload-plans').addClass("close-upload-plans-modal").removeClass(currentPage.disabledGrayButton);
                 modal.modal('hide');
 
                 LOADER = true;
@@ -1199,6 +1217,31 @@ $(document).ready(function() {
             '                   </td>' +
             '                   <td class="rwd-td2" data-th="">' +
             '                       <input type="text" class="table_input plan-name" value="'+ planName +'" name="plans['+ planRows +'][plan_name]" disabled required>' +
+            '                   </td>' +
+            '                   <td class="rwd-td3" data-th="">' +
+            '                       <div class="multi-select-box comma">'+
+            '                           <div class="select-imitation q4-form-input floor-numbers">' +
+            '                               <span class="select-imitation-title"></span>' +
+
+            '                               <div class="over-select"></div><i class="arrow-down q4bikon-arrow_bottom"></i>' +
+            '                           </div>' +
+
+            '                           <div class="checkbox-list-no-scroll hidden">' +
+            '                               <div class="checkbox-list-row">' +
+            '                                   <span class="checkbox-text">' +
+            '                                       <label class="checkbox-wrapper-multiple inline " data-val="1">' +
+            '                                           <span class="checkbox-replace"></span>' +
+            '                                           <i class="checkbox-list-tick q4bikon-tick"></i>' +
+            '                                       </label>' +
+            '                                       <span class="checkbox-text-content bidi-override">' +
+            '                                   </span>' +
+            '                                   </span>' +
+            '                               </div>' +
+            '                           </div>' +
+            '                           <select class="hidden-select" name="plan_<?=$item->id?>_floors" multiple>' +
+                '                           <option value=""></option>' +
+            '                           </select>' +
+            '                       </div>' +
             '                   </td>' +
             '                   <td>' +
             '                       <div class="text-right-left action-buttons">' +
@@ -1849,10 +1892,13 @@ $(document).ready(function() {
 
     $('body').on('projectPlansUpdated', function(e, data) {
 
-        if ($('.call-professions-list-modal').closest('.panel_body').length && data.projectPlansForm != undefined) {
+        if (data.projectPlansForm != undefined) {
 
             $(document).find('.modal').modal('hide');
-            $('.call-professions-list-modal').closest('.panel_body').find('.filter-plans').trigger('click');
+
+            var updatedTable = $(data.projectPlansForm).find('table.table');
+            $('table.table').replaceWith(updatedTable);
+            $('[data-toggle="table"]').bootstrapTable();
 
         }
 
@@ -3039,4 +3085,11 @@ $(document).ready(function() {
             }
         });
     });
+
+
+    $(document).find('.no-format-found').closest('tr').css('background', '#e49999');
+
+
+
+
 });

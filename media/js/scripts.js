@@ -127,8 +127,6 @@ $(document).on('click', 'form a.q4-form-submit', function(e) {
     var urlPost = self.closest('form').attr('action');
     var currentForm = self.closest('form');
 
-    console.log('q4-form-submit');
-
     var valid = $.fn.utilities('validateForm', self.closest('form'));
 console.log('valid', valid);
 
@@ -391,6 +389,7 @@ $(document).ready(function() {
     // $(document).find('.loader_backdrop').show();
     //$('html').css('direction', 'ltr');
     //$('body').attr('dir', 'rtl');
+
     function formatDate(date) {
         var monthNames = [
             __("January"), __("February"), __("March"),
@@ -1830,6 +1829,8 @@ $(document).ready(function() {
         "</span>" );
 
     });
+
+
 
 });
 
