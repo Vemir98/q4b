@@ -138,7 +138,7 @@ $icons = [
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row ev-has-file-menu">
                 <div class="col-md-1 rtl-float-right">
                     <div class="form-group">
                         <a class="plans-deselect-all q4-link-b-blue"><?=__('unselect all')?></a>
