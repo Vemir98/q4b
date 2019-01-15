@@ -236,6 +236,11 @@ class Model_PrPlan extends MORM
     public function hasQualityControl(){
         return (bool) $this->quality_controls->count_all();
     }
+
+    public function hasFile(){
+        return (bool) ($this->file()->loaded() and $this->has_file);
+    }
+
     public function file(){
         return $this->files->order_by('id','DESC')->find();
     }

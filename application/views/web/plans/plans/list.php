@@ -203,7 +203,7 @@ $icons = [
                                     $disabledButton = $item->hasQualityControl() ? ' disabled-gray-button' : '';
                                 ?>
 
-                                <tr data-planid="<?=$item->id?>">
+                                <tr data-planid="<?=$item->id?>" class="<?= $item->hasFile() ? '' : 'no-format-found'?>">
                                     <td class="hidden table-print-td"
                                         data-planid="<?=$item->id?>"
                                         data-property="<?=$item->object->type->name.' - '.$item->object->name?>"
@@ -259,7 +259,7 @@ $icons = [
                                     </td>
                                     <td class="rwd-td5 align-center-left">
 
-                                        <? if ($item->file()->loaded() and $item->has_file): ?>
+                                        <? if ($item->hasFile()): ?>
                                             <span class="plans-inline-icon">
                                                 <a target="_blank" href="<?=$item->file()->originalFilePath()?>" class="<?=$mime== 'unknown' ? 'disabled-input' : ''?>">
                                                     <img src="/media/img/choose-format/format-<?=$mime?>.png" title="<?=$name?>" alt="<?=$name?>">
