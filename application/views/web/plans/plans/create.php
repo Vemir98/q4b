@@ -48,7 +48,7 @@
                                     <div class="select-wrapper">
                                         <i class="q4bikon-arrow_bottom"></i>
 
-                                        <select name="profession_id" class="q4-select q4_select q4-form-input profession-general-select" required>
+                                        <select name="profession_id" id="profession_id" class="q4-select q4_select q4-form-input profession-general-select" required>
                                             <option value=""><?=__('Please select')?></option>
 
                                             <?foreach ($professions as $profession): ?>

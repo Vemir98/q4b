@@ -89,12 +89,15 @@ $(document).ready(function() {
 
         var self = $(this);
         var $this = $(this).val();
+        var neightborVal = $(document).find('#profession_id').val();
         var minFloor = $(this).find('option:selected').data('minfloor');
         var maxFloor = $(this).find('option:selected').data('maxfloor');
-        console.log('$this :  ', $this);
 
         if($this > 0){
-            self.closest('#add-plans-modal').find('.add-plan').removeClass('disabled-link');
+
+            if(neightborVal > 0){
+                self.closest('#add-plans-modal').find('.add-plan').removeClass('disabled-link');
+            }
 
             var floorsRange = $.fn.utilities('generateMultiSelectFloor', minFloor, maxFloor);
 
@@ -102,8 +105,31 @@ $(document).ready(function() {
 
         } else {
 
-            self.closest('#add-plans-modal').find('.add-plan').addClass('disabled-link');
+            if($this == 0 || neightborVal == 0){
+                self.closest('#add-plans-modal').find('.add-plan').addClass('disabled-link');
+            }
             self.closest('#add-plans-modal').find('.floors-select').empty().append(floorsRange);
+        }
+
+    });
+
+    $(document).on('change','#profession_id', function(){
+
+        var self = $(this);
+        var $this = $(this).val();
+        var neightborVal = $(document).find('#plans-select-prof').val();
+
+        if($this > 0){
+            console.log('if ');
+            if(neightborVal > 0){
+                self.closest('#add-plans-modal').find('.add-plan').removeClass('disabled-link');
+            }
+
+        } else {
+            if($this == 0 || neightborVal == 0){
+                self.closest('#add-plans-modal').find('.add-plan').addClass('disabled-link');
+            }
+
         }
 
     });
@@ -369,6 +395,23 @@ $(document).ready(function() {
                 }
             }
         });
+    });
+
+    $(document).on('click', '.plans-deselect-all', function(e) {
+        e.preventDefault();
+        var printLandscape = $(document).find('.print-landscape-mode');
+        printLandscape.find('.printable-table-other').empty();
+        CHECKED_PLANS = {};
+        CURRENT_PROFFESION_ID = '';
+        $.fn.utilities('checkCurrentProffesion',CURRENT_PROFFESION_ID,false)
+
+        $(document).find('.plans-list-layout .total-res-selected').html(0);
+        $(document).find('.plans-list-layout').find('.enable-plan-action input[type=checkbox]').prop('checked',false);
+        $(document).find('.plans-list-layout').find('.check-all-column input[type=checkbox]').prop('checked',false);
+        $(document).find('.current-profession-id').val('')
+        $(document).find('.selected-plans').val('')
+        $(document).find('.check-all-column').addClass('disabled-input');
+
     });
 
     $(document).on('click', currentPage.filterTracking, function(e) {
@@ -743,9 +786,11 @@ $(document).ready(function() {
                 $('.upload-plans-title').find('.q4-plans-count').html('');
                 modal.find('.upload-plans').text(__('Done')).removeClass('upload-plans').addClass("close-upload-plans-modal").removeClass(currentPage.disabledGrayButton);
                 modal.modal('hide');
-
+                window.location.reload();
                 LOADER = true;
             }
+
+
         }
 
     });
@@ -812,6 +857,10 @@ $(document).ready(function() {
 
             return false;
         }
+
+        var self = $(this);
+        self.closest('#add-plans-modal').find('#plans-select-prof').addClass('disabled-gray-button');
+        self.closest('#add-plans-modal').find('#profession_id').addClass('disabled-gray-button');
 
         var newRowMarkup = '<tr>' +
             '                   <td class="rwd-td1" data-th="">' +
