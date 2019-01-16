@@ -527,7 +527,12 @@ h6 {
   .col-75 {
     float: none;
     display: block;
-    width: 100%; } }
+    width: 100%; }
+
+  .ml-15 {
+    margin-left: auto; }
+
+}
 @media (max-width: 768px) {
   .responsive-modal-table .w-25 {
     width: 25px; }
@@ -11551,14 +11556,16 @@ header {
  *   end of Dashboard Page
  ************************************** */
 .panel-footer-first {
-  position: absolute;
+  /*  position: absolute;
   left: 15px;
-  top: 28px; }
+  top: 28px; */
+}
 
 .panel-footer-second {
-  position: absolute;
+  /* position: absolute;
   left: 215px;
-  top: 28px; }
+  top: 28px; */
+}
 /*
 .plans-to-print-link {
   position: absolute;

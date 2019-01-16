@@ -1049,6 +1049,7 @@ $(document).ready(function() {
 
 
     $(window).on('resize', function() {
+
         var windowWidth = $(this).width();
         if ($('.panel_header').hasClass('open')) {
             // $.fn.utilities('setScrollbarDirection', '.scrollable-table');
@@ -1066,6 +1067,7 @@ $(document).ready(function() {
             var modalWidth = $('#quality-control-modal').find('.modal-dialog').width();
             var tasksItemCount = $('#quality-control-modal').find('.tasks-full-description li:visible').length;
             var tasksItemsWidth = tasksItemCount * (350 + 40) + 20;
+
             var $resizedSlider = $('#quality-control-modal').find('.tasks-full-description-box');
             $('.tasks-full-description-box').width(modalWidth - 40);
             $('.tasks-full-description').width(tasksItemsWidth);
