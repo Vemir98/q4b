@@ -2505,7 +2505,7 @@ label.checkbox-wrapper-comma.checked .checkbox-replace:before {
   right: 0;
   width: 100%;
   max-height: 129px;
-  overflow-y: scroll; }
+  overflow-y: auto; }
   .multi-select-box .checkbox-list-no-scroll label.checkbox-wrapper.checked .checkbox-replace:before {
     top: -2px;
     font-size: 16px; }

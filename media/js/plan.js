@@ -12,46 +12,7 @@ Q4U.pages = window.Q4U.pages || {};
 $(document).ready(function() {
     $.extend(Q4U.pages, {
         updatePage: {
-            struct:     {
-                addEditSpace: {
-                    spaceMarkup: '<tr>'+
-                                    '<td data-th="Name">'+
-                                        '<input type="text" class="table_input disabled-input sp-number" name="space_%s_number" value="%number">'+
-                                    '</td>'+
-                                    '<td data-th="Item Type">'+
-                                        '<div class="select-wrapper">'+
-                                            '<i class="q4bikon-arrow_bottom"></i>'+
-                                            '<select class="q4-select q4-form-input" name="space_%s_type">%space-types</select>'+
-                                        '</div>'+
-                                    '</td>'+
-                                    '<td data-th="Item Description">'+
-                                        '<input type="text" class="table_input" name="space_%s_desc">'+
-                                    '</td>'+
-                                    '<td data-th="Delete"><div class="wrap_delete_row">'+
-                                            '<span class="delete_row delete-space">'+
-                                                '<i class="q4bikon-delete"></i>'+
-                                            '</span>'+
-                                        '</div>'+
-                                    '</td>'+
-                                '</tr>',
-                    addSpaceSelector: '.add-space',
-                    spaceTableClass: '.spaces-tbl'
-                },
 
-            },
-            linkMarkup: '<tr class="new-link">' +
-                        '<td data-th="Name">    ' +
-                            '<input type="text" class="table_input link-name" name="link_%s_name">' +
-                        '</td>' +
-                        '<td data-th="URL"> ' +
-                            '<input type="text" class="table_input q4_url" name="link_%s_url" value="http://www.">' +
-                        '</td>' +
-                        '<td data-th="Delete">  ' +
-                            '<div class="wrap_delete_row">' +
-                                '<span class="delete_row delete-link disable"><i class="q4bikon-delete"></i></span>' +
-                            '</div>' +
-                        '</td>' +
-                    '</tr>',
             planMarkup:'<tr class="new-link">' +
 
                 '<td class="rwd-td3" data-th=""> ' +
@@ -128,68 +89,51 @@ $(document).ready(function() {
 
         var self = $(this);
         var $this = $(this).val();
+        var neightborVal = $(document).find('#profession_id').val();
         var minFloor = $(this).find('option:selected').data('minfloor');
         var maxFloor = $(this).find('option:selected').data('maxfloor');
-        console.log('$this :  ', $this);
 
         if($this > 0){
-            self.closest('#add-plans-modal').find('.add-plan').removeClass('disabled-link');
+
+            if(neightborVal > 0){
+                self.closest('#add-plans-modal').find('.add-plan').removeClass('disabled-link');
+            }
 
             var floorsRange = $.fn.utilities('generateMultiSelectFloor', minFloor, maxFloor);
-
-            console.log('floorsRange', floorsRange);
 
             self.closest('#add-plans-modal').find('.floors-select').empty().append(floorsRange);
 
         } else {
 
-            self.closest('#add-plans-modal').find('.add-plan').addClass('disabled-link');
-            self.closest('#add-plans-modal').find('.floors-select').empty();
-        }
-
-    });
-    $(document).on('click', currentPage.struct.addEditSpace.addSpaceSelector, function(e) {
-        e.preventDefault();
-        var Id = Q4U.timestamp();
-
-        var html = currentPage.struct.addEditSpace.spaceMarkup.replace(/%space-types/g, $(document).find('.space-types').html());
-        html = html.replace(/%s/g, '+' + Id);
-        var i = 1;
-        $(document).find(currentPage.struct.addEditSpace.spaceTableClass + ' tbody:first').prepend($(html));
-
-        $(currentPage.struct.addEditSpace.spaceTableClass + ' tbody tr').each(function() {
-            $(this).find('.sp-number').val(i++);
-        });
-
-    });
-
-    $(document).on('click', '.delete-space', function() {
-        $(this).parents('tr').remove();
-    });
-
-    $(document).on('click', '.add-new-project-user', function(e) {
-        e.preventDefault();
-        Q4U.ajaxGetRequest($(this).data('url'), {
-            successCallback: function(data) {
-                if (data.getData().modal) {
-                    $(document).find('.modal').modal('hide');
-                    var modal = data.getData().modal;
-                    $('body').append(modal);
-                    $(document).find('.modal').modal('show');
-                    // $('.modal .list-users-scroll').mCustomScrollbar({ axis: "y" });
-                    $('[data-toggle="table"]').bootstrapTable();
-                }
+            if($this == 0 || neightborVal == 0){
+                self.closest('#add-plans-modal').find('.add-plan').addClass('disabled-link');
             }
-        });
-    });
-    $(document).on('click', currentPage.addLinkSelector, function() {
-        if (!$(document).find('.new-link').length || !!$(document).find('.new-link').first().find('.link-name').val().trim()) {
-            var Id = Q4U.timestamp();
-            var html = currentPage.linkMarkup.replace(/%s/g, '+' + Id);
-            $(document).find(currentPage.linkFormClass + ' tbody:first').prepend($(html));
+            self.closest('#add-plans-modal').find('.floors-select').empty().append(floorsRange);
         }
 
     });
+
+    $(document).on('change','#profession_id', function(){
+
+        var self = $(this);
+        var $this = $(this).val();
+        var neightborVal = $(document).find('#plans-select-prof').val();
+
+        if($this > 0){
+            console.log('if ');
+            if(neightborVal > 0){
+                self.closest('#add-plans-modal').find('.add-plan').removeClass('disabled-link');
+            }
+
+        } else {
+            if($this == 0 || neightborVal == 0){
+                self.closest('#add-plans-modal').find('.add-plan').addClass('disabled-link');
+            }
+
+        }
+
+    });
+
 
 
     $(document).on('change','.modal .plan-place-number',function(){
@@ -271,8 +215,6 @@ $(document).ready(function() {
                         $.fn.utilities('updateContentOnChange');
                         $('.selectpicker').selectpicker({size:3,dropupAuto:false})
                     }, 300);
-                    // current.closest('.panel_content').find('.panel_footer').find('.plans-to-print-link').addClass('disabled-gray-button');
-                    // current.closest('.panel_content').find('.panel_footer').find('.plans-to-send').addClass('disabled-gray-button');
 
                     $('[data-toggle="table"]').bootstrapTable();
                     CURRENT_PLAN_PAGE = false;
@@ -328,8 +270,6 @@ $(document).ready(function() {
                         $.fn.utilities('updateContentOnChange');
                         $('.selectpicker').selectpicker({size:3,dropupAuto:false})
                     }, 300);
-                    // current.closest('.panel_content').find('.panel_footer').find('.plans-to-print-link').addClass('disabled-gray-button');
-                    // current.closest('.panel_content').find('.panel_footer').find('.plans-to-send').addClass('disabled-gray-button');
 
                     $('[data-toggle="table"]').bootstrapTable();
                     CURRENT_PLAN_PAGE = false;
@@ -360,7 +300,7 @@ $(document).ready(function() {
             floor.removeClass('disabled-input')
         }
 
-    })
+    });
 
     $(document).on('keyup change', '.plan-place-custom-number', function() {
         var self = $(this);
@@ -451,15 +391,13 @@ $(document).ready(function() {
                         $.fn.utilities('updateContentOnChange');
                         $('.selectpicker').selectpicker({size:3,dropupAuto:false})
                     }, 300);
-                    // current.closest('.panel_content').find('.panel_footer').find('.plans-to-print-link').addClass('disabled-gray-button');
-                    // current.closest('.panel_content').find('.panel_footer').find('.plans-to-send').addClass('disabled-gray-button');
 
                     $('[data-toggle="table"]').bootstrapTable();
                 }
             }
         });
     });
-    /*
+
     $(document).on('click', '.plans-deselect-all', function(e) {
         e.preventDefault();
         var printLandscape = $(document).find('.print-landscape-mode');
@@ -469,16 +407,13 @@ $(document).ready(function() {
         $.fn.utilities('checkCurrentProffesion',CURRENT_PROFFESION_ID,false)
 
         $(document).find('.plans-list-layout .total-res-selected').html(0);
-        $(document).find('.plans-list-layout').find('.enable-plan-action input[type=checkbox]').prop('checked',false)
-        $(document).find('.plans-list-layout').find('.check-all-column input[type=checkbox]').prop('checked',false)
+        $(document).find('.plans-list-layout').find('.enable-plan-action input[type=checkbox]').prop('checked',false);
+        $(document).find('.plans-list-layout').find('.check-all-column input[type=checkbox]').prop('checked',false);
         $(document).find('.current-profession-id').val('')
         $(document).find('.selected-plans').val('')
         $(document).find('.check-all-column').addClass('disabled-input');
-        $(this).closest('.panel_content').find('.panel_footer').find('.plans-to-print-link').addClass('disabled-gray-button');
-        $(this).closest('.panel_content').find('.panel_footer').find('.plans-to-send').addClass('disabled-gray-button');
 
-
-    }); */
+    });
 
     $(document).on('click', currentPage.filterTracking, function(e) {
         e.preventDefault();
@@ -514,11 +449,7 @@ $(document).ready(function() {
                     $.fn.utilities('setCarouselWidth', '.q4-carousel-table-wrap', window.innerWidth);
                     $.fn.utilities('setScrollBarWidth', self.closest('.tab_panel').find('.scrollable-table'), windowWidth);
 
-                    var widthT = $.fn.utilities('measureHiddenTable', self.closest('.tab_panel').find('table.table'),false);
-
-
                     setTimeout(function(){
-                        // self.closest('.tab_panel').find('table.table').closest('.mCSB_container').width(widthT);
 
                         $.fn.utilities('updateContentOnChange');
                     }, 300);
@@ -553,11 +484,7 @@ $(document).ready(function() {
                     $.fn.utilities('setCarouselWidth', '.q4-carousel-table-wrap', window.innerWidth);
                     $.fn.utilities('setScrollBarWidth', self.closest('.tab_panel').find('.scrollable-table'), windowWidth);
 
-                    var widthT = $.fn.utilities('measureHiddenTable', self.closest('.tab_panel').find('table.table'),false);
-
-
                     setTimeout(function(){
-                        // self.closest('.tab_panel').find('table.table').closest('.mCSB_container').width(widthT);
 
                         $.fn.utilities('updateContentOnChange');
                     }, 300);
@@ -606,10 +533,7 @@ $(document).ready(function() {
                     $.fn.utilities('setCarouselWidth', '.q4-carousel-table-wrap', window.innerWidth);
                     $.fn.utilities('setScrollBarWidth', self.closest('.tab_panel').find('.scrollable-table'), windowWidth);
 
-                    var widthT = $.fn.utilities('measureHiddenTable', self.closest('.tab_panel').find('table.table'),false);
-
                     setTimeout(function(){
-                        // self.closest('.tab_panel').find('table.table').closest('.mCSB_container').width(widthT);
 
                         $.fn.utilities('updateContentOnChange');
                     }, 300);
@@ -778,12 +702,9 @@ $(document).ready(function() {
                     }, 300);
                     if($.fn.utilities('getObjectLength',CHECKED_PLANS)<1){
                         CURRENT_PROFFESION_ID = '';
-                        // currentTab.find('.panel_footer').find('.plans-to-print-link').addClass('disabled-gray-button');
-                        // currentTab.find('.panel_footer').find('.plans-to-send').addClass('disabled-gray-button');
                     }else{
 
                         $.fn.utilities('checkCurrentProffesion',CURRENT_PROFFESION_ID,true);
-                        // $(document).find('.check-all-column').removeClass('disabled-input');
                     }
 
                     $('[data-toggle="table"]').bootstrapTable();
@@ -866,112 +787,15 @@ $(document).ready(function() {
                 $('.upload-plans-title').find('.q4-plans-count').html('');
                 modal.find('.upload-plans').text(__('Done')).removeClass('upload-plans').addClass("close-upload-plans-modal").removeClass(currentPage.disabledGrayButton);
                 modal.modal('hide');
-
+                window.location.reload();
                 LOADER = true;
             }
-        }
 
+
+        }
 
     });
 
-    // $(document).on('click', '.__upload-plans', function(e) {
-    //     e.preventDefault();
-    //     LOADER = false;
-    //     var modal = $(this).closest('.modal')
-    //     var currentForm = modal.find('form');
-    //     var urlPost = currentForm.attr('action');
-    //     modal.find('.modal-progress-bg').show();
-    //     var uploads = modal.find('.upload-plans-title .hide-upload')
-    //
-    //     var plansCount = 0;
-    //     for(var key in FILES_BUFFER){
-    //         plansCount++;
-    //     }
-    //     var length = modal.find('.upload-plans-scroll ul').find('li').length;
-    //     var elem = modal.find(".modal-bar");
-    //     var addWidth = parseInt(100 *parseFloat(1/(plansCount)));
-    //     var width = 0;
-    //     var i = 1;
-    //     var reject = 0;
-    //     var deleteKey = '';
-    //     (async () => {
-    //
-    //         for(var key in FILES_BUFFER){
-    //             deleteKey = key;
-    //             var formData = new FormData();
-    //             var data = getFormData(currentForm);
-    //             modal.find('.upload-plans').addClass(currentPage.disabledGrayButton)
-    //             data["csrf"] = Q4U.getCsrfToken();
-    //             formData.append("Data", JSON.stringify(data));
-    //
-    //             if(FILES_BUFFER[key]!=undefined){
-    //                 formData.append('file',FILES_BUFFER[key]);
-    //                 var res = await $.ajax({//можно использовать только асинхронные функции
-    //                     url: urlPost,
-    //                     type: 'POST',
-    //                     data:formData,
-    //                     dataType: 'json',
-    //                     cache: false,
-    //                     contentType: false,
-    //                     processData: false,
-    //                 });
-    //
-    //                 if(res){
-    //                         width =  (plansCount == i) ? 100 : width + addWidth;
-    //                         $('.upload-plans-title').find('.q4-plans-count').html('('+plansCount+')')
-    //
-    //                         elem.css('width', width + '%');
-    //                         elem.closest('.modal-progress-bar').find('.progress-bar-text').html(__("Load") + ' ' + i + ' ' +__("from") + ' ' +  plansCount);
-    //                         elem.closest('.modal-progress-bar').find('.progress-bar-status').html(__("loading") +' ('+ FILES_BUFFER[key].name +')');
-    //
-    //
-    //                     if(res.errors){
-    //                         reject++;
-    //                     }else{
-    //                         modal.find('.upload-plans-wrapper').find('li.'+deleteKey).remove();
-    //                     }
-    //                     if(i==plansCount){
-    //                         modal.find('.modal-progress-bg').fadeOut()
-    //                         $('.upload-plans-title').find('.q4-plans-count').html('')
-    //                         modal.find('.upload-plans').text(__('Done')).removeClass('upload-plans').addClass("close-upload-plans-modal").removeClass(currentPage.disabledGrayButton)
-    //                         FILES_BUFFER = [];
-    //                         LOADER = true;
-    //
-    //                         if(reject > 0){
-    //                             Q4U.alert(__('You have $s rejected files').replace(/%s/g, reject), {
-    //                                 type: "danger",
-    //                                 confirmText: __("OK")
-    //                             });
-    //                         }
-    //                     }
-    //                     i++;
-    //                 }
-    //
-    //             }
-    //
-    //     }
-    //
-    //     })().catch((err) => {
-    //
-    //         reject++;
-    //         if(i==plansCount){
-    //             modal.find('.modal-progress-bg').fadeOut()
-    //             $('.upload-plans-title').find('.q4-plans-count').html('')
-    //             modal.find('.upload-plans').text(__('Done')).removeClass('upload-plans').addClass("close-upload-plans-modal").removeClass(currentPage.disabledGrayButton)
-    //             FILES_BUFFER = [];
-    //             LOADER = true;
-    //
-    //             if(reject > 0){
-    //                 Q4U.alert(__('You have $s rejected files').replace(/%s/g, reject), {
-    //                     type: "danger",
-    //                     confirmText: __("OK")
-    //                 });
-    //             }
-    //         }
-    //         i++;
-    //     })
-    //
-    // });
 
     $(document).on('click', '.close-upload-plans-modal', function(e) {
         e.preventDefault();
@@ -1013,183 +837,6 @@ $(document).ready(function() {
     });
 
 
-    $(document).on('click', currentPage.qcFilterSettings, function(e) {
-        e.preventDefault();
-        var self = $(this);
-        var status = self.data('status');
-        var html = self.html();
-        Q4U.ajaxGetRequest($(this).data('url'), {
-            successCallback: function(data) {
-                if (data.getData()) {
-
-                    if ($(document).find('.qc-list-modal').length && data.getData().modal != undefined){
-                        var currentModal = data.getData().modal;
-                        $(document).find('.q4_form').replaceWith($(currentModal).find('.q4_form'));
-                    }
-
-                    $(document).find(".filter-settings-button").removeClass('active');
-                    $(document).find(".filter-settings-button[data-status='" + status + "']").addClass('active');
-
-                    $(document).find('.q4-inside-filter-mobile a.q4-inside-select-filter').html(html);
-
-                    if($(document).find('html').hasClass('rtl')){
-                        $(document).find('body').removeAttr('style');
-
-                    }
-
-                    $.fn.utilities('setModalCarouselWidth', '.q4-carousel-table-wrap', $('.modal-dialog').width());
-                    $.fn.utilities('setCarouselDirection', ".q4-carousel-table", 10);
-                    $.fn.utilities('owlPagination', '.q4-carousel-table');
-
-                    $(document).find('[data-toggle="table"]').bootstrapTable();
-
-
-                }
-            }
-        });
-    });
-
-
-
-    $(document).on('click', currentPage.addTaskSelector, function(e) {
-        e.preventDefault();
-        if ($(document).find(currentPage.taskFormClass + ' .new-el [data-attr="name"]').val() != '') {
-            var id = Q4U.timestamp();
-            var html = $(document).find(currentPage.taskFormClass + ' .el-pattern')[0].outerHTML;
-
-            html = html.replace(/%s/g, '+' + id);
-            html = html.replace(/data-name/g, 'name');
-
-            $(document).find(currentPage.taskFormClass + ' tbody:first').prepend($(html).removeClass('hidden').removeClass('el-pattern').addClass('new-el'));
-        }
-
-
-    });
-
-
-    $(document).on('click', currentPage.addCertSelector, function(e) {
-        e.preventDefault();
-        if ($(document).find(currentPage.certFormClass + ' .new-el [data-attr="name"]').val() != '') {
-            var id = Q4U.timestamp();
-            var html = $(document).find(currentPage.certFormClass + ' .el-pattern')[0].outerHTML;
-
-            html = html.replace(/%s/g, '+' + id);
-            html = html.replace(/data-name/g, 'name');
-
-            $(document).find(currentPage.certFormClass + ' tbody:first').prepend($(html).removeClass('hidden').removeClass('el-pattern').addClass('new-el'));
-        }
-
-
-    });
-
-
-    $(document).on('click', currentPage.addPropSelector, function(e) {
-        e.preventDefault();
-        if ($(document).find(currentPage.propFormClass + ' .new-el [data-attr="name"]').val() != '') {
-            var id = Q4U.timestamp();
-            var html = $(document).find(currentPage.propFormClass + ' .el-pattern')[0].outerHTML;
-
-            html = html.replace(/%s/g, '+' + id);
-            html = html.replace(/data-name/g, 'name');
-            $(document).find(currentPage.propFormClass + ' tbody:first').prepend($(html).removeClass('hidden').removeClass('el-pattern').addClass('new-el').addClass(id));
-            $(document).find(currentPage.propFormClass + ' tbody:first').find('.new-el').find('.property-name-input').addClass('q4_required')
-            $(document).find('.scrollable-table .scrollable-date').each(function() {
-
-                $(this).datetimepicker({locale:LANG}).show();
-
-                $(this).datetimepicker({ widgetParent: 'body' })
-                    .on('dp.show', function() {
-                        var top = ($(this).offset().top - 270);
-                        var left = $(this).offset().left;
-                        if ($(this).offset().top - 400 <= 0) { //display below if not enough room above
-                            top = $(this).offset().top + $(this).height() + 10;
-                        }
-                        $(document).find('.bootstrap-datetimepicker-widget').css({
-                            'top': top + 'px',
-                            'left': left + 'px',
-                            'bottom': 'auto',
-                            'right': 'auto'
-                        });
-
-                    });
-
-            });
-        }
-
-
-    });
-
-    $(document).on('click', '.cert-files', function(e) {
-        e.preventDefault();
-
-        Q4U.ajaxGetRequest($(this).data('url'), {
-            successCallback: function(data) {
-                if (data.getData().modal) {
-
-                    $(document).find('.modal').modal('hide');
-                    var modal = data.getData().modal;
-                    $('body').append(modal);
-                    $(document).find('.modal').modal('show');
-
-                }
-            }
-        });
-
-    });
-
-    $(document).on('click', '.cert-files-upload', function(e) {
-        e.preventDefault();
-        var el = $(this).closest('form').find('input[type="file"]');
-        el[0].value = null;
-        el.trigger('click');
-    });
-
-
-
-    $('body').on('renewCertificationModal', function(e, data) {
-        if ($('.modal').length && data.modal != undefined)
-            $('.modal .q4_modal').replaceWith($(data.modal).find('.q4_modal'));
-        if ($('.certifications-form').length && data.certificationsForm != undefined) {
-            $('.certifications-form').replaceWith(data.certificationsForm);
-
-        }
-
-        $('[data-toggle="table"]').bootstrapTable();
-    });
-
-    $(document).on('click', currentPage.qcCurrentSelector, function(e) {
-        e.preventDefault();
-        var modalId = $(this).data('modalid');
-        Q4U.ajaxGetRequest($(this).data('url'), {
-            successCallback: function(data) {
-                if (data.getData().modal) {
-
-                    $(document).find('.quality-control-modal').remove();
-                    $(document).find('#choose-plan-modal').remove();
-                    $(document).find('#choose-plan-modal-mobile').remove();
-                    $(document).find('.print-quality-control').remove();
-                    var modal = data.getData().modal;
-                    $('body').append(modal);
-                    $(document).find('.quality-control-modal').addClass('no-delete').modal('show');
-
-                    setTimeout(function() {
-                        var self = $(document).find('#' + modalId);
-                        var modalWidth = self.find('.modal-dialog').width();
-
-                        var tasksItemCount = $('.tasks-full-description li:visible').length;
-                        var tasksItemsWidth = tasksItemCount * (350 + 40)+20;
-
-                        // Add scroll to tasks
-                        self.find('.tasks-full-description-box').width(modalWidth - 40);
-                        self.find('.tasks-full-description').width(tasksItemsWidth);
-
-                    }, 300)
-
-                }
-            }
-        });
-    });
-
     var planRows = 0;
     $(document).on('click', '.add-plan', function(e) {
         e.preventDefault();
@@ -1211,6 +858,10 @@ $(document).ready(function() {
 
             return false;
         }
+
+        var self = $(this);
+        self.closest('#add-plans-modal').find('#plans-select-prof').addClass('disabled-gray-button');
+        self.closest('#add-plans-modal').find('#profession_id').addClass('disabled-gray-button');
 
         var newRowMarkup = '<tr>' +
             '                   <td class="rwd-td1" data-th="">' +
@@ -1313,21 +964,6 @@ $(document).ready(function() {
         });
     });
 
-    $(document).on('change', '.select-project-get-objects', function(e) {
-        e.preventDefault();
-
-        var url = $(this).data('url') +'/'+ $(this).find('option:selected').val()
-
-        Q4U.ajaxGetRequest(url, {
-            successCallback: function(data) {
-                if (data.getData().objects) {
-                    var objects = data.getData().objects;
-                    $(document).find('.modal .select-objects-for-copy').html(objects);
-                }
-            }
-        });
-    });
-
     $(document).on('click', '.copy-plan', function(e) {
         e.preventDefault();
 
@@ -1367,7 +1003,6 @@ $(document).ready(function() {
 
     $(document).on('click', '.delete-tracking', function(e) {
         e.preventDefault();
-        // var filterButton = $(this).closest('.tab_panel').find('.plans-tracking-layout .filter-tracking');
         var trackingId = $(this).data('id');
         var searchText = $(document).find('.plans-tracking-layout .search-input').val();
         Q4U.confirm(__('Are you sure, you want') + ' ' +  __('delete') + ' ' + trackingId +' '+ __('tracking') + '?', {
@@ -1444,71 +1079,6 @@ $(document).ready(function() {
     });
 
 
-    $(document).on('click', '.copy-property', function(e) {
-
-        Q4U.confirm(__('Are you sure, you want') + __('copy object?'), {
-            confirmCallback: function(el, params) {
-                Q4U.ajaxGetRequest($(params.custom.el).data('url'));
-            },
-            hilight: "object",
-            type: "normal",
-            confirmText:  __('Confirm'),
-            custom: {
-                el: this
-            }
-        });
-    });
-
-    $(document).on('click', '.call-professions-list-modal', function(e) {
-        e.preventDefault();
-        Q4U.ajaxGetRequest($(this).data('url'), {
-            successCallback: function(data) {
-                if (data.getData().modal) {
-                    $(document).find('.modal').modal('hide');
-                    var modal = data.getData().modal;
-                    $('body').append(modal);
-                    $(document).find('.modal').modal('show');
-
-                }
-            }
-        });
-    });
-
-    $(document).on('change keyup', '.place-number', function() {
-        var val = parseInt($(this).val());
-        if (!isNaN(val) && val != 0) {
-            $(document).find('.floor-numbers').removeClass('select-imitation');
-        } else {
-            $(document).find('.floor-numbers').addClass('select-imitation');
-        }
-    });
-
-    $(document).on('change', '.qc-prop', function() {
-        var option = '';
-        var optMarckup = '';
-        var select = $(this).parents('.modal').find('select[name=floors]');
-        select.closest('.multi-select-box').find('.select-imitation-title').text( __('Please select'));
-
-        var currentEl = $(this).find('option[value=' + $(this).val() + ']');
-        var max = currentEl.data('max');
-        for (var i = currentEl.data('min'); i <= max; i++) {
-            optMarckup  +=  '<div class="checkbox-list-row">'+
-                                '<span class="checkbox-text">' +
-                                     '<label class="checkbox-wrapper-multiple inline" data-val="' + i + '">'+
-                                        '<span class="checkbox-replace"></span>'+
-                                        '<i class="checkbox-list-tick q4bikon-tick"></i>'+
-                                    '</label>' + '<span class="checkbox-text-content bidi-override">' + i +'</span>'+
-                                '</span>'+
-                            '</div>';
-            option += '<option value="' + i + '">' + i + '</option>';
-        }
-
-        select.html(option);
-        // select.closest('.multi-select-box').find('.checkbox-list .mCSB_container').html(optMarckup);
-
-
-    });
-
     $(document).on('change', '.plan-profession, .plan-craft', function() {
 
         if ($(this).hasClass('plan-profession')) {
@@ -1546,115 +1116,9 @@ $(document).ready(function() {
     });
 
 
-    $(document).on('click', '.show-proj-images', function(e) {
-        e.preventDefault();
-        Q4U.ajaxGetRequest($(this).data('url'), {
-            successCallback: function(data) {
-                if (data.getData().modal) {
-                    $(document).find('.modal').modal('hide');
-                    var modal = data.getData().modal;
-                    $('body').append(modal);
-                    $(document).find('.modal').modal('show');
-                    // $('.display-project-images').mCustomScrollbar({ axis: 'y' });
-                }
-            }
-        });
-    });
 
-    $(document).on('click', '.create-quality-control', function(e) {
-        e.preventDefault();
-
-        Q4U.ajaxGetRequest($(this).data('url'), {
-            successCallback: function(data) {
-                if (data.getData().modal) {
-
-                    $(document).find('.create-modal').remove();
-                    $(document).find('.choose-plan-modal').remove();
-                    $(document).find('#choose-plan-modal').remove();
-                    $(document).find('#choose-plan-modal-mobile').remove();
-                    // $(document).find('.print-quality-control').remove();
-                    var modal = data.getData().modal;
-                    $('body').append(modal);
-
-                    $(document).find('.create-modal').addClass('no-delete').modal('show');
-
-
-                    var self = $(document).find('#quality-control-modal');
-                    var modalWidth = self.find('.modal-dialog').width();
-                    $('.date').datetimepicker({
-                        locale: $(document).find('html').attr('lang')
-                    }).show();
-                    setTimeout(function() {
-                        var tasksItemCount = $('.modal .tasks-full-description li:visible').length;
-                        var tasksItemsWidth = tasksItemCount * (350 + 30);
-
-                        // Add scroll to tasks
-                        $('.tasks-full-description-box').width(modalWidth - 60);
-                        $('.tasks-full-description').width(tasksItemsWidth);
-
-                        $.fn.utilities('owlPagination', '.modal .q4-owl-carousel');
-
-
-                    }, 400)
-
-                }
-
-            }
-        });
-    });
-
-
-    $(document).on('click', '.qc-choose-plan a,.qc-change-plan a', function(e) {
-        e.preventDefault();
-
-         setTimeout(function () {
-
-            $.fn.utilities('setModalCarouselWidth', '.q4-carousel-table-wrap', $('#choose-plan-modal-mobile .modal-dialog').width());
-            $.fn.utilities('setCarouselDirection', ".q4-carousel-table", 10);
-            $.fn.utilities('owlPagination', '.q4-carousel-table');
-
-        },300);
-
-    });
-
-    // Check all rows in table
-
-    /*
-    $(document).on('change', '.check-all-column input[type=checkbox]', function () {
-        console.log('.check-all-column');
-
-        var self =  $(this);
-        var label =self.closest('label');
-        var checkedColumn = self.is(':checked');
-
-        checkedColumn ? label.attr('title',__("unselect all on page")):label.attr('title',__("select all on page"))
-
-
-        self.closest('table').find('.selectable-column input[type=checkbox]').each(function(){
-
-            console.log('.check-all-column');
-
-            var selfCheckbox = $(this);
-            var disabled = selfCheckbox.closest('.selectable-column').hasClass('disabled-input');
-            var checkedBox = selfCheckbox.is(':checked');
-            if(!disabled){
-                if(checkedColumn){
-                    if(!checkedBox){
-                        selfCheckbox.trigger('click')
-                    }
-                }else{
-                    if(checkedBox){
-                        selfCheckbox.trigger('click')
-                    }
-                }
-            }
-        })
-
-    }); */
-
-
-
-    $(document).on('change', '.select-user-action label.checkbox-wrapper input[type=checkbox],.enable-plan-action label.checkbox-wrapper input[type=checkbox]', function() {
+    $(document).on('change', '.select-user-action label.checkbox-wrapper input[type=checkbox],' +
+        '.enable-plan-action label.checkbox-wrapper input[type=checkbox]', function() {
         var self = $(this)
         var printLandscape = $(document).find('.print-landscape-mode');
         var table = printLandscape.find('.printable-table-first .page-break');
@@ -1698,8 +1162,6 @@ $(document).ready(function() {
             }
 
             self.closest('.panel_content').find('.wrap_delete_users').removeClass('hide');
-            // self.closest('.panel_content').find('.panel_footer').find('.plans-to-print-link').removeClass('disabled-gray-button');
-            // self.closest('.panel_content').find('.panel_footer').find('.plans-to-send').removeClass('disabled-gray-button');
 
         }else{
             delete CHECKED_PLANS['plans_' + tablePrintTd.data('planid') + '_id'];
@@ -1714,28 +1176,6 @@ $(document).ready(function() {
                 self.closest('.panel_body').find('.wrap_delete_users').removeClass('hide');
             }
         }
-
-        /*
-
-        var plansJson = JSON.stringify(CHECKED_PLANS)
-        $(document).find('.selected-plans').val(plansJson)
-
-        var userLength = $(this).closest('.panel_content').find('.select-user-action').find("input[type=checkbox]:checked").length;
-        planLength = $.fn.utilities('getObjectLength',CHECKED_PLANS);
-        $(this).closest('.panel_content').find('.total-res-selected').html($.fn.utilities('getObjectLength',CHECKED_PLANS));
-        if (userLength == 0) {
-            $(this).closest('.panel_content').find('.wrap_delete_users').addClass('hide');
-        }
-        if (planLength == 0) {
-            CURRENT_PROFFESION_ID = '';
-            $.fn.utilities('checkCurrentProffesion',CURRENT_PROFFESION_ID,false)
-            $(document).find('.current-profession-id').val('')
-            $(document).find('.selected-plans').val('')
-            $(document).find('.check-all-column').addClass('disabled-input');
-
-            $(this).closest('.panel_content').find('.panel_footer').find('.plans-to-print-link').addClass('disabled-gray-button');
-            $(this).closest('.panel_content').find('.panel_footer').find('.plans-to-send').addClass('disabled-gray-button');
-        } */
 
     });
 
@@ -1767,13 +1207,6 @@ $(document).ready(function() {
         formData["csrf"] = Q4U.getCsrfToken();
         formData["x-form-secure-tkn"] = "";
 
-        // $('.enable-plan-action .checkbox-wrapper input[type=checkbox]').each(function(i, el){
-        //
-        //     var self = $(el);
-        //     var planID = self.closest('tr').data('planid');
-        //     CHECKED_PLANS['plans_'+planID+'_id']= planID;
-        //
-        // });
 
         console.log('CHECKED_PLANS ', CHECKED_PLANS);
 
@@ -1817,6 +1250,8 @@ $(document).ready(function() {
         });
 
     });
+
+
     $(document).on('click', '.plans-to-send', function(e) {
         e.preventDefault();
         var url = $(this).data('url');
@@ -1862,34 +1297,7 @@ $(document).ready(function() {
 
     });
 
-    $('body').on('projectUsersUpdated', function(e, data) {
-        if ($('.project-users-form').length && data.projectUsersForm != undefined) {
-            $('.project-users-form').replaceWith(data.projectUsersForm);
-            $(document).find('.modal').modal('hide');
-            $('[data-toggle="table"]').bootstrapTable();
-        }
 
-    });
-
-    $('body').on('placeError', function(e, data) {
-
-        if(data.placeErrorsList){
-
-            var list =data.placeErrorsList;
-
-            for(var i=0;i<list.length;i++){
-
-                var tr = $(document).find('[data-planid="'+list[i]+'"]')
-                tr.find('.plan-place-custom-number').addClass('q4_required');
-                tr.find('.plan-place-custom-number').addClass('error');
-            }
-            Q4U.alert(__('Incorrect element number'), {
-                type: "danger",
-                confirmText: __("OK")
-            });
-        }
-
-    });
 
     $('body').on('projectPlansUpdated', function(e, data) {
 
@@ -1905,62 +1313,6 @@ $(document).ready(function() {
 
     });
 
-    $(document).on('click','.open-report-modal',function (e) {
-
-        var url  = $(this).data('url');
-
-        $.ajax({
-            url: url,
-            method: 'GET',
-            cache: false,
-            dataType: 'json',
-            contentType: false,
-            processData: false,
-            success: function(data){
-
-                if(data['html']!=undefined){
-                // var modal = data.getData().modal;
-                 $(document).find('.modal').remove();
-                var modal = data.html;
-                $('body').append(modal);
-                $(document).find('.modal').modal('show');
-
-
-                }else if(data.errors!=undefined){
-                    error = data.errors;
-
-                }
-            },
-        });
-    })
-
-    /**
-     * Tasks on update event handler
-     */
-    $('body').on('tasksUpdated', function(e, data) {
-        if ($('.tasks-form').length && data.tasksForm != undefined) {
-            $('.tasks-form').replaceWith(data.tasksForm);
-            $('[data-toggle="table"]').bootstrapTable();
-            $(document).find('.checkbox-list-no-scroll').addClass('hidden')
-        }
-
-    });
-
-    $('body').on('certificationsUpdated', function(e, data) {
-        //certificationsForm
-        if ($('.certifications-form').length && data.certificationsForm != undefined) {
-            $('.certifications-form').replaceWith(data.certificationsForm);
-            $('[data-toggle="table"]').bootstrapTable();
-        }
-    });
-
-    $('body').on('propsUpdated', function(e, data) {
-        if ($('.props-form').length && data.propsForm != undefined) {
-            $('.props-form').replaceWith(data.propsForm);
-            $('[data-toggle="table"]').bootstrapTable();
-        }
-
-    });
 
     $(document).on('change keyup', '.floors-from, .floors-to', function(e) {
         e.preventDefault();
@@ -2013,61 +1365,7 @@ $(document).ready(function() {
 
     });
 
-    $(document).on('click', '.places-count', function() {
-        $(this).select();
-    });
 
-    $(document).on('change keyup', '.places-count', function(e) {
-        e.preventDefault();
-        var el = this;
-        setTimeout(function() {
-            var x = parseInt($(el).parents('tr').find('.floors-from').val());
-            var y = parseInt($(el).parents('tr').find('.floors-to').val());
-            if (isNaN(x)) {
-                x = 0;
-            }
-            if (isNaN(y)) {
-                y = 0;
-            }
-            var totalFloors = 1;
-            if (x != y) {
-                totalFloors = Math.abs(x) + Math.abs(y) + 1;
-            }
-
-            var val = parseInt($(el).val());
-            if (isNaN(val)) {
-                val = 0;
-            }
-
-            if (val < totalFloors) {
-                $(el).val(totalFloors);
-            }
-
-        }, 1000);
-    });
-
-    /**
-     * Удаление объекта
-     */
-    $(document).on('click', '.delete-prop', function(e) {
-        e.preventDefault();
-
-        Q4U.confirm(__('Are you sure, you want') + __('delete object?'), {
-            confirmCallback: function(el, params) {
-                Q4U.ajaxGetRequest($(params.custom.el).data('url'), {
-                    successCallback: function(data) {
-                        $(params.custom.el).parents('tr').remove()
-                    }
-                });
-            },
-            hilight: 'object',
-            type: 'danger',
-            confirmText: __('Delete'),
-            custom: {
-                el: this
-            }
-        });
-    });
 
     /**
      *  Манипуляция с объектами и этажами
@@ -2133,6 +1431,7 @@ $(document).ready(function() {
                 }
             });
         });
+
     function formatSelection(obj, container) {
 
         var originalOption = obj.element;
@@ -2152,27 +1451,6 @@ $(document).ready(function() {
             escapeMarkup: function(m) { return m; }
         });
     }
-    $(document).on('click',' .place-edit, .place-add',function(){
-        Q4U.ajaxGetRequest($(this).data('url'), {
-            successCallback: function(data) {
-                if (data.getData().struct) {
-                    var struct = data.getData().struct;
-                    $(document).find('.property-tab-content').html(struct);
-                    normalizeObjectStruct();
-                }
-                if (data.getData().modal) {
-                    $(document).find('.modal').modal('hide');
-                    $(document).find('.modal').remove();
-                    var modal = data.getData().modal;
-                    $('body').append(modal);
-                    $(document).find('.modal').modal('show');
-                    $('.selectpicker').selectpicker({size:3,dropupAuto:false})
-                    select2Object("#constaction-object");
-
-                }
-            },
-        });
-    })
 
     $(document).on('select2:select',"#constaction-object", function (e) {
         var data = e.params.data.element;
@@ -2182,155 +1460,8 @@ $(document).ready(function() {
     });
 
 
-    $('body').on('placeCreated', function(e, data) {
-        $(document).find('.modal').modal('hide');
-        $(document).find('.property-tab-content').html(data.struct);
-        normalizeObjectStruct();
-        $('[data-toggle="table"]').bootstrapTable();
-    });
-    $('body').on('qualityControlCreated', function(e, data) {
-
-        if($(document).find('html').data('mobile')==undefined){
-            $(document).find('.property-tab-content').html(data.struct);
-            normalizeObjectStruct();
-        }
-
-        var active = $(document).find('.property-structure-list-group .owl-item.active');
-        active.find('.count.apartment-circle').removeClass('gray').addClass('orange');
-        active.find('.apartment-number').addClass('quality-control-list');
-
-        FILES_BUFFER = [];
-        $(document).find('.modal').modal('hide');
-        $('[data-toggle="table"]').bootstrapTable();
-    });
-
-    $(document).on('click', '.floor-row .apt', function(e) {
-        $('.apt-tools').hide();
-        $(this).find('.apt-tools').show();
-        e.preventDefault();
-        return false;
-    });
-
-    $(document).on('click', '.place-quality-controls-list', function(e) {
-        $('.apt-tools').hide();
-        e.preventDefault();
-        Q4U.ajaxGetRequest($(this).data('url'), {
-            successCallback: function(data) {
-                if (data.getData().struct) {
-                    var struct = data.getData().struct;
-                    $(document).find('.property-tab-content').html(struct);
-                }
-
-                if (data.getData().modal) {
-                    $(document).find('.modal').modal('hide');
-                    var modal = data.getData().modal;
-                    $('body').append(modal);
-                    $(document).find('.modal').modal('show');
-                }
-                $('[data-toggle="table"]').bootstrapTable();
-            }
-        });
-        return false;
-    });
-
-    $(document).on('click', '.w-center', function(e) {
-        e.preventDefault();
-        $('.apt-tools').hide();
-    });
 
 
-    $(document).on('click', '.pr-object-show-struct', function(e) {
-        e.preventDefault();
-
-        Q4U.ajaxGetRequest($(this).data('url'), {
-            successCallback: function(data) {
-                $(document).find('.property-tab-content').html(data.getData().struct);
-                normalizeObjectStruct();
-
-
-                var allFloors = $(document).find('.wrap-property-structure-list').data('floor');
-                var middleFloor = parseInt(allFloors/2);
-
-                 // Switch floors wrap-property-structure-list /
-                $('.wrap-property-structure-list').jCarouselLite({
-                    btnNext: ".next",
-                    btnPrev: ".prev",
-                    vertical: true,
-                    visible: 1,
-                    circular:false,
-                    start: middleFloor,
-                });
-                $('.wrap-property-structure-list').css('overflow', 'hidden');
-
-                if(allFloors < 2){
-
-                    $('.wrap-property-structure-list')
-                        .closest('.property-struct')
-                        .find('.property-floors-arrow')
-                        .addClass('disabled');
-                }
-
-                $.fn.utilities('setCarouselDirection', ".q4-owl-carousel", 0);
-                $.fn.utilities('owlPagination', '.q4-owl-carousel');
-            }
-        });
-    });
-
-    $(document).on('click', '.go-to-proj-props', function(e) {
-        e.preventDefault();
-        Q4U.ajaxGetRequest($(this).data('url'), {
-            successCallback: function(data) {
-                $(document).find('.property-tab-content').html(data.getData().projectObjects);
-                //$(document).find('.scrollable-table').mCustomScrollbar({ axis: "x" });
-                $.fn.utilities('setCarouselWidth', '.q4-carousel-table-wrap', window.innerWidth);
-                $.fn.utilities('setScrollBarWidth', $(document).find('.panel_content.open').find('.scrollable-table'), window.innerWidth);
-                var widthT = $.fn.utilities('measureHiddenTable', $(document).find('.panel_content.open').find('table.table'));
-
-                // $(document).find('.panel_content.open').find('table.table').closest('.mCSB_container').width(widthT);
-
-
-                $('[data-toggle="table"]').bootstrapTable();
-
-            }
-        });
-    });
-
-    $(document).on('change', '.qc-status', function() {
-        if ($(this).val() == 'invalid') {
-            $(document).find('.property-quality-control-conditions .select-wrapper .q4-form-input').removeClass('disabled-input');
-        } else {
-
-            $(document).find('.property-quality-control-conditions .q4-form-input').addClass('disabled-input');
-        }
-    });
-
-
-    /**
-     * Смена иконки у tasks-ов
-     */
-    $(document).on('click', '.open-nested', function(e) {
-
-        e.preventDefault();
-
-        var self = $(this);
-        var windowWidth = $(window).width();
-        if (self.find('i').hasClass('q4bikon-arrow_right')) {
-
-            self.find('i').removeClass('q4bikon-arrow_right');
-            self.find('i').addClass('q4bikon-arrow_bottom');
-            self.closest('.table').find('tr.nested-row > td').css('border-bottom', '1px solid #ddd');
-
-
-        } else if (self.find('i').hasClass('q4bikon-arrow_bottom')) {
-
-            self.find('i').removeClass('q4bikon-arrow_bottom');
-            self.find('i').addClass('q4bikon-arrow_right');
-
-            self.closest('.table').find('tr.nested-row > td').css('border-bottom', '1px solid transparent');
-
-        }
-
-    });
 
 
     $(document).on('click', '.arrows > .arrow', function() {
@@ -2344,58 +1475,6 @@ $(document).ready(function() {
             input.change();
         }
     });
-
-
-    /***************************************
-     *   Смена символов группы для объектов
-     ***************************************/
-    $(document).on('click', '.wrap-letters .no-arrow_top, .wrap-letters .no-arrow_bottom', function() {
-        var letterInput = $(this).closest('span').siblings('input.letters-only');
-        var letter = letterInput.val().charAt(0).toUpperCase();
-        if ($(this).hasClass('no-arrow_top')) {
-            if (letter.charCodeAt(0) >= 65 && letter.charCodeAt(0) < 90) {
-                letterInput.val(String.fromCharCode(letter.charCodeAt(0) + 1));
-            } else {
-                letterInput.val(String.fromCharCode(65));
-            }
-        } else {
-            if (letter.charCodeAt(0) > 65 && letter.charCodeAt(0) <= 90) {
-                letterInput.val(String.fromCharCode(letter.charCodeAt(0) - 1));
-            } else {
-                letterInput.val(String.fromCharCode(90));
-            }
-        }
-
-    });
-
-
-    $(document).on('click', '.property-structure-actions .edit-element', function() {
-
-
-        if ($(this).hasClass('enable-sorting')) {
-
-            $(this).removeClass('enable-sorting');
-            $(this).closest('.property-structure-list-group').css('background', '#ffffff').removeClass('enabled');
-            $(this).siblings('.copy-element').removeAttr('data-toggle, data-target').removeClass('enable-copying');
-            $(this).siblings('.delete_row').removeAttr('data-toggle, data-target').removeClass('enable-delete');
-
-        } else {
-
-            var editEl = $(document).find('.property-structure-actions .edit-element')
-
-            editEl.removeClass('enable-sorting');
-            editEl.closest('.property-structure-list-group').css('background', '#ffffff').removeClass('enabled');
-            editEl.siblings('.copy-element').removeAttr('data-toggle, data-target').removeClass('enable-copying');
-            editEl.siblings('.delete_row').removeAttr('data-toggle, data-target').removeClass('enable-delete');
-
-            $(this).addClass('enable-sorting');
-            $(this).closest('.property-structure-list-group').css('background', '#e0f1fd').addClass('enabled');
-            $(this).siblings('.copy-element').addClass('enable-copying');
-            $(this).siblings('.delete_row').addClass('enable-delete');
-
-        }
-    });
-
 
 
 
@@ -2434,379 +1513,9 @@ $(document).ready(function() {
             $(document).find('.property-structure-actions .delete_row').tooltip('disable');
         }
     });
-    $(document).on('click', '.go-to-floor', function () {
 
-        $(this).closest('.property-struct').find('.object-type-table-box').toggle();
-        if($(this).closest('.property-struct').find('.object-type-table').is(':visible')){
 
 
-
-        }
-        return false;
-    });
-
-
-     $(document).on('click', '.select-go-to-floor', function () {
-        var self = $(this)
-       if(self.val()!=undefined && self.val().length){
-
-            self.closest('.property-struct').find('.go-to-place-button-structure').removeClass('disabled-input')
-       }else{
-            if(self.closest('.property-struct').find('.go-to-place-number').val().length<1){
-            self.closest('.property-struct').find('.go-to-place-button-structure').addClass('disabled-input')
-        }
-
-       }
-    });
-
-    $(document).on('keyup', '.go-to-place-number', function () {
-        var self = $(this);
-        if(self.val().length){
-            self.closest('.property-struct').find('.go-to-place-button-structure').removeClass('disabled-input')
-        }else{
-        if(self.closest('.property-struct').find('.select-go-to-floor').val().length<1){
-
-            self.closest('.property-struct').find('.go-to-place-button-structure').addClass('disabled-input')
-        }
-
-       }
-    });
-
-
-     $(document).on('click', '.go-to-place-button-structure', function () {
-
-            var allFloors = $(document).find('.wrap-property-structure-list').data('floor');
-            var firstFloor = $('.select-go-to-floor').find("option:first").val();
-            var lastFloor = $('.select-go-to-floor').find("option:last").val();
-            var selectedFloor = $(document).find('.select-go-to-floor').val();
-            var selectedPlaceNumber = $(document).find('.go-to-place-number').val().toLowerCase();
-            var floorNumber = false;
-            var number = 0;
-            if(selectedPlaceNumber.length>0){
-                    var selectedItem = $(document).find('[data-placenumber="'+selectedPlaceNumber+'"]');
-                    if(selectedItem.length){
-
-                        number =  selectedItem.data('number');
-                        floorNumber =  selectedItem.closest('.property-structure-list-group').find('.structure-floor-number').data('floornumber');
-
-                       setTimeout(function() {
-
-                            selectedItem.find('.create-quality-control').trigger('click')
-
-                        }, 100)
-                    }
-                }
-
-            $(this).closest('.property-struct').find('.object-type-table-box').hide();
-
-            $('div.wrap-property-structure-list').trigger('endCarousel');
-
-            number = number ? number : 0;
-            var allFloors = $(document).find('.wrap-property-structure-list').data('floor');
-            var middleFloor = parseInt(allFloors/2);
-
-            middleFloor = selectedFloor ? selectedFloor : middleFloor
-            middleFloor = floorNumber !== false ? floorNumber : middleFloor;
-            var placeNumber = $(document).find('.wrap-property-structure-list').find('[data-floornumber="'+middleFloor+'"]').closest('li').find('.q4-owl-carousel').data('structurecount')
-            placeNumber = parseInt(placeNumber/2)
-            number = floorNumber !== false ? number : placeNumber
-            $('.wrap-property-structure-list').jCarouselLite({
-                btnNext: ".next",
-                btnPrev: ".prev",
-                vertical: true,
-                visible: 1,
-                circular:false,
-                start: middleFloor,
-            });
-            $('.wrap-property-structure-list').css('overflow', 'hidden');
-
-
-            $.fn.utilities('setCarouselDirection', ".q4-owl-carousel", 0,number);
-            $.fn.utilities('owlPagination', '.q4-owl-carousel',number+1);
-
-
-            if(selectedFloor == firstFloor){
-
-                $('.wrap-property-structure-list')
-                    .closest('.property-struct')
-                    .find('.property-floors-arrow.prev')
-                    .removeClass('disabled');
-            }
-            else if(selectedFloor == lastFloor){
-
-                $('.wrap-property-structure-list')
-                    .closest('.property-struct')
-                    .find('.property-floors-arrow.next')
-                    .removeClass('disabled');
-            }
-            else{
-
-                $('.wrap-property-structure-list')
-                    .closest('.property-struct')
-                    .find('.property-floors-arrow')
-                    .removeClass('disabled');
-            }
-            if(allFloors < 2){
-
-                $('.wrap-property-structure-list')
-                    .closest('.property-struct')
-                    .find('.property-floors-arrow')
-                    .addClass('disabled');
-            }
-
-
-    });
-
-
-     $(document).on('click', '.go-to-place', function (e) {
-        e.preventDefault()
-        var self = $(this);
-        self.closest('.property-struct').find('.object-type-table-box').toggle();
-
-
-
-
-
-
-    });
-
-
-     $(document).on('change', '.select-structure', function () {
-        var self = $(this);
-        if(self.val().length){
-            var allFloors = $(document).find('.wrap-property-structure-list').data('floor');
-
-            var firstFloor = self.find('option:selected').data("minfloor");
-            var lastFloor = self.find('option:selected').data('maxfloor');
-            var floorCount = lastFloor - firstFloor;
-            var floors="";
-            var j=0;
-            var middleFloor = parseInt(floorCount/2);
-            for (var i = firstFloor; i <= lastFloor; i++) {
-                var selected = j==middleFloor ? ' selected="selected"':''
-                floors += '<option '+ selected +' class="bidi-override" value="'+ parseInt(floorCount-j) +  '">'+i+'</option>';
-                j++;
-            }
-            self.closest('.property-struct').find('.select-go-to-floor').empty()
-            self.closest('.property-struct').find('.select-go-to-floor').append(floors)
-
-            self.closest('.property-struct').find('.go-to-place-button').removeClass('disabled-input')
-        }else{
-            self.closest('.property-struct').find('.select-go-to-floor').empty()
-            self.closest('.property-struct').find('.go-to-place-button').addClass('disabled-input')
-
-        }
-
-    });
-
-
-
-    $(document).on('click','.go-to-place-button', function(){
-        var url = $(this).data('url');
-        var structureId = $(document).find('.select-structure').val();
-        var selectedFloor = $(document).find('.select-go-to-floor').val();
-        var selectedPlaceNumber = $(document).find('.go-to-place-number').val().toLowerCase();
-
-        Q4U.ajaxGetRequest(url +'/'+ structureId, {
-            successCallback: function(data) {
-
-                $(document).find('.property-tab-content').html(data.getData().struct);
-                normalizeObjectStruct();
-                var floorNumber = false;
-                var number = 0;
-                if(selectedPlaceNumber.length>0){
-                    var selectedItem = $(document).find('[data-placenumber="'+selectedPlaceNumber+'"]');
-                    if(selectedItem.length){
-
-                        number =  selectedItem.data('number');
-                        floorNumber =  selectedItem.closest('.property-structure-list-group').find('.structure-floor-number').data('floornumber');
-
-                       setTimeout(function() {
-
-                            selectedItem.find('.create-quality-control').trigger('click')
-
-                        }, 100)
-                    }
-                }
-
-                number = number ? number : 0;
-                var allFloors = $(document).find('.wrap-property-structure-list').data('floor');
-                var middleFloor = parseInt(allFloors/2);
-                middleFloor = selectedFloor ? selectedFloor : middleFloor
-                middleFloor = floorNumber !== false ? floorNumber : middleFloor;
-                var placeNumber = $(document).find('.wrap-property-structure-list').find('[data-floornumber="'+middleFloor+'"]').closest('li').find('.q4-owl-carousel').data('structurecount')
-
-                placeNumber = parseInt(placeNumber/2)
-                number = floorNumber !== false ? number : placeNumber
-                $('.wrap-property-structure-list').jCarouselLite({
-                    btnNext: ".next",
-                    btnPrev: ".prev",
-                    vertical: true,
-                    visible: 1,
-                    circular:false,
-                    start: middleFloor,
-                });
-                $('.wrap-property-structure-list').css('overflow', 'hidden');
-                if(allFloors < 2){
-
-                    $('.wrap-property-structure-list')
-                        .closest('.property-struct')
-                        .find('.property-floors-arrow')
-                        .addClass('disabled');
-                }
-
-                $.fn.utilities('setCarouselDirection', ".q4-owl-carousel", 0,number);
-                $.fn.utilities('owlPagination', '.q4-owl-carousel',number+1);
-
-            }
-        });
-
-    })
-
-
-    $(document).on('click', '.apartment-box-top', function() {
-        $(document).find('.apartment-box-clicked').hide()
-        $(this).siblings('.apartment-box-clicked').show();
-
-    });
-
-    $(document).on('click', '.apartment-box-clicked-close', function() {
-
-        $(this).closest('.apartment-box-clicked').hide();
-
-    });
-
-
-
-    $(document).on('click', '#change-main-image', function(e) {
-
-        e.preventDefault();
-        if ($(this).hasClass('clicked')) {
-
-            $(this).removeClass('clicked');
-        } else {
-            $(this).addClass('clicked');
-        }
-
-    });
-
-    $(document).on('click', '.display-project-image-scr', function(e) {
-
-        e.preventDefault();
-        if ($('#change-main-image').hasClass('clicked')) {
-
-            if (!$(this).hasClass('main-image')) {
-                $(this).addClass('main-image');
-                $(this).closest('li').siblings('li').find('.display-project-image-scr').removeClass('main-image');
-                $(document).find('#preview_image').attr('src', $(this).find('img').attr('src'));
-                Q4U.ajaxGetRequest($(this).data('url'), {
-                    successCallback: function(data) {
-                        $(document).find('.modal').modal('hide');
-                    }
-                });
-            }
-        }
-
-    });
-
-    $(document).on('click', '.delete-proj-image', function(e) {
-        e.preventDefault();
-        Q4U.confirm('Are you sure you want delete that image?', {
-            confirmCallback: function(el, params) {
-                Q4U.ajaxGetRequest($(params.custom.el).data('url'), {
-                    successCallback: function(data) {
-                        $(params.custom.el).parents('li').remove();
-                    }
-                });
-            },
-            hilight: 'image',
-            type: 'danger',
-            confirmText: 'Delete',
-            custom: {
-                el: this
-            }
-        });
-    });
-
-
-    $(document).on('click', '.see-project-images', function(e) {
-        e.preventDefault();
-        Q4U.ajaxGetRequest($(this).data('url'), {
-            successCallback: function(data) {
-                if (data.getData().modal) {
-                    $(document).find('.modal').modal('hide');
-                    var modal = data.getData().modal;
-                    $('body').append(modal);
-                    $('.modal').modal('show');
-                    // $('.modal .q4-vertical-scroll').mCustomScrollbar({ axis: "x" });
-                }
-            }
-        });
-
-    });
-
-
-
-
-    /**
-     * Datepicker Part
-     */
-    if($(document).find('html').hasClass('rtl'))
-    {
-        $('#project-start-date, #project-end-date').datetimepicker({locale:'he'}).show();
-    }else{
-        $('#project-start-date, #project-end-date').datetimepicker({locale:'en'}).show();
-    }
-    $('#project-start-date, #project-end-date').datetimepicker({
-        useCurrent: false,
-        minDate: moment()
-    });
-    $('#project-start-date').datetimepicker().on('dp.change', function(e) {
-        var incrementDay = moment(new Date(e.date));
-        $('#project-end-date').data('DateTimePicker').minDate(incrementDay);
-        $(this).data("DateTimePicker").hide();
-    });
-
-    $('#project-end-date').datetimepicker().on('dp.change', function(e) {
-        var decrementDay = moment(new Date(e.date));
-        $('#project-start-date').data('DateTimePicker').maxDate(decrementDay);
-        $(this).data("DateTimePicker").hide();
-    });
-
-
-    if($(document).find('html').hasClass('rtl'))
-    {
-        $('.project-property-start_date, .project-property-end_date, ' +
-            '.date-tracking-start_date, .date-tracking-end_date').datetimepicker({locale:'he'}).show();
-    }else{
-        $('.project-property-start_date, .project-property-end_date, ' +
-            '.date-tracking-start_date, .date-tracking-end_date').datetimepicker({locale:'en'}).show();
-    }
-
-    //Property td datepicker
-    $('.project-property-start_date, .project-property-end_date, ' +
-        '.date-tracking-start_date, .date-tracking-end_date').datetimepicker({
-        useCurrent: false,
-        minDate: moment()
-    });
-    $(document).find('[id^=property-start_date]').datetimepicker().on('dp.change', function(e) {
-        var incrementDay = moment(new Date(e.date));
-
-        $(this).closest('td').siblings('td').find('.project-property-end_date').data('DateTimePicker').minDate(incrementDay);
-        $(this).data("DateTimePicker").hide();
-    });
-
-    $(document).find('[id^=property-end_date]').datetimepicker().on('dp.change', function(e) {
-        var decrementDay = moment(new Date(e.date));
-
-        $(this).closest('td').siblings('td').find('.project-property-start_date').data('DateTimePicker').maxDate(decrementDay);
-        $(this).data("DateTimePicker").hide();
-    });
-
-
-    /**
-     * End Of Datepicker
-     */
 
     $(document).on('click', '.show-plan-history', function(e) {
         e.preventDefault();
@@ -2855,8 +1564,6 @@ $(document).ready(function() {
         });
 
     });
-
-
 
 
     $(document).on('click', '.set-image-link2', function(e) {
@@ -3069,16 +1776,11 @@ $(document).ready(function() {
                     $.fn.utilities('setCarouselWidth', '.q4-carousel-table-wrap', window.innerWidth);
                     $.fn.utilities('setScrollBarWidth', self.closest('.tab_panel').find('.scrollable-table'), windowWidth);
 
-                    var widthT = $.fn.utilities('measureHiddenTable', self.closest('.tab_panel').find('table.table'),false);
-
-
                     setTimeout(function(){
 
                         $.fn.utilities('updateContentOnChange');
                         $('.selectpicker').selectpicker({size:3,dropupAuto:false})
                     }, 300);
-                    // current.closest('.panel_content').find('.panel_footer').find('.plans-to-print-link').addClass('disabled-gray-button');
-                    // current.closest('.panel_content').find('.panel_footer').find('.plans-to-send').addClass('disabled-gray-button');
 
                     $('[data-toggle="table"]').bootstrapTable();
                     CURRENT_PLAN_PAGE = false;
