@@ -414,6 +414,33 @@ $(document).ready(function() {
 
     });
 
+    // Check all rows in table
+    $(document).on('change', '.check-all-column input[type=checkbox]', function () {
+
+        var self =  $(this);
+        var label =self.closest('label');
+        var checkedColumn = self.is(':checked');
+
+        checkedColumn ? label.attr('title',__("unselect all on page")):label.attr('title',__("select all on page"));
+
+        self.closest('table').find('.selectable-column input[type=checkbox]').each(function(){
+            var selfCheckbox = $(this);
+            // var disabled = selfCheckbox.closest('.selectable-column').hasClass('disabled-input');
+            var checkedBox = selfCheckbox.is(':checked');
+            if(checkedColumn){
+                if(!checkedBox){
+                    selfCheckbox.trigger('click')
+                }
+            }else{
+                if(checkedBox){
+                    selfCheckbox.trigger('click')
+                }
+            }
+
+        })
+
+    });
+
     $(document).on('click', currentPage.filterTracking, function(e) {
         e.preventDefault();
         var current = $(this)

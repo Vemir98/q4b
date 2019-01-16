@@ -135,11 +135,11 @@ $icons = [
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-1 rtl-float-right">
-                    <div class="form-group">
-                        <a class="plans-deselect-all q4-link-b-blue"><?=__('unselect all')?></a>
-                    </div>
-                </div>
+<!--                <div class="col-md-1 rtl-float-right">-->
+<!--                    <div class="form-group">-->
+<!--                        <a class="plans-deselect-all q4-link-b-blue">--><?//=__('unselect all')?><!--</a>-->
+<!--                    </div> -->
+<!--                </div>-->
                 <div class="col-md-2 col-sm-12 rtl-float-right">
                     <a href="#" class="ev-with-file" data-with-file="0">
                         <div class="form-group">
@@ -171,7 +171,7 @@ $icons = [
                             <thead>
                             <tr>
                                 <th class="hidden w-25"></th><!--  -->
-                                <th class="w-25"><!-- 0 -->
+                                <th class="w-25 check-all-column"><!-- 0 -->
                                     <label class="checkbox-wrapper" title="<?=__('select all on page')?>">
                                         <input type="checkbox">
                                         <span class="checkbox-replace"></span><i class="checkbox-tick q4bikon-tick"></i>
