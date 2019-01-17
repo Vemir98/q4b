@@ -111,7 +111,7 @@ $(document).ready(function() {
             self.closest('#add-plans-modal').find('.floors-select').empty().append(floorsRange);
         }
 
-    });
+    }); 
 
     $(document).on('change','#profession_id', function(){
 
@@ -120,7 +120,7 @@ $(document).ready(function() {
         var neightborVal = $(document).find('#plans-select-prof').val();
 
         if($this > 0){
-            
+
             if(neightborVal > 0){
                 self.closest('#add-plans-modal').find('.add-plan').removeClass('disabled-link');
             }
