@@ -111,7 +111,7 @@ $(document).ready(function() {
             self.closest('#add-plans-modal').find('.floors-select').empty().append(floorsRange);
         }
 
-    }); 
+    });
 
     $(document).on('change','#profession_id', function(){
 
