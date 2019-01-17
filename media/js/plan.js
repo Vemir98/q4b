@@ -251,7 +251,7 @@ $(document).ready(function() {
 
                         $(document).find('.plans-list-layout .scrollable-table').closest('div.row').replaceWith($(currentModal).find('.scrollable-table').closest('div.row'));
                         $(document).find('.plans-list-layout .q4-carousel-table-wrap').closest('div.row').replaceWith($(currentModal).find('.q4-carousel-table-wrap').closest('div.row'));
-
+                        $(document).find('.plans-list-layout .ev-has-file-menu').replaceWith($(currentModal).find('.ev-has-file-menu'));
                     }
 
                     var self = $(document).find('.plans-list-layout').closest('.tab_panel').find('.panel_header');
@@ -370,7 +370,7 @@ $(document).ready(function() {
 
                         $(document).find('.plans-list-layout .scrollable-table').closest('div.row').replaceWith($(currentModal).find('.scrollable-table').closest('div.row'));
                         $(document).find('.plans-list-layout .q4-carousel-table-wrap').closest('div.row').replaceWith($(currentModal).find('.q4-carousel-table-wrap').closest('div.row'));
-
+                        $(document).find('.plans-list-layout .ev-has-file-menu').replaceWith($(currentModal).find('.ev-has-file-menu'));
                     }
 
 

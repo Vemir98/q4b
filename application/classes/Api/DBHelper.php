@@ -185,6 +185,11 @@ LEFT JOIN files_custom_names fcn ON fcn.file_id = f.id
 WHERE pp.id IN (SELECT max(pp1.id) id FROM pr_plans pp1 WHERE pp1.project_id='.$id.' GROUP BY pp1.scope ORDER BY pp1.id DESC) ')->execute()->as_array();
     }
 
+    public static function getPlanCrafts($planId)
+    {
+        return DB::query(Database::SELECT,'SELECT craft_id id, plan_id FROM pr_plans_cmp_crafts ppcc WHERE ppcc.plan_id = '.$planId)->execute()->as_array();
+    }
+
     public static function getPlansCrafts($planIds)
     {
         return DB::query(Database::SELECT,'SELECT craft_id id, plan_id FROM pr_plans_cmp_crafts ppcc WHERE ppcc.plan_id IN ('.implode(',',$planIds).')')->execute()->as_array();
@@ -193,6 +198,11 @@ WHERE pp.id IN (SELECT max(pp1.id) id FROM pr_plans pp1 WHERE pp1.project_id='.$
     public static function getPlansFloors($planIds)
     {
         return DB::query(Database::SELECT,'SELECT floor_id id, plan_id FROM pr_floors_pr_plans pfpp WHERE pfpp.plan_id IN ('.implode(',',$planIds).')')->execute()->as_array();
+    }
+
+    public static function getPlanFloors($planId)
+    {
+        return DB::query(Database::SELECT,'SELECT floor_id id, plan_id FROM pr_floors_pr_plans pfpp WHERE pfpp.plan_id = '.$planId)->execute()->as_array();
     }
 
     public static function getProjectUsedTasks($id)

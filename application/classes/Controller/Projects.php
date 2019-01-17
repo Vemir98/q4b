@@ -133,7 +133,7 @@ class Controller_Projects extends HDVP_Controller_Template
             foreach ($result['items'] as $item){
                 $projectIds [] = $item->id;
             }
-            $this->template->content = View::make('projects/list', $result + ['filterProjects' => $filterProjects, 'projectsEmptyPlans' => Model_Project::getProjectsWithoutPlansSpecialities($projectIds)]);
+            $this->template->content = View::make('projects/list', $result + ['filterProjects' => $filterProjects]);
         }
     }
 
@@ -1576,7 +1576,7 @@ class Controller_Projects extends HDVP_Controller_Template
         }
     }
 
-    public function action_update_plan_list(){ // todo:: not used
+    public function action_update_plan_list(){
         if(($this->request->method() != HTTP_Request::POST) OR !(int)$this->request->param('id')){
             throw new HTTP_Exception_404;
         }
