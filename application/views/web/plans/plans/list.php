@@ -89,8 +89,7 @@ $icons = [
                         <div class="select-wrapper">
                             <i class="q4bikon-arrow_bottom"></i>
                             <select data-name="object" class="q4-select q4-form-input select-icon-pd select-structure">
-                                <option value="0"><?=__('All')?> </option>
-
+<!--                                <option value="0">--><?//=__('All')?><!-- </option>-->
                                 <?if(isset($objects)):?>
                                     <?foreach ($objects as $object): ?>
                                         <option value="<?=$object->id?>"><?=$object->name?></option>
@@ -109,7 +108,7 @@ $icons = [
                         <div class="select-wrapper">
                             <i class="q4bikon-arrow_bottom"></i>
                             <select data-name="profession" class="q4-select q4-form-input select-icon-pd select-profession">
-                                <option value="0" selected="selected"><?=__('All')?> </option>
+<!--                                <option value="0" selected="selected">--><?//=__('All')?><!-- </option>-->
 
                                 <?if(isset($professions)):?>
                                     <?foreach ($professions as $profession): ?>
@@ -179,6 +178,7 @@ $icons = [
                                 </th>
                                 <th class="td-50"></th> <!-- 1 -->
                                 <th data-field="<?=__('Structure')?>" class="td-100"><?=__('Structure')?></th><!-- 2 -->
+                                <th data-field="<?=__('Profession')?>" class="td-100"><?=__('Profession')?></th><!-- 2 -->
                                 <th data-field="<?=__('Sheet Number')?>" class="td-100"><?=__('Sheet Number')?></th><!-- 3 -->
                                 <th data-field="<?=__('Name')?>" class="td-200"><?=__('Name')?></th><!-- 4 -->
                                 <th data-field="<?=__('File')?>" class="td-25">File</th><!-- 5 -->
@@ -239,6 +239,10 @@ $icons = [
                                                 <option value="Property name"><?=$item->object->name?></option>
                                             </select>
                                         </div>
+                                    </td>
+                                    <td class="rwd-td2" data-th="<?=__('Profession')?>" data-col="structure">
+
+                                        <input type="text" name="plan_<?=$item->id?>_name" class="q4-form-input q4_required" value="<?=$item->profession->name ?>">
                                     </td>
                                     <td class="rwd-td3 plans-sheet-number-cell" data-th="<?=__('Sheet Number')?>">
                                         <input type="text" value="<?=$item->file()->sheet_number?>" name="plan_<?=$item->id?>_sheet_number" class="q4-form-input plans-sheet-number-val<?=$disabled?>">

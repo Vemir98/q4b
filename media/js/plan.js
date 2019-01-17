@@ -120,7 +120,7 @@ $(document).ready(function() {
         var neightborVal = $(document).find('#plans-select-prof').val();
 
         if($this > 0){
-            console.log('if ');
+            
             if(neightborVal > 0){
                 self.closest('#add-plans-modal').find('.add-plan').removeClass('disabled-link');
             }
@@ -153,6 +153,7 @@ $(document).ready(function() {
                 }
             }
         });
+
         if(text.length){
             modal.find('.plan-place-type').removeClass('disabled-input').addClass('q4_required');
             modal.find('.q4_form_submit').addClass(currentPage.disabledGrayButton);
@@ -410,7 +411,7 @@ $(document).ready(function() {
         $(document).find('.plans-list-layout').find('.check-all-column input[type=checkbox]').prop('checked',false);
         $(document).find('.current-profession-id').val('')
         $(document).find('.selected-plans').val('')
-        $(document).find('.check-all-column').addClass('disabled-input');
+        // $(document).find('.check-all-column').addClass('disabled-input');
 
     });
 
@@ -813,7 +814,8 @@ $(document).ready(function() {
                 $('.upload-plans-title').find('.q4-plans-count').html('');
                 modal.find('.upload-plans').text(__('Done')).removeClass('upload-plans').addClass("close-upload-plans-modal").removeClass(currentPage.disabledGrayButton);
                 modal.modal('hide');
-                window.location.reload();
+
+                $('[data-toggle="table"]').bootstrapTable();
                 LOADER = true;
             }
 
@@ -870,6 +872,9 @@ $(document).ready(function() {
         var rowTemplate = $(document).find('.general-plan-row');
         var sheetNumber = rowTemplate.find('.sheet-number').val();
         var planName = rowTemplate.find('.plan-name').val();
+        var floors = rowTemplate.find('.hidden-select').val();
+        var multiSelectBox = rowTemplate.find('.multi-select-box').html();
+
 
         if (! sheetNumber) {
             rowTemplate.addClass('warning');
@@ -885,9 +890,16 @@ $(document).ready(function() {
             return false;
         }
 
+        if (! floors) {
+            rowTemplate.addClass('warning');
+            Q4U.alert(__('Please check all rows'));
+
+            return false;
+        }
+
         var self = $(this);
-        self.closest('#add-plans-modal').find('#plans-select-prof').addClass('disabled-gray-button');
-        self.closest('#add-plans-modal').find('#profession_id').addClass('disabled-gray-button');
+        self.closest('#add-plans-modal').find('#plans-select-prof').addClass('disabled-input');
+        self.closest('#add-plans-modal').find('#profession_id').addClass('disabled-input');
 
         var newRowMarkup = '<tr>' +
             '                   <td class="rwd-td1" data-th="">' +
@@ -898,27 +910,8 @@ $(document).ready(function() {
             '                   </td>' +
             '                   <td class="rwd-td3" data-th="">' +
             '                       <div class="multi-select-box comma">'+
-            '                           <div class="select-imitation q4-form-input floor-numbers">' +
-            '                               <span class="select-imitation-title"></span>' +
+                                       multiSelectBox+
 
-            '                               <div class="over-select"></div><i class="arrow-down q4bikon-arrow_bottom"></i>' +
-            '                           </div>' +
-
-            '                           <div class="checkbox-list-no-scroll hidden">' +
-            '                               <div class="checkbox-list-row">' +
-            '                                   <span class="checkbox-text">' +
-            '                                       <label class="checkbox-wrapper-multiple inline " data-val="1">' +
-            '                                           <span class="checkbox-replace"></span>' +
-            '                                           <i class="checkbox-list-tick q4bikon-tick"></i>' +
-            '                                       </label>' +
-            '                                       <span class="checkbox-text-content bidi-override">' +
-            '                                   </span>' +
-            '                                   </span>' +
-            '                               </div>' +
-            '                           </div>' +
-            '                           <select class="hidden-select" name="plan_<?=$item->id?>_floors" multiple>' +
-                '                           <option value=""></option>' +
-            '                           </select>' +
             '                       </div>' +
             '                   </td>' +
             '                   <td>' +
@@ -953,6 +946,9 @@ $(document).ready(function() {
         container.appendChild(input2);
 
         $(document).find('#add-plans-modal').find('table tbody:first').append(newRowMarkup);
+        $(document).find('#add-plans-modal').find('table tbody:first')
+            .find('tr:last-child').find('.multi-select-box .hidden-select').val(floors);
+
     });
 
     $(document).on('click', currentPage.addPlanSelectorModal, function(e) {
@@ -1162,7 +1158,7 @@ $(document).ready(function() {
 
             if(planLength == 1){
                 CURRENT_PROFFESION_ID = professionId;
-                $(document).find('.check-all-column').removeClass('disabled-input');
+                // $(document).find('.check-all-column').removeClass('disabled-input');
                 $(document).find('.current-profession-id').val(CURRENT_PROFFESION_ID)
 
                 $.fn.utilities('checkCurrentProffesion',CURRENT_PROFFESION_ID,true)
@@ -1219,7 +1215,6 @@ $(document).ready(function() {
         var urlTracking = $(document).find('.plans-list-layout').data('trackingurl');
 
         var selectedProfessionId = $('.plans-layout .select-profession').val();
-        console.log('selectedProfessionId', selectedProfessionId);
 
         var fPage = firstPage.clone();
         var profession =  $(document).find('.plans-list-layout [data-professionid='+selectedProfessionId+']:first').data('profession')
@@ -1233,8 +1228,6 @@ $(document).ready(function() {
         formData["csrf"] = Q4U.getCsrfToken();
         formData["x-form-secure-tkn"] = "";
 
-
-        console.log('CHECKED_PLANS ', CHECKED_PLANS);
 
         for(var key in CHECKED_PLANS){
             formData[key] = CHECKED_PLANS[key];
