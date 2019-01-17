@@ -390,6 +390,15 @@ $(document).ready(function() {
     //$('html').css('direction', 'ltr');
     //$('body').attr('dir', 'rtl');
 
+
+
+    $(document).find('.object-general-select').on('change', function(){
+
+        var $this = $(this).val();
+        console.log('$this 111 2 ', $this);
+
+    });
+
     function formatDate(date) {
         var monthNames = [
             __("January"), __("February"), __("March"),
@@ -1711,6 +1720,7 @@ $(document).ready(function() {
                             locale: $(document).find('html').attr('lang')
                         }).show();
                     setTimeout(function() {
+                        $(window).trigger('resize');
                         var self = $(document).find('#' + modalId);
                         var modalWidth = self.find('.modal-dialog').width();
 
