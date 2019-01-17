@@ -89,8 +89,7 @@ $icons = [
                         <div class="select-wrapper">
                             <i class="q4bikon-arrow_bottom"></i>
                             <select data-name="object" class="q4-select q4-form-input select-icon-pd select-structure">
-                                <option value="0"><?=__('All')?> </option>
-
+<!--                                <option value="0">--><?//=__('All')?><!-- </option>-->
                                 <?if(isset($objects)):?>
                                     <?foreach ($objects as $object): ?>
                                         <option value="<?=$object->id?>"><?=$object->name?></option>
@@ -109,6 +108,7 @@ $icons = [
                         <div class="select-wrapper">
                             <i class="q4bikon-arrow_bottom"></i>
                             <select data-name="profession" class="q4-select q4-form-input select-icon-pd select-profession">
+<!--                                <option value="0" selected="selected">--><?//=__('All')?><!-- </option>-->
                                 <option value="0"><?=__('All')?> </option>
 
                                 <?if(isset($professions)):?>
@@ -139,11 +139,11 @@ $icons = [
                 </div>
             </div>
             <div class="row ev-has-file-menu">
-                <div class="col-md-1 rtl-float-right">
-                    <div class="form-group">
-                        <a class="plans-deselect-all q4-link-b-blue"><?=__('unselect all')?></a>
-                    </div>
-                </div>
+<!--                <div class="col-md-1 rtl-float-right">-->
+<!--                    <div class="form-group">-->
+<!--                        <a class="plans-deselect-all q4-link-b-blue">--><?//=__('unselect all')?><!--</a>-->
+<!--                    </div> -->
+<!--                </div>-->
                 <div class="col-md-2 col-sm-12 rtl-float-right">
                     <a href="#" class="ev-with-file" data-with-file="0">
                         <div class="form-group">
@@ -175,7 +175,7 @@ $icons = [
                             <thead>
                             <tr>
                                 <th class="hidden w-25"></th><!--  -->
-                                <th class="w-25"><!-- 0 -->
+                                <th class="w-25 check-all-column"><!-- 0 -->
                                     <label class="checkbox-wrapper" title="<?=__('select all on page')?>">
                                         <input type="checkbox">
                                         <span class="checkbox-replace"></span><i class="checkbox-tick q4bikon-tick"></i>

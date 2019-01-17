@@ -16,7 +16,7 @@ if($_USER->is('project_supervisor')){//запрет на изменение ст
 }
 ?>
 <div id="quality-control-modal" data-backdrop="static" data-keyboard="false" class="quality-control-modal modal fade" role="dialog" data-qcid="<?=$item->id?>">
-    <div class="modal-dialog q4_project_modal quality-control-dialog">
+    <div class="modal-dialog q4_project_modal modal-dialog-1070">
         <form id="qc-form-id" class="q4_form" action="<?=$formAction?>" data-ajax="true" data-submit="false" method="post">
             <input type="hidden" value="" name="x-form-secure-tkn"/>
             <div class="modal-content">
@@ -484,12 +484,12 @@ if($_USER->is('project_supervisor')){//запрет на изменение ст
                 <div class="panel-modal-footer text-align">
                     <div class="row">
                         <div class="col-sm-12">
-                            <a href="#" class="q4-btn-lg light-blue-bg qc-to-print-btn panel-footer-first"><?=__('Proceed to print')?></a>
-                            <a href="#" class="q4-btn-lg light-blue-bg send-reports panel-footer-second" data-url=<?=URL::site('reports/quality_control_mailing/'.$item->id)?>><?=__('Proceed to send')?></a>
+                            <a href="#" class="q4-btn-lg light-blue-bg qc-to-print-btn panel-footer-first mb-15"><?=__('Proceed to print')?></a>
+                            <a href="#" class="q4-btn-lg light-blue-bg send-reports panel-footer-second ml-15 mb-15" data-url=<?=URL::site('reports/quality_control_mailing/'.$item->id)?>><?=__('Proceed to send')?></a>
                             <?if($isSuperAdmin):?>
-                            <a  class="q4-btn-lg btn-confirm red q4-delete-qc" data-url="<?=URL::site('projects/quality_control_delete/'.$item->id)?>" ><?= __('Delete')?></a>
+                            <a  class="q4-btn-lg btn-confirm red q4-delete-qc ml-15 mb-15" data-url="<?=URL::site('projects/quality_control_delete/'.$item->id)?>" ><?= __('Delete')?></a>
                             <?endif?>
-                             <a  href="#" class="q4-btn-lg ml-15 orange q4_form_submit <?=$disabled && !$isSuperAdmin ? '' : ' q4-form-submit'?>" <?=$disabled && !$isSuperAdmin ? 'data-dismiss="modal"' : ""?> data-url="<?=$formAction?>"><?=$disabled && !$isSuperAdmin ? __('Close') : __('Update')?></a>
+                             <a  href="#" class="q4-btn-lg ml-15 mb-15 orange q4_form_submit  <?=$disabled && !$isSuperAdmin ? '' : ' q4-form-submit'?>" <?=$disabled && !$isSuperAdmin ? 'data-dismiss="modal"' : ""?> data-url="<?=$formAction?>"><?=$disabled && !$isSuperAdmin ? __('Close') : __('Update')?></a>
                         </div>
                     </div>
                 </div>
