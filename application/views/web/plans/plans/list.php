@@ -343,7 +343,7 @@ $icons = [
                                         </span>
                                     </td>
                                     <td class="rwd-td8" data-th="<?=__('Status')?>">
-                                        <input name="plan_<?=$item->id?>_status" type="text" class="q4-form-input disabled-input" value="<?=$item->status ?: null?>">
+                                        <input name="plan_<?=$item->id?>_status" type="text" class="q4-form-input disabled-input" value="<?=ucfirst(__($item->status ?: null))?>">
                                     </td>
 
                                     <td class="rwd-td9" data-th="Updates note">
