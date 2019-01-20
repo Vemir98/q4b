@@ -2544,6 +2544,11 @@ label.checkbox-wrapper-comma.checked .checkbox-replace:before {
     right: 10px;
     z-index: 5; }
 
+
+.multi-select-box.disabled-input.comma .select-imitation {
+  background: #e8edf0;
+}
+
 .multi-select-box-icon .multi-select-box .select-imitation-title {
   margin-left: 30px; }
 .multi-select-box-icon i {
@@ -6301,6 +6306,13 @@ textarea.fixed-textarea {
   font-weight: normal;
   font-style: normal;
   font-family: "proxima_nova_rgregular", Arial, Helvetica, sans-serif; }
+
+.table > tbody > tr.success-plan {
+  background: rgba(0, 128, 0, .7);
+}
+.table > tbody > tr.has-no-file {
+  background: rgba(228, 153, 153, .7);
+}
 
 .bootstrap-table .table:not(.table-condensed),
 .bootstrap-table .table:not(.table-condensed) > tbody > tr > td,
