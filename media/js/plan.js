@@ -806,9 +806,10 @@ $(document).ready(function() {
             data["csrf"] = Q4U.getCsrfToken();
             formData.append("Data", JSON.stringify(data));
 
-            var res = $.post(urlPost,
-                JSON.stringify(data)
-                ).done(function(res) {
+            console.log('JSON.stringify(data) ', JSON.stringify(data));
+            console.log('data ', data);
+
+            var res = $.post(urlPost, JSON.stringify(data)).done(function(res) {
 
                 if(res){
                     modal.find('.modal-progress-bg').fadeOut();
@@ -894,6 +895,19 @@ $(document).ready(function() {
         var floors = rowTemplate.find('.hidden-select').val();
         var multiSelectBox = rowTemplate.find('.multi-select-box').html();
 
+        console.log(floors);
+        console.log(typeof floors);
+
+        console.log('Object.values', Object.values(floors));
+
+        var floorsArray = Object.values(floors);
+        console.log('floorsArray ', typeof floorsArray);
+
+        // floorsArray = $.map(floors, function(value, index) {
+        //     return [value];
+        // });
+
+        // console.log(typeof floorsArray);
 
         if (! sheetNumber) {
             rowTemplate.addClass('warning');
@@ -928,9 +942,10 @@ $(document).ready(function() {
             '                       <input type="text" class="table_input plan-name disabled-input" value="'+ planName +'" name="plans['+ planRows +'][plan_name]" required>' +
             '                   </td>' +
             '                   <td class="rwd-td3" data-th="">' +
-            '                       <div class="multi-select-box disabled-input comma" data-name="floors-select-' + planRows + '">' +
+            '                       <div class="multi-select-box disabled-input comma" data-name="plans_'+ planRows +'_floors[]">' +
                                        multiSelectBox +
             '                       </div>' +
+            '                       <input type="hidden" name="plans['+ planRows +'][floors-input][]" value="' + floorsArray + '">' +
             '                   </td>' +
             '                   <td>' +
             '                       <div class="text-right-left action-buttons">' +
@@ -945,6 +960,7 @@ $(document).ready(function() {
 
         var input1 = document.createElement("input");
         var input2 = document.createElement("input");
+        var input3 = document.createElement("input");
 
 
         input1.type = "hidden";
@@ -955,6 +971,10 @@ $(document).ready(function() {
         input2.name = 'plan_'+ planRows +'_name';
         input2.value = planName;
 
+        input3.type = "hidden";
+        input3.name = 'plan_'+ planRows +'_floors';
+        input3.value = floorsArray;
+
         $(document).find('.upload-plans').removeClass('disabled-gray-button');
 
         planRows++;
@@ -963,6 +983,7 @@ $(document).ready(function() {
 
         container.appendChild(input1);
         container.appendChild(input2);
+        container.appendChild(input3);
 
         $(document).find('#add-plans-modal').find('table tbody:first').append(newRowMarkup);
         $(document).find('#add-plans-modal').find('table tbody:first')
