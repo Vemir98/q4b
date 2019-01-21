@@ -3729,7 +3729,7 @@ label.q4-circle-checkbox {
   color: #ffffff; }
 
 .disabled-link {
-  opacity: 0.75;
+  opacity: 0.5;
   pointer-events: none;
   cursor: not-allowed;
 }
@@ -3738,7 +3738,8 @@ label.q4-circle-checkbox {
   background: #e8edf0 !important;
   color: #708492;
   pointer-events: none;
-  cursor: not-allowed; }
+  cursor: not-allowed;
+}
 
 .disabled-button {
   opacity: 0.75;
@@ -6799,6 +6800,11 @@ textarea.fixed-textarea {
         border: 1px solid transparent; }
         .modal-single-image-table table tr td.modal-tasks-image-option .download_file:hover {
           border-color: transparent; }
+
+
+#add-plans-modal .scrollable-table {
+  min-height: 200px;
+}
 
 .blue-head {
   background: #1ebae5;
