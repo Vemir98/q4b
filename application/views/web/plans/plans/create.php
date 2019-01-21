@@ -73,7 +73,7 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="scrollable-table">
-                                    <table class="rwd-table responsive_table table" data-toggle="table">
+                                    <table class="rwd-table responsive_table table add-new-plan-table" data-toggle="table">
                                         <thead>
                                         <tr>
                                             <th data-field="<?=__('Sheet Number')?>" class="td-100"><?=__('Sheet Number')?></th><!-- 3 -->
@@ -102,17 +102,15 @@
 
                                                         <?for($i = $object->smaller_floor; $i <= $object->bigger_floor; $i++):?>
                                                             <div class="checkbox-list-row">
-                                                        <span class="checkbox-text">
-                                                            <label class="checkbox-wrapper-multiple inline" data-val="<?=$i?>">
-                                                                <span class="checkbox-replace"></span>
-                                                                <i class="checkbox-list-tick q4bikon-tick"></i>
-                                                            </label>
-                                                            <span class="checkbox-text-content bidi-override">
-
-                                                                <?=$i?>
-
-                                                            </span>
-                                                        </span>
+                                                                <span class="checkbox-text">
+                                                                    <label class="checkbox-wrapper-multiple inline" data-val="<?=$i?>">
+                                                                        <span class="checkbox-replace"></span>
+                                                                        <i class="checkbox-list-tick q4bikon-tick"></i>
+                                                                    </label>
+                                                                    <span class="checkbox-text-content bidi-override">
+                                                                        <?=$i?>
+                                                                    </span>
+                                                                </span>
                                                             </div>
                                                         <?endfor?>
 
@@ -129,7 +127,7 @@
                                             </td>
                                             <td class="rwd-td12" data-th="Action">
                                                 <div class="text-right-left action-buttons">
-                                                    <a class="circle-sm orange add-plan disabled-link">
+                                                    <a class="circle-sm orange add-plan">
                                                         <i class="plus q4bikon-plus"></i>
                                                     </a>
                                                 </div>

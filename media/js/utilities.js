@@ -216,7 +216,7 @@
                         var self = $(el);
                         var planId = self.data('planid');
 
-                        self.closest('tr').find('input[type=checkbox]').closest('td').removeClass('disabled-input')
+                        self.closest('tr').find('input[type=checkbox]').closest('td').removeClass('disabled-input');
 
 
                         if(planId!=undefined && methods.in_array(planId,selected)){
