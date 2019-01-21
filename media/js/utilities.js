@@ -372,7 +372,7 @@
 
             methods.setCarouselDirection(selector, 10);
             methods.owlPagination(selector);
-            methods.setScrollbarDirection('.scrollable-table');
+            //methods.setScrollbarDirection('.scrollable-table');
         },
         utf8_encode: function (str_data) { // Encodes an ISO-8859-1 string to UTF-8
 

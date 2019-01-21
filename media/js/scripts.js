@@ -190,7 +190,7 @@ console.log('valid', valid);
 
         }else{
 
-            // currentForm.submit();
+             currentForm.submit();
 
         }
     }else{
@@ -395,7 +395,6 @@ $(document).ready(function() {
     $(document).find('.object-general-select').on('change', function(){
 
         var $this = $(this).val();
-        console.log('$this 111 2 ', $this);
 
     });
 
@@ -795,11 +794,7 @@ $(document).ready(function() {
             $('#literally-canvas-modal .wrap-literally-canvas .literally').css('height', setModalHeight);
             window.dispatchEvent(new Event('resize'));
             var canvasWidth = $('.literally-canvas-modal .lc-drawing canvas').attr('width');
-            console.log("canvasWidth", canvasWidth);
             var canvasHeight = $('.literally-canvas-modal .lc-drawing canvas').attr('height');
-            console.log("canvasHeight", canvasHeight);
-
-
 
 
             $(document).find('.export-canvas-button').on('click', function(e) {
@@ -1184,19 +1179,22 @@ $(document).ready(function() {
 
 
     $(document).on('change', '.qc-craft', function() {
+
         var craftVal = $(document).find('.qc-craft').val();
+        var selectedCrafts = $(document).find('.qc-craft').data('selected-crafts');
 
         $(document).find('select[name=tasks] option').each(function() {
+
             var crafts = ($(this).data('crafts')).toString().split(',');
             var el = $('.qc-tasks-list a[data-id=' + $(this).val() + ']');
             var elMobile = $('.qc-tasks-list-mobile a[data-id=' + $(this).val() + ']');
             if ((crafts.indexOf(craftVal) == -1)) {
                 $(this).removeAttr('selected');
                 this.selected = false;
-                el.parents('li').removeClass('selected');
-                elMobile.closest('div.item').removeClass('selected')
-                el.parents('li').addClass('hidden')
-                elMobile.closest('div.item').addClass('hidden')
+                // el.parents('li').removeClass('selected');
+                // elMobile.closest('div.item').removeClass('selected')
+                el.parents('li').addClass('hidden');
+                elMobile.closest('div.item').addClass('hidden');
             } else {
                 el.parents('li').removeClass('hidden');
                 elMobile.parents('div.item').removeClass('hidden');
@@ -1231,7 +1229,8 @@ $(document).ready(function() {
         });
 
         var self = $('#quality-control-modal');
-        var modalWidth = $('#quality-control-modal').find('.modal-dialog').width();
+        var selfMobile = $('#quality-control-modal-mobile');
+        var modalWidth = self.find('.modal-dialog').width();
         $('.qc-tasks-list-mobile').trigger('destroy.owl.carousel').removeClass('owl-carousel owl-loaded');
         $('.qc-tasks-list-mobile').find('.owl-stage-outer').children().unwrap();
         $('.qc-tasks-list-mobile').find('.owl-stage-outer').remove()
@@ -1241,6 +1240,18 @@ $(document).ready(function() {
         // Add scroll to tasks
         $('.tasks-full-description-box').width(modalWidth - 40);
         $('.tasks-full-description').width(tasksItemsWidth);
+
+
+
+        if(craftVal == selectedCrafts){
+            var selectedCrafts = self.find('.qc-tasks-list .hidden-select').data('selected-crafts').split(',');
+            console.log('selectedCrafts', selectedCrafts);
+            self.find('.qc-tasks-list .hidden-select').val(selectedCrafts);
+            selfMobile.find('.qc-tasks-list-mobile .hidden-select');
+        }
+
+
+
 
         $.fn.utilities('updateCurrentOnChange','.qc-tasks-list-mobile');
 

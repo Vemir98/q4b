@@ -420,24 +420,32 @@ $(document).ready(function() {
         var self =  $(this);
         var label =self.closest('label');
         var checkedColumn = self.is(':checked');
-
         checkedColumn ? label.attr('title',__("unselect all on page")):label.attr('title',__("select all on page"));
 
-        self.closest('table').find('.selectable-column input[type=checkbox]').each(function(){
-            var selfCheckbox = $(this);
-            var disabled = selfCheckbox.closest('.selectable-column').hasClass('disabled-input');
+        self.closest('table').find('.selectable-column input[type=checkbox]').each(function(i, el){
+
+            var selfCheckbox = $(el);
             var checkedBox = selfCheckbox.is(':checked');
             if(checkedColumn){
                 if(!checkedBox){
-                    selfCheckbox.trigger('click')
+                    selfCheckbox.prop('checked',true);
                 }
             }else{
                 if(checkedBox){
-                    selfCheckbox.trigger('click')
+                    selfCheckbox.prop('checked',false);
                 }
             }
 
-        })
+        });
+        var checked = $('table .enable-plan-action input[type=checkbox]:checked').length;
+
+        if(checked > 0){
+            $(document).find('.plans-to-print-link, .plans-to-send').removeClass('disabled-link');
+        } else {
+
+            $(document).find('.plans-to-print-link, .plans-to-send').addClass('disabled-link');
+
+        }
 
     });
 
@@ -523,9 +531,9 @@ $(document).ready(function() {
 
     $(document).on('click', currentPage.searchTracking, function(e) {
         e.preventDefault();
-        var current = $(this)
+        var current = $(this);
         var searchText = current.closest('form').find('.search-input').val();
-        var current = $(this)
+        var current = $(this);
         var filterType = current.closest('form').find('[data-name="filter_tracking_type"]').val();
         var proffession = current.closest('form').find('[data-name="filter_proffesion"]').val();
         var fromSplit = current.closest('form').find('.filter-from').val().split('/');
@@ -798,26 +806,38 @@ $(document).ready(function() {
             data["csrf"] = Q4U.getCsrfToken();
             formData.append("Data", JSON.stringify(data));
 
-            var res = $.ajax({
-                url: urlPost,
-                type: 'POST',
-                data: JSON.stringify(data),
-                dataType: 'json',
-                cache: false,
-                contentType: "application/json",
-                processData: false,
+            console.log('JSON.stringify(data) ', JSON.stringify(data));
+            console.log('data ', data);
+
+            var res = $.post(urlPost, JSON.stringify(data)).done(function(res) {
+
+                if(res){
+                    modal.find('.modal-progress-bg').fadeOut();
+                    $('.upload-plans-title').find('.q4-plans-count').html('');
+                    modal.find('.upload-plans').text(__('Done')).removeClass('upload-plans')
+                        .addClass("close-upload-plans-modal").removeClass(currentPage.disabledGrayButton);
+                    modal.modal('hide');
+
+                    $(document).find('.select-profession').trigger('change');
+
+                    LOADER = true;
+                }
             });
 
-            if(res){
-                modal.find('.modal-progress-bg').fadeOut();
-                $('.upload-plans-title').find('.q4-plans-count').html('');
-                modal.find('.upload-plans').text(__('Done')).removeClass('upload-plans')
-                    .addClass("close-upload-plans-modal").removeClass(currentPage.disabledGrayButton);
-                modal.modal('hide');
 
-                $('[data-toggle="table"]').bootstrapTable();
-                LOADER = true;
-            }
+
+            //     url: urlPost,
+            //     type: 'POST',
+            //     data: JSON.stringify(data),
+            //     dataType: 'json',
+            //     cache: false,
+            //     contentType: "application/json",
+            //     processData: false,
+            // }).done(function() {
+            //     alert( "second success" );
+            // });
+
+
 
 
         }
@@ -875,6 +895,19 @@ $(document).ready(function() {
         var floors = rowTemplate.find('.hidden-select').val();
         var multiSelectBox = rowTemplate.find('.multi-select-box').html();
 
+        console.log(floors);
+        console.log(typeof floors);
+
+        console.log('Object.values', Object.values(floors));
+
+        var floorsArray = Object.values(floors);
+        console.log('floorsArray ', typeof floorsArray);
+
+        // floorsArray = $.map(floors, function(value, index) {
+        //     return [value];
+        // });
+
+        // console.log(typeof floorsArray);
 
         if (! sheetNumber) {
             rowTemplate.addClass('warning');
@@ -909,9 +942,10 @@ $(document).ready(function() {
             '                       <input type="text" class="table_input plan-name disabled-input" value="'+ planName +'" name="plans['+ planRows +'][plan_name]" required>' +
             '                   </td>' +
             '                   <td class="rwd-td3" data-th="">' +
-            '                       <div class="multi-select-box disabled-input comma" data-name="floors-select-' + planRows + '">' +
+            '                       <div class="multi-select-box disabled-input comma" data-name="plans_'+ planRows +'_floors[]">' +
                                        multiSelectBox +
             '                       </div>' +
+            '                       <input type="hidden" name="plans['+ planRows +'][floors-input][]" value="' + floorsArray + '">' +
             '                   </td>' +
             '                   <td>' +
             '                       <div class="text-right-left action-buttons">' +
@@ -926,6 +960,7 @@ $(document).ready(function() {
 
         var input1 = document.createElement("input");
         var input2 = document.createElement("input");
+        var input3 = document.createElement("input");
 
 
         input1.type = "hidden";
@@ -936,6 +971,10 @@ $(document).ready(function() {
         input2.name = 'plan_'+ planRows +'_name';
         input2.value = planName;
 
+        input3.type = "hidden";
+        input3.name = 'plan_'+ planRows +'_floors';
+        input3.value = floorsArray;
+
         $(document).find('.upload-plans').removeClass('disabled-gray-button');
 
         planRows++;
@@ -944,6 +983,7 @@ $(document).ready(function() {
 
         container.appendChild(input1);
         container.appendChild(input2);
+        container.appendChild(input3);
 
         $(document).find('#add-plans-modal').find('table tbody:first').append(newRowMarkup);
         $(document).find('#add-plans-modal').find('table tbody:first')
@@ -957,17 +997,15 @@ $(document).ready(function() {
             if(multiSelect.data('name') && typeof multiSelect.data('name') !== 'undefined'){
                 var nameAttr = multiSelect.attr("data-name");
                 multiSelect.find('select').attr('name', nameAttr);
-                console.log('nameAttr', nameAttr);
             }
         });
-        $(document).find('#add-plans-modal').find('.add-new-plan-table .multi-select-box').each(function (i, el) {
 
-            var self = $(el);
-            if(self.data('name')){
-                var nameAttr = self.attr("data-name");
-                // console.log('nameAttr', nameAttr);
-            }
-        });
+        rowTemplate.find('.sheet-number').val('');
+        rowTemplate.find('.plan-name').val('');
+        rowTemplate.find('.hidden-select').val('');
+        rowTemplate.find('.checkbox-wrapper-multiple').removeClass('checked');
+        rowTemplate.find('.select-imitation-title').html('');
+
 
     });
 
@@ -1174,7 +1212,7 @@ $(document).ready(function() {
     });
 
 
-
+/*
     $(document).on('change', '.select-user-action label.checkbox-wrapper input[type=checkbox],' +
         '.enable-plan-action label.checkbox-wrapper input[type=checkbox]', function() {
 
@@ -1236,12 +1274,77 @@ $(document).ready(function() {
             }
         }
 
-    });
+    }); */
 
 
 
     /**Print Plans in projects page */
     $(document).on('click', '.plans-to-print-link', function() {
+
+        $(document).find('.enable-plan-action label.checkbox-wrapper input[type=checkbox]:checked').each(function(i,el){
+            var self = $(el);
+            var printLandscape = $(document).find('.print-landscape-mode');
+            var table = printLandscape.find('.printable-table-first .page-break');
+            // var firstPage = $(document).find('.print-landscape-mode .first-page');
+            var tablePrintTd = self.closest('tr').find('.table-print-td');
+            var planId = tablePrintTd.data('planid');
+            var tableId = tablePrintTd.data('id');
+            var profession = tablePrintTd.data('profession');
+            var professionId = tablePrintTd.data('professionid');
+            var planLength = 0;
+
+            if(self.is(':checked')){
+
+                CHECKED_PLANS['plans_' + tablePrintTd.data('planid') + '_id'] = planId;
+
+                planLength = $.fn.utilities('getObjectLength',CHECKED_PLANS);
+
+                if(planLength == 1){
+                    CURRENT_PROFFESION_ID = professionId;
+
+                    $(document).find('.current-profession-id').val(CURRENT_PROFFESION_ID)
+
+                }
+                var property = tablePrintTd.data('property');
+                var currentTable ='';
+                if($(document).find('.print-landscape-mode table[data-id="'+ tableId +'"]').length>0){
+                    currentTable = $(document).find('.print-landscape-mode table[data-id="'+ tableId +'"]');
+
+
+                }else{
+                    var newTable = table.clone();
+                    $(document).find('.print-landscape-mode .printable-table-other').append(newTable);
+                    newTable.find('th[data-type=property]').text(__('Property')+ ":" + property);
+                    newTable.find('table').attr('data-id',tableId);
+                    currentTable = newTable;
+
+                }
+                var line =  self.closest('tr').find('.table-print-td table tr').clone();
+                if(profession && property){
+                    currentTable.find('tbody').append(line);
+                }
+
+                self.closest('.panel_content').find('.wrap_delete_users').removeClass('hide');
+
+            } else {
+                delete CHECKED_PLANS['plans_' + tablePrintTd.data('planid') + '_id'];
+                var currentTr = $(document).find('.print-landscape-mode .printable-table-other [data-id='+planId+']').closest('tr');
+                var currentTableRemove = currentTr.closest('table');
+                currentTr.remove();
+
+                if(currentTableRemove.find('tbody tr').length<1){
+                    currentTableRemove.closest('.page-break').remove();
+                }
+                if(self.closest('.panel_content').find('.checkbox-wrapper input[type=checkbox]').is(":checked").length>0){
+                    self.closest('.panel_body').find('.wrap_delete_users').removeClass('hide');
+                }
+            }
+        })
+
+
+        //**********************
+
+
         $('body>.print-landscape-mode').remove();
 
         var printLandscape = $(document).find('.print-landscape-mode');
@@ -1290,7 +1393,7 @@ $(document).ready(function() {
                             window.print();
                             $('body>.print-landscape-mode').remove();
 
-                            }
+                        }
                     },1000);
                 }else if(data.errors!=undefined){
                     error = data.errors;

@@ -111,7 +111,7 @@ $(document).ready(function() {
 
                         var tasksItemCount = $('.tasks-full-description li:visible').length;
                         var tasksItemsWidth = tasksItemCount * (350 + 40);
-console.log('tasksItemsWidth', tasksItemsWidth);
+
                         // Add scroll to tasks
                         self.find('.tasks-full-description-box').width(modalWidth - 40);
                         self.find('.tasks-full-description').width(tasksItemsWidth);
