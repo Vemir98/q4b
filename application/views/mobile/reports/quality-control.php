@@ -63,7 +63,7 @@ if(Auth::instance()->get_user()->is('project_supervisor')){//запрет на �
                                 <label class="table_label dark-blue"><?=__('Crafts')?> <span class="q4-required">*</span></label>
                                 <div class="select-wrapper"><i class="q4bikon-arrow_bottom"></i>
                                     <?$privileged = $item->userHasExtraPrivileges( Auth::instance()->get_user())?>
-                                    <select name="craft_id" class="q4-select q4-form-input qc-craft q4_select <?=$privileged && !$disabled? '' : 'disabled-input' ?>">
+                                    <select name="craft_id" data-selected-crafts="<?=$item->craft_id?>" class="q4-select q4-form-input qc-craft q4_select <?=$privileged && !$disabled? '' : 'disabled-input' ?>">
                                         <?foreach ($crafts as $craft):
                                         $selected = $item->craft_id == $craft->id ? "selected='selected'" : '';
                                         $profs = $craft->professions->where('status','=',Enum_Status::Enabled)->find_all();
@@ -220,7 +220,7 @@ if(Auth::instance()->get_user()->is('project_supervisor')){//запрет на �
                                     </div>
                                 <?endforeach;?>
                             </div>
-                            <select class="hidden-select q4_select" name="tasks" multiple>
+                            <select class="hidden-select q4_select" name="tasks" data-selected-tasks="<?=implode(',', $arrayTasks)?>" multiple>
                                 <?foreach($tasks as $task):?>
                                     <?php
                                     $crafts = $task->crafts->where('cmpcraft.status','=',Enum_Status::Enabled)->find_all();
@@ -431,7 +431,7 @@ if(Auth::instance()->get_user()->is('project_supervisor')){//запрет на �
                         <i class="q4bikon-property"></i>
                         <?=__('Property')?>:
                     </span>
-                    <span><strong><?=$printableItem->object->type->name?></strong></span>
+                    <span><strong><?=$printableItem->object->type->name?> - <?=$printableItem->object->name?></strong></span>
                 </li>
                 <li>
                     <span>
@@ -530,12 +530,12 @@ if(Auth::instance()->get_user()->is('project_supervisor')){//запрет на �
         <?if(strlen($printableItem->description)>1):?>
             <div class="form-group">
                 <label class="table_label"><?=__('Description')?></label>
-                <div class="textarea-div small">
+
                     <?$desc = explode("\n",$printableItem->description);
                     foreach ($desc as $line) {?>
                         <p><?=$line?></p>
                     <?}?>
-                </div>
+
             </div>
         <?endif?>
         <div class="q4-copyright">

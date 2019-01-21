@@ -49,7 +49,7 @@ if($_USER->is('project_supervisor')){//запрет на изменение ст
                                             <label class="table_label"><?=__('Craft')?></label>
                                             <div class="select-wrapper"><i class="q4bikon-arrow_bottom"></i>
                                                 <?$privileged = $item->userHasExtraPrivileges($_USER)?>
-                                                <select name="craft_id" class="q4-select q4-form-input qc-craft q4_select <?=$privileged && !$disabled ? '' : 'disabled-input' ?>">
+                                                <select name="craft_id" data-selected-crafts="<?=$item->craft_id?>" class="q4-select q4-form-input qc-craft q4_select <?=$privileged && !$disabled ? '' : 'disabled-input' ?>">
                                                     <?foreach ($crafts as $craft):
                                                     $selected = $item->craft_id == $craft->id ? "selected='selected'" : '';
                                                     $profs = $craft->professions->where('status','=',Enum_Status::Enabled)->find_all();
@@ -255,7 +255,7 @@ if($_USER->is('project_supervisor')){//запрет на изменение ст
                             </ul>
 
 
-                            <select class="hidden-select q4_select" name="tasks" multiple>
+                            <select class="hidden-select q4_select" name="tasks" data-selected-tasks="<?=implode(',', $arrayTasks)?>" multiple>
                             <?foreach($tasks as $task):?>
                                 <?php
                                 $crafts = $task->crafts->where('cmpcraft.status','=',Enum_Status::Enabled)->find_all();
