@@ -531,9 +531,9 @@ $(document).ready(function() {
 
     $(document).on('click', currentPage.searchTracking, function(e) {
         e.preventDefault();
-        var current = $(this)
+        var current = $(this);
         var searchText = current.closest('form').find('.search-input').val();
-        var current = $(this)
+        var current = $(this);
         var filterType = current.closest('form').find('[data-name="filter_tracking_type"]').val();
         var proffession = current.closest('form').find('[data-name="filter_proffesion"]').val();
         var fromSplit = current.closest('form').find('.filter-from').val().split('/');
