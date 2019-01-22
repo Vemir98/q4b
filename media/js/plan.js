@@ -874,8 +874,6 @@ $(document).ready(function() {
         });
     });
 
-
-    var planRows = 0;
     $(document).on('click', '.add-plan', function(e) {
         e.preventDefault();
 
@@ -936,6 +934,7 @@ $(document).ready(function() {
 
         var input1 = document.createElement("input");
         var input2 = document.createElement("input");
+        var input3 = document.createElement("input");
 
         input1.type = "hidden";
         input1.name = 'plan_'+ Id +'_sheet';
@@ -945,14 +944,17 @@ $(document).ready(function() {
         input2.name = 'plan_'+ Id +'_name';
         input2.value = planName;
 
-        $(document).find('.upload-plans').removeClass('disabled-gray-button');
+        input3.type = "hidden";
+        input3.name = 'plan_'+ Id +'_floors';
+        input3.value = JSON.stringify(floors);
 
-        planRows++;
+        $(document).find('.upload-plans').removeClass('disabled-gray-button');
 
         var container = document.getElementById("general-plan-row");
 
         container.appendChild(input1);
         container.appendChild(input2);
+        container.appendChild(input3);
 
         $(document).find('#add-plans-modal').find('table tbody:first').append(newRowMarkup);
         $(document).find('#add-plans-modal').find('table tbody:first')

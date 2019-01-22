@@ -1898,6 +1898,22 @@ class Controller_Plans extends HDVP_Controller_Template
                     $plan->scope = Model_PrPlan::getNewScope();
                     $plan->project_id = $this->project->id;
                     $plan->save();
+                    $object = ORM::factory('PrObject',$plan->object_id);
+
+                    if(is_string($c['floors'])){
+                        $c['floors'] = json_decode($c['floors']);
+                    }
+
+                    $dataFloors = $c['floors'];
+
+                    $floors = $object->floors->where('number','IN',DB::expr('('.implode(',',$dataFloors).')'))->find_all();
+                    if(count($floors) != count($c['floors'])){
+                        throw new HDVP_Exception('Incorrect floor numbers');
+                    }
+                    $plan->remove('floors');
+                    foreach ($floors as $floor){
+                        $plan->add('floors',$floor);
+                    }
 
                     $file = ORM::factory('PlanFile')->values($fileData)->save();
                     $plan->add('files', $file->pk());
@@ -1997,7 +2013,7 @@ class Controller_Plans extends HDVP_Controller_Template
                     }
                     $floors = $object->floors->where('number','IN',DB::expr('('.implode(',',$dataFloors).')'))->find_all();
                     if(count($floors) != count($this->post()['floors'])){
-                        throw new HDVP_Exception('Incorrect flor numbers');
+                        throw new HDVP_Exception('Incorrect floor numbers');
                     }
                     $plan->remove('floors');
                     foreach ($floors as $floor){
