@@ -698,7 +698,7 @@ $(document).ready(function() {
         setTimeout(function () {
              $.fn.utilities('updateContentOnChange');
             $(document).find('.loader_backdrop').hide();
-        },500)
+        },500);
 
         return false;
     });
@@ -718,7 +718,7 @@ $(document).ready(function() {
                         $(document).find('.plans-list-layout  .q4-carousel-table-wrap').closest('div.row').replaceWith($(currentModal).find(' .q4-carousel-table-wrap').closest('div.row'));
                     }
 
-                    var currentTab = $(document).find('.plans-list-layout').closest('.tab_panel')
+                    var currentTab = $(document).find('.plans-list-layout').closest('.tab_panel');
                     var self = currentTab.find('.panel_header');
                     var windowWidth = window.innerWidth;
 
@@ -797,47 +797,37 @@ $(document).ready(function() {
             var modal = $(this).closest('.modal');
             var currentForm = $(document).find('.modal').find('form');
             var urlPost = currentForm.attr('action');
-            // modal.find('.modal-progress-bg').show();
 
             var formData = new FormData();
-            var data = getFormData(currentForm);
-
+            var data = $(currentForm).serializeObject();
             modal.find('.upload-plans').addClass(currentPage.disabledGrayButton);
             data["csrf"] = Q4U.getCsrfToken();
+
             formData.append("Data", JSON.stringify(data));
 
-            console.log('JSON.stringify(data) ', JSON.stringify(data));
-            console.log('data ', data);
+            var res = $.ajax({
+                type: "POST",
+                url: urlPost,
+                data: JSON.stringify(data),
+                success: function(resultData) {
 
-            var res = $.post(urlPost, JSON.stringify(data)).done(function(res) {
+                    if(resultData){
+                        modal.find('.modal-progress-bg').fadeOut();
+                        $('.upload-plans-title').find('.q4-plans-count').html('');
+                        modal.find('.upload-plans').text(__('Done')).removeClass('upload-plans')
+                            .addClass("close-upload-plans-modal").removeClass(currentPage.disabledGrayButton);
+                        modal.modal('hide');
 
-                if(res){
-                    modal.find('.modal-progress-bg').fadeOut();
-                    $('.upload-plans-title').find('.q4-plans-count').html('');
-                    modal.find('.upload-plans').text(__('Done')).removeClass('upload-plans')
-                        .addClass("close-upload-plans-modal").removeClass(currentPage.disabledGrayButton);
-                    modal.modal('hide');
+                        $(document).find('.select-profession').trigger('change');
 
-                    $(document).find('.select-profession').trigger('change');
+                        LOADER = true;
+                    }
 
-                    LOADER = true;
                 }
             });
-
-
-
-            //     url: urlPost,
-            //     type: 'POST',
-            //     data: JSON.stringify(data),
-            //     dataType: 'json',
-            //     cache: false,
-            //     contentType: "application/json",
-            //     processData: false,
-            // }).done(function() {
-            //     alert( "second success" );
-            // });
-
-
+            res.error(function() {
+                console.log("Something went wrong");
+            });
 
 
         }
@@ -895,19 +885,6 @@ $(document).ready(function() {
         var floors = rowTemplate.find('.hidden-select').val();
         var multiSelectBox = rowTemplate.find('.multi-select-box').html();
 
-        console.log(floors);
-        console.log(typeof floors);
-
-        console.log('Object.values', Object.values(floors));
-
-        var floorsArray = Object.values(floors);
-        console.log('floorsArray ', typeof floorsArray);
-
-        // floorsArray = $.map(floors, function(value, index) {
-        //     return [value];
-        // });
-
-        // console.log(typeof floorsArray);
 
         if (! sheetNumber) {
             rowTemplate.addClass('warning');
@@ -933,19 +910,18 @@ $(document).ready(function() {
         var self = $(this);
         self.closest('#add-plans-modal').find('#plans-select-prof').addClass('disabled-input');
         self.closest('#add-plans-modal').find('#profession_id').addClass('disabled-input');
-
+        var Id = Q4U.timestamp();
         var newRowMarkup = '<tr>' +
             '                   <td class="rwd-td1" data-th="">' +
-            '                       <input type="text" class="table_input sheet-number disabled-input" value="'+ sheetNumber +'" name="plans['+ planRows +'][sheet_number]" required>' +
+            '                       <input type="text" class="table_input sheet-number disabled-input" value="'+ sheetNumber +'" name="plans_'+Id +'_sheet_number" required>' +
             '                   </td>' +
             '                   <td class="rwd-td2" data-th="">' +
-            '                       <input type="text" class="table_input plan-name disabled-input" value="'+ planName +'" name="plans['+ planRows +'][plan_name]" required>' +
+            '                       <input type="text" class="table_input plan-name disabled-input" value="'+ planName +'" name="plans_'+ Id +'_plan_name" required>' +
             '                   </td>' +
             '                   <td class="rwd-td3" data-th="">' +
-            '                       <div class="multi-select-box disabled-input comma" data-name="plans_'+ planRows +'_floors[]">' +
+            '                       <div class="multi-select-box disabled-input comma" data-name="plans_'+ Id +'_floors">' +
                                        multiSelectBox +
             '                       </div>' +
-            '                       <input type="hidden" name="plans['+ planRows +'][floors-input][]" value="' + floorsArray + '">' +
             '                   </td>' +
             '                   <td>' +
             '                       <div class="text-right-left action-buttons">' +
@@ -960,20 +936,14 @@ $(document).ready(function() {
 
         var input1 = document.createElement("input");
         var input2 = document.createElement("input");
-        var input3 = document.createElement("input");
-
 
         input1.type = "hidden";
-        input1.name = 'plan_'+ planRows +'_sheet';
+        input1.name = 'plan_'+ Id +'_sheet';
         input1.value = sheetNumber;
 
         input2.type = "hidden";
-        input2.name = 'plan_'+ planRows +'_name';
+        input2.name = 'plan_'+ Id +'_name';
         input2.value = planName;
-
-        input3.type = "hidden";
-        input3.name = 'plan_'+ planRows +'_floors';
-        input3.value = floorsArray;
 
         $(document).find('.upload-plans').removeClass('disabled-gray-button');
 
@@ -983,11 +953,11 @@ $(document).ready(function() {
 
         container.appendChild(input1);
         container.appendChild(input2);
-        container.appendChild(input3);
 
         $(document).find('#add-plans-modal').find('table tbody:first').append(newRowMarkup);
         $(document).find('#add-plans-modal').find('table tbody:first')
             .find('tr:last-child').find('.multi-select-box .hidden-select').val(floors);
+
 
         $(document).find('#add-plans-modal').find('.add-new-plan-table tr').each(function (i, el) {
 
@@ -1005,7 +975,6 @@ $(document).ready(function() {
         rowTemplate.find('.hidden-select').val('');
         rowTemplate.find('.checkbox-wrapper-multiple').removeClass('checked');
         rowTemplate.find('.select-imitation-title').html('');
-
 
     });
 
@@ -1104,7 +1073,6 @@ $(document).ready(function() {
             confirmCallback: function(el, params) {
                 Q4U.ajaxGetRequest($(params.custom.el).data('url'), {
                     successCallback: function(data) {
-                        // filterButton.trigger('click')
 
                         if(searchText.length > 0){
                             $(document).find('.plans-tracking-layout .search-tracking').trigger('click');
@@ -1210,71 +1178,6 @@ $(document).ready(function() {
             }
         }
     });
-
-
-/*
-    $(document).on('change', '.select-user-action label.checkbox-wrapper input[type=checkbox],' +
-        '.enable-plan-action label.checkbox-wrapper input[type=checkbox]', function() {
-
-        var self = $(this);
-        var printLandscape = $(document).find('.print-landscape-mode');
-        var table = printLandscape.find('.printable-table-first .page-break');
-        var firstPage = $(document).find('.print-landscape-mode .first-page');
-        var tablePrintTd = self.closest('tr').find('.table-print-td');
-        var planId = tablePrintTd.data('planid');
-        var tableId = tablePrintTd.data('id');
-        var profession = tablePrintTd.data('profession');
-        var professionId = tablePrintTd.data('professionid');
-        var planLength = 0;
-
-        if(self.is(':checked')){
-
-            CHECKED_PLANS['plans_' + tablePrintTd.data('planid') + '_id'] = planId;
-
-            planLength = $.fn.utilities('getObjectLength',CHECKED_PLANS);
-
-            if(planLength == 1){
-                CURRENT_PROFFESION_ID = professionId;
-
-                $(document).find('.current-profession-id').val(CURRENT_PROFFESION_ID)
-
-            }
-            var property = tablePrintTd.data('property');
-            var currentTable ='';
-            if($(document).find('.print-landscape-mode table[data-id="'+ tableId +'"]').length>0){
-                currentTable = $(document).find('.print-landscape-mode table[data-id="'+ tableId +'"]');
-
-
-            }else{
-                var newTable = table.clone();
-                $(document).find('.print-landscape-mode .printable-table-other').append(newTable);
-                newTable.find('th[data-type=property]').text(__('Property')+ ":" + property);
-                newTable.find('table').attr('data-id',tableId);
-                currentTable = newTable;
-
-            }
-            var line =  self.closest('tr').find('.table-print-td table tr').clone();
-            if(profession && property){
-                currentTable.find('tbody').append(line);
-            }
-
-            self.closest('.panel_content').find('.wrap_delete_users').removeClass('hide');
-
-        } else {
-            delete CHECKED_PLANS['plans_' + tablePrintTd.data('planid') + '_id'];
-            var currentTr = $(document).find('.print-landscape-mode .printable-table-other [data-id='+planId+']').closest('tr');
-            var currentTableRemove = currentTr.closest('table');
-            currentTr.remove();
-
-            if(currentTableRemove.find('tbody tr').length<1){
-                currentTableRemove.closest('.page-break').remove();
-            }
-            if(self.closest('.panel_content').find('.checkbox-wrapper input[type=checkbox]').is(":checked").length>0){
-                self.closest('.panel_body').find('.wrap_delete_users').removeClass('hide');
-            }
-        }
-
-    }); */
 
 
 
