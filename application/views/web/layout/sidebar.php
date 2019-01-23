@@ -9,6 +9,13 @@
 
 $items = [
     [
+        'slug' => 'quality_control',
+        'text' => 'Quality control',
+        'tooltip' => 'Dashboard',
+        'icon' => 'q4bikon-uncheked',
+        'resource' => 'Controller_QControl',
+        'priority' => Enum_UserPriorityLevel::Project
+    ], [
         'slug' => 'dashboard',
         'text' => 'Dashboard',
         'tooltip' => 'Dashboard',

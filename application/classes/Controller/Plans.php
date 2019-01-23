@@ -51,7 +51,7 @@ class Controller_Plans extends HDVP_Controller_Template
 //        die('Projects page stopped! Maintenance work in backend side!!! <br><a href="/">go to Homepage</a>');
         if ($this->auto_render === TRUE)
         {
-            Breadcrumbs::add(Breadcrumb::factory()->set_title(__('Projects'))->set_url('/projects'));
+            Breadcrumbs::add(Breadcrumb::factory()->set_title(__('Plans'))->set_url('/plans'));
         }
     }
 
@@ -62,7 +62,7 @@ class Controller_Plans extends HDVP_Controller_Template
             if($this->request->action() == 'company'){
                 if($this->company){
                     Breadcrumbs::add(Breadcrumb::factory()->set_title($this->company->name)->set_url('/companies/update/'.$this->company->id));
-                    Breadcrumbs::add(Breadcrumb::factory()->set_title($this->company->name.' '. __('Projects'))->set_url(URL::site('/projects')));
+                    Breadcrumbs::add(Breadcrumb::factory()->set_title($this->company->name.' '. __('Projects'))->set_url(URL::site('/plans')));
                 }
             }
         }
