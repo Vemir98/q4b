@@ -185,7 +185,7 @@
 
 
                                     }
-                                        //echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($usedTasks); echo "</pre>";
+                                       // echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($usedTasks); echo "</pre>";
                                 ?>
                         <div class="tasks-full-description-box">
                             <ul class="tasks-full-description qc-tasks-list">
@@ -212,6 +212,7 @@
                                     if(empty($c)) continue;
                                     $taskId = $task->id;
                                     $usedCraftsArray = isset($usedTasks->$taskId)? $usedTasks->$taskId->crafts: [];
+                                    //echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r(@$usedTasks->$taskId); echo "</pre>";
                                     ?>
                                     <option value="<?=$task->id?>" data-usedcrafts="<?=implode(',',$usedCraftsArray)?>" data-crafts="<?=implode(',',$c)?>" ><?=$task->name?></option>
                                 <?endforeach?>

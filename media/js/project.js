@@ -539,7 +539,9 @@ $(document).ready(function() {
                     $('.date').datetimepicker({
                         locale: $(document).find('html').attr('lang')
                     }).show();
+
                     setTimeout(function() {
+
                         var tasksItemCount = $('.modal .tasks-full-description li:visible').length;
                         var tasksItemsWidth = tasksItemCount * (350 + 30);
 
@@ -548,7 +550,7 @@ $(document).ready(function() {
                         $('.tasks-full-description').width(tasksItemsWidth);
 
                         $.fn.utilities('owlPagination', '.modal .q4-owl-carousel');
-
+                        $(window).trigger('resize');
 
                     }, 400)
 

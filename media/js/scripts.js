@@ -1176,8 +1176,197 @@ $(document).ready(function() {
         checkboxesNoscoll.toggleClass('hidden');
     });
 
+    $(document).on('change', '.qc-craft', function() {
+        var craftVal = $(document).find('.qc-craft').val();
+        var selectedCrafts = $(document).find('.qc-craft').data('selected-crafts');
+        //console.log(craftVal)
 
 
+        $(document).find('select[name=tasks] option').each(function() {
+            var crafts = ($(this).data('crafts')).toString().split(',');
+
+            var usedCrafts = ($(this).data('usedcrafts')).toString().split(',')
+            var el = $('.qc-tasks-list a[data-id=' + $(this).val() + ']');
+            var elMobile = $('.qc-tasks-list-mobile a[data-id=' + $(this).val() + ']');
+            if ((crafts.indexOf(craftVal) == -1)) {
+                $(this).removeAttr('selected');
+                this.selected = false;
+                if(!el.parents('li').hasClass('used-task')){
+
+                    el.parents('li').removeClass('selected');
+                }
+                if(!elMobile.closest('div.item').hasClass('used-task')){
+
+                    // el.parents('li').removeClass('selected');
+                    elMobile.closest('div.item').removeClass('selected')
+                }
+                el.parents('li').addClass('hidden')
+                elMobile.closest('div.item').addClass('hidden')
+            } else {
+                console.log(crafts,el);
+                el.parents('li').removeClass('hidden');
+                elMobile.parents('div.item').removeClass('hidden');
+            }
+            if ((usedCrafts.indexOf(craftVal) == -1)) {
+                $(this).removeAttr('selected');
+                this.selected = false;
+
+
+                //el.parents('li').removeClass('selected');
+                el.parents('li').removeClass('reusable');
+                el.parents('li').removeClass('used-task');
+
+                // el.parents('li').removeClass('selected');
+                //elMobile.closest('div.item').removeClass('selected')
+                elMobile.closest('div.item').removeClass('reusable')
+                elMobile.closest('div.item').removeClass('used-task')
+
+                // el.parents('li').addClass('hidden')
+                // elMobile.closest('div.item').addClass('hidden')
+            } else {
+                // el.parents('li').removeClass('hidden');
+                el.parents('li').addClass('reusable');
+                el.parents('li').addClass('used-task');
+                //el.parents('li').addClass('selected');
+                // elMobile.parents('div.item').removeClass('hidden');
+                elMobile.parents('div.item').addClass('reusable');
+                elMobile.parents('div.item').addClass('used-task');
+                //elMobile.parents('div.item').addClass('selected');
+
+            }
+        });
+
+
+        var itemCount = 0;
+        $(document).find('#choose-plan-modal table.responsive_table tbody tr').each(function(i,el){
+            var selfTr = $(el);
+            // console.log(selfTr.data('crafts'))
+            var craftsArray = JSON.parse('"' + selfTr.data('crafts') + '"');
+            // console.log(craftsArray)
+            if(craftsArray.length && craftsArray.indexOf(craftVal) == -1){
+                selfTr.addClass('hidden');
+
+            }else{
+                selfTr.removeClass('hidden');
+                itemCount++;
+            }
+        })
+        // console.log('desktop',itemCount);
+        itemCount = 0;
+        $(document).find('#choose-plan-modal-mobile .q4-carousel-table .item').each(function(i,el){
+            var selfTr = $(el);
+            // console.log(selfTr.data('crafts'))
+            var craftsArray = JSON.parse('"' + selfTr.data('crafts') + '"');
+            if(craftsArray.length && craftsArray.indexOf(craftVal) == -1){
+                selfTr.addClass('hidden');
+
+            }else{
+                selfTr.removeClass('hidden');
+                itemCount++;
+            }
+        })
+        // $(document).find('#choose-plan-modal-mobile .q4-carousel-table').data('structurecount',itemCount)
+        // console.log('mobile',itemCount);
+        var self = $('#quality-control-modal');
+        //self.find('.tasks-full-description-box').mCustomScrollbar("destroy");
+        var modalWidth = $('#quality-control-modal').find('.modal-dialog').width();
+        $('.qc-tasks-list-mobile').trigger('destroy.owl.carousel').removeClass('owl-carousel owl-loaded');
+        $('.qc-tasks-list-mobile').find('.owl-stage-outer').children().unwrap();
+        $('.qc-tasks-list-mobile').find('.owl-stage-outer').remove()
+        var tasksItemCount = $('.tasks-full-description li:visible').length;
+
+        var tasksItemsWidth = (tasksItemCount+1) * (350 + 30);
+        // Add scroll to tasks
+        $('.tasks-full-description-box').width(modalWidth - 60);
+        $('.tasks-full-description').width(tasksItemsWidth);
+
+        if(craftVal == selectedCrafts){
+            var selectedCrafts = self.find('.qc-tasks-list .hidden-select').data('selected-tasks').split(',');
+            console.log('selectedCrafts', selectedCrafts);
+            self.find('.qc-tasks-list .hidden-select').val(selectedCrafts);
+            selfMobile.find('.qc-tasks-list-mobile .hidden-select');
+        }
+        $.fn.utilities('updateCurrentOnChange','.qc-tasks-list-mobile');
+        $(window).trigger('resize');
+
+
+        // self.find('.tasks-full-description-box').mCustomScrollbar({ axis: "x" });
+        // self.find('.tasks-full-description .task-item-txt').mCustomScrollbar({ axis: "y" });
+        // self.find('.tasks-full-description-mobile .task-item-txt').mCustomScrollbar({ axis: "y" });
+
+        // $.fn.utilities('updateContentOnChange');
+
+    });
+
+    $(document).on('click', '.qc-tasks-list li', function(e) {
+        e.preventDefault();
+        var el = $(document).find('.modal').find('select[name=tasks] option[value=' + $(this).children('a').data('id') + ']');
+
+        console.log('el ', el);
+        if (el.is(':selected')) {
+            console.log('selected');
+            if($(this).hasClass('used-task')){
+                $(this).addClass('reusable');
+            }
+            $(this).removeClass('selected');
+            el.prop('selected',false);
+        }else {
+            console.log('NOT selected');
+            if($(this).hasClass('used-task')){
+                $(this).removeClass('reusable');
+            }
+            $(this).addClass('selected');
+            el.prop('selected',true);
+        }
+    });
+    $(document).on('click', '.qc-tasks-list-mobile .item', function(e) {
+        e.preventDefault();
+        var el = $(document).find('.modal').find('select[name=tasks] option[value=' + $(this).children('a').data('id') + ']');
+        console.log($(document).find('.modal').find('select[name=tasks]').val())
+        if (el.is(':selected')) {
+            if($(this).hasClass('used-task')){
+                $(this).addClass('reusable');
+            }
+            $(this).removeClass('selected');
+            el.prop('selected',false);
+        }else {
+            console.log("else")
+            if($(this).hasClass('used-task')){
+                $(this).removeClass('reusable');
+            }
+            $(this).addClass('selected');
+            el.prop('selected',true);
+        }
+    });
+
+    // $(document).on('change', '.qc-craft', function() {
+    //     var attrs = ($(this).find('option:selected').data('professions')).toString().split(',');
+    //     var selectedCraftId = $(this).val();
+    //     var needReselect = true;
+    //     $.each(attrs, function(key, val) {
+    //         if (selectedCraftId == val) {
+    //             needReselect = false;
+    //         }
+    //     });
+    //     if (needReselect) {
+    //         $(document).find('.qc-profession').val(attrs[0]);
+    //     }
+    //
+    //     $(document).find('.qc-profession option').each(function() {
+    //         var crafts = ($(this).data('crafts')).toString().split(',');
+    //         if (crafts.indexOf($('.qc-craft').val()) == -1) {
+    //             $(this).css('display', 'none');
+    //         } else {
+    //             $(this).css('display', 'block');
+    //         }
+    //
+    //     });
+    //
+    // });
+
+
+
+    /*
     $(document).on('change', '.qc-craft', function() {
 
         var craftVal = $(document).find('.qc-craft').val();
@@ -1251,9 +1440,10 @@ $(document).ready(function() {
         }
 
         $.fn.utilities('updateCurrentOnChange','.qc-tasks-list-mobile');
+        $(window).trigger('resize');
 
-    });
-
+    }); */
+/*
     $(document).on('click', '.qc-tasks-list li', function(e) {
         e.preventDefault();
         var el = $(document).find('.modal').find('select[name=tasks] option[value=' + $(this).children('a').data('id') + ']');
@@ -1264,7 +1454,8 @@ $(document).ready(function() {
             $(this).addClass('selected');
             el.prop('selected',true);
         }
-    });
+    }); */
+/*  
     $(document).on('click', '.qc-tasks-list-mobile .item', function(e) {
         e.preventDefault();
         var el = $(document).find('.modal').find('select[name=tasks] option[value=' + $(this).children('a').data('id') + ']');
@@ -1276,7 +1467,7 @@ $(document).ready(function() {
             $(this).addClass('selected');
             el.prop('selected',true);
         }
-    });
+    }); */
 
     $(document).on('change', '.qc-craft', function() {
         var attrs = ($(this).find('option:selected').data('professions')).toString().split(',');
