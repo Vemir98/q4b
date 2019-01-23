@@ -1244,14 +1244,11 @@ $(document).ready(function() {
 
 
         if(craftVal == selectedCrafts){
-            var selectedCrafts = self.find('.qc-tasks-list .hidden-select').data('selected-crafts').split(',');
+            var selectedCrafts = self.find('.qc-tasks-list .hidden-select').data('selected-tasks').split(',');
             console.log('selectedCrafts', selectedCrafts);
             self.find('.qc-tasks-list .hidden-select').val(selectedCrafts);
             selfMobile.find('.qc-tasks-list-mobile .hidden-select');
         }
-
-
-
 
         $.fn.utilities('updateCurrentOnChange','.qc-tasks-list-mobile');
 
