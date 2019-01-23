@@ -368,6 +368,12 @@
                 methods.updateContentOnChange();
             }, 500);
         },
+        updateContentPlans: function(){
+
+            var windowWidth = window.innerWidth;
+            methods.setScrollBarWidth($(document).find('.tab_panel').find('.scrollable-table'), windowWidth);
+
+        },
         updateCurrentOnChange: function(selector){
 
             methods.setCarouselDirection(selector, 10);
