@@ -8,7 +8,8 @@
  */
 ?>
 
-<div class="plans-list-layout" data-trackingurl="<?=URL::site('projects/plans_printed/'.$_PROJECT->id)?>">
+
+<div id="plans-list-layout" class="plans-list-layout" data-trackingurl="<?=URL::site('projects/plans_printed/'.$_PROJECT->id)?>">
     <form action="<?=URL::site('/projects/update_plan_list/'.$_PROJECT->id)?>" data-ajax=true method="post" class="q4_form" autocomplete="off">
         <input type="hidden" value="" name="x-form-secure-tkn"/>
         <input type="hidden" value="<?=$secure_tkn?>" name="secure_tkn"/>

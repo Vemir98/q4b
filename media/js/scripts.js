@@ -1052,6 +1052,13 @@ $(document).ready(function() {
     });
 
 
+    if($( "#plans-list-layout" ).length > 0){
+
+        console.log('.plans-list-layout 3 ');
+        $.fn.utilities('updateContentPlans');
+    }
+
+
     $(window).on('resize', function() {
 
         var windowWidth = $(this).width();
@@ -1095,6 +1102,8 @@ $(document).ready(function() {
             $.fn.utilities('setCarouselWidth', '.q4-carousel-table-wrap', windowWidth);
             $.fn.utilities('setCarouselWidth', '.q4-wrap-mobile', windowWidth);
         }
+
+        $.fn.utilities('updateContentPlans');
 
     });
 
@@ -1455,7 +1464,7 @@ $(document).ready(function() {
             el.prop('selected',true);
         }
     }); */
-/*  
+/*
     $(document).on('click', '.qc-tasks-list-mobile .item', function(e) {
         e.preventDefault();
         var el = $(document).find('.modal').find('select[name=tasks] option[value=' + $(this).children('a').data('id') + ']');
