@@ -126,9 +126,7 @@ $(document).on('click', 'form a.q4-form-submit', function(e) {
     var self = $(this);
     var urlPost = self.closest('form').attr('action');
     var currentForm = self.closest('form');
-
     var valid = $.fn.utilities('validateForm', self.closest('form'));
-console.log('valid', valid);
 
     if(valid.valid){
 
@@ -703,7 +701,6 @@ $(document).ready(function() {
         currentClass = (currentClass != 'call-lit-plugin') ? currentClass :'';
         $(document).find('.literally-canvas-modal').remove();
         var imageSrc = self.data('url');
-        console.log("imageSrc", imageSrc);
 
         var setModalHeight = $(window).height()*0.70;
 
@@ -746,9 +743,7 @@ $(document).ready(function() {
 
         setTimeout(function(){
             var currentImageWidth = backgroundImage.width;
-            console.log("backgroundImage.width", backgroundImage.width);
             var currentImageHeight = backgroundImage.height;
-            console.log("backgroundImage.height", backgroundImage.height);
             var imageSize = {width:currentImageWidth,height:currentImageHeight};
             var currentModalWidth = $(document).find('.literally-canvas-modal .modal-dialog').width()-63;
             var hRatio = currentModalWidth/currentImageWidth;
@@ -1054,7 +1049,6 @@ $(document).ready(function() {
 
     if($( "#plans-list-layout" ).length > 0){
 
-        console.log('.plans-list-layout 3 ');
         $.fn.utilities('updateContentPlans');
     }
 
@@ -1109,8 +1103,6 @@ $(document).ready(function() {
 
 
     $(document).on('click', '.trigger-image-upload', function(e) {
-
-        console.log('set-image-link ');
 
         e.stopPropagation();
         e.preventDefault();
@@ -1188,8 +1180,6 @@ $(document).ready(function() {
     $(document).on('change', '.qc-craft', function() {
         var craftVal = $(document).find('.qc-craft').val();
         var selectedCrafts = $(document).find('.qc-craft').data('selected-crafts');
-        //console.log(craftVal)
-
 
         $(document).find('select[name=tasks] option').each(function() {
             var crafts = ($(this).data('crafts')).toString().split(',');
@@ -1212,7 +1202,7 @@ $(document).ready(function() {
                 el.parents('li').addClass('hidden')
                 elMobile.closest('div.item').addClass('hidden')
             } else {
-                console.log(crafts,el);
+
                 el.parents('li').removeClass('hidden');
                 elMobile.parents('div.item').removeClass('hidden');
             }
@@ -1249,9 +1239,7 @@ $(document).ready(function() {
         var itemCount = 0;
         $(document).find('#choose-plan-modal table.responsive_table tbody tr').each(function(i,el){
             var selfTr = $(el);
-            // console.log(selfTr.data('crafts'))
             var craftsArray = JSON.parse('"' + selfTr.data('crafts') + '"');
-            // console.log(craftsArray)
             if(craftsArray.length && craftsArray.indexOf(craftVal) == -1){
                 selfTr.addClass('hidden');
 
@@ -1260,11 +1248,10 @@ $(document).ready(function() {
                 itemCount++;
             }
         })
-        // console.log('desktop',itemCount);
+
         itemCount = 0;
         $(document).find('#choose-plan-modal-mobile .q4-carousel-table .item').each(function(i,el){
             var selfTr = $(el);
-            // console.log(selfTr.data('crafts'))
             var craftsArray = JSON.parse('"' + selfTr.data('crafts') + '"');
             if(craftsArray.length && craftsArray.indexOf(craftVal) == -1){
                 selfTr.addClass('hidden');
@@ -1274,8 +1261,7 @@ $(document).ready(function() {
                 itemCount++;
             }
         })
-        // $(document).find('#choose-plan-modal-mobile .q4-carousel-table').data('structurecount',itemCount)
-        // console.log('mobile',itemCount);
+
         var self = $('#quality-control-modal');
         //self.find('.tasks-full-description-box').mCustomScrollbar("destroy");
         var modalWidth = $('#quality-control-modal').find('.modal-dialog').width();
@@ -1291,7 +1277,6 @@ $(document).ready(function() {
 
         if(craftVal == selectedCrafts){
             var selectedCrafts = self.find('.qc-tasks-list .hidden-select').data('selected-tasks').split(',');
-            console.log('selectedCrafts', selectedCrafts);
             self.find('.qc-tasks-list .hidden-select').val(selectedCrafts);
             selfMobile.find('.qc-tasks-list-mobile .hidden-select');
         }
@@ -1311,16 +1296,15 @@ $(document).ready(function() {
         e.preventDefault();
         var el = $(document).find('.modal').find('select[name=tasks] option[value=' + $(this).children('a').data('id') + ']');
 
-        console.log('el ', el);
         if (el.is(':selected')) {
-            console.log('selected');
+
             if($(this).hasClass('used-task')){
                 $(this).addClass('reusable');
             }
             $(this).removeClass('selected');
             el.prop('selected',false);
         }else {
-            console.log('NOT selected');
+
             if($(this).hasClass('used-task')){
                 $(this).removeClass('reusable');
             }
@@ -1331,7 +1315,7 @@ $(document).ready(function() {
     $(document).on('click', '.qc-tasks-list-mobile .item', function(e) {
         e.preventDefault();
         var el = $(document).find('.modal').find('select[name=tasks] option[value=' + $(this).children('a').data('id') + ']');
-        console.log($(document).find('.modal').find('select[name=tasks]').val())
+
         if (el.is(':selected')) {
             if($(this).hasClass('used-task')){
                 $(this).addClass('reusable');
@@ -1339,7 +1323,7 @@ $(document).ready(function() {
             $(this).removeClass('selected');
             el.prop('selected',false);
         }else {
-            console.log("else")
+
             if($(this).hasClass('used-task')){
                 $(this).removeClass('reusable');
             }
@@ -1443,7 +1427,7 @@ $(document).ready(function() {
 
         if(craftVal == selectedCrafts){
             var selectedCrafts = self.find('.qc-tasks-list .hidden-select').data('selected-tasks').split(',');
-            console.log('selectedCrafts', selectedCrafts);
+
             self.find('.qc-tasks-list .hidden-select').val(selectedCrafts);
             selfMobile.find('.qc-tasks-list-mobile .hidden-select');
         }
