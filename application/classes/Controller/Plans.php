@@ -1486,6 +1486,10 @@ class Controller_Plans extends HDVP_Controller_Template
             $this->project->plans->where('project_id','=','not found');
         }
 
+        $withFileCount = clone($query);
+        $withFileCount = $withFileCount->and_where('prplan.has_file','=',1)->find_all()->count();
+        $withoutFileCount = clone($query);
+        $withoutFileCount = $withoutFileCount->and_where('prplan.has_file','=',0)->find_all()->count();
 
         $paginationSettings = [
             'items_per_page' => 15,
@@ -1495,13 +1499,16 @@ class Controller_Plans extends HDVP_Controller_Template
         $result = (new ORMPaginate($query,null,$paginationSettings))->getData();
 
         View::set_global('_PROJECT', $this->project);
-        $this->setResponseData('plans',View::make('projects/plans/list',
+        $this->setResponseData('plans',View::make('plans/plans/list',
             [   'items' => $result['items'],
                 'pagination' => $result['pagination'],
                 'objects' => $this->project->objects->find_all(),
                 'professions' => $this->project->company->professions->where('status','=',Enum_Status::Enabled)->order_by('cmpprofession.name','ASC')->find_all(),
                 'floorsFilter' => $this->project->getObjectsBiggerAndSmallerFloors(),
-                'secure_tkn' => AesCtr::encrypt($this->project->id.Text::random('alpha'),$this->project->id,192)
+                'secure_tkn' => AesCtr::encrypt($this->project->id.Text::random('alpha'),$this->project->id,192),
+                'withFileCount' => $withFileCount,
+                'withoutFileCount' => $withoutFileCount,
+                'planCount' => $withoutFileCount + $withFileCount,
             ]
         ));
     }
