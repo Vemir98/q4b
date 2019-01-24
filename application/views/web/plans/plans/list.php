@@ -131,15 +131,17 @@ $icons = [
                         </div>
                     </div>
                     <div class="col-md-3 rtl-float-right multi-select-col">
-                        <div class="col-md-8 rtl-float-right">
+
                             <label class="visibility-hidden table_label">Search</label>
-                            <div class="search-input-wrapper block">
-                                <input  type="search" class="search-input search-plan-input" value="">
-                                <a data-url="<?=URL::site('/plans/search_in_plan_list/'.$_PROJECT->id.'/search/')?>" class="search-button search-plans search-button-text">
-                                    <?=__('Search')?>
-                                </a>
+                            <div class="form-group">
+                                <div class="search-input-wrapper block">
+                                    <input  type="search" class="search-input search-plan-input" value="">
+                                    <a data-url="<?=URL::site('/plans/search_in_plan_list/'.$_PROJECT->id.'/search/')?>" class="search-button search-plans search-button-text">
+                                        <?=__('Search')?>
+                                    </a>
+                                </div>
                             </div>
-                        </div>
+
                     </div>
                 </div>
                 <div class="row ev-has-file-menu">

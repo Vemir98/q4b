@@ -105,6 +105,7 @@ $(document).ajaxStart(function() {
 $(document).ajaxComplete(function() {
     $(document).find('.loader_backdrop').hide();
     AJAX_LOADS =  false;
+    $(window).trigger('resize');
 });
 $(document).on('click', 'form a.submit', function(e) {
     e.preventDefault();

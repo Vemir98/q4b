@@ -363,11 +363,12 @@ $(document).ready(function() {
             successCallback: function(data) {
                 if (data.getData()) {
                     var printLandscape = $(document).find('.print-landscape-mode');
+
                     printLandscape.find('.printable-table-other').empty();
                     CHECKED_PLANS = {};
                     if ($(document).find('.plans-list-layout').length && data.getData().plans != undefined){
                         var currentModal = data.getData().plans;
-
+                        console.log(currentModal)
                         $(document).find('.plans-list-layout .scrollable-table').closest('div.row').replaceWith($(currentModal).find('.scrollable-table').closest('div.row'));
                         $(document).find('.plans-list-layout .q4-carousel-table-wrap').closest('div.row').replaceWith($(currentModal).find('.q4-carousel-table-wrap').closest('div.row'));
                         $(document).find('.plans-list-layout .ev-has-file-menu').replaceWith($(currentModal).find('.ev-has-file-menu'));
