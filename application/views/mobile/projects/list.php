@@ -104,7 +104,7 @@
                                     <a href="<?=URL::site('projects/company_project_update/'.$i->id)?>"><?=$i->name?></a>
                                 </figcaption>
                             </figure>
-                            
+
                             <span class="q4-list-item-mobile projects title"><?=__('Company')?>:
                                 <span class="project-list-c-name"><?=$i->company->name?></span>
                             </span>
