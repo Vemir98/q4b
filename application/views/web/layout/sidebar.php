@@ -11,9 +11,9 @@ $items = [
     [
         'slug' => 'quality_control',
         'text' => 'Quality control',
-        'tooltip' => 'Dashboard',
-        'icon' => 'q4bikon-uncheked',
-        'resource' => 'Controller_QControl',
+        'tooltip' => 'Quality control',
+        'icon' => 'q4bikon-tick',
+        'resource' => 'Controller_QControls',
         'priority' => Enum_UserPriorityLevel::Project
     ], [
         'slug' => 'dashboard',

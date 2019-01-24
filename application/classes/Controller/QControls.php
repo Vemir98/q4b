@@ -6,7 +6,7 @@
  * Date: 03.12.2016
  * Time: 5:53
  */
-class Controller_QControl extends HDVP_Controller_Template
+class Controller_QControls extends HDVP_Controller_Template
 {
     protected $_actions_perms = [
         'list,company,property_item_quality_control_list,plans_list,tracking_list,get_custom_number,plan_list_search' => [
@@ -322,19 +322,11 @@ class Controller_QControl extends HDVP_Controller_Template
         ));
     }
 
-    public function action_quality_control(){
-        $this->_checkForAjaxOrDie();
-        $placeId = (int)$this->request->param('id');
-        $place = ORM::factory('PrPlace',$placeId);
-        if( ! $place->loaded()){
-            throw new HTTP_Exception_404;
-        }
-        $this->project = $place->project;
-        View::set_global('_PROJECT', $this->project);
+    public function action_create(){
         if($this->request->method() == HTTP_Request::POST){
             $formData = Arr::extract($this->post(),['space_id','status','project_stage','due_date','description','tasks','profession_id','craft_id','severity_level','condition_list','plan_id','message']);
             if(!empty(trim($formData['description'])))
-            $formData['description'] = '['.date('d/m/Y').'] '.$formData['description'].PHP_EOL;
+                $formData['description'] = '['.date('d/m/Y').'] '.$formData['description'].PHP_EOL;
             $formData['due_date'] = DateTime::createFromFormat('d/m/Y',$formData['due_date'])->getTimestamp();
             $formData['space_id'] = $place->spaces->where('id','=',(int)$formData['space_id'])->find()->id;
             $message = $formData['message'];
@@ -419,40 +411,27 @@ class Controller_QControl extends HDVP_Controller_Template
                 $this->_setErrors('Operation Error');
             }
         }else{
-            $scopes = [];
+            $projectsQuery = ORM::factory('Project');
+            if($this->_user->getRelevantRole('outspread') != Enum_UserOutspread::General){
+                $projectsQuery->where('client_id','=',$this->_user->client_id);
+            }
+            if( ! $this->_user->priorityLevelIn(Enum_UserPriorityLevel::Company) AND $this->_user->priorityLevelIn(Enum_UserPriorityLevel::Project)){
+                $projectsQuery = $this->_user->projects;
+            }
+
+            $projects = $projectsQuery->order_by('name','ASC')->find_all();
+
+            $objects = [];
+            $places = [];
             $plans = [];
 
-            foreach ($place->plans->order_by('id','DESC')->find_all() as $item){
-                if(in_array($item->scope,$scopes)) continue;
-                $scopes[] = $item->scope;
-                $plans[$item->id] = $item;
-            }
-
-            foreach($place->floor->plans->order_by('id','DESC')->find_all() as $item){
-                if(in_array($item->scope,$scopes)) continue;
-                $scopes[] = $item->scope;
-                $plans[$item->id] = $item;
-            }
-
-//            $placePlans = [];
-//            foreach ($plans as $pp){
-//                if($pp->place_id == $place->id){
-//                    $placePlans[$pp->id] = $pp;
-//                }
-//            }
-//
-//            if(!empty($placePlans)){
-//                $plans = $placePlans;
-//                unset($placePlans);
-//            }
-
-            $this->setResponseData('modal',View::make('projects/quality-controls/form',
-                [
-                    'item' => $place,
-                    'plans' => $plans,
-                    'tasks' =>$this->project->tasks->where('status','=',Enum_Status::Enabled)->find_all(),
-                    'usedTasks' => $this->project->usedTasks($place->id),
-                ]));
+            $this->template->content = View::make('quality-controls/form', [
+                'projects' => $projects,
+                'objects' => $objects,
+                'places' => $places,
+                'plans' => $plans,
+//                'usedTasks' => $this->project->usedTasks($place->id),
+            ]);
         }
 
     }
@@ -566,7 +545,7 @@ class Controller_QControl extends HDVP_Controller_Template
                     $qcPath = $qc->project->qualityControlPath();
                     $tmpName1 = explode('.',$file->original_name);
                     if(count($tmpName1) > 1)
-                    unset($tmpName1[count($tmpName1)-1]);
+                        unset($tmpName1[count($tmpName1)-1]);
                     if(in_array($ext,['jpe','jpeg'])){
                         $ext = 'jpg';
                     }
@@ -613,8 +592,8 @@ class Controller_QControl extends HDVP_Controller_Template
 
         }else{//Вывод файла
             $this->response->headers([
-               'Content-Type' => $mime,
-               //'Content-Length' => filesize($file->fullFilePath()),
+                'Content-Type' => $mime,
+                //'Content-Length' => filesize($file->fullFilePath()),
             ]);
             readfile($filepath);
         }
@@ -1155,7 +1134,7 @@ class Controller_QControl extends HDVP_Controller_Template
 //
 //        return $output;
         $object = ORM::factory('PrObject',$objectId);
-            $floors = $object->floors->order_by('number','DESC')->with('places')->find_all();
+        $floors = $object->floors->order_by('number','DESC')->with('places')->find_all();
         return View::make('projects/property/struct/form',['item' => $object, 'itemFloors' => $floors])->render();
     }
 
