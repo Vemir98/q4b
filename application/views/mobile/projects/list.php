@@ -104,9 +104,7 @@
                                     <a href="<?=URL::site('projects/company_project_update/'.$i->id)?>"><?=$i->name?></a>
                                 </figcaption>
                             </figure>
-                            <?if(isset($projectsEmptyPlans[$i->id]) ):?>
-                                <span style="position: absolute;bottom: 0;right: 0;background: #1ebae5;color: #ffffff;text-align: center;padding: 5px 6px;font-size: 14px;font-weight: normal;font-style: normal;font-family: 'proxima_nova_rgregular', Arial, Helvetica, sans-serif;-webkit-border-radius: 0px 0px 6px 0px;-moz-border-radius: 0px 0px 6px 0px;-ms-border-radius: 0px 0px 6px 0px;border-radius: 0px 0px 6px 0px;">(<span class=""><?=$projectsEmptyPlans[$i->id]?></span>) <?=__('Not associated plans')?> </span>
-                            <?endif;?>
+                            
                             <span class="q4-list-item-mobile projects title"><?=__('Company')?>:
                                 <span class="project-list-c-name"><?=$i->company->name?></span>
                             </span>

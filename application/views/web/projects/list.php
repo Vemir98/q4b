@@ -95,9 +95,7 @@
                         <?endif;?>
                     </figure>
 
-                     <?if(isset($projectsEmptyPlans[$i->id]) ):?>
-                        <span style="position: absolute;bottom: 0;right: 0;background: #1ebae5;color: #ffffff;text-align: center;padding: 5px 6px;font-size: 14px;font-weight: normal;font-style: normal;font-family: 'proxima_nova_rgregular', Arial, Helvetica, sans-serif;-webkit-border-radius: 0px 0px 6px 0px;-moz-border-radius: 0px 0px 6px 0px;-ms-border-radius: 0px 0px 6px 0px;border-radius: 0px 0px 6px 0px;">(<span class=""><?=$projectsEmptyPlans[$i->id]?></span>) <?=__('Not associated plans')?> </span>
-                    <?endif;?>
+
                     <div class="wrap-projects-list-items">
                         <span class="q4-list-item-info title"><?=__('Company')?>: <span class="project-list-c-name"><?=$i->company->name?></span></span>
                         <span class="q4-list-item-info"><?=__('Start Date')?>: <span class="project-list-date"><?=date('d/m/Y',$i->start_date)?></span></span>
