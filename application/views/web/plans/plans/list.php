@@ -351,8 +351,11 @@ $icons = [
                                             <input name="plan_<?=$item->id?>_status" type="text" class="q4-form-input disabled-input" value="<?=ucfirst(__($item->status ?: null))?>">
                                         </td>
 
-                                        <td class="rwd-td9" data-th="Updates note">
-                                            <input name="plan_<?=$item->id?>_description" type="text" class="q4-form-input disabled-input" value="<?=$item->description ?: null?>">
+                                        <td class="rwd-td9" data-th="Updates note" title="<?=$item->description ?: null?>">
+                                            <input name="plan_<?=$item->id?>_description"
+                                                   type="text"
+                                                   class="q4-form-input disabled-input"
+                                                   value="<?=$item->description ?: null?>">
                                         </td>
                                         <td class="rwd-td10 align-center-left" data-th="<?=__('Upload date')?>">
                                             <div class="div-cell">

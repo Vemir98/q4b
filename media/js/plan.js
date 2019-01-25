@@ -228,6 +228,7 @@ $(document).ready(function() {
 
     $(document).on('change','.select-structure, .select-profession',function(e){
 
+        console.log('change');
         var current = $(this);
 
         var objectId = current.closest('form').find('[data-name="object"]').val();
@@ -268,7 +269,7 @@ $(document).ready(function() {
                     setTimeout(function(){
 
                         $.fn.utilities('updateContentOnChange');
-                        $('.selectpicker').selectpicker({size:3,dropupAuto:false})
+                        $('.selectpicker').selectpicker({size:3,dropupAuto:false});
                     }, 300);
 
                     $('[data-toggle="table"]').bootstrapTable();
@@ -1360,8 +1361,6 @@ $(document).ready(function() {
 
     });
 
-
-
     $('body').on('projectPlansUpdated', function(e, data) {
 
         if (data.projectPlansForm != undefined) {
@@ -1375,7 +1374,6 @@ $(document).ready(function() {
         }
 
     });
-
 
     $(document).on('change keyup', '.floors-from, .floors-to', function(e) {
 
@@ -1428,7 +1426,6 @@ $(document).ready(function() {
         }
 
     });
-
 
 
     /**
@@ -1524,10 +1521,6 @@ $(document).ready(function() {
     });
 
 
-
-
-
-
     $(document).on('click', '.arrows > .arrow', function() {
         var num = ($(this).hasClass('no-arrow_top') == true) ? 1 : -1;
         var input = $(this).parents('.arrows').siblings('.numeric-input');
@@ -1539,7 +1532,6 @@ $(document).ready(function() {
             input.change();
         }
     });
-
 
 
     $(window).on('resize', function() {
@@ -1715,9 +1707,7 @@ $(document).ready(function() {
             window.print();
             $('.tracking-details-modal').show();
             $(document).find('.print-data-tracking').remove();
-        })
-
-
+        });
 
     });
 
@@ -1853,6 +1843,17 @@ $(document).ready(function() {
         });
     });
 
+
+    $(document).on('click','.update-plans',function(e){
+
+
+        setTimeout(function(){
+            console.log('aaaa');
+            $(document).find('.select-profession').trigger('change');
+            $(document).find('.select-profession').css('border', '1px solid red');
+        }, 500);
+
+    });
 
     // $(document).find('.no-format-found').closest('tr').css('background', '#e49999');
     // $(document).find('.select-profession').trigger('change');

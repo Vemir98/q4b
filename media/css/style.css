@@ -898,7 +898,7 @@ html.rtl {
     border-right: 1px solid transparent; }
   .rtl .panel-options {
     text-align: left; }
-    .rtl .panel-options span {
+    .rtl .panel-options > span {
       margin-right: 0;
       margin-left: 12px; }
   .rtl .modal .panel-options {
@@ -6471,6 +6471,10 @@ textarea.fixed-textarea {
     color: #b0bbc3; }
     .pending_row td .show_details i {
       color: #708492; }
+
+td[data-col="structure"] .select-wrapper .q4-select {
+  padding: 0px 2px 0px 5px;
+}
 
 .table_input {
   display: block;
