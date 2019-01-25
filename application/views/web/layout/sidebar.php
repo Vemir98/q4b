@@ -73,7 +73,14 @@ $items = [
     ],
 
 ];
+$detector = new Mobile_Detect; // todo:: Just add Plans page for Mobile devices
+$isMobile = $detector->isMobile(); // Just add Plans page for Mobile devices
+
 foreach ($items as $key => $i){
+    if($isMobile and ($i['slug'] == 'plans')){ // Just add Plans page for Mobile devices
+        unset($items[$key]); // Just add Plans page for Mobile devices
+    } // Just add Plans page for Mobile devices
+
     if(!Usr::can(Usr::READ_PERM,$i['resource'],$i['priority'])){
         unset($items[$key]);
     }
