@@ -1855,6 +1855,12 @@ $(document).ready(function() {
 
     });
 
+
+    $('body').on('onPlanListUpdate', function(e, data) {
+
+        $(document).find('.select-profession').trigger('change');
+    });
+
     // $(document).find('.no-format-found').closest('tr').css('background', '#e49999');
     // $(document).find('.select-profession').trigger('change');
 
