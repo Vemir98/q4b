@@ -101,7 +101,7 @@ if($_USER->is('project_supervisor')){//запрет на изменение ст
                                         <div class="form-group col-md-6 rtl-float-right">
                                             <label class="table_label"><?=__('Status')?> <span class="q4-required">*</span></label>
                                             <div class="select-wrapper"><i class="q4bikon-arrow_bottom"></i>
-                                                <select class="qc-status q4-select q4-form-input <?=$disabled?>" name="status">
+                                                <select class="qc-status q4-select q4-form-input <?=$disabled?>" data-selected="<?=$item->status?>" name="status">
                                                 <?foreach ($itemStatuses as $status) :
                                                     $selected = $item->status == $status ? "selected='selected'" : '';
                                                 ?>
