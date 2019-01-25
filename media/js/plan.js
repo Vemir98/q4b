@@ -1369,9 +1369,9 @@ $(document).ready(function() {
 
             $(document).find('.modal').modal('hide');
 
-            var updatedTable = $(data.projectPlansForm).find('table.table');
-            $('table.table').replaceWith(updatedTable);
-            $('[data-toggle="table"]').bootstrapTable();
+            // var updatedTable = $(data.projectPlansForm).find('table.table');
+            // $('table.table').replaceWith(updatedTable);
+            // $('[data-toggle="table"]').bootstrapTable();
 
         }
 
@@ -1848,6 +1848,11 @@ $(document).ready(function() {
 
 
     $('body').on('planListUpdated', function(e, data) {
+
+        $(document).find('.select-profession').trigger('change');
+    });
+
+    $('body').on('projectPlansUpdated', function(e, data) {
 
         $(document).find('.select-profession').trigger('change');
     });
