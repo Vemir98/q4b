@@ -34,7 +34,7 @@
                                         <option value=""><?=__('Please select')?></option>
 
                                         <?foreach ($objects as $obj): ?>
-                                            <option data-minfloor="<?=$obj->smaller_floor?>" data-maxfloor="<?=$obj->bigger_floor?>" value="<?=$obj->id?>" <?=($obj->id == $object->id) ? 'selected' : ''?>><?=$obj->type->name.'-'.$obj->name?></option>
+                                            <option data-minfloor="<?=$obj->smaller_floor?>" data-maxfloor="<?=$obj->bigger_floor?>" value="<?=$obj->id?>" <?=($obj->id == $object->id) ? 'selected' : ''?>><?=$obj->name?></option>
                                         <?endforeach ?>
 
                                     </select>

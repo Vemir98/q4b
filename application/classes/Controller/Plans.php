@@ -1486,10 +1486,16 @@ class Controller_Plans extends HDVP_Controller_Template
             $this->project->plans->where('project_id','=','not found');
         }
 
-        $withFileCount = clone($query);
-        $withFileCount = $withFileCount->and_where('prplan.has_file','=',1)->find_all()->count();
-        $withoutFileCount = clone($query);
-        $withoutFileCount = $withoutFileCount->and_where('prplan.has_file','=',0)->find_all()->count();
+        $withFileCount = 0;
+        $withoutFileCount = 0;
+
+        if(isset($query)){
+            $withFileCount = clone($query);
+            $withFileCount = $withFileCount->and_where('prplan.has_file','=',1)->find_all()->count();
+            $withoutFileCount = clone($query);
+            $withoutFileCount = $withoutFileCount->and_where('prplan.has_file','=',0)->find_all()->count();
+
+        }
 
         $paginationSettings = [
             'items_per_page' => 15,

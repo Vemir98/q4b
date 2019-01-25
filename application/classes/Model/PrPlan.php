@@ -258,4 +258,9 @@ class Model_PrPlan extends MORM
   LEFT JOIN pr_places pp1 ON pp.place_id = pp1.id
   WHERE pp.project_id = '.(int)$project_id)->execute()->as_array();
     }
+
+    public function isDeliveredAndReceived()
+    {
+        return (bool) ($this->delivered_at and $this->received_at);
+    }
 }

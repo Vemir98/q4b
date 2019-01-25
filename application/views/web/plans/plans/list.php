@@ -212,7 +212,7 @@ $icons = [
                                         $disabledButton = $item->hasQualityControl() ? ' disabled-gray-button' : '';
                                     ?>
 
-                                    <tr data-planid="<?=$item->id?>" class="<?= $item->hasFile() ? ($item->hasQualityControl() ? 'success-plan' : '') : 'has-no-file'?>">
+                                    <tr data-planid="<?=$item->id?>" class="<?= $item->hasFile() ? ($item->isDeliveredAndReceived() ? 'success-plan' : '') : 'has-no-file'?>">
                                         <td class="hidden table-print-td"
                                             data-planid="<?=$item->id?>"
                                             data-property="<?=$item->object->type->name.' - '.$item->object->name?>"
