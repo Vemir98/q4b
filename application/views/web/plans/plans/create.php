@@ -19,7 +19,7 @@
                         <div class="clear"></div>
                     </div>
                     <div class="q4_modal_sub_header">
-                        <h3><?=__('Add plan(s)')?></h3>
+                        <h3><?=__('Add plans')?></h3>
                     </div>
                 </div>
                 <div class="modal-body bb-modal">

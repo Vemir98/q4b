@@ -888,21 +888,21 @@ $(document).ready(function() {
 
         if (! sheetNumber) {
             rowTemplate.addClass('warning');
-            Q4U.alert(__('Please check all rows'));
+            Q4U.alert(__('Please  fill all fields'));
 
             return false;
         }
 
         if (! planName) {
             rowTemplate.addClass('warning');
-            Q4U.alert(__('Please check all rows'));
+            Q4U.alert(__('Please  fill all fields'));
 
             return false;
         }
 
         if (! floors) {
             rowTemplate.addClass('warning');
-            Q4U.alert(__('Please check all rows'));
+            Q4U.alert(__('Please  fill all fields'));
 
             return false;
         }

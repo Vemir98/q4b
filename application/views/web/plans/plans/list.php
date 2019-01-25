@@ -221,7 +221,6 @@ $icons = [
                                             <table>
                                                 <tr data-id="<?=$item->id?>">
                                                     <td><?=$item->file() ? $item->file()->getName() : $item->name;?></td>
-                                                    <td>Name </td>
                                                     <td><?=$item->edition?></td>
                                                     <td><?=__($item->status)?></td>
                                                     <td><?=date('d/m/Y',$item->date)?></td>
@@ -271,7 +270,7 @@ $icons = [
                                             <? if ($item->hasFile()): ?>
                                                 <span class="plans-inline-icon">
                                                     <a target="_blank" href="<?=$item->file()->originalFilePath()?>" class="<?=$mime== 'unknown' ? 'disabled-input' : ''?>">
-                                                        <img src="/media/img/choose-format/format-<?=$mime?>.png" title="<?=$name?>" alt="<?=$name?>">
+                                                        <img src="/media/img/choose-format/format-<?=$mime?>.png" title="<?=$item->file()->original_name?>" alt="<?=$item->file()->original_name?>">
                                                     </a>
                                                 </span>
                                             <? else: ?>

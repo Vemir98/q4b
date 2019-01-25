@@ -2341,34 +2341,36 @@ class Controller_Plans extends HDVP_Controller_Template
         $projectId = $this->getUIntParamOrDie($this->request->param('id'));
         $this->project = ORM::factory('Project',$projectId);
         $plans = $this->getNormalizedPostArr('plans');
+
         if(!empty($plans)){
             $plans = array_keys($plans);
         }
-            try{
-                if(!$this->project->loaded() OR !$this->_user->canUseProject($this->project)) {
-                    throw new HDVP_Exception('Access Denied');
-                }
-                Database::instance()->begin();
-                if(!empty($plans)){
-                    $tracking = ORM::factory('PlanTracking');
-                    $tracking->project_id = $this->project->id;
-                    $tracking->save();
-                    $tracking->add('plans',$plans);
-                    $this->setResponseData('id',$tracking->id);
-                }else{
-                    throw new HDVP_Exception('Plans can not be empty');
-                }
-                Database::instance()->commit();
-            }catch (ORM_Validation_Exception $e){
-                Database::instance()->rollback();
-                $this->_setErrors($e->errors('validation'));
-            }catch (HDVP_Exception $e){
-                Database::instance()->rollback();
-                $this->_setErrors($e->getMessage());
-            }catch (Exception $e){
-                Database::instance()->rollback();
-                $this->_setErrors('Operation Error');
+
+        try{
+            if(!$this->project->loaded() OR !$this->_user->canUseProject($this->project)) {
+                throw new HDVP_Exception('Access Denied');
             }
+            Database::instance()->begin();
+            if(!empty($plans)){
+                $tracking = ORM::factory('PlanTracking');
+                $tracking->project_id = $this->project->id;
+                $tracking->save();
+                $tracking->add('plans',$plans);
+                $this->setResponseData('id',$tracking->id);
+            }else{
+                throw new HDVP_Exception('Plans can not be empty');
+            }
+            Database::instance()->commit();
+        }catch (ORM_Validation_Exception $e){
+            Database::instance()->rollback();
+            $this->_setErrors($e->errors('validation'));
+        }catch (HDVP_Exception $e){
+            Database::instance()->rollback();
+            $this->_setErrors($e->getMessage());
+        }catch (Exception $e){
+            Database::instance()->rollback();
+            $this->_setErrors('Operation Error');
+        }
 
     }
 
