@@ -27,7 +27,7 @@
                         <div class="row">
                             <div class="form-group col-28 rtl-float-right">
                                 <label class="table_label"><?=__('Plan name')?></label>
-                                <input type="text" class="table_input<?=$disabled?>" name="name" value="<?=$item->file() ? $item->file()->getName()  : $item->name;?>">
+                                <input type="text" class="table_input<?=$disabled?>" name="name" value="<?=$item->file()->loaded() ? $item->file()->getName() : $item->name;?>">
                             </div>
                             <div class="form-group col-28 rtl-float-right">
                                 <label class="table_label"><?=__('Property')?></label>
