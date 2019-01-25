@@ -655,6 +655,11 @@ return [
 "Updates note" => "מהות העדכון",
 "Delivered date" => "תאריך מסירה",
 
+"Add plans" =>  "הוספת תוכניות",
+"Please  fill all fields" => "בבקשה תמלא את כל השדות",
+
+
+
 
 
 

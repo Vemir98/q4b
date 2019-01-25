@@ -633,6 +633,8 @@ return [
 "File" => "Файл",
 "Updates note" => "Изменения",
 "Delivered date" => "Дата доставки",
+"Add plans" =>  "Добавить чертёж",
+"Please  fill all fields" => "Пожалуйста заполните все поля",
 
 
 

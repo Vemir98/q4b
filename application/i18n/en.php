@@ -662,6 +662,8 @@ return [
 "File" => "File",
 "Updates note" => "Updates note",
 "Delivered date" => "Delivered date",
+"Add plans" =>  "Add plans",
+"Please  fill all fields" => "Please  fill all fields",
 
 
 
