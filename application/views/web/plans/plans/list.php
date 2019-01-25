@@ -36,7 +36,7 @@ $icons = [
                                 <span class="inline-options text-center">
                                     <a class="plans-date-tracking" data-url="<?=URL::site('plans/tracking_list/'.$_PROJECT->id)?>">
                                         <span class="circle-sm blue">
-                                            <i class="q4bikon-reports"></i>
+                                            <img src="/media/img/tracking.png" title="tracking" alt="tracking">
                                         </span>
                                     </a>
                                     <span class="inline-options-text">
@@ -47,7 +47,7 @@ $icons = [
                                 <span class="inline-options text-center">
                                      <a class="plans-to-print-link db disabled-link" data-toggle="modal" data-target="#plans-to-print-modal">
                                        <span class="circle-sm orange">
-                                            <i class="q4bikon-download"></i>
+                                            <img src="/media/img/delivery.png" title="delivery" alt="delivery">
                                         </span>
                                      </a>
                                     <span class="inline-options-text">
@@ -57,7 +57,7 @@ $icons = [
 
                                 <span class="inline-options">
                                      <a class="circle-sm red plans-to-send disabled-link" data-id=<?=$_PROJECT->id?> data-url="<?=URL::site('plans/plans_mailing/'.$_PROJECT->id)?>">
-                                        <i class="q4bikon-arrow_left"></i>
+                                         <img src="/media/img/send.png" title="send" alt="send">
                                      </a>
                                      <span class="inline-options-text"><?=__('Send')?></span>
                                 </span>
@@ -65,7 +65,6 @@ $icons = [
                                 <span class="inline-options">
                                     <span class="circle-sm dark-blue copy-plan" title="<?=__('Copy plan')?>"
                                           data-url="<?=URL::site('plans/copy_plan/'.$_PROJECT->id)?>" >
-
                                         <i class="q4bikon-copy"></i>
                                     </span>
                                     <span class="inline-options-text">Copy</span>
