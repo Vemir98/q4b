@@ -267,9 +267,10 @@ $(document).ready(function() {
 
 
                     setTimeout(function(){
-
                         $.fn.utilities('updateContentOnChange');
                         $('.selectpicker').selectpicker({size:3,dropupAuto:false});
+
+                        eventAfterUpdate();
                     }, 300);
 
                     $('[data-toggle="table"]').bootstrapTable();
@@ -439,16 +440,8 @@ $(document).ready(function() {
             }
 
         });
-        var checked = $('table .enable-plan-action input[type=checkbox]:checked').length;
 
-        if(checked > 0){
-            $(document).find('.plans-to-print-link, .plans-to-send').removeClass('disabled-link');
-        } else {
-
-            $(document).find('.plans-to-print-link, .plans-to-send').addClass('disabled-link');
-
-        }
-
+        eventAfterUpdate();
     });
 
     $(document).on('click', currentPage.filterTracking, function(e) {
@@ -1133,17 +1126,7 @@ $(document).ready(function() {
     });
 
     $(document).on('click', '.enable-plan-action > .checkbox-wrapper', function () {
-
-        var checked = $('table .enable-plan-action input[type=checkbox]:checked').length;
-
-        if(checked > 0){
-            $(document).find('.plans-to-print-link, .plans-to-send').removeClass('disabled-link');
-        } else {
-
-            $(document).find('.plans-to-print-link, .plans-to-send').addClass('disabled-link');
-
-        }
-
+        eventAfterUpdate();
     });
 
 
@@ -1187,10 +1170,11 @@ $(document).ready(function() {
 
     /**Print Plans in projects page */
     $(document).on('click', '.plans-to-print-link', function() {
+        var printLandscape = $(document).find('.print-landscape-mode');
+        printLandscape.find('.printable-table-other').html('');
 
         $(document).find('.enable-plan-action label.checkbox-wrapper input[type=checkbox]:checked').each(function(i,el){
             var self = $(el);
-            var printLandscape = $(document).find('.print-landscape-mode');
             var table = printLandscape.find('.printable-table-first .page-break');
             // var firstPage = $(document).find('.print-landscape-mode .first-page');
             var tablePrintTd = self.closest('tr').find('.table-print-td');
@@ -1254,7 +1238,6 @@ $(document).ready(function() {
 
         $('body>.print-landscape-mode').remove();
 
-        var printLandscape = $(document).find('.print-landscape-mode');
         var table = printLandscape.find('.printable-table-first .page-break');
         var firstPage = $(document).find('.print-landscape-mode .first-page');
         var error = '';
@@ -1314,7 +1297,6 @@ $(document).ready(function() {
                 }
             },
         });
-
     });
 
 
@@ -1845,7 +1827,15 @@ $(document).ready(function() {
         });
     });
 
+    function eventAfterUpdate(){
+        var checked = $('table .enable-plan-action input[type=checkbox]:checked').length;
 
+        if(checked > 0){
+            $(document).find('.plans-to-print-link, .plans-to-send').removeClass('disabled-link');
+        } else {
+            $(document).find('.plans-to-print-link, .plans-to-send').addClass('disabled-link');
+        }
+    }
 
     $('body').on('planListUpdated', function(e, data) {
 
