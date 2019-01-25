@@ -1986,7 +1986,7 @@ $(document).ready(function() {
         } else {
 
             $(document).find('.property-quality-control-conditions .q4-form-input').addClass('disabled-input');
-            
+
             if($(this).data('selected') == 'invalid' && value != 'existing'){
 
                 $(document).find('.q4-status-select').append('<option class="q4-status-approved" value="approved">'+__('approved')+'</option>');
