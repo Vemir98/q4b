@@ -133,7 +133,7 @@ class Controller_Plans extends HDVP_Controller_Template
             foreach ($result['items'] as $item){
                 $projectIds [] = $item->id;
             }
-            $this->template->content = View::make('plans/project-list', $result + ['filterProjects' => $filterProjects, 'projectsEmptyPlans' => Model_Project::getProjectsWithoutPlansSpecialities($projectIds)]);
+            $this->template->content = View::make('plans/project-list', $result + ['filterProjects' => $filterProjects]);
         }
     }
 
