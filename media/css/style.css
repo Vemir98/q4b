@@ -12046,19 +12046,19 @@ header {
         height: 230px; }
   .report-status-list .report-status-result-multiple {
     width: 100%; }
-
+/*
   .plans-to-print-link {
     display: block;
     width: 100%;
     position: static;
-    margin-bottom: 15px; }
-
+    margin-bottom: 15px; } */
+/*
   .plans-to-send {
-    display: block;
+    display: block; 
     width: 100%;
     position: static;
     margin-bottom: 15px; }
-
+*/
   .content .panel_footer {
     height: auto;
     line-height: 1;
