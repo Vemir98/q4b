@@ -676,5 +676,7 @@ return [
     'Interpretation. In the event of any conflict' => 'Interpretation. In the event of any conflict or inconsistency between this EULA and any Additional Agreement, then except to the extent any Additional Agreement expressly varies or overrides a specified clause of this EULA, this EULA shall govern and prevail to the extent of such inconsistency.',
 
     //end of translation
+    ':user | Quality control # :id | :project' => ':user | Q4B Форма контроля качества # :id | Проект  :project',// todo:: WTT
+    ':user | Report | :project' => ':user | Q4B Отчёт | Проект :project',// todo:: WTT
     ''=>'',
 ];

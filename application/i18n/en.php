@@ -707,5 +707,7 @@ return [
 
 
     //end of translation
+    ':user | Quality control # :id | :project' => ':user | Q4B Quality control # :id | Project :project', // todo:: WTT
+    ':user | Report | :project' => ':user | Q4B Quality control # :id | Project :project', // todo:: WTT
     ''=>'',
 ];

@@ -245,8 +245,30 @@
   content: "\e902";
 }
 
-/* elements */
+/* elements // todo:: WTT */
 
+/*.select_wrapper:before {*/
+  /*content: "\e919";*/
+  /*font-size: 10px;*/
+  /*font-family: "q4b" !important;*/
+  /*font-style: normal;*/
+  /*font-weight: normal;*/
+  /*font-variant: normal;*/
+  /*position: absolute;*/
+  /*top: 12px;*/
+  /*right: 10px;*/
+  /*z-index: 10;*/
+  /*color: #005c87;*/
+/*}*/
+
+/*.select_wrapper.select_large:before {*/
+  /*content: "\e919";*/
+  /*font-size: 12px;*/
+  /*position: absolute;*/
+  /*top: 12px;*/
+  /*right: 12px;*/
+  /*z-index: 5;*/
+  /*color: #1ebae5; }*/
 /*
 label.checkbox_wrapper [type=checkbox]:checked + span:before {
   content: "\e93e";
