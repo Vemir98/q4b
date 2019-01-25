@@ -1749,7 +1749,7 @@ class Controller_Plans extends HDVP_Controller_Template
                 foreach ($plansArr as $item){
                     Event::instance()->fire('onItemUpdated',['sender' => $this,'item' => $item]);
                 }
-                $this->setResponseData('triggerOnPlanListUpdate','triggerOnPlanListUpdate');
+                $this->setResponseData('triggerEvent','planListUpdated');
                 Database::instance()->commit();
             }catch(ORM_Validation_Exception $e){
                 Database::instance()->rollback();

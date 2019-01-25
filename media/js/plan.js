@@ -1846,19 +1846,8 @@ $(document).ready(function() {
     });
 
 
-    $(document).on('click','.update-plans',function(e){
 
-
-        setTimeout(function(){
-            console.log('aaaa');
-            $(document).find('.select-profession').trigger('change');
-            $(document).find('.select-profession').css('border', '1px solid red');
-        }, 500);
-
-    });
-
-
-    $('body').on('onPlanListUpdate', function(e, data) {
+    $('body').on('planListUpdated', function(e, data) {
 
         $(document).find('.select-profession').trigger('change');
     });
