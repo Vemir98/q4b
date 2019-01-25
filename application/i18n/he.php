@@ -624,6 +624,42 @@ return [
 
 "Field Invalid Severity Is Required" => "נדרש למלא שדה דרגות חומרה",
 
+"Leave" => "להפסיק",
+
+"Plan Sync Finished" => "סנכרון תוכנית הסתיים",
+
+"Download Finished" => "ההורדה הסתיימה",
+
+"Synchronising Plan" => "סנכרון תוכנית",
+
+"Removing Plans" => "הסרת תוכניות",
+
+"Downloading Invalid Image" => "מוריד תמונה של ליקויים",
+
+"Removing Invalid Images" => "הסרת תמונות של ליקויים",
+
+"Translations" => "תרגומים",
+
+"Invalid Forms" => "בקרות בסטטוס לא תקין",
+
+"Professions and Specialties" => "מלאכות ומקצועות",
+
+"Without a file" => "ללא קובץ",
+"With a file" => "עם קובץ",
+"All" => "הכל",
+"Tracking" => "מעקב",
+"Delivery" => "מסירה",
+"Copy" => "להעתיק",
+"Sheet Number" => "מספר גיליון",
+"File" => "קובץ",
+"Updates note" => "מהות העדכון",
+"Delivered date" => "תאריך מסירה",
+
+"Add plans" =>  "הוספת תוכניות",
+"Please  fill all fields" => "בבקשה תמלא את כל השדות",
+
+
+
 
 
 

@@ -63,11 +63,13 @@ $icons = [
                                 </span>
 
                                 <span class="inline-options">
-                                    <span class="circle-sm dark-blue copy-plan" title="<?=__('Copy plan')?>"
+                                    <span class="circle-sm dark-blue copy-plan" title="<?=__('Copy')?>"
                                           data-url="<?=URL::site('plans/copy_plan/'.$_PROJECT->id)?>" >
                                         <i class="q4bikon-copy"></i>
                                     </span>
-                                    <span class="inline-options-text">Copy</span>
+                                    <span class="inline-options-text">
+                                        <?=__('Copy')?>
+                                    </span>
                                 </span>
                                 <span class="inline-options">
                                      <span class="db text-center">
@@ -76,7 +78,9 @@ $icons = [
                                             <i class="plus q4bikon-plus"></i>
                                         </a>
     <!--                                    <span class="inline-options-text">--><?//=__('Add new plan')?><!--</span>-->
-                                        <span class="inline-options-text"><?=__('Add')?></span>
+                                        <span class="inline-options-text">
+                                            <?=__('Add')?>
+                                        </span>
                                      </span>
                                 </span>
 
@@ -152,21 +156,21 @@ $icons = [
                     <div class="col-md-2 col-sm-12 rtl-float-right">
                         <a href="#" class="ev-with-file" data-with-file="0">
                             <div class="form-group">
-                                <div class="btn btn-primary db">All (<?=$planCount?>)</div>
+                                <div class="btn btn-primary db"><?=__('All')?> (<?=$planCount?>)</div>
                             </div>
                         </a>
                     </div>
                     <div class="col-md-2 col-sm-12 rtl-float-right">
                         <a href="#" class="ev-with-file" data-with-file="1">
                             <div class="form-group">
-                                <div class="btn btn-info db">With a file (<?=$withFileCount?>)</div>
+                                <div class="btn btn-info db"><?=__('With a file')?> (<?=$withFileCount?>)</div>
                             </div>
                         </a>
                     </div>
                     <div class="col-md-2 col-sm-12 rtl-float-right">
                         <a href="#" class="ev-with-file" data-with-file="-1">
                             <div class="form-group">
-                                <div class="btn btn-warning db">Without a file (<?=$withoutFileCount?>)</div>
+                                <div class="btn btn-warning db"><?=__('Without a file')?> (<?=$withoutFileCount?>)</div>
                             </div>
                         </a>
                     </div>
@@ -190,13 +194,13 @@ $icons = [
                                     <th data-field="<?=__('Structure')?>" class="td-100"><?=__('Structure')?></th><!-- 2 -->
                                     <th data-field="<?=__('Sheet Number')?>" class="td-100"><?=__('Sheet Number')?></th><!-- 3 -->
                                     <th data-field="<?=__('Name')?>" class="td-200"><?=__('Name')?></th><!-- 4 -->
-                                    <th data-field="<?=__('File')?>" class="td-25">File</th><!-- 5 -->
+                                    <th data-field="<?=__('File')?>" class="td-25"><?=__('File')?></th><!-- 5 -->
                                     <th data-field="<?=__('Floor')?>" class="td-25"><?=__('Floor')?></th><!-- 6 -->
                                     <th data-field="<?=__('Edition')?>" class="td-100"><?=__('Edition')?> </th><!-- 7 -->
                                     <th data-field="<?=__('Status')?>" class="td-125"><?=__('Status')?></th>  <!-- 8  -->
                                     <th data-field="<?=__('Updates note')?>" class="td-200"><?=__('Updates note')?> </th><!-- 9 -->
                                     <th data-field="<?=__('Upload date')?>" data-sortable="true" class="td-75"><?=__('Upload date')?></th>  <!-- 10 -->
-                                    <th data-field="Delivered date" class="td-50">Delivered date</th><!-- 11 -->
+                                    <th data-field="Delivered date" class="td-50"><?=__('Delivered date')?></th><!-- 11 -->
                                     <th data-field="<?=__('Received date')?>" class="td-100"><?=__('Received date')?></th><!-- 12 -->
                                 </tr>
                                 </thead>

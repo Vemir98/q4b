@@ -612,8 +612,29 @@ return [
     "Field Invalid Condition Is Required" => "Поле Список условий обязательно к заполнению",
     "Field Invalid Severity Is Required" => "Поле Уровень проблемы обязательно к заполнению",
 
+    "Leave" => "Прервать",
+    "Plan Sync Finished" => "Синхронизация планов завершена",
+    "Download Finished" => "Загрузка завершена",
+    "Synchronising Plan" => "Синхронизация планов",
+    "Removing Plans" => "Удаление планов",
+    "Downloading Invalid Image" => "Загрузка изображения неисправности ",
+    "Removing Invalid Images" => "Удаление изображений неисправностей",
+    "Translations" => "Переводы",
+    "Invalid Forms" => "Неисправные ФКК",
+    "Professions and Specialties" => "Профессии и специальности",
 
-
+    "Without a file" => "Без файла",
+"With a file" => "С файлом",
+"All" => "Все",
+"Tracking" => "Прослеживание",
+"Delivery" => "Поставка",
+"Copy" => "Копирование",
+"Sheet Number" => "Номер листа",
+"File" => "Файл",
+"Updates note" => "Изменения",
+"Delivered date" => "Дата доставки",
+"Add plans" =>  "Добавить чертёж",
+"Please  fill all fields" => "Пожалуйста заполните все поля",
 
 
 

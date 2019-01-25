@@ -641,6 +641,30 @@ return [
 "Field Invalid Severity Is Required" => "Field Severity level Is Required",
 
 
+"Leave" => "Leave",
+"Plan Sync Finished" => "Plan Sync Finished",
+"Download Finished" => "Download Finished",
+"Synchronising Plan" => "Synchronising Plan",
+"Removing Plans" => "Removing Plans",
+"Downloading Invalid Image" => "Downloading Invalid Image",
+"Removing Invalid Images" => "Removing Invalid Images",
+"Translations" => "Translations",
+"Invalid Forms" => "Invalid Forms",
+"Professions and Specialties" => "Professions and Specialties",
+
+"Without a file" => "Without a file",
+"With a file" => "With a file",
+"All" => "All",
+"Tracking" => "Tracking",
+"Delivery" => "Delivery",
+"Copy" => "Copy",
+"Sheet Number" => "Sheet Number",
+"File" => "File",
+"Updates note" => "Updates note",
+"Delivered date" => "Delivered date",
+"Add plans" =>  "Add plans",
+"Please  fill all fields" => "Please  fill all fields",
+
 
 
 

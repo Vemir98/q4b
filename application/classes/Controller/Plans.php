@@ -51,7 +51,7 @@ class Controller_Plans extends HDVP_Controller_Template
 //        die('Projects page stopped! Maintenance work in backend side!!! <br><a href="/">go to Homepage</a>');
         if ($this->auto_render === TRUE)
         {
-            Breadcrumbs::add(Breadcrumb::factory()->set_title(__('Projects'))->set_url('/projects'));
+            Breadcrumbs::add(Breadcrumb::factory()->set_title(__('Plans'))->set_url('/plans'));
         }
     }
 
@@ -62,7 +62,7 @@ class Controller_Plans extends HDVP_Controller_Template
             if($this->request->action() == 'company'){
                 if($this->company){
                     Breadcrumbs::add(Breadcrumb::factory()->set_title($this->company->name)->set_url('/companies/update/'.$this->company->id));
-                    Breadcrumbs::add(Breadcrumb::factory()->set_title($this->company->name.' '. __('Projects'))->set_url(URL::site('/projects')));
+                    Breadcrumbs::add(Breadcrumb::factory()->set_title($this->company->name.' '. __('Projects'))->set_url(URL::site('/plans')));
                 }
             }
         }
@@ -1486,6 +1486,10 @@ class Controller_Plans extends HDVP_Controller_Template
             $this->project->plans->where('project_id','=','not found');
         }
 
+        $withFileCount = clone($query);
+        $withFileCount = $withFileCount->and_where('prplan.has_file','=',1)->find_all()->count();
+        $withoutFileCount = clone($query);
+        $withoutFileCount = $withoutFileCount->and_where('prplan.has_file','=',0)->find_all()->count();
 
         $paginationSettings = [
             'items_per_page' => 15,
@@ -1495,13 +1499,16 @@ class Controller_Plans extends HDVP_Controller_Template
         $result = (new ORMPaginate($query,null,$paginationSettings))->getData();
 
         View::set_global('_PROJECT', $this->project);
-        $this->setResponseData('plans',View::make('projects/plans/list',
+        $this->setResponseData('plans',View::make('plans/plans/list',
             [   'items' => $result['items'],
                 'pagination' => $result['pagination'],
                 'objects' => $this->project->objects->find_all(),
                 'professions' => $this->project->company->professions->where('status','=',Enum_Status::Enabled)->order_by('cmpprofession.name','ASC')->find_all(),
                 'floorsFilter' => $this->project->getObjectsBiggerAndSmallerFloors(),
-                'secure_tkn' => AesCtr::encrypt($this->project->id.Text::random('alpha'),$this->project->id,192)
+                'secure_tkn' => AesCtr::encrypt($this->project->id.Text::random('alpha'),$this->project->id,192),
+                'withFileCount' => $withFileCount,
+                'withoutFileCount' => $withoutFileCount,
+                'planCount' => $withoutFileCount + $withFileCount,
             ]
         ));
     }
@@ -1742,6 +1749,7 @@ class Controller_Plans extends HDVP_Controller_Template
                 foreach ($plansArr as $item){
                     Event::instance()->fire('onItemUpdated',['sender' => $this,'item' => $item]);
                 }
+                $this->setResponseData('triggerOnPlanListUpdate','triggerOnPlanListUpdate');
                 Database::instance()->commit();
             }catch(ORM_Validation_Exception $e){
                 Database::instance()->rollback();
@@ -1898,6 +1906,22 @@ class Controller_Plans extends HDVP_Controller_Template
                     $plan->scope = Model_PrPlan::getNewScope();
                     $plan->project_id = $this->project->id;
                     $plan->save();
+                    $object = ORM::factory('PrObject',$plan->object_id);
+
+                    if(is_string($c['floors'])){
+                        $c['floors'] = json_decode($c['floors']);
+                    }
+
+                    $dataFloors = $c['floors'];
+
+                    $floors = $object->floors->where('number','IN',DB::expr('('.implode(',',$dataFloors).')'))->find_all();
+                    if(count($floors) != count($c['floors'])){
+                        throw new HDVP_Exception('Incorrect floor numbers');
+                    }
+                    $plan->remove('floors');
+                    foreach ($floors as $floor){
+                        $plan->add('floors',$floor);
+                    }
 
                     $file = ORM::factory('PlanFile')->values($fileData)->save();
                     $plan->add('files', $file->pk());
@@ -1997,7 +2021,7 @@ class Controller_Plans extends HDVP_Controller_Template
                     }
                     $floors = $object->floors->where('number','IN',DB::expr('('.implode(',',$dataFloors).')'))->find_all();
                     if(count($floors) != count($this->post()['floors'])){
-                        throw new HDVP_Exception('Incorrect flor numbers');
+                        throw new HDVP_Exception('Incorrect floor numbers');
                     }
                     $plan->remove('floors');
                     foreach ($floors as $floor){
