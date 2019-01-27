@@ -167,7 +167,7 @@ class Model_PrPlan extends MORM
 
     public function cloneIntoObject(Model_PrObject $object){
         $plan = ORM::factory('PrPlan');
-        $plan->values($this->as_array(),['name','date','profession_id','scale','status']);
+        $plan->values($this->as_array(),['name','date','profession_id','scale']);
         $plan->project_id = $object->project_id;
         $plan->scope = self::getNewScope();
         if($this->place_id){
