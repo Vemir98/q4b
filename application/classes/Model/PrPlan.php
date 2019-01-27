@@ -167,16 +167,23 @@ class Model_PrPlan extends MORM
 
     public function cloneIntoObject(Model_PrObject $object){
         $plan = ORM::factory('PrPlan');
-        $plan->values($this->as_array(),['name','date','profession_id','scale']);
+        $plan->values($this->as_array(),['name','date','scale']);
         $plan->project_id = $object->project_id;
+        $plan->object_id = $object->id;
         $plan->scope = self::getNewScope();
+
         if($this->place_id){
             $place = $object->places->where('number','=',$this->place->number)->find();
             if($place->loaded()){
                 $plan->place_id = $place->id;
             }
         }
-        $plan->object_id = $object->id;
+
+        $copyPlanProfession = $object->project->qc_professions->where('name','=',$this->profession->name)->find();
+
+        if(!$copyPlanProfession->loaded()) return false;
+
+        $plan->profession_id = $copyPlanProfession->id;
 
 //        if($this->file()->loaded()){ //Plan name is file name
 //            $name = $this->file()->getName();
