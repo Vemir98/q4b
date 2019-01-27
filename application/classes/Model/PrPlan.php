@@ -179,10 +179,17 @@ class Model_PrPlan extends MORM
             }
         }
 
-        $copyPlanProfession = $object->project->qc_professions->where('name','=',$this->profession->name)->find();
+        $copyPlanProfession = $object->project->qc_professions->where('name','like','%'. $this->profession->name .'%')->find();
 
         if(!$copyPlanProfession->loaded()) return false;
-
+$copyPlanProfession = $object->project->qc_professions->where('name','like','%'. $this->profession->name .'%')->find_all();
+echo "<pre>";
+print_r($copyPlanProfession);
+echo "</pre>";
+echo "<pre>";
+print_r('aaa');
+echo "</pre>";
+die;
         $plan->profession_id = $copyPlanProfession->id;
 
 //        if($this->file()->loaded()){ //Plan name is file name
@@ -211,6 +218,9 @@ class Model_PrPlan extends MORM
 //            }
 //            $plan->add('files',$newFile->id);
 //        }
+echo "<pre>";
+print_r($plan->id);
+echo "</pre>";
 
         return $plan;
     }

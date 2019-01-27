@@ -199,7 +199,7 @@ $icons = [
                                     <th data-field="<?=__('Edition')?>" class="td-100"><?=__('Edition')?> </th><!-- 7 -->
                                     <th data-field="<?=__('Status')?>" class="td-125"><?=__('Status')?></th>  <!-- 8  -->
                                     <th data-field="<?=__('Updates note')?>" class="td-200"><?=__('Updates note')?> </th><!-- 9 -->
-                                    <th data-field="<?=__('Upload date')?>" data-sortable="true" class="td-75"><?=__('Upload date')?></th>  <!-- 10 -->
+                                    <th data-field="<?=__('Plan date')?>" data-sortable="true" class="td-75"><?=__('Plan date')?></th>  <!-- 10 -->
                                     <th data-field="Delivered date" class="td-50"><?=__('Delivered date')?></th><!-- 11 -->
                                     <th data-field="<?=__('Received date')?>" class="td-100"><?=__('Received date')?></th><!-- 12 -->
                                 </tr>
@@ -360,9 +360,9 @@ $icons = [
                                                    class="q4-form-input disabled-input"
                                                    value="<?=$item->description ?: null?>">
                                         </td>
-                                        <td class="rwd-td10 align-center-left" data-th="<?=__('Upload date')?>">
+                                        <td class="rwd-td10 align-center-left" data-th="<?=__('Plan date')?>">
                                             <div class="div-cell">
-                                                <input type="text" class="q4-form-input disabled-input" value="<?=date('d/m/Y',$item->created_at)?>">
+                                                <input type="text" class="q4-form-input disabled-input" value="<?=date('d/m/Y',$item->date)?>">
                                             </div>
                                         </td>
                                         <td class="rwd-td11" data-th="Delivered date">

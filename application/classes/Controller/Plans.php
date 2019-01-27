@@ -2259,13 +2259,14 @@ class Controller_Plans extends HDVP_Controller_Template
                 foreach ($copyToPlans as $copyToPlan) {
                     $copyToPlan->cloneIntoObject($copyToObject);
                 }
-
-                Database::instance()->commit();
+                Database::instance()->rollback();
+die;
+//                Database::instance()->commit();
                 
-                $this->setResponseData('projectPlansForm',View::make('projects/plans/list',
-                    $this->_getPlanListPaginatedData($this->project, isset($object) ? $object : null, !empty($professionIds) ? $professionIds : null)
-                    ));
-                $this->setResponseData('triggerEvent','projectPlansUpdated');
+//                $this->setResponseData('projectPlansForm',View::make('projects/plans/list',
+//                    $this->_getPlanListPaginatedData($this->project, isset($object) ? $object : null, !empty($professionIds) ? $professionIds : null)
+//                    ));
+//                $this->setResponseData('triggerEvent','projectPlansUpdated');
                 
                 Event::instance()->fire('onPlanCopy',['sender' => $this,'item' => $plan]);
             }catch (Exception $e){
