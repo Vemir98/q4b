@@ -2196,6 +2196,7 @@ class Controller_Plans extends HDVP_Controller_Template
         $this->_checkForAjaxOrDie();
 
         $projectId = (int) $this->request->param('project_id');
+        $objectId = (int) $this->request->param('object_id');
         $this->project = ORM::factory('Project',$projectId);
 
         $projects = ORM::factory('Project');
@@ -2217,7 +2218,7 @@ class Controller_Plans extends HDVP_Controller_Template
         }
 
         $professions = [];
-        $plans = $this->project->plans->find_all();
+        $plans = $this->project->plans->where('object_id', '=', $objectId)->find_all();
 
         foreach($plans as $plan){
             if( ! in_array($plan->profession_id,$professions)){
@@ -2248,8 +2249,12 @@ class Controller_Plans extends HDVP_Controller_Template
                 }
 
                 $professionsIds = '('.implode(',',$copyToProfessions).')';
-                
-                $copyToPlans = $this->project->plans->where('profession_id', 'IN', DB::expr($professionsIds))->find_all();
+
+                $copyToPlans = $this->project
+                    ->plans
+                    ->where('profession_id', 'IN', DB::expr($professionsIds))
+                    ->where('object_id', '=', $objectId)
+                    ->find_all();
 
                 foreach ($copyToPlans as $copyToPlan) {
                     $copyToPlan->cloneIntoObject($copyToObject);
@@ -2273,7 +2278,7 @@ class Controller_Plans extends HDVP_Controller_Template
                 'professions' => $professions,
                 'projects' => $projects,
                 'objects' => $this->project->objects->find_all(),
-                'action' => URL::site('plans/copy_plan/'. $projectId)
+                'action' => URL::site('plans/copy_plan/'. $projectId .'/object_id/'. $objectId)
             ]));
         }
     }

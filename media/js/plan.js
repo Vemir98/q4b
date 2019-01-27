@@ -1054,7 +1054,10 @@ $(document).ready(function() {
     $(document).on('click', '.copy-plan', function(e) {
         e.preventDefault();
 
-        Q4U.ajaxGetRequest($(this).data('url'), {
+        var url = $(this).data('url');
+        url += '/object_id/' + $(document).find('.select-structure').val();
+
+        Q4U.ajaxGetRequest(url, {
             successCallback: function(data) {
                 if (data.getData().modal) {
                     var modal = data.getData().modal;
