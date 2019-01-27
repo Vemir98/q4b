@@ -57,7 +57,7 @@
                                 <label class="table_label">Project</label>
                                 <div class="select-wrapper"><i class="q4bikon-arrow_bottom"></i>
                                     <select name="project_id" class="q4-select q4-form-input select-project-get-objects" data-url="<?=URL::site('plans/project_objects')?>">
-
+                                        <option value="0" class="demo-option"><?=__('Please select Project')?></option>
                                         <? foreach ($projects as $project): ?>
                                             <option value="<?=$project->id?>"><?=$project->name?></option>
                                         <? endforeach ?>
@@ -69,7 +69,7 @@
                                 <label class="table_label"><?=__('Choose property')?></label>
                                 <div class="select-wrapper"><i class="q4bikon-arrow_bottom"></i>
                                     <select name="object_id" class="q4-select q4-form-input select-objects-for-copy">
-                                        <option value="0"><?=__('Please select Project')?></option>
+                                        <option value="0"><?=__('Please select Structure')?></option>
                                     </select>
                                 </div>
                             </div>
@@ -81,7 +81,7 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <span class="q4-btn-lg white close q4-close-modal" data-dismiss="modal"><?=__('Cancel')?></span>
-                            <a href="#" class="inline_block_btn blue-light-button q4_form_submit"><?=__('Copy')?></a>
+                            <a href="#" class="inline_block_btn blue-light-button q4_form_submit disabled-link copy-plans-to-another"><?=__('Copy')?></a>
                         </div>
                     </div>
                 </div>

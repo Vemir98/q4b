@@ -167,7 +167,7 @@ class Model_PrPlan extends MORM
 
     public function cloneIntoObject(Model_PrObject $object){
         $plan = ORM::factory('PrPlan');
-        $plan->values($this->as_array(),['name','edition','description','date','profession_id','scale','status']);
+        $plan->values($this->as_array(),['name','date','profession_id','scale','status']);
         $plan->project_id = $object->project_id;
         $plan->scope = self::getNewScope();
         if($this->place_id){
@@ -177,12 +177,14 @@ class Model_PrPlan extends MORM
             }
         }
         $plan->object_id = $object->id;
-        if($this->file()->loaded()){
-            $name = $this->file()->getName();
-        }else{
-            $name = $this->name;
-        }
-        $plan->name = trim($name);
+
+//        if($this->file()->loaded()){ //Plan name is file name
+//            $name = $this->file()->getName();
+//        }else{
+//            $name = $this->name;
+//        }
+//        $plan->name = trim($name);
+
         $plan->save();
         $floors = $this->floors->find_all();
         if(count($floors)){

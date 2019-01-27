@@ -63,7 +63,7 @@ $icons = [
                                 </span>
 
                                 <span class="inline-options">
-                                    <span class="circle-sm dark-blue copy-plan" title="<?=__('Copy')?>"
+                                    <span class="circle-sm dark-blue copy-plan disabled-link" title="<?=__('Copy')?>"
                                           data-url="<?=URL::site('plans/copy_plan/'.$_PROJECT->id)?>" >
                                         <i class="q4bikon-copy"></i>
                                     </span>
