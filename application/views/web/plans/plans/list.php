@@ -362,7 +362,7 @@ $icons = [
                                         </td>
                                         <td class="rwd-td10 align-center-left" data-th="<?=__('Plan date')?>">
                                             <div class="div-cell">
-                                                <input type="text" class="q4-form-input disabled-input" value="<?=date('d/m/Y',$item->date)?>">
+                                                <input type="text" class="q4-form-input" value="<?=date('d/m/Y',$item->date)?>" name="plan_<?=$item->id?>_date">
                                             </div>
                                         </td>
                                         <td class="rwd-td11" data-th="Delivered date">

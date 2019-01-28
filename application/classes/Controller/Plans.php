@@ -1687,6 +1687,8 @@ class Controller_Plans extends HDVP_Controller_Template
                     $plan->delivered_at = Arr::get($c,'delivered_at');
                     $plan->received_at = Arr::get($c,'received_at');
 
+                    $plan->date = DateTime::createFromFormat('d/m/Y',Arr::get($c,'date'))->getTimestamp();
+
                     if(Arr::get($c,'edition') !== ''){
                         $plan->edition = Arr::get($c,'edition');
                     }
