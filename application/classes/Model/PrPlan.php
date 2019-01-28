@@ -179,10 +179,10 @@ class Model_PrPlan extends MORM
             }
         }
 
-        $copyPlanProfession = $object->project->qc_professions->where('catalog_number','=',$this->profession->catalog_number)->find();
+        $copyPlanProfession = $object->project->qc_professions->where('name','=',$this->profession->name)->find();
 
         if(!$copyPlanProfession->loaded()) return false;
-//$copyPlanProfession = $object->project->qc_professions->where('name','like','%'. $this->profession->name .'%')->find_all();
+//$copyPlanProfession = $object->project->qc_professions->where('catalog_number','like','%'. $this->catalog_number .'%')->find_all();
 //echo "<pre>";
 //print_r($copyPlanProfession);
 //echo "</pre>";

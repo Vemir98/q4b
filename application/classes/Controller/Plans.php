@@ -2259,7 +2259,7 @@ class Controller_Plans extends HDVP_Controller_Template
                     ->find_all();
 
                 foreach ($copyToPlans as $copyToPlan) {
-                    $copyToPlan->cloneIntoObject($copyToObject);
+                    $copyToPlan->cloneIntoObject(clone $copyToObject);
                 }
                 Database::instance()->commit();
                 

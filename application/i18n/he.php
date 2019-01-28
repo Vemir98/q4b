@@ -460,7 +460,7 @@ return [
     'Select type' => 'בחר/י סוג',
     'Print date' => 'תאריך הדפסה',
     'Departure date'=>'תאריך שליחה',
-    'Received date'=>'תאריך קבלה',
+    'Received date'=>'התקבל חתום',
     'Recipient person' => 'שם המקבל',
     'Back to list of plans' => 'חזרה לרשימת התוכניות',
     'Date tracking' => 'טבלת מעקב',
@@ -653,7 +653,7 @@ return [
 "Sheet Number" => "מספר גיליון",
 "File" => "קובץ",
 "Updates note" => "מהות העדכון",
-"Delivered date" => "תאריך מסירה",
+"Delivered date" => "נמסר לשטח",
 
 "Add plans" =>  "הוספת תוכניות",
 "Please  fill all fields" => "בבקשה תמלא את כל השדות",
