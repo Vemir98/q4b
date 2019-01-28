@@ -2258,11 +2258,13 @@ class Controller_Plans extends HDVP_Controller_Template
                     ->plans
                     ->where('profession_id', 'IN', DB::expr($professionsIds))
                     ->where('object_id', '=', $objectId)
+                    ->where('prplan.id','IN',DB::expr(' (SELECT max(pp.id) id FROM pr_plans pp WHERE pp.project_id='.$this->project->id.' GROUP BY pp.scope ORDER BY pp.id DESC)'))
                     ->find_all();
 
                 foreach ($copyToPlans as $copyToPlan) {
                     $copyToPlan->cloneIntoObject(clone $copyToObject);
                 }
+
                 Database::instance()->commit();
                 
                 $this->setResponseData('projectPlansForm',View::make('projects/plans/list',
