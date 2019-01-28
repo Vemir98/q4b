@@ -222,6 +222,16 @@ class Model_PrPlan extends MORM
 //print_r($plan->id);
 //echo "</pre>";
 
+        $fileData = [
+            'sheet_number' => null,
+            'path' => str_replace(DOCROOT,'',$object->project->plansPath()),
+        ];
+
+        $file = ORM::factory('PlanFile')->values($fileData)->save();
+        $plan->add('files', $file->pk());
+        $file->customName($this->file()->getName());
+
+
         return $plan;
     }
 

@@ -1682,6 +1682,8 @@ class Controller_Plans extends HDVP_Controller_Template
 
                         $planFile->sheet_number = Arr::get($c,'sheet_number');
                         $planFile->save();
+                    }else{
+                        $plan->name = Arr::get($c,'name');
                     }
 
                     $plan->delivered_at = Arr::get($c,'delivered_at');
