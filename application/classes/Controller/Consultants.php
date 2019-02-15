@@ -49,9 +49,19 @@ class Controller_Consultants extends HDVP_Controller_Template
         if($this->_isAjax){
             throw new HTTP_Exception_404();
         }
+        $projectID = (int)$this->request->param('project');
+        if($projectID){
+            $project = ORM::factory('Project',$projectID);
+            if( ! $project->loaded()){
+                throw new HTTP_Exception_404();
+            }
+        }
+
         $this->template->content = View::make('consultants/list',
             [
-                'users' => Model_Consultant::getAllUsers(),
+                'users' => ( ! $projectID) ? Model_Consultant::getAllUsers() : Model_Consultant::getAllUsersForProject($projectID),
+                'selectedProject' => $projectID,
+                'projects' => ORM::factory('Project')->order_by('name','ASC')->find_all()
             ]);
     }
 

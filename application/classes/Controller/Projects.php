@@ -1956,7 +1956,7 @@ class Controller_Projects extends HDVP_Controller_Template
             }
             try{
                 Database::instance()->begin();
-                $data = Arr::extract($this->post(),['edition','description','date','scale','status']);
+                $data = Arr::extract($this->post(),['edition','description','date','scale','status','sheet_number']);
                 $data['date'] = DateTime::createFromFormat('d/m/Y',$data['date'])->getTimestamp();
                 $newPlan = ORM::factory('PrPlan')->values($data);
                 $newPlan->name = $plan->name;
@@ -1973,6 +1973,9 @@ class Controller_Projects extends HDVP_Controller_Template
                         $newPlan->add('floors',$floor);
                     }
 
+                }
+                foreach ($plan->crafts->find_all() as $craft){
+                    $newPlan->add('crafts',$craft);
                 }
                 $this->project->makeProjectPaths();
                 if(!empty($this->files()) AND !empty($this->files()['file'])){

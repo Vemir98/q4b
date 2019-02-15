@@ -8,14 +8,14 @@
  */
 
 $items = [
-//    [
-//        'slug' => 'quality_control',
-//        'text' => 'Quality control',
-//        'tooltip' => 'Quality control',
-//        'icon' => 'q4bikon-tick',
-//        'resource' => 'Controller_QControls',
-//        'priority' => Enum_UserPriorityLevel::Project
-//    ],
+    [
+        'slug' => 'quality_control/create',
+        'text' => 'Quality control',
+        'tooltip' => 'Quality control',
+        'icon' => 'q4bikon-tick',
+        'resource' => 'Controller_QualityControl',
+        'priority' => Enum_UserPriorityLevel::Project
+    ],
     [
         'slug' => 'dashboard',
         'text' => 'Dashboard',

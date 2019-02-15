@@ -52,7 +52,7 @@
         <?foreach ($itemFloors as $floor):?>
         <div class="property-structure-list-group">
             <div class="property-structure-actions inactive">
-                <span class="copy-element present-modal floor-copy" data-url="<?=URL::site('projects/floor_copy/'.$floor->project_id.'/'.$floor->object_id.'/'.$floor->id)?>"><i class="q4bikon-copy"></i></span>
+                <span class="copy-element present-modal floor-copy w32" data-url="<?=URL::site('projects/floor_copy/'.$floor->project_id.'/'.$floor->object_id.'/'.$floor->id)?>"><i class="q4bikon-copy"></i></span>
                 <span class="edit-element"><i class="q4bikon-edit"></i></span>
                 <span class="delete_row present-modal floor-delete" data-url="<?=URL::site('projects/floor_delete/'.$floor->project_id.'/'.$floor->object_id.'/'.$floor->id)?>"><i class="q4bikon-delete"></i></span>
             </div>
@@ -99,7 +99,7 @@
                                     <span class="apartment-box-clicked-close"><i class="q4bikon-close"></i></span>
                                     <div class="apartment-box-click-actions">
                                         <span class="add-element place-add" data-url="<?=URL::site('projects/place_create/'.$floor->object_id.'/'.$floor->id.'/'.$place->id)?>"><i class="q4bikon-plus"></i></span>
-                                        <span class="copy-element place-copy" data-url="<?=URL::site('projects/place_copy/'.$floor->object_id.'/'.$floor->id.'/'.$place->id)?>"><i class="q4bikon-copy"></i></span>
+                                        <span class="copy-element place-copy w32" data-url="<?=URL::site('projects/place_copy/'.$floor->object_id.'/'.$floor->id.'/'.$place->id)?>"><i class="q4bikon-copy"></i></span>
                                         <span class="edit-element-clicked place-edit" data-url="<?=URL::site('projects/place_update/'.$floor->object_id.'/'.$floor->id.'/'.$place->id)?>"><i class="q4bikon-edit"></i></span>
                                         <span class="delete-element place-delete" data-url="<?=URL::site('projects/place_delete/'.$floor->object_id.'/'.$floor->id.'/'.$place->id)?>"><i class="q4bikon-delete"></i></span>
                                     </div>

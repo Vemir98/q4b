@@ -665,7 +665,6 @@ class Controller_Api_Projects extends HDVP_Controller_API
             $qc->add('tasks',$clientData['tasks']);
             if(!empty(trim($message)))
                 ORM::factory('QcComment')->values(['message' => $message, 'qcontrol_id' => $qc->pk()])->save();
-            $this->setResponseData('triggerEvent','qualityControlUpdated');
             Database::instance()->commit();
         }catch (ORM_Validation_Exception $e){
             Database::instance()->rollback();

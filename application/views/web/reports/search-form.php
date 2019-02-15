@@ -139,7 +139,7 @@ $statuses = [
                                                 <div class="input-group-addon small-input-group">
                                                     <span class="glyphicon glyphicon-calendar"></span>
                                                 </div>
-                                                <input type="text" class="form-control" data-min-date data-date-format="DD/MM/YYYY" name="from" value="<?=$selectedArray["from"] ? $selectedArray["from"] : date('d/m/Y',time() - (60 * 60 * 24 * 7))?>">
+                                                <input type="text" class="form-control" data-min-date data-date-format="DD/MM/YYYY" name="from" value="<?=$selectedArray["from"] ? $selectedArray["from"] : date('d/m/Y',time() - (60 * 60 * 24 * 6))?>">
                                             </div>
                                         </div>
                                     </div>
@@ -151,7 +151,7 @@ $statuses = [
                                                 <div class="input-group-addon small-input-group">
                                                     <span class="glyphicon glyphicon-calendar"></span>
                                                 </div>
-                                                <input type="text" class="form-control" data-date-format="DD/MM/YYYY" name="to" value="<?=$selectedArray["to"] ? $selectedArray["to"] : date('d/m/Y',time())?>">
+                                                <input type="text" class="form-control" data-date-format="DD/MM/YYYY" name="to" value="<?=$selectedArray["to"] ? $selectedArray["to"] : date('d/m/Y',time() + (60 * 60 * 24 * 30))?>">
                                             </div>
                                         </div>
                                     </div>

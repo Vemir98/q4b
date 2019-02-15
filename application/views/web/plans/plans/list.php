@@ -202,6 +202,7 @@ $icons = [
                                     <th data-field="<?=__('Plan date')?>" data-sortable="true" class="td-75"><?=__('Plan date')?></th>  <!-- 10 -->
                                     <th data-field="Delivered date" class="td-50"><?=__('Delivered date')?></th><!-- 11 -->
                                     <th data-field="<?=__('Received date')?>" class="td-100"><?=__('Received date')?></th><!-- 12 -->
+                                    <th data-field="<?=__('Tracking file')?>" class="td-25"><?=__('Tracking file')?></th><!-- 12 -->
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -210,9 +211,10 @@ $icons = [
                                     <?
                                         $disabled = $item->hasQualityControl() ? ' disabled-input' : '';
                                         $disabledButton = $item->hasQualityControl() ? ' disabled-gray-button' : '';
+                                        $track = $item->trackings->order_by('id','DESC')->find();
                                     ?>
 
-                                    <tr data-planid="<?=$item->id?>" class="<?= $item->hasFile() ? ($item->isDeliveredAndReceived() ? 'success-plan' : '') : 'has-no-file'?>">
+                                    <tr data-planid="<?=$item->id?>" class="<?= $item->hasFile() ? (($item->isDeliveredAndReceived() OR ($track->loaded() AND ($track->departure_date AND $track->received_date))) ? 'success-plan' : '') : 'has-no-file'?>">
                                         <td class="hidden table-print-td"
                                             data-planid="<?=$item->id?>"
                                             data-property="<?=$item->object->type->name.' - '.$item->object->name?>"
@@ -366,11 +368,21 @@ $icons = [
                                             </div>
                                         </td>
                                         <td class="rwd-td11" data-th="Delivered date">
-                                            <input type="text" value="<?=$item->delivered_at?>" name="plan_<?=$item->id?>_delivered_at" class="q4-form-input<?=$disabled?>">
+                                            <input type="text" disabled value="<?=$track->departure_date ? (date('d/m/Y',$track->departure_date)) : ''?>" name="plan_<?=$item->id?>_delivered_at" class="q4-form-input<?=$disabled?>">
                                         </td>
                                         <td class="rwd-td12 td-50" data-th="<?=__('Received date')?>">
-                                            <input type="text" value="<?=$item->received_at?>" name="plan_<?=$item->id?>_received_at" class="q4-form-input<?=$disabled?>">
+                                            <input type="text" disabled value="<?=$track->received_date ? (date('d/m/Y',$track->received_date)) : ''?>" name="plan_<?=$item->id?>_received_at" class="q4-form-input<?=$disabled?>">
 
+                                        </td>
+                                        <td class="rwd-td5 align-center-left">
+
+                                            <?if($track->loaded() AND !empty($track->file)):?>
+                                            <span class="plans-inline-icon">
+                                                    <a target="_blank" href="/<?=$track->file?>" class="<?=$mime== 'unknown' ? 'disabled-input' : ''?>">
+                                                        <img src="/media/img/choose-format/format-<?=end(explode('.',$track->file))?>.png" title="Tracking id #<?=$track->id?>" alt="Tracking id #<?=$track->id?>">
+                                                    </a>
+                                                </span>
+                                            <?endif;?>
                                         </td>
                                     </tr>
                                 <?endforeach;?>

@@ -1078,16 +1078,7 @@ html.rtl {
   .rtl ul.q4-unordered-list > li .q4-nested-list {
     border-right: 1px solid #dddddd;
     border-left: none; }
-  .rtl .panel-footer-first {
-    position: absolute;
-    left: inherit;
-    right: 15px;
-    top: 28px; }
-  .rtl .panel-footer-second {
-    position: absolute;
-    left: inherit;
-    right: 215px;
-    top: 28px; }
+
   .rtl .upload-plans-box .upload-plans-title h3 {
     float: right; }
   .rtl .upload-plans-box .load-files-btn-wrap {
@@ -2971,8 +2962,9 @@ label.q4-circle-checkbox {
   vertical-align: middle;
   background: #1ebae5;
   text-align: center;
-  border-radius: 16px;
+  border-radius: 50%;
   padding: 7px;
+
   color: #ffffff;
   cursor: pointer;
   line-height: 1;
@@ -2986,6 +2978,10 @@ label.q4-circle-checkbox {
     font-size: 18px; }
   .copy-element i {
     font-size: 16px; }
+.copy-element.w32{
+  width:32px;
+  height:32px;
+}
 
 .edit-element {
   display: inline-block;
@@ -2994,7 +2990,7 @@ label.q4-circle-checkbox {
   text-align: center;
   width: 32px;
   height: 32px;
-  border-radius: 16px;
+  border-radius: 50%;
   line-height: 32px;
   color: #ffffff;
   cursor: pointer; }
@@ -3808,8 +3804,7 @@ label.q4-circle-checkbox {
       color: #005c87;
       font-weight: bold;
       padding: 0 3px; }
-  .apartment-box .copy-element {
-    line-height: 35px; }
+
   .apartment-box .quality-control-list {
     cursor: pointer; }
   .apartment-box .apartment-box-clicked {

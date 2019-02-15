@@ -2141,6 +2141,9 @@ class Controller_Plans extends HDVP_Controller_Template
                     }
 
                 }
+                foreach ($plan->crafts->find_all() as $craft){
+                    $newPlan->add('crafts',$craft);
+                }
                 $this->project->makeProjectPaths();
                 if(!empty($this->files()) AND !empty($this->files()['file'])){
                     $fileData = $_FILES['file'];

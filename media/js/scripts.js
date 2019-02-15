@@ -1986,10 +1986,11 @@ $(document).ready(function() {
         } else {
 
             $(document).find('.property-quality-control-conditions .q4-form-input').addClass('disabled-input');
+            $(document).find('.q4-status-select').append('<option class="q4-status-approved" value="approved">'+__('approved')+'</option>');
 
             if($(this).data('selected') == 'invalid' && value != 'existing'){
 
-                $(document).find('.q4-status-select').append('<option class="q4-status-approved" value="approved">'+__('approved')+'</option>');
+
                 $(document).find('.modal .q4-status-select').val('approved').trigger('change');
             }
 
