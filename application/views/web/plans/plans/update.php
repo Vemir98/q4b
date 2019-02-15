@@ -58,11 +58,11 @@
                                         <?endforeach;?>
                                     </select>
                                 </div>
-                            </div>
+                            </div>2
                             <div class="form-group col-16 rtl-float-right">
                                 <label class="table_label">Sheet Number</label>
                                 <div class="input-group form-group">
-                                    <input type="text" class="table_input" name="sheet_number" value="<?=$item->file()->sheet_number?>">
+                                    <input type="text" class="table_input" name="sheet_number" value="<?=$item->sheet_number?>">
                                 </div>
                             </div>
                         </div>

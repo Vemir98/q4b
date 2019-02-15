@@ -1677,14 +1677,15 @@ class Controller_Plans extends HDVP_Controller_Template
 
                     $planFile = $plan->file();
 
-                    if($planFile->loaded()){
-                        $planFile->customName(Arr::get($c,'name'));
-
-                        $planFile->sheet_number = Arr::get($c,'sheet_number');
-                        $planFile->save();
-                    }else{
+//                    if($planFile->loaded()){ // todo:: Understand WTF ?
+//                        $planFile->customName(Arr::get($c,'name'));
+//
+//                        $planFile->sheet_number = Arr::get($c,'sheet_number');
+//                        $planFile->save();
+//                    }else{
+                        $plan->sheet_number = Arr::get($c,'sheet_number');
                         $plan->name = Arr::get($c,'name');
-                    }
+//                    }
 
                     $plan->delivered_at = Arr::get($c,'delivered_at');
                     $plan->received_at = Arr::get($c,'received_at');
@@ -1906,15 +1907,13 @@ class Controller_Plans extends HDVP_Controller_Template
                 Database::instance()->begin();
 
                 foreach($plansData as $pid => $c) {
-                    $fileData = [
-                        'sheet_number' => Arr::get($c,'sheet'),
-                        'path' => str_replace(DOCROOT,'',$this->project->plansPath()),
-                    ];
-
                     $data['date'] = time();//DateTime::createFromFormat('d/m/Y',$data['date'])->getTimestamp();
                     $plan = ORM::factory('PrPlan')->values($data);
                     $plan->scope = Model_PrPlan::getNewScope();
                     $plan->project_id = $this->project->id;
+                    $plan->sheet_number = Arr::get($c,'sheet');
+                    $plan->name = Arr::get($c,'name');
+                    $plan->edition = 1; // todo:: WTF ???
                     $plan->save();
                     $object = ORM::factory('PrObject',$plan->object_id);
 
@@ -1932,10 +1931,6 @@ class Controller_Plans extends HDVP_Controller_Template
                     foreach ($floors as $floor){
                         $plan->add('floors',$floor);
                     }
-
-                    $file = ORM::factory('PlanFile')->values($fileData)->save();
-                    $plan->add('files', $file->pk());
-                    $file->customName(Arr::get($c,'name'));
 
                     $this->setResponseData('triggerEvent','projectPlanCreated');
                     $this->setResponseData('id',$plan->id);
@@ -2015,7 +2010,6 @@ class Controller_Plans extends HDVP_Controller_Template
                 if($f->loaded()){
                     $f->customName($data['name']);
 
-                    $f->sheet_number = Arr::get($data,'sheet_number');
                     $f->save();
                 }
                 if( ! $plan->place_id){
@@ -2158,18 +2152,13 @@ class Controller_Plans extends HDVP_Controller_Template
                 }
                 if(!empty($uploadedFiles)){
                     foreach ($uploadedFiles as $file){
-                        $file = ORM::factory('PlanFile')->values($file)->save();
-                        $newPlan->add('files', $file->pk());
-                        Event::instance()->fire('onPlanFileAdded',['sender' => $this,'item' => $file]);
+                        $PlanFile = ORM::factory('PlanFile')->values($file)->save();
+                        $newPlan->add('files', $PlanFile->pk());
+                        Event::instance()->fire('onPlanFileAdded',['sender' => $this,'item' => $PlanFile]);
                     }
-                    $f = $plan->file();
+                    $f = $plan->file(); // todo:: WTF ?
                     if($f->hasCustomName()){
-                        $file->customName($f->customName());
-                    }
-
-                    if($file->loaded()){
-                        $file->sheet_number = Arr::get($data,'sheet_number');
-                        $file->save();
+                        $PlanFile->customName($f->customName());
                     }
                 }
                 Database::instance()->commit();

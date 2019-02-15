@@ -255,7 +255,7 @@ $icons = [
                                             </div>
                                         </td>
                                         <td class="rwd-td3 plans-sheet-number-cell" data-th="<?=__('Sheet Number')?>">
-                                            <input type="text" value="<?=$item->file()->sheet_number?>" name="plan_<?=$item->id?>_sheet_number" class="q4-form-input plans-sheet-number-val<?=$disabled?>">
+                                            <input type="text" value="<?=$item->sheet_number?>" name="plan_<?=$item->id?>_sheet_number" class="q4-form-input plans-sheet-number-val<?=$disabled?>">
                                         </td>
                                         <td class="rwd-td4 plan-name-field" data-th="<?=__('Name')?>">
 

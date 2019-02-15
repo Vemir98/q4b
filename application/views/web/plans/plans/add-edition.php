@@ -89,7 +89,7 @@
                             <div class="form-group col-16 rtl-float-right">
                                 <label class="table_label">Sheet Number</label>
                                 <div class="input-group form-group">
-                                    <input type="text" class="table_input plans-sheet-number disabled-input" value="<?=$item->file()->sheet_number?>" disabled name="sheet_number">
+                                    <input type="text" class="table_input plans-sheet-number disabled-input" value="<?=$item->sheet_number?>" disabled name="sheet_number">
                                 </div>
                             </div>
                         </div>

@@ -192,6 +192,9 @@ class Model_PrPlan extends MORM
 //        }
 //        $plan->name = trim($name);
 
+        $plan->sheet_number = $this->sheet_number;
+        $plan->name = $this->name;
+        $plan->edition = 1; // todo:: WTF ???
         $plan->save();
         $floors = $this->floors->find_all();
         if(count($floors)){
@@ -211,16 +214,6 @@ class Model_PrPlan extends MORM
 //            }
 //            $plan->add('files',$newFile->id);
 //        }
-
-        $fileData = [
-            'sheet_number' => null,
-            'path' => str_replace(DOCROOT,'',$object->project->plansPath()),
-        ];
-
-        $file = ORM::factory('PlanFile')->values($fileData)->save();
-        $plan->add('files', $file->pk());
-        $file->customName($this->file()->getName());
-
 
         return $plan;
     }
