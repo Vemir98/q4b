@@ -214,7 +214,7 @@ $icons = [
                                         $track = $item->trackings->order_by('id','DESC')->find();
                                     ?>
 
-                                    <tr data-planid="<?=$item->id?>" class="<?= $item->hasFile() ? (($item->isDeliveredAndReceived() OR ($track->loaded() AND ($track->departure_date AND $track->received_date))) ? 'success-plan' : '') : 'has-no-file'?>">
+                                    <tr data-planid="<?=$item->id?>" class="<?= $item->hasFile() ? (($track->loaded() AND ($track->departure_date AND $track->received_date)) ? 'success-plan' : '') : 'has-no-file'?>">
                                         <td class="hidden table-print-td"
                                             data-planid="<?=$item->id?>"
                                             data-property="<?=$item->object->type->name.' - '.$item->object->name?>"
@@ -222,7 +222,7 @@ $icons = [
                                             data-professionid="<?=$item->profession->id?>" data-id="<?=$item->object->type->name.' - '.$item->object->name?>">
                                             <table>
                                                 <tr data-id="<?=$item->id?>">
-                                                    <td><?=$item->file() ? $item->file()->getName() : $item->name;?></td>
+                                                    <td><?=$item->name?></td>
                                                     <td><?=$item->edition?></td>
                                                     <td><?=__($item->status)?></td>
                                                     <td><?=date('d/m/Y',$item->date)?></td>
@@ -260,7 +260,7 @@ $icons = [
                                         <td class="rwd-td4 plan-name-field" data-th="<?=__('Name')?>">
 
                                             <?
-                                                $name = $item->file()->loaded() ? $item->file()->getName()  : $item->name;
+                                                $name = $item->name;
                                                 $mime = $item->file()->loaded() ? strtolower($item->file()->ext) : 'unknown';
                                             ?>
 

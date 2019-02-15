@@ -375,7 +375,7 @@
                                                     <div class="qc-change-plan">
                                                         <a href="#" data-toggle="modal" data-target="#choose-plan-modal"><?=__('Choose plan')?></a>
                                                     </div>
-                                                    <h4 class="table-modal-label-h4"><?=__('Plan name')?>: <?=$plan->file() ? $plan->file()->getName() : $plan->name?></h4>
+                                                    <h4 class="table-modal-label-h4"><?=__('Plan name')?>: <?=$plan->name?></h4>
                                                     <input type="hidden" name="plan_id" value="<?=$plan->id?>"/>
                                                     <div class="col-20">
                                                         <label class="table_label"><?=__('Edition')?></label>
@@ -410,7 +410,7 @@
                                         </td>
                                         <td class="rwd-td1" data-th="<?=__('Name/Type')?>">
                                             <div class="div-cell break-c">
-                                                <?=$plan->file()->getName()?>
+                                                <?=$plan->name?>
                                             </div>
                                         </td>
                                         <td class="rwd-td2" data-th="<?=__('Profession')?>">

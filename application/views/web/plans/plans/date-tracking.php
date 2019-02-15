@@ -140,14 +140,14 @@
                                                             <label class="checkbox-wrapper-multiple inline checked">
                                                                 <span class="checkbox-replace "></span>
                                                                 <i class="checkbox-list-tick q4bikon-tick"></i>
-                                                            </label><?=trim($plan->file()->getName())?></span>
+                                                            </label><?=trim($plan->name)?></span>
                                                     </div>
 
                                                 <?endforeach?>
                                             </div><!--.checkbox-list-->
                                             <select class="hidden-select" multiple>
                                                 <?foreach ($item->plans->find_all() as $plan):?>
-                                                    <option value="<?=$plan->file()->getName()?>"><?=$plan->file()->getName()?></option>
+                                                    <option value="<?=$plan->name?>"><?=$plan->name?></option>
                                                 <?endforeach?>
                                             </select>
                                         </div><!--.multi-select-box-->

@@ -67,7 +67,7 @@
                                     	<?foreach ($item->plans->find_all() as $plan):?>
 	                                        <tr>
 	                                            <td data-th="Plan name">
-                                                    <span class="q4-form-input" value="" title="<?=$plan->file()->original_name?>"><?=$plan->file()->getName()?></span>
+                                                    <span class="q4-form-input" value="" title="<?=$plan->file()->original_name?>"><?=$plan->name?></span>
                                                 </td>
                                                 <td data-th="File">
                                                     <span class="q4-form-input" title="<?=$plan->file()->original_name?>">

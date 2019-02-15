@@ -2117,10 +2117,11 @@ class Controller_Plans extends HDVP_Controller_Template
             }
             try{
                 Database::instance()->begin();
-                $data = Arr::extract($this->post(),['edition','description','date','scale','status','sheet_number']);
+                $data = Arr::extract($this->post(),['edition','description','date','scale','status']);
                 $data['date'] = DateTime::createFromFormat('d/m/Y',$data['date'])->getTimestamp();
                 $newPlan = ORM::factory('PrPlan')->values($data);
                 $newPlan->name = $plan->name;
+                $newPlan->sheet_number = $plan->sheet_number;
                 $newPlan->place_id = $plan->place_id;
                 $newPlan->scope = $plan->scope;
                 $newPlan->project_id = $plan->project_id;
