@@ -3528,5 +3528,4 @@ class Controller_Plans extends HDVP_Controller_Template
         }
         return $output;
     }
-
 }
