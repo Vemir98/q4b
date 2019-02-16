@@ -230,6 +230,16 @@ FROM pr_plans_files
 
     public function action_exchange_sheet_numbers()
     {
-        $files = ORM::factory('File')
+        $plans = ORM::factory('PrPlan')
+            ->find_all();
+
+        foreach ($plans as $plan) {
+            $plan->sheet_number = $plan->file()->sheet_number;
+            $plan->save();
+
+            echo "<pre>";
+            print_r($plan->id);
+            echo "</pre>";
+        }
     }
 } // End Welcome

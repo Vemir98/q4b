@@ -2260,7 +2260,7 @@ class Controller_Plans extends HDVP_Controller_Template
 
                 Database::instance()->commit();
                 
-                $this->setResponseData('projectPlansForm',View::make('projects/plans/list',
+                $this->setResponseData('projectPlansForm',View::make('plans/plans/list',
                     $this->_getPlanListPaginatedData($this->project, isset($object) ? $object : null, !empty($professionIds) ? $professionIds : null)
                     ));
                 $this->setResponseData('triggerEvent','projectPlansUpdated');
