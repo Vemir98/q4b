@@ -264,14 +264,14 @@ $icons = [
                                                 $mime = $item->file()->loaded() ? strtolower($item->file()->ext) : 'unknown';
                                             ?>
 
-                                            <input type="text" name="plan_<?=$item->id?>_name" class="q4-form-input q4_required<?=$disabled?>" value="<?=$name ?>">
+                                            <input type="text" name="plan_<?=$item->id?>_name" class="q4-form-input q4_required<?=$disabled?>" value="<?=$name?>">
                                             <input type="hidden" name="plan_<?=$item->id?>_id" value="<?=$item->id?>">
                                         </td>
                                         <td class="rwd-td5 align-center-left">
 
                                             <? if ($item->hasFile()): ?>
                                                 <span class="plans-inline-icon">
-                                                    <a target="_blank" href="<?=$item->file()->originalFilePath()?>" class="<?=$mime== 'unknown' ? 'disabled-input' : ''?>">
+                                                    <a target="_blank" href="<?=$item->file()->originalFilePath()?>" class="<?=$mime == 'unknown' ? 'disabled-input' : ''?>">
                                                         <img src="/media/img/choose-format/format-<?=$mime?>.png" title="<?=$item->file()->original_name?>" alt="<?=$item->file()->original_name?>">
                                                     </a>
                                                 </span>
