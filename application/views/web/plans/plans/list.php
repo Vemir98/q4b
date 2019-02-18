@@ -368,10 +368,10 @@ $icons = [
                                             </div>
                                         </td>
                                         <td class="rwd-td11" data-th="Delivered date">
-                                            <input type="text" disabled value="<?=$track->departure_date ? (date('d/m/Y',$track->departure_date)) : ''?>" name="plan_<?=$item->id?>_delivered_at" class="q4-form-input<?=$disabled?>">
+                                            <input type="text" disabled value="<?=$track->departure_date ? (date('d/m/Y',$track->departure_date)) : ''?>" name="plan_<?=$item->id?>_delivered_at" class="q4-form-input disabled-input">
                                         </td>
                                         <td class="rwd-td12 td-50" data-th="<?=__('Received date')?>">
-                                            <input type="text" disabled value="<?=$track->received_date ? (date('d/m/Y',$track->received_date)) : ''?>" name="plan_<?=$item->id?>_received_at" class="q4-form-input<?=$disabled?>">
+                                            <input type="text" disabled value="<?=$track->received_date ? (date('d/m/Y',$track->received_date)) : ''?>" name="plan_<?=$item->id?>_received_at" class="q4-form-input disabled-input">
 
                                         </td>
                                         <td class="rwd-td5 align-center-left">
