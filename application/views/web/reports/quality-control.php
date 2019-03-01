@@ -672,7 +672,7 @@ if($_USER->is('project_supervisor')){//запрет на изменение ст
     </div>
 </div>
 <div id="choose-plan-modal" data-backdrop="static" data-keyboard="false" class="modal fade no-delete" role="dialog">
-    <div class="modal-dialog choose-plan-dialog">
+    <div class="modal-dialog choose-plan-dialog modal-dialog-1070">
             <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header q4_modal_header">
@@ -720,7 +720,7 @@ if($_USER->is('project_supervisor')){//запрет на изменение ст
 
                                     <div class="pln-data hide">
                                         <input type="hidden" name="plan_id" value="<?=$plan->id?>"/>
-                                        <h4 class="table-modal-label-h4"><?=__('Plan name')?>: <?=$plan->file() ? $plan->file()->getName() : $plan->name?></h4>
+                                        <h4 class="table-modal-label-h4"><?=__('Plan name')?>: <?=$plan->name ? $plan->name : $plan->file()->getName() ?></h4>
                                         <div class="col-20">
                                             <label class="table_label"><?=__('Edition')?></label>
                                             <input type="text" class="table_input disabled-input" value="<?=$plan->edition?>"/>
@@ -755,7 +755,7 @@ if($_USER->is('project_supervisor')){//запрет на изменение ст
                                 </td>
                                 <td data-th="Name/Type">
                                     <div class="div-cell break-c">
-                                        <?=$plan->file()->getName()?>
+                                        <?=$plan->name?>
                                     </div>
                                 </td>
                                 <td data-th="Profession">

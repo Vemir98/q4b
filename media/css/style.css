@@ -1248,6 +1248,14 @@ html.rtl {
   line-height: 34px;
   text-align: center;
   color: #ffffff; }
+.inline_block_btn.add_50percent {
+  height: 45px;
+  line-height: 45px;
+  font-size: 24px;
+  width: auto;
+  padding-left: 6px;
+  padding-right: 6px;
+}
 
 .inline-block-btn-small {
   display: inline-block;
@@ -1396,6 +1404,11 @@ html.rtl {
   @media (max-width: 768px) {
     .table_label {
       margin-bottom: 10px; } }
+.table_label.add_50percent {
+  font-size: 24px;
+}
+
+
 
 .table-inline-label {
   display: inline-block;
@@ -4446,6 +4459,12 @@ ul.pagination li {
   font-weight: normal;
   font-style: normal;
   font-family: "proxima_nova_rgregular", Arial, Helvetica, sans-serif; }
+  .q4-form-input.add_50percent{
+    height: 45px;
+    line-height: 45px;
+    font-size: 24px;
+
+  }
   .q4-form-input.symbol {
     padding: 0 6px 0 40px; }
   .q4-form-input.inlined {
@@ -6487,7 +6506,11 @@ td[data-col="structure"] .select-wrapper .q4-select {
   font-weight: normal;
   font-style: normal;
   font-family: "proxima_nova_rgregular", Arial, Helvetica, sans-serif; }
-
+.table_input.add_50percent {
+  height: 45px;
+  line-height: 45px;
+  font-size: 24px;
+}
 .table_input_full {
   display: block;
   height: 30px;
@@ -8247,6 +8270,13 @@ a.present-modal {
   font-weight: normal;
   font-style: normal;
   font-family: "proxima_nova_rgregular", Arial, Helvetica, sans-serif; }
+
+.modal-details-actions-list .modal-details-action.add_50percent {
+  font-size: 24px;
+   }
+.modal-details-actions-list .modal-details-action-status.add_50percent {
+  font-size: 24px;
+   }
 
 .modal-details-actions-list .modal-details-action-status .d-color {
   color: #a1aeb7; }
@@ -13018,3 +13048,10 @@ header {
     height: 150px; } }
 
 /*# sourceMappingURL=style.css.map */
+
+.autocomplete-suggestions { border: 1px solid #d4e1ea; border-top: none; background: #FFF; overflow: auto; }
+.autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; cursor: default;}
+.autocomplete-selected { background: #F0F0F0; }
+.autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
+.autocomplete-group { padding: 2px 5px; }
+.autocomplete-group strong { display: block; border-bottom: 1px solid #000; }

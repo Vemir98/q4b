@@ -23,46 +23,64 @@
                             <div class="col-md-6 rtl-float-right">
                                 <div class="row">
                                     <div class="form-group col-md-6 rtl-float-right">
-                                        <label class="table_label"><?=__('Project name')?></label>
+                                        <label class="table_label add_50percent"><?=__('Project name')?></label>
                                         <div class="select-wrapper">
-                                            <input type="text" class="table_input qc-project" value=""/>
+                                            <input type="text" class="table_input add_50percent qc-project" value=""/>
                                             <input type="hidden" name="project_id" data-url="<?=URL::site('quality_control/get_objects')?>" value=""/>
                                         </div>
                                     </div>
-                                    <div class="form-group col-md-6 rtl-float-right">
-                                        <label class="table_label"><?=__('Property')?></label>
-                                        <select class="q4-select q4-form-input qc-object disabled-input">
-                                        </select>
+                                     <div class="form-group col-md-6 rtl-float-right">
+                                        <label class="table_label add_50percent"><?=__('Element')?></label>
+                                        <input type="text" class="table_input add_50percent qc-place disabled-input" data-url="<?=URL::site('quality_control/get_places_for_floor')?>" data-place-data-url="<?=URL::site('quality_control/get_place_data')?>" value=""/>
                                     </div>
+
                                 </div>
 
                                 <div class="row">
+
                                     <div class="form-group col-md-6 rtl-float-right">
-                                        <label class="table_label"><?=__('Craft')?></label>
+                                        <label class="table_label add_50percent"><?=__('Property')?></label>
+                                        <select class="q4-select q4-form-input add_50percent qc-object disabled-input">
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group col-md-6 rtl-float-right">
+                                        <label class="table_label add_50percent"><?=__('Floor')?></label>
+                                        <input type="text" class="table_input add_50percent disabled-input bidi-override qc-floor" value=""/>
+                                    </div>
+
+
+
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="form-group col-md-6 rtl-float-right">
+                                        <label class="table_label add_50percent"><?=__('Craft')?></label>
                                         <div class="select-wrapper"><i class="q4bikon-arrow_bottom"></i>
-                                            <select class="q4-select q4-form-input qc-craft q4_select disabled-input" data-url="<?=URL::site('quality_control/get_plans')?>" name="craft_id">
+                                            <select class="q4-select q4-form-input add_50percent qc-craft q4_select disabled-input" data-url="<?=URL::site('quality_control/get_plans')?>" name="craft_id">
                                                 <option value=''><?=__('Please select')?></option>
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="form-group col-md-6 rtl-float-right">
-                                        <label class="table_label"><?=__('Element')?></label>
-                                        <input type="text" class="table_input qc-place disabled-input" data-url="<?=URL::site('quality_control/get_places_for_floor')?>" data-place-data-url="<?=URL::site('quality_control/get_place_data')?>" value=""/>
-                                    </div>
+
                                 </div>
+
                                 <div class="row">
+
+
                                     <div class="form-group col-md-6 rtl-float-right">
-                                        <label class="table_label"><?=__('Space/Place')?> <span class="q4-required">*</span>
+                                        <label class="table_label add_50percent"><?=__('Space/Place')?> <span class="q4-required">*</span>
                                         </label>
                                         <div class="select-wrapper"><i class="q4bikon-arrow_bottom"></i>
-                                            <select class="q4-select q4-form-input qc-spaces disabled-input" name="space_id">
+                                            <select class="q4-select q4-form-input add_50percent qc-spaces disabled-input" name="space_id">
                                             </select>
                                         </div>
                                     </div>
                                     <div class="form-group col-md-6 rtl-float-right">
-                                        <label class="table_label"><?=__('Stage')?></label>
+                                        <label class="table_label add_50percent"><?=__('Stage')?></label>
                                         <div class="select-wrapper"><i class="q4bikon-arrow_bottom"></i>
-                                            <select class="q4-select q4-form-input" name="project_stage">
+                                            <select class="q4-select q4-form-input add_50percent" name="project_stage">
                                                 <?foreach(Enum_ProjectStage::toArray() as $stage):?>
                                                     <?$selected = isset($item->project_stage) && $item->project_stage == $stage ? " selected='selected'" : '';?>
                                                     <option<?$selected?> value="<?=$stage?>"><?=__($stage)?></option>
@@ -72,21 +90,11 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="form-group col-md-6 rtl-float-right">
-                                        <label class="table_label"><?=__('Status')?> <span class="q4-required">*</span></label>
-                                        <div class="select-wrapper"><i class="q4bikon-arrow_bottom"></i>
-                                            <select class="q4-select q4-form-input qc-status" name="status">
-                                                <?foreach (Enum_QualityControlStatus::toArray() as $val):?>
-                                                    <option value="<?=$val?>"><?=__($val)?></option>
-                                                <?endforeach?>
 
-                                            </select>
-                                        </div>
-                                    </div>
                                     <div class="form-group col-md-6 rtl-float-right">
-                                        <label class="table_label"><?=__('Responsible profession')?> <span class="q4-required">*</span></label>
+                                        <label class="table_label add_50percent"><?=__('Responsible profession')?> <span class="q4-required">*</span></label>
                                         <div class="select-wrapper"><i class="q4bikon-arrow_bottom"></i>
-                                            <select class="q4-select q4-form-input qc-profession disabled-input" name="profession_id">
+                                            <select class="q4-select q4-form-input add_50percent qc-profession disabled-input" name="profession_id">
                                             </select>
                                         </div>
                                     </div>
@@ -96,27 +104,24 @@
                                 <div class="row">
                                     <div class="form-group col-md-12">
                                         <div class="row">
-                                            <div class="col-20 rtl-float-right">
-                                                <label class="table_label"><?=__('Floor')?></label>
-                                                <input type="text" class="table_input disabled-input bidi-override qc-floor" value=""/>
-                                            </div>
+
                                             <div class="col-25 rtl-float-right">
-                                                <label class="table_label"><?=__('Element number')?></label>
-                                                <input type="text" class="table_input disabled-input qc-place-name" value=""/>
+                                                <label class="table_label add_50percent"><?=__('Element number')?></label>
+                                                <input type="text" class="table_input add_50percent disabled-input qc-place-name" value=""/>
 
                                             </div>
                                             <div class="col-25 rtl-float-right">
-                                                <label class="table_label"><?=__('Element id')?></label>
-                                                <input type="text" class="table_input disabled-input bidi-override qc-place-number" value=""/>
+                                                <label class="table_label add_50percent"><?=__('Element id')?></label>
+                                                <input type="text" class="table_input add_50percent disabled-input bidi-override qc-place-number" value=""/>
 
                                             </div>
                                             <div class="col-30 rtl-float-right">
-                                                <label class="table_label"><?=__('Due Date')?></label>
+                                                <label class="table_label add_50percent"><?=__('Due Date')?></label>
                                                 <div class="input-group date" id="qc-due-date" data-provide="datepicker">
                                                     <div class="input-group-addon small-input-group">
                                                         <span class="glyphicon glyphicon-calendar"></span>
                                                     </div>
-                                                    <input type="text" name="due_date" class="q4-form-input table_input" data-date-format="DD/MM/YYYY" value="<?=date('d/m/Y', time())?>"/>
+                                                    <input type="text" name="due_date" class="q4-form-input add_50percent table_input add_50percent" data-date-format="DD/MM/YYYY" value="<?=date('d/m/Y', time())?>"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -126,10 +131,9 @@
 
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <label class="table_label"><?=__('Plan')?></label>
+                                        <label class="table_label add_50percent"><?=__('Plan')?></label>
                                         <div class="qc-choose-plan">
-                                            <a href="#" data-toggle="modal" data-target="#choose-plan-modal" class="inline_block_btn blue-light-button choose-plan" style="height: 30px;margin: -1px 0 0 0;line-height: 30px;
-                                                "><?=__('Choose plan')?></a>
+                                            <a href="#" data-toggle="modal" data-target="#choose-plan-modal" class="inline_block_btn add_50percent blue-light-button choose-plan"><?=__('Choose plan')?></a>
                                         </div>
                                     </div>
                                 </div>
@@ -146,7 +150,7 @@
                 </div>
 
                 <div class="plans-modal-dialog-top relative error-handler">
-                    <h4 class="table-modal-label-h4"><?=__('Tasks List')?></h4>
+                    <h4 class="table_label add_50percent"><?=__('Tasks List')?></h4>
                     <div class="tasks-full-description-box qc-tasks">
 
                     </div>
@@ -157,7 +161,7 @@
                     <div class="row">
                         <div class="form-group col-md-12">
                             <div class="modal-images-list-box">
-                                <a href="#" id="modal-tasks-load-images" class="inline_block_btn blue-light-button  modal-load-images"><?=__('Load images')?></a>
+                                <a href="#" id="modal-tasks-load-images" class="inline_block_btn add_50percent blue-light-button  modal-load-images"><?=__('Load images')?></a>
                                 <div class="hide-upload">
 
                                     <input type="file" class="load-images-input" accept="image/*" data-id="<?=uniqid()?>" multiple name="images[]">
@@ -168,15 +172,25 @@
                     </div>
 
                     <div class="row">
-
                         <div class="form-group col-md-6 rtl-float-right">
-                            <label class="table_label"><?=__('Conditions')?></label>
+                            <label class="table_label add_50percent"><?=__('Status')?> <span class="q4-required">*</span></label>
+                            <div class="select-wrapper"><i class="q4bikon-arrow_bottom"></i>
+                                <select class="q4-select q4-form-input add_50percent qc-status" name="status">
+                                    <?foreach (Enum_QualityControlStatus::toArray() as $val):?>
+                                        <option value="<?=$val?>"><?=__($val)?></option>
+                                    <?endforeach?>
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6 rtl-float-right">
+                            <label class="table_label add_50percent"><?=__('Conditions')?></label>
                             <div class="property-quality-control-conditions">
                                 <div class="row">
                                     <div class="form-group col-md-6">
-                                        <label class="table_label"><?=__('Severity Level')?></label>
+                                        <label class="table_label add_50percent"><?=__('Severity Level')?></label>
                                         <div class="select-wrapper"><i class="q4bikon-arrow_bottom"></i>
-                                            <select class="q4-select q4-form-input disabled-input" name="severity_level">
+                                            <select class="q4-select q4-form-input add_50percent disabled-input" name="severity_level">
                                                 <option selected="selected"><?=__('Please select')?></option>
                                                 <?foreach (Enum_QualityControlConditionLevel::toArray() as $val):?>
                                                     <option value="<?=$val?>"><?=ucfirst(__($val))?></option>
@@ -185,9 +199,9 @@
                                         </div>
                                     </div>
                                     <div class="form-group col-md-6">
-                                        <label class="table_label "><?=__('Conditions List')?></label>
+                                        <label class="table_label add_50percent"><?=__('Conditions List')?></label>
                                         <div class="select-wrapper"><i class="q4bikon-arrow_bottom"></i>
-                                            <select class="q4-select q4-form-input disabled-input" name="condition_list">
+                                            <select class="q4-select q4-form-input add_50percent disabled-input" name="condition_list">
                                                 <option selected="selected"><?=__('Please select')?></option>
                                                 <?foreach (Enum_QualityControlConditionList::toArray() as $val):?>
                                                     <option value="<?=$val?>"><?=ucfirst(__($val))?></option>
@@ -200,7 +214,7 @@
                         </div>
 
                         <div class="form-group col-md-6 rtl-float-right">
-                            <label class="table_label"><?=__('Images List')?></label>
+                            <label class="table_label add_50percent"><?=__('Images List')?></label>
                             <div id="tasks-quality-control-images-list" class="modal-images-list-table">
                                 <table >
                                     <tbody>
@@ -217,7 +231,7 @@
                 <div class="plans-modal-dialog-bottom">
                     <div class="row">
                         <div class="form-group col-md-6 rtl-float-right">
-                            <label class="table_label"><?=__('Description')?></label>
+                            <label class="table_label add_50percent"><?=__('Description')?></label>
                             <textarea class="modal-details-textarea q4_required" name="description"></textarea>
                         </div>
 
@@ -226,12 +240,12 @@
                                 <div class="modal-details-actions">
                                     <div class="modal-details-actions-list">
                                         <div>
-                                            <span class="modal-details-action blue"><?=__('Viewed by')?> :</span>
-                                            <span class="modal-details-action-status orange"><?=__('Waiting to approve')?></span>
+                                            <span class="modal-details-action add_50percent blue"><?=__('Viewed by')?> :</span>
+                                            <span class="modal-details-action-status add_50percent orange"><?=__('Waiting to approve')?></span>
                                         </div>
                                         <div>
-                                            <span class="modal-details-action blue"><?=__('Created by')?> : </span>
-                                            <span class="modal-details-action-status gray"><?=Auth::instance()->get_user()->name?></span>
+                                            <span class="modal-details-action add_50percent blue"><?=__('Created by')?> : </span>
+                                            <span class="modal-details-action-status add_50percent gray"><?=Auth::instance()->get_user()->name?></span>
                                         </div>
                                     </div>
                                 </div>
@@ -243,7 +257,7 @@
             <div class="modal-footer text-align" style="background-color: transparent">
                 <div class="row">
                     <div class="col-sm-12">
-                        <a href="#" class="inline_block_btn orange_button q4-form-submit q4_form_submit"><?=__('Create')?></a>
+                        <a href="#" class="inline_block_btn add_50percent orange_button q4-form-submit q4_form_submit"><?=__('Create')?></a>
                     </div>
                 </div>
             </div>
@@ -303,7 +317,11 @@
         </div>
     </div>
 
-
+<style>
+    .qc-tasks{
+        width: 100%!important;
+    }
+</style>
 <script>
     (function($) {
     <?$u = []?>

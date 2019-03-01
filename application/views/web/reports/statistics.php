@@ -210,7 +210,15 @@
                                     </ul>
                                 </div>
                             </div>
-
+                            <div style="padding-bottom: 20px;color: #1ebae5;background-color: white;">
+                            <?
+                                $sum = 100;
+                                $inv = $sum - $craftsParams['percents'][Enum_QualityControlStatus::Repaired]-$craftsParams['percents'][Enum_QualityControlStatus::Invalid];
+                                $other = $sum - $craftsParams['percents'][Enum_QualityControlStatus::Invalid];
+                            ?>
+                            <?='A:'. $inv?>%&nbsp;&nbsp;
+                            <?='B:'.$other?>%
+                            </div>
                         </div>
                     </div>
 
@@ -236,7 +244,15 @@
                                     </ul>
                                 </div>
                             </div>
-
+                            <div style="padding-bottom: 20px;color: #1ebae5;background-color: white;">
+                                 <?
+                                    $sum = 100;
+                                    $inv = $sum - $filteredCraftsParams['percents'][Enum_QualityControlStatus::Repaired]-$filteredCraftsParams['percents'][Enum_QualityControlStatus::Invalid];
+                                    $other = $sum - $filteredCraftsParams['percents'][Enum_QualityControlStatus::Invalid];
+                                ?>
+                               <?='A:'. $inv?>%&nbsp;&nbsp;
+                                <?='B:'.$other?>%
+                            </div>
                         </div>
                     </div>
 

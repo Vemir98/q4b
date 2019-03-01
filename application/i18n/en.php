@@ -43,7 +43,7 @@ return [
     'results from'=>'results from',
     'Project'=>'Project',
     'Projects'=>'Projects',
-    'Menu _Projects'=>'Projects and QC',
+    'Menu _Projects'=>'Projects',
     'Tooltip _Projects' => 'Projects and quality control',
     'Country'=>'Country',
     'Status'=>'Status',
@@ -153,6 +153,7 @@ return [
     'pr_stage_4'=>'Finished works',
     'pr_stage_5'=>'Development work',
     'pr_stage_6'=>'Deliver',
+    'pr_stage_7'=>'Inspection array',
     'Project images'=>'Project images',
     'Main Image'=>'Main Image',
     'Change main image'=>'Change main image',
@@ -713,5 +714,6 @@ return [
     'Filter by project'=>'Filter by project',
     'Search By Name'=>'Search by name or email',
     'Tracking file'=>'Tracking file',
+    'str_'=>'structure',
     ''=>'',
 ];

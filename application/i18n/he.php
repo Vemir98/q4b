@@ -43,7 +43,7 @@ return [
     'results from'=>'תוצאות',
     'Project'=>'פרויקט',
     'Projects'=>'פרויקטים',
-    'Menu _Projects'=>'פרויקטים/בקרות',
+    'Menu _Projects'=>'פרויקטים',
     'Tooltip _Projects' => 'פרויקטים/בקרות',
     'Country'=>'מדינה',
     'Status'=>'סטטוס',
@@ -154,6 +154,7 @@ return [
     'pr_stage_4'=>'עבודות גימורים',
     'pr_stage_5'=>'עבודות פיתוח',
     'pr_stage_6'=>'מסירות',
+    'pr_stage_7'=>'מערך בדיקות',
     'Project images'=>'תמונות הפרויקט',
     'Main Image'=>'תמונה ראשי',
     'Change main image'=>'החלפת תמונה ראשית',
@@ -710,5 +711,6 @@ return [
     'Filter by project'=>'הצג לפי  פרויקט',
     'Search By Name'=>'חפש לפי שם או דוא"ל',
     'Tracking file'=>'קובץ חתום',
+    'str_'=>'-',
     ''=>'',
 ];

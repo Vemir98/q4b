@@ -10,8 +10,8 @@
 $items = [
     [
         'slug' => 'quality_control/create',
-        'text' => 'Quality control',
-        'tooltip' => 'Quality control',
+        'text' => 'Create Quality Control',
+        'tooltip' => 'Create Quality Control',
         'icon' => 'q4bikon-tick',
         'resource' => 'Controller_QualityControl',
         'priority' => Enum_UserPriorityLevel::Project

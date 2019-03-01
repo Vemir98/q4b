@@ -13,17 +13,21 @@ class Controller_QualityControl extends HDVP_Controller_Template
             'GET' => 'read',
             'POST' => 'update'
         ],
+        'get_objects,get_places,get_place_data,get_places_for_floor,get_plans' => [
+            'GET' => 'read'
+        ]
     ];
     public function action_create(){
 
-//        $placeId = (int)$this->request->param('id');
-//        $place = ORM::factory('PrPlace',$placeId);
-//        if( ! $place->loaded()){
-//            throw new HTTP_Exception_404;
-//        }
-       // $this->project = $place->project;
         View::set_global('_PROJECT', $this->project);
         if($this->request->method() == HTTP_Request::POST){
+            $placeId = (int)Arr::get($this->post(),'place_id');
+            $place = ORM::factory('PrPlace',$placeId);
+            if( ! $place->loaded()){
+                throw new HTTP_Exception_404;
+            }
+             $this->project = $place->project;
+
             $this->_checkForAjaxOrDie();
             $formData = Arr::extract($this->post(),['space_id','status','project_stage','due_date','description','tasks','profession_id','craft_id','severity_level','condition_list','plan_id','message']);
             if(!empty(trim($formData['description'])))
@@ -98,7 +102,6 @@ class Controller_QualityControl extends HDVP_Controller_Template
                 if(!empty(trim($message)))
                     ORM::factory('QcComment')->values(['message' => $message, 'qcontrol_id' => $qc->pk()])->save();
                 Database::instance()->commit();
-                $this->setResponseData('struct',$this->getObjectStruct($place->object_id));
                 $this->setResponseData('triggerEvent','qualityControlCreated');
             }catch (ORM_Validation_Exception $e){
                 Database::instance()->rollback();
@@ -128,5 +131,172 @@ class Controller_QualityControl extends HDVP_Controller_Template
             ]);
         }
 
+    }
+
+    public function action_get_objects(){
+        $projectId = (int)$this->request->param('id');
+        $project = ORM::factory('Project',$projectId);
+        if( ! $project->loaded()){
+            throw new HTTP_Exception_404;
+        }
+
+        $places = [];
+        foreach($project->places->find_all() as $place){
+            $places[] = [
+                'id' => $place->id,
+                'name' => str_replace("'"," ",$place->name.' ('.$place->custom_number.') '.__('str_').' '.$place->object->name.' '.__('floor').' '.$place->floor->number),
+            ];
+        }
+        $this->setResponseData('places',json_encode($places));
+        $this->setResponseData('items',View::make('qc/objects-select-options',['items' => $project->objects->find_all()])->render());
+    }
+
+    public function action_get_places(){
+        $objectId = (int)$this->request->param('id');
+        $object = ORM::factory('PrObject',$objectId);
+        if( ! $object->loaded()){
+            throw new HTTP_Exception_404;
+        }
+        $places = [];
+        foreach($object->places->find_all() as $place){
+            $places[] = [
+                'id' => $place->id,
+                'name' => $place->name.' ('.$place->custom_number.')',
+            ];
+        }
+        $this->setResponseData('items',json_encode($places));
+    }
+
+    public function action_get_places_for_floor(){
+        $objectId = (int)$this->request->param('param1');
+        $floorNumber = (int)$this->request->param('param2');
+        $object = ORM::factory('PrObject',$objectId);
+        if( ! $object->loaded()){
+            throw new HTTP_Exception_404;
+        }
+        $floor = $object->floors->where('number','=',$floorNumber)->find();
+        if( ! $floor->loaded()){
+            throw new HTTP_Exception_404;
+        }
+        $places = [];
+        foreach($floor->places->find_all() as $place){
+            $places[] = [
+                'id' => $place->id,
+                'name' => $place->name.' ('.$place->custom_number.')',
+            ];
+        }
+        $this->setResponseData('items',json_encode($places));
+    }
+
+    public function action_get_place_data(){
+        $placeId = (int)$this->request->param('id');
+        $place = ORM::factory('PrPlace',$placeId);
+        if( ! $place->loaded()){
+            throw new HTTP_Exception_404;
+        }
+        $project = $place->project;
+        $output = [];
+        $floor = $place->floor;
+        $output = [
+            'placeNumber' => $place->number,
+            'customNumber' => $place->custom_number,
+            'floor' => $floor->number
+        ];
+
+
+
+        $output['crafts'] = View::make('qc/crafts-select-options',['item' => $project])->render();
+        $output['tasks'] = View::make('qc/tasks-select-options',['project' => $project,'items' => $project->tasks->where('status','=',Enum_Status::Enabled)->find_all()])->render();
+        $output['professions'] = View::make('qc/professions-select-options',['item' => $project])->render();
+        $output['spaces'] = View::make('qc/spaces-select-options',['spaces' => $place->spaces->find_all()])->render();
+        $output['object'] = $place->object->id;
+
+        $this->setResponseData('item',json_encode($output));
+    }
+
+    public function action_get_plans(){
+        $placeId = (int)$this->request->param('param1');
+        $craftId = (int)$this->request->param('param2');
+        $place = ORM::factory('PrPlace',$placeId);
+        if( ! $place->loaded()){
+            throw new HTTP_Exception_404;
+        }
+
+        $craft = ORM::factory('CmpCraft',$craftId);
+        if( ! $craft->loaded()){
+            throw new HTTP_Exception_404;
+        }
+
+        $scopes = $plans = $output = [];
+
+        foreach ($place->plans->order_by('id','DESC')->find_all() as $item){
+            if(in_array($item->scope,$scopes)) continue;
+            $scopes[] = $item->scope;
+            if(!$item->crafts->where('craft_id','=',$craftId)->count_all()){
+                continue;
+            }
+            $plans[$item->id] = $item;
+        }
+
+        foreach($place->floor->plans->order_by('id','DESC')->find_all() as $item){
+            if(in_array($item->scope,$scopes)) continue;
+            $scopes[] = $item->scope;
+            if(!$item->crafts->where('craft_id','=',$craftId)->count_all()){
+                continue;
+            }
+            $plans[$item->id] = $item;
+        }
+
+//        foreach ($craft->plans->where('place_id','=',$place->id)->order_by('id','DESC')->find_all() as $item){
+//            if(in_array($item->scope,$scopes)) continue;
+//            $scopes[] = $item->scope;
+//            $plans[$item->id] = $item;
+//        }
+//
+//        foreach($place->floor->plans->order_by('id','DESC')->find_all() as $item){
+//            if(in_array($item->scope,$scopes)) continue;
+//            $scopes[] = $item->scope;
+//            $plans[$item->id] = $item;
+//        }
+
+
+        $output['planList'] = View::make('qc/plan-items',['plans' => $plans])->render();
+        $this->setResponseData('item',json_encode($output));
+    }
+
+    protected function getNormalizedPostArr($arrKey){
+        $output = [];
+        foreach ($this->post() as $key => $value){
+            if(preg_match('~'.$arrKey.'_(?<isNew>\+)?(?<id>[0-9a-z]+)_(?<field>[a-z_]+)~',$key,$matches))
+                if($matches['isNew']){
+                    $output['new_'.$matches['id']][$matches['field']] = $value;
+                }else{
+                    $output[$matches['id']][$matches['field']] = $value;
+                }
+
+        }
+        return $output;
+    }
+
+    public function saveBase64Image($base64String, $name, $path,$quality = 50){
+        $data = explode( ',', $base64String);
+        if(count($data) != 2 OR empty($name)){
+            throw new HDVP_Exception('Operation Error');
+        }
+
+        $img = new JBZoo\Image\Image($base64String);
+        $name = uniqid().'.jpg';
+        $img->saveAs(rtrim($path,DS).DS.$name,$quality);
+
+        $f = ORM::factory('Image');
+        $f->name = $name;
+        $f->original_name = $name;
+        $f->mime = 'image/jpeg';
+        $f->ext = 'jpg';
+        $f->path = str_replace(DOCROOT,'',rtrim($path,DS));
+        $f->token = md5($name).base_convert(microtime(false), 10, 36);
+        $f->status = Enum_FileStatus::Active;
+        $f->save();
+        return $f;
     }
 }
