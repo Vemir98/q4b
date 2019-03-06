@@ -276,6 +276,8 @@
 
         },
 
+
+
         setCarouselWidth: function(selector, winWidth) {
 
             winWidth = winWidth != undefined ? winWidth: '';

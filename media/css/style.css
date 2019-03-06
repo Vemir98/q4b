@@ -4607,7 +4607,11 @@ ul.pagination li {
       border: 1px solid #093049;
       color: #ffffff;
       text-decoration: none; }
-
+.q4-btn-lg.add_50percent {
+    height: 45px;
+    line-height: 45px;
+    font-size: 24px !important;
+}
 .q4-btn-65 {
   display: inline-block;
   vertical-align: middle;

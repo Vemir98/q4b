@@ -9,7 +9,7 @@
  */
 
 ?>
-<div class="modal create-modal qc-create-window" id="klir" style="position: inherit!important; display: block!important;">
+<div class="modal create-modal qc-create-window quality-control-dialog-mobile q4-mobile-layout" id="klir" style="position: inherit!important; display: block!important; margin: auto; overflow: hidden !important;">
     <form id="qc-form" class="q4_form" data-submit="false" action="<?=URL::site('/quality_control/create')?>"  data-ajax="true" method="post">
         <input type="hidden" value="" name="x-form-secure-tkn"/>
         <input type="hidden" value="" name="place_id">
@@ -133,7 +133,7 @@
                                     <div class="col-md-12">
                                         <label class="table_label add_50percent"><?=__('Plan')?></label>
                                         <div class="qc-choose-plan">
-                                            <a href="#" data-toggle="modal" data-target="#choose-plan-modal" class="inline_block_btn add_50percent blue-light-button choose-plan"><?=__('Choose plan')?></a>
+                                            <a href="#" data-toggle="modal" data-target="#choose-plan-modal-mobile" class="q4-btn-lg add_50percent light-blue-bg choose-plan"><?=__('Choose plan')?></a>
                                         </div>
                                     </div>
                                 </div>
@@ -150,15 +150,15 @@
                 </div>
 
                 <div class="plans-modal-dialog-top relative error-handler">
-                    <h4 class="table_label add_50percent"><?=__('Tasks List')?></h4>
-                    <div class="tasks-full-description-box qc-tasks">
+                    <h3 class="table_label add_50percent"><?=__('Tasks List')?></h3>
+                    <div class="tasks-full-description-box-mobile qc-tasks">
 
                     </div>
                 </div>
 
                 <div class="plans-modal-dialog-top form_row">
 
-                    <div class="row">
+                    <!-- <div class="row">
                         <div class="form-group col-md-12">
                             <div class="modal-images-list-box">
                                 <a href="#" id="modal-tasks-load-images" class="inline_block_btn add_50percent blue-light-button  modal-load-images"><?=__('Load images')?></a>
@@ -169,7 +169,7 @@
                                 <div class="clear"></div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                     <div class="row">
                         <div class="form-group col-md-6 rtl-float-right">
@@ -213,17 +213,18 @@
                             </div>
                         </div>
 
-                        <div class="form-group col-md-6 rtl-float-right">
+                        <div class="form-group col-md-12">
                             <label class="table_label add_50percent"><?=__('Images List')?></label>
-                            <div id="tasks-quality-control-images-list" class="modal-images-list-table">
-                                <table >
-                                    <tbody>
-                                    </tbody>
-                                </table>
 
+                            <div data-structurecount="0" class="qc-image-list-mobile q4-owl-carousel">
                             </div>
-
+                        <div class="modal-images-list-box">
+                            <a href="#" class="q4-btn-lg light-blue-bg modal-load-images quality-control-load-images add_50percent"><?=__('Load images')?></a>
+                             <div class="hide-upload">
+                                <input type="file" class="load-images-input" data-id="<?=uniqid()?>" accept="image/*" multiple name="images[]">
+                            </div>
                         </div>
+                    </div>
 
                     </div>
                 </div>
@@ -267,7 +268,7 @@
 
 
 
-    <div id="choose-plan-modal" class="choose-plan-modal modal no-delete klris-glox" role="dialog">
+    <div id="choose-plan-modal-mobile" class="choose-plan-modal modal no-delete klris-glox" role="dialog">
         <div class="modal-dialog modal-dialog-1170">
             <form class="q4_form" action="<?=1?>" data-ajax="true" method="post">
                 <!-- Modal content-->
@@ -284,19 +285,9 @@
                     <div class="modal-body bb-modal">
 
                         <div class="plans-modal-dialog-bottom">
-                            <table class="rwd-table responsive_table table scrollable-tbody" data-toggle="table">
-                                <thead>
-                                <tr>
-                                    <th class="td-50"><?=__('')?></th>
-                                    <th data-field="Name/Type" data-sortable="true" class="td-cell-10"><?=__('Name/Type')?></th>
-                                    <th data-field="Profession" data-sortable="true" class="td-cell-10"><?=__('Profession')?></th>
-                                    <th data-field="Floor" class="td-10" data-sortable="true"><?=__('Floor')?></th>
-                                    <th data-field="Element number" data-sortable="true" class="w-10"><?=__('Element number')?></th>
-                                    <th data-field="Edition" data-sortable="true" class="w-10"><?=__('Edition')?></th>
-                                    <th data-field="Date" data-sortable="true" class="td-10"><?=__('Date')?></th>
-                                    <th data-field="Image" data-sortable="true" class="td-10"><?=__('Image')?></th>
-                                </tr>
-                                </thead>
+                            <table class="rwd-table responsive_table table" data-toggle="table">
+
+
                                 <tbody class="qc-v-scroll qc-plans-list">
                                 </tbody>
                             </table>
@@ -307,7 +298,7 @@
                     <div class="modal-footer text-align">
                         <div class="row">
                             <div class="col-sm-12">
-                                <a href="#" class="inline_block_btn blue-light-button confirm-plan1"><?=__('Confirm')?></a>
+                                <a href="#" class="inline_block_btn blue-light-button confirm-plan1 confirm-plan-mobile"><?=__('Confirm')?></a>
                             </div>
                         </div>
                     </div>

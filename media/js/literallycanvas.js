@@ -3796,7 +3796,7 @@ defineOptionsStyle('font', React.createClass({
       isItalic: false,
       isBold: false,
       fontName: 'Helvetica',
-      fontSizeIndex: 10
+      fontSizeIndex: 5
     };
   },
 
