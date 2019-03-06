@@ -1202,7 +1202,7 @@ $(document).ready(function() {
         var tasksItemCount = $('.tasks-full-description li:visible').length;
         var sidebarWidth = $(".sidebar").is(':visible') ? $(".sidebar").width() : 0;
 
-        var tasksItemsWidth = (tasksItemCount + 1) * (350 + 30)-20;
+        var tasksItemsWidth = (tasksItemCount + 1) * (360 + 30)-20;
         // Add scroll to tasks
         $('.tasks-full-description-box').width(modalWidth - 60);
         if($('.qc-create-window').width()){
