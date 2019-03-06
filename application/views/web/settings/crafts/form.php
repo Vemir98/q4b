@@ -13,8 +13,11 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="panel-options">
-                    <span><?=__('Add new craft')?></span>
-                    <a class="orange_plus_small add-craft" id="new_craft"><i class="plus q4bikon-plus"></i></a>
+                    <span class="inline-options">
+                        <a class="orange_plus_small add-craft" id="new_craft"><i class="plus q4bikon-plus"></i></a>
+                         <span class="inline-options-text"><?=__('Add new craft')?></span>
+                    </span>
+
                 </div>
                 <table class="new_company_table responsive_table table" data-toggle="table">
                     <thead>

@@ -9,7 +9,7 @@
 ?>
 
 <div id="copy-plans-modal" class="modal copy-plans-modal" data-backdrop="static" data-keyboard="false" role="dialog">
-    <div class="modal-dialog ">
+    <div class="modal-dialog modal-dialog-1070">
         <form class="q4_form" action="<?=$action?>" data-ajax="true" method="post">
             <input type="hidden" value="" name="x-form-secure-tkn"/>
             <!-- Modal content-->
@@ -25,22 +25,63 @@
                 </div>
                 <div class="modal-body bb-modal"><br>
                     <div class="row">
-                        <div class="form-group col-md-6 rtl-float-right">
-                            <label class="table_label"><?=__('Choose property')?></label>
-                            <div class="select-wrapper"><i class="q4bikon-arrow_bottom"></i>
-                                <select name="object_id" class="q4-select q4-form-input">
-                                    <?foreach ($objects as $obj):?>
-                                        <option value="<?=$obj->id?>"><?=$obj->type->name .' - '.$obj->name?></option>
-                                    <?endforeach;?>
-                                </select>
+                        <div class="col-md-6 rtl-float-right">
+                            <div class="form-group">
+                                <div class="professions-list-queue">
+                                    <div class="professions-list-queue-title"><h3><?=__('Profession')?></h3></div>
+                                    <ul class="professions-list-queue-lines">
+
+                                        <?foreach ($professions as $key => $item):?>
+                                            <li>
+                                                <div class="professions-list-checkbox">
+                                                    <label class="checkbox-wrapper">
+                                                        <input type="checkbox" name="professions" value="<?=$key?>">
+                                                        <span class="checkbox-replace"></span>
+                                                        <i class="checkbox-tick q4bikon-tick"></i>
+                                                    </label>
+                                                </div>
+                                                <div class="professions-list-input">
+                                                    <input type="text" class="table_input_full disabled-input" value="<?=__($item)?>"/>
+                                                </div>
+                                            </li>
+                                        <?endforeach?>
+
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-5 col-md-offset-1 rtl-float-right">
+
+                            <div class="form-group">
+                                <label class="table_label">Project</label>
+                                <div class="select-wrapper"><i class="q4bikon-arrow_bottom"></i>
+                                    <select name="project_id" class="q4-select q4-form-input select-project-get-objects" data-url="<?=URL::site('plans/project_objects')?>">
+                                        <option value="0" class="demo-option"><?=__('Please select Project')?></option>
+                                        <? foreach ($projects as $project): ?>
+                                            <option value="<?=$project->id?>"><?=$project->name?></option>
+                                        <? endforeach ?>
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="table_label"><?=__('Choose property')?></label>
+                                <div class="select-wrapper"><i class="q4bikon-arrow_bottom"></i>
+                                    <select name="object_id" class="q4-select q4-form-input select-objects-for-copy">
+                                        <option value="0"><?=__('Please select Structure')?></option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="panel-modal-footer text-right">
+
+                <div class="modal-footer text-align">
                     <div class="row">
                         <div class="col-sm-12">
-                            <a href="#" class="inline_block_btn blue-light-button q4_form_submit"><?=__('Copy')?></a>
+                            <span class="q4-btn-lg white close q4-close-modal" data-dismiss="modal"><?=__('Cancel')?></span>
+                            <a href="#" class="inline_block_btn blue-light-button q4_form_submit disabled-link copy-plans-to-another"><?=__('Copy')?></a>
                         </div>
                     </div>
                 </div>

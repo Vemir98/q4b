@@ -8,8 +8,9 @@
  */
 ?>
 
-<div class="plans-list-layout" data-trackingurl="<?=URL::site('projects/plans_printed/'.$_PROJECT->id)?>">
-    <form action="<?=URL::site('/projects/update_plan_list/'.$_PROJECT->id)?>" data-ajax=true method="post" class="q4_form" autocomplete="off">
+
+<div id="plans-list-layout" class="plans-list-layout" data-trackingurl="<?=URL::site('plans/plans_printed/'.$_PROJECT->id)?>">
+    <form action="<?=URL::site('/plans/update_plan_list/'.$_PROJECT->id)?>" data-ajax=true method="post" class="q4_form" autocomplete="off">
         <input type="hidden" value="" name="x-form-secure-tkn"/>
         <input type="hidden" value="<?=$secure_tkn?>" name="secure_tkn"/>
         <input type="hidden" class="current-profession-id" value="" />
@@ -19,9 +20,9 @@
                 <div class="col-md-12">
                     <div class="panel-options form_row">
                         <div class="plans-border-bottom">
-                            <a href="#" class="call-professions-list-modal" data-url="<?=URL::site('projects/plans_professions_list/'.$_PROJECT->id)?>"><?=__('Professions list')?> </a>
-                            <a data-url="<?=URL::site('projects/tracking_list/'.$_PROJECT->id)?>" class="plans-date-tracking q4-link-b-blue"><?=__('Date tracking')?></a>
-                            <a class="orange_plus_small add-plan" data-url="<?=URL::site('projects/create_plan/'.$_PROJECT->id)?>"><i class="plus q4bikon-plus"></i></a>
+                            <a href="#" class="call-professions-list-modal" data-url="<?=URL::site('plans/plans_professions_list/'.$_PROJECT->id)?>"><?=__('Professions list')?> </a>
+                            <a data-url="<?=URL::site('plans/tracking_list/'.$_PROJECT->id)?>" class="plans-date-tracking q4-link-b-blue"><?=__('Date tracking')?></a>
+                            <a class="orange_plus_small add-plan" data-url="<?=URL::site('plans/create_plan/'.$_PROJECT->id)?>"><i class="plus q4bikon-plus"></i></a>
                         </div>
                     </div>
                 </div>
@@ -96,7 +97,7 @@
                     </div>
                     <div class="col-md-3 form-group rtl-float-right">
                         <label class="table_label visibility-hidden"><?=__('Show')?></label>
-                        <input data-url="<?=URL::site('/projects/'.$_PROJECT->id.'/plans_list/')?>" class="inline-block-btn-small light_blue_btn filter-plans" type="submit" value="<?=__('Show')?>">
+                        <input data-url="<?=URL::site('/plans/'.$_PROJECT->id.'/plans_list/')?>" class="inline-block-btn-small light_blue_btn filter-plans" type="submit" value="<?=__('Show')?>">
 
                     </div>
 
@@ -107,7 +108,7 @@
                     <div class="form-group">
                         <div class="search-input-wrapper block">
                             <input  type="search" class="search-input search-plan-input" value="">
-                            <a data-url="<?=URL::site('/projects/search_in_plan_list/'.$_PROJECT->id.'/search/')?>" class="search-button search-plans search-button-text"><?=__('Search')?></a>
+                            <a data-url="<?=URL::site('/plans/search_in_plan_list/'.$_PROJECT->id.'/search/')?>" class="search-button search-plans search-button-text"><?=__('Search')?></a>
                         </div>
                     </div>
                 </div>
@@ -124,7 +125,7 @@
                                     <div class="q4-carousel-blue-head reports-prop-title">
                                         <span class="blue-head-title"><?=' #'.$item->id?></span>
                                         <div class="blue-head-option project-props-qc">
-                                            <a class="show-structure-mobile plan-details" data-qc="quality-control" data-url="<?=URL::site('projects/update_plan/'.$item->project_id.'/'.$item->id)?>">
+                                            <a class="show-structure-mobile plan-details" data-qc="quality-control" data-url="<?=URL::site('plans/update_plan/'.$item->project_id.'/'.$item->id)?>">
                                                 <i class="plus q4bikon-preview"></i>
                                             </a>
                                         </div>

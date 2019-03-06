@@ -30,17 +30,18 @@
                     <div class="professions-list-queue-title"><h3><?=__('Profession')?></h3></div>
                     <ul class="professions-list-queue-lines">
                         <?foreach ($items as $item):?>
-                        <li>
-                            <div class="professions-list-checkbox">
-                                <label  class="checkbox-wrapper">
-                                    <input type="checkbox"   <?=in_array($item->id,$selected) ? 'checked' : ''?> disabled="disabled">
-                                     <span class="checkbox-replace"></span><i class="checkbox-tick q4bikon-tick"></i>
-                                </label>
-                            </div>
-                            <div class="professions-list-input">
-                                <input type="text" class="table_input_full disabled-input" value="<?=__($item->name)?>"/>
-                            </div>
-                        </li>
+                            <li>
+                                <div class="professions-list-checkbox">
+                                    <label  class="checkbox-wrapper">
+                                        <input type="checkbox">
+                                        <span class="checkbox-replace"></span>
+                                        <i class="checkbox-tick q4bikon-tick"></i>
+                                    </label>
+                                </div>
+                                <div class="professions-list-input">
+                                    <input type="text" class="table_input_full disabled-input" value="<?=__($item->name)?>"/>
+                                </div>
+                            </li>
                         <?endforeach?>
                     </ul>
                 </div>

@@ -26,13 +26,25 @@ $icons = [
                 <div class="col-md-12">
                     <div class="panel-options form_row">
                         <div class="plans-border-bottom">
-                            <a href="#" class="call-professions-list-modal q4-link-b-blue" data-url="<?=URL::site('projects/plans_professions_list/'.$_PROJECT->id)?>"><?=__('Professions list')?> </a>
+                            <span class="inline-options">
+                                <a href="#" class="q4-link-b-blue" data-url="<?=URL::site('projects/plans_professions_list/'.$_PROJECT->id)?>">
+                                    <span><?=__('Professions list')?></span>
+                                </a>
+                            </span>
 
-                                <a data-url="<?=URL::site('projects/tracking_list/'.$_PROJECT->id)?>" class="plans-date-tracking q4-link-b-blue"><?=__('Date tracking')?></a>
+                            <span class="inline-options">
+                                <i class="q4bikon-reports"></i>
+                                <a data-url="<?=URL::site('projects/tracking_list/'.$_PROJECT->id)?>" class="q4-link-b-blue">
+                                    <?=__('Date tracking')?>
+                                </a>
+                            </span>
 
-
-                            <span><?=__('Add new plan')?></span>
-                            <a class="orange_plus_small add-plan" data-url="<?=URL::site('projects/create_plan/'.$_PROJECT->id)?>"><i class="plus q4bikon-plus"></i></a>
+                            <span class="inline-options">
+                                <a class="orange_plus_small add-plan" data-url="<?=URL::site('projects/create_plan/'.$_PROJECT->id)?>">
+                                    <i class="plus q4bikon-plus"></i>
+                                </a>
+                                <span class="inline-options-text"><?=__('Add new plan')?></span>
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -192,9 +204,12 @@ $icons = [
                                         </label>
                                     </td>
                                     <td class="rwd-td1 align-center-left" data-th="<?=__('Details')?>">
-                                        <div class="div-cell">
+                                        <div class="div-cell td-cell-80">
                                             <span class="show-structure plan-details" title="<?=__('Details')?>" data-url="<?=URL::site('projects/update_plan/'.$item->project_id.'/'.$item->id)?>">
                                                 <i class="plus q4bikon-preview"></i>
+                                            </span>
+                                            <span class="delete_row delete-plan<?=$disabledButton?>" data-url="<?=URL::site('projects/plan_delete/'.$item->project_id.'/'.$item->id)?>" title="<?=__('Delete plan')?>">
+                                                <i class="q4bikon-delete"></i>
                                             </span>
                                         </div>
                                     </td>
@@ -350,10 +365,12 @@ $icons = [
                                     </td> -->
                                     <td class="rwd-td8 td-cell-120" data-th="<?=__('Action')?>">
                                         <div class="wrap-align-row">
-                                            <span class="plans-add-edition add-plan-edition" data-toggle="modal" data-target="#plans-new-edition-modal" data-url="<?=URL::site('projects/add_edition/'.$item->project_id.'/'.$item->id)?>"  title="<?=__('Add Edition')?>"><i class="plus q4bikon-plus"></i></span>
-                                            <span class="copy-element copy-plan" data-url="<?=URL::site('projects/copy_plan/'.$item->project_id.'/'.$item->id)?>" title="<?=__('Copy plan')?>"><i class="q4bikon-copy"></i></span>
-                                            <span class="delete_row delete-plan<?=$disabledButton?>" data-url="<?=URL::site('projects/plan_delete/'.$item->project_id.'/'.$item->id)?>" title="<?=__('Delete plan')?>">
-                                                <i class="q4bikon-delete"></i>
+                                            <span class="plans-add-edition add-plan-edition"
+                                                  data-toggle="modal" data-target="#plans-new-edition-modal"
+                                                  data-url="<?=URL::site('projects/add_edition/'.$item->project_id.'/'.$item->id)?>"  title="<?=__('Add Edition')?>"><i class="plus q4bikon-plus"></i>
+                                            </span>
+                                            <span class="copy-element copy-plan" data-url="<?=URL::site('projects/copy_plan/'.$item->project_id.'/'.$item->id)?>" title="<?=__('Copy plan')?>">
+                                                <i class="q4bikon-copy"></i>
                                             </span>
                                         </div>
                                     </td>
@@ -377,7 +394,7 @@ $icons = [
             <div class="row">
                 <div class="col-sm-12">
                     <a href="#" class="q4-btn-lg light-blue-bg disabled-gray-button plans-to-print-link" data-toggle="modal" data-target="#plans-to-print-modal"><?=__('Proceed to print')?></a>
-                    <a href="#" class="q4-btn-lg light-blue-bg disabled-gray-button plans-to-send" data-toggle="modal" data-id=<?=$_PROJECT->id?> data-url="<?=URL::site('projects/plans_mailing/'.$item->project_id)?>"><?=__('Proceed to send')?></a>
+                    <a href="#" class="q4-btn-lg light-blue-bg disabled-gray-button plans-to-send" data-toggle="modal" data-id=<?=$_PROJECT->id?> data-url="<?=URL::site('projects/plans_mailing/'.$_PROJECT->id)?>"><?=__('Proceed to send')?></a>
                     <a class="q4-btn-lg q4_form_submit orange update-plans"><?=__('Update')?></a>
                 </div>
             </div>

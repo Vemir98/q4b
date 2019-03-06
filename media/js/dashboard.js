@@ -104,6 +104,7 @@ $(document).ready(function() {
                     $('.date').datetimepicker({
                             locale: $(document).find('html').attr('lang')
                         }).show();
+
                     setTimeout(function() {
                         var self = $(document).find('#' + modalId);
                         var modalWidth = self.find('.modal-dialog').width();

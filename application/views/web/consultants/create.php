@@ -12,7 +12,7 @@
 <div id="consultants-user-detail" class="modal fade in" role="dialog">
 <?//echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($user); echo "</pre>";?>
 
-    <div class="modal-dialog q4_project_modal consultants-user-detail-dialog">
+    <div class="modal-dialog q4_project_modal modal-dialog-1170">
         <form action="<?=URL::site('/consultants/create/')?>" data-submit="false" method="post" class="q4_form"  data-ajax="true" enctype="multipart/form-data">
 
             <div class="modal-content">
@@ -33,18 +33,18 @@
                     <div class="row">
                      <div class="col-lg-3 col-sm-12 rtl-float-right">
                          <!--<div class="set-image-block centered" data-id="projects">
-                                <div class="upload-logo">
+                                <div class="upload-logo up-box">
                                     <div class="hide-upload">
                                         <input type="file" class="upload-user-logo" accept=".jpg,.jpe,.jpeg,.png,.gif,.tif,.tiff" name="logo"/>
                                     </div>
-                                    <div class="camera-bg">
+                                    <div class="camera-bg camera-default-image">
                                         <img src="/media/img/camera.png" class="camera" alt="camera">
                                     </div>
-                                    <img class="hidden preview-user-image" alt="preview user image">
+                                    <img class="hidden preview-user-image show-uploaded-image" alt="preview user image">
 
                                 </div>
 
-                                <a href="#" class="form-control light_blue_btn set-image-link"><?=__('Set your photo')?></a>
+                                <a href="#" class="form-control light_blue_btn set-image-link trigger-image-upload"><?=__('Set your photo')?></a>
                             </div>-->
                         </div>
                      <!--<div class="border_left col-lg-9 rtl-float-right">-->
@@ -54,7 +54,7 @@
                                     <label class="table_label"><?=__('Email')?></label>
                                     <div class="form-group form_row">
                                         <i class="input_icon q4bikon-email"></i>
-                                        <input name="email" type="text" class="q4-form-input q4_required symbol form_input disabled-input" value="<?=$user->email?>"/>
+                                        <input name="email" type="text" class="q4-form-input q4_required symbol disabled-input" value="<?=$user->email?>"/>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6 rtl-float-right">
@@ -81,14 +81,14 @@
                                     <label class="table_label"><?=__('Name')?></label>
                                     <div class="form-group form_row">
                                         <i class="input_icon q4bikon-username"></i>
-                                        <input type="text" name="name" class="q4-form-input q4_required symbol form_input" value=""/>
+                                        <input type="text" name="name" class="q4-form-input q4_required symbol" value=""/>
                                     </div>
                                 </div>
                                 <div class="col-md-6 rtl-float-right">
                                     <label class="table_label"><?=__('Phone')?></label>
                                     <div class="form-group form_row">
                                         <i class="input_icon q4bikon-phone"></i>
-                                        <input type="text" name="phone" class="q4-form-input symbol form_input" value=""/>
+                                        <input type="text" name="phone" class="q4-form-input symbol" value=""/>
                                     </div>
                                 </div>
                             </div>
@@ -150,7 +150,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="panel-modal-footer text-align">
+                <div class="modal-footer text-align">
                     <div class="row">
                         <div class="col-sm-12">
                             <a class="q4-btn-lg orange q4_form_submit create-consultant"><?=__('Save')?></a>

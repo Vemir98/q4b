@@ -1,7 +1,7 @@
 <?defined('SYSPATH') OR die('No direct script access.');?>
-<!-- choose-sender-modal-->
+<!-- choose-sender-modal -->
 <div id="choose-sender-modal" class="modal fade no-delete" data-backdrop="static" data-keyboard="false" role="dialog">
-    <div class="modal-dialog q4_project_modal choose-sender-dialog">
+    <div class="modal-dialog q4_project_modal modal-dialog-1070">
         <!-- Modal content-->
         <div class="modal-content">
             <form class="q4_form" data-ajax="true" method="post" >
@@ -74,7 +74,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="panel-modal-footer text-align">
+                <div class="modal-footer text-align">
                     <div class="row">
                         <div class="col-sm-12">
                             <input data-dismiss="modal" type="submit" class="inline_block_btn blue-light-button send-email q4_form_submit" value="<?=__('Send')?>" >
@@ -92,7 +92,7 @@
 
 <!-- qc-list-users-modal -->
 <div id="qc-list-users-modal" data-backdrop="static" data-keyboard="false" class="modal fade no-delete" role="dialog">
-    <div class="modal-dialog q4_project_modal plans-list-of-users-dialog">
+    <div class="modal-dialog q4_project_modal modal-dialog-1070">
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header q4_modal_header">
@@ -174,7 +174,7 @@
                     </div>
                 </div>
 
-                <div class="panel-modal-footer text-align">
+                <div class="modal-footer text-align">
                     <div class="row">
                         <div class="col-sm-12">
                             <a href="#" class="inline_block_btn blue-light-button confirm-selected-users mobile" data-dismiss="modal"><?=__('Confirm')?></a>

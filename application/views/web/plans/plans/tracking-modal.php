@@ -1,6 +1,6 @@
 <?defined('SYSPATH') OR die('No direct script access.');?>
 <div id="tracking-details-modal" data-backdrop="static" data-keyboard="false" class="modal tracking-details-modal  fade" role="dialog">
-    <div class="modal-dialog q4_project_modal tracking-details-dialog">
+    <div class="modal-dialog q4_project_modal modal-dialog-1170 tracking-details-dialog">
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header q4_modal_header">
@@ -67,7 +67,7 @@
                                     	<?foreach ($item->plans->find_all() as $plan):?>
 	                                        <tr>
 	                                            <td data-th="Plan name">
-                                                    <span class="q4-form-input" value="" title="<?=$plan->file()->original_name?>"><?=$plan->file()->getName()?></span>
+                                                    <span class="q4-form-input" value="" title="<?=$plan->file()->original_name?>"><?=$plan->name?></span>
                                                 </td>
                                                 <td data-th="File">
                                                     <span class="q4-form-input" title="<?=$plan->file()->original_name?>">
@@ -95,17 +95,17 @@
                                             <input type="file" accept=".jpg,.jpe,.jpeg,.png,.gif,.tif,.tiff,.pdf" class="upload-user-logo2"  name="file" />
                                         </div>
                                         <?if(!$item->file):?>
-                                            <div class="camera-bg">
+                                            <div class="camera-bg camera-default-image">
                                                 <img src="/media/img/camera.png" class="camera" alt="camera">
                                             </div>
-                                            <img class="hidden preview-user-image" alt="preview image">
+                                            <img class="hidden preview-user-image show-uploaded-image" alt="preview image">
                                         <?else:?>
                                             <a class="print-dt-link" target="_blank" href="/<?=$item->file?>">
-                                                    <?if(strtolower(end(explode('.',$item->file)))=='pdf'):?>
-                                                    <img src="/media/img/pdf-icon.png" class="preview-user-image pdf-icon" alt="pdf">
+                                                <?if(strtolower(end(explode('.',$item->file)))=='pdf'):?>
+                                                    <img src="/media/img/pdf-icon.png" class="preview-user-image show-uploaded-image pdf-icon" alt="pdf">
 
                                                 <?else:?>
-                                                    <img src="/<?=$item->file?>" class="preview-user-image" alt="preview user image">
+                                                    <img src="/<?=$item->file?>" class="preview-user-image show-uploaded-image" alt="preview user image">
                                                 <?endif;?>
                                             </a>
 
@@ -147,7 +147,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="panel-modal-footer text-align">
+                <div class="modal-footer text-align">
                     <div class="row">
                         <div class="col-sm-12">
                             <a href="#" class="q4-btn-lg orange q4_form_submit update-tracking-confirm"><?=__('Update')?></a>

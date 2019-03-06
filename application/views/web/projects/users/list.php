@@ -13,8 +13,12 @@
             <div class="col-lg-12">
                 <div class=" panel-options">
                     <div class="wrap_delete_users hide">
-                        <span><?=__('Delete users')?></span>
-                        <span class="delete_user" data-toggle="modal" data-target="#confirmation-modal-delete"><i class="q4bikon-delete"></i></span>
+                        <span class="inline-options">
+                            <span class="delete_user" data-toggle="modal" data-target="#confirmation-modal-delete">
+                                <i class="q4bikon-delete"></i>
+                            </span>
+                            <span class="inline-options-text"><?=__('Delete users')?></span>
+                        </span>
                     </div>
 
                     <span ><?=__('Add new user')?></span>

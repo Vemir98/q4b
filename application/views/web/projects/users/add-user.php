@@ -11,7 +11,7 @@
 <div id="users-list-modal" class="modal fade" data-backdrop="static" data-keyboard="false" role="dialog">
     <form class="form-horizontal q4_form" action="<?=$action?>" data-ajax="true" method="post">
     <input type="hidden" value="" name="x-form-secure-tkn"/>
-    <div class="modal-dialog q4_project_modal users-list-dialog">
+    <div class="modal-dialog q4_project_modal modal-dialog-1170">
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header q4_modal_header">
@@ -95,7 +95,7 @@
                     </div>
                 </div>
             </div>
-            <div class="panel-modal-footer text-right">
+            <div class="modal-footer text-align">
                 <div class="row">
                     <div class="col-sm-12">
                         <a href="#" class="inline_block_btn orange_button q4_form_submit"><?=__('Add to list')?></a>

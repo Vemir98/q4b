@@ -13,8 +13,11 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="panel-options">
-                    <span ><?=__('Add new task')?></span>
-                    <a class="orange_plus_small add-task"  id="new_task"><i class="plus q4bikon-plus"></i></a>
+                    <span class="inline-options">
+                        <a class="orange_plus_small add-task"  id="new_task"><i class="plus q4bikon-plus"></i></a>
+                        <span class="inline-options-text"><?=__('Add new task')?></span>
+                    </span>
+
                 </div>
 
                 <table class="new_company_table settings-tasks-table responsive_table table" data-toggle="table">

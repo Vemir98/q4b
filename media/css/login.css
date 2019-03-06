@@ -943,13 +943,7 @@ html.rtl {
   .rtl .login_input {
     padding: 0 40px 0 6px;
     text-align: right; }
-  .rtl .select_wrapper:before {
-    right: inherit;
-    left: 10px; }
-  .rtl .select_wrapper select {
-    padding: 0px 10px 0px 10px; }
-    .rtl .select_wrapper select.select-icon {
-      padding: 0px 45px 0px 10px; }
+
   .rtl .generate-reports .generate-reports-body .report-range-box .report-range-unit:first-child {
     padding-left: 0;
     padding-right: 80px; }
@@ -962,8 +956,7 @@ html.rtl {
     -o-transform: rotate(180deg);
     -ms-transform: rotate(180deg);
     transform: rotate(180deg); }
-  .rtl .generate-reports .generate-reports-body #advanced-reports .select_wrapper select.suppress {
-    padding: 0px 22px 0px 5px; }
+
   .rtl .generate-reports .generate-reports-footer {
     text-align: left; }
     .rtl .generate-reports .generate-reports-footer .clear-all-reports {

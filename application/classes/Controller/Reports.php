@@ -231,14 +231,14 @@ SELECT cc.id, cc.name, count(craft_id) `count`
 FROM quality_controls qc
 JOIN cmp_crafts cc ON qc.craft_id = cc.id '.($filteredCraftsListQuery['join'] ?: null).'
 WHERE qc.project_id = '.$data['project'].' AND qc.craft_id IN ('.implode(',',$data['crafts']).')
-AND (qc.created_at BETWEEN '.$data['from'].' AND '.$data['to'].') AND cc.status="'.Enum_Status::Enabled.'"
+AND (qc.due_date BETWEEN '.$data['from'].' AND '.$data['to'].') AND cc.status="'.Enum_Status::Enabled.'"
 AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: null).' GROUP BY qc.craft_id
 ')->execute()->as_array('id');
         }else{
             if(!empty($filteredCraftsListQuery['and'])){
                 $filteredCraftsListQuery['and'] = implode(' ',$filteredCraftsListQuery['and']);
             }
-            $filteredCraftsList = DB::query(Database::SELECT,'SELECT cc.id, cc.name, count(craft_id) `count` FROM quality_controls qc JOIN cmp_crafts cc ON qc.craft_id = cc.id WHERE qc.project_id = '.$data['project'].' AND qc.craft_id IN ('.implode(',',$data['crafts']).') AND (qc.created_at BETWEEN '.$data['from'].' AND '.$data['to'].') AND cc.status="'.Enum_Status::Enabled.'" AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: null).' GROUP BY qc.craft_id')->execute()->as_array('id');
+            $filteredCraftsList = DB::query(Database::SELECT,'SELECT cc.id, cc.name, count(craft_id) `count` FROM quality_controls qc JOIN cmp_crafts cc ON qc.craft_id = cc.id WHERE qc.project_id = '.$data['project'].' AND qc.craft_id IN ('.implode(',',$data['crafts']).') AND (qc.due_date BETWEEN '.$data['from'].' AND '.$data['to'].') AND cc.status="'.Enum_Status::Enabled.'" AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: null).' GROUP BY qc.craft_id')->execute()->as_array('id');
         }
         if($floorsNeedJoin){
             $qcs->join('pr_floors','INNER');
@@ -252,8 +252,8 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
 
 
 
-        $qcs->and_where('qualitycontrol.created_at','>=',$data['from']);
-        $qcs->and_where('qualitycontrol.created_at','<=',$data['to']);
+        $qcs->and_where('qualitycontrol.due_date','>=',$data['from']);
+        $qcs->and_where('qualitycontrol.due_date','<=',$data['to']);
         $paginationSettings = [
             'items_per_page' => 7,
             'view'              => 'pagination/project',
@@ -307,15 +307,15 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                 ];
 
                 $filteredCraftsParams['mngrApprovalStatuses'] = [
-                    Enum_QualityControlApproveStatus::Waiting => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('approval_status','=',Enum_QualityControlApproveStatus::Waiting)->and_where('qualitycontrol.created_at','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->and_where('qualitycontrol.craft_id', 'IN', DB::expr('('.implode(',',$data['crafts']).')')),
-                    Enum_QualityControlApproveStatus::ForRepair => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('approval_status','=',Enum_QualityControlApproveStatus::ForRepair)->and_where('qualitycontrol.created_at','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->and_where('qualitycontrol.craft_id', 'IN', DB::expr('('.implode(',',$data['crafts']).')')),
-                    Enum_QualityControlApproveStatus::Approved => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('approval_status','=',Enum_QualityControlApproveStatus::Approved)->and_where('qualitycontrol.created_at','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->and_where('qualitycontrol.craft_id', 'IN', DB::expr('('.implode(',',$data['crafts']).')')),
+                    Enum_QualityControlApproveStatus::Waiting => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('approval_status','=',Enum_QualityControlApproveStatus::Waiting)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->and_where('qualitycontrol.craft_id', 'IN', DB::expr('('.implode(',',$data['crafts']).')')),
+                    Enum_QualityControlApproveStatus::ForRepair => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('approval_status','=',Enum_QualityControlApproveStatus::ForRepair)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->and_where('qualitycontrol.craft_id', 'IN', DB::expr('('.implode(',',$data['crafts']).')')),
+                    Enum_QualityControlApproveStatus::Approved => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('approval_status','=',Enum_QualityControlApproveStatus::Approved)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->and_where('qualitycontrol.craft_id', 'IN', DB::expr('('.implode(',',$data['crafts']).')')),
                 ];
                 $filteredCraftsParams['statuses'] = [
-                    Enum_QualityControlStatus::Existing => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('status','=',Enum_QualityControlStatus::Existing)->and_where('qualitycontrol.created_at','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->and_where('qualitycontrol.craft_id', 'IN', DB::expr('('.implode(',',$data['crafts']).')')),
-                    Enum_QualityControlStatus::Normal => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('status','=',Enum_QualityControlStatus::Normal)->and_where('qualitycontrol.created_at','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->and_where('qualitycontrol.craft_id', 'IN', DB::expr('('.implode(',',$data['crafts']).')')),
-                    Enum_QualityControlStatus::Repaired => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('status','=',Enum_QualityControlStatus::Repaired)->and_where('qualitycontrol.created_at','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->and_where('qualitycontrol.craft_id', 'IN', DB::expr('('.implode(',',$data['crafts']).')')),
-                    Enum_QualityControlStatus::Invalid => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('status','=',Enum_QualityControlStatus::Invalid)->and_where('qualitycontrol.created_at','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->and_where('qualitycontrol.craft_id', 'IN', DB::expr('('.implode(',',$data['crafts']).')')),
+                    Enum_QualityControlStatus::Existing => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('status','=',Enum_QualityControlStatus::Existing)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->and_where('qualitycontrol.craft_id', 'IN', DB::expr('('.implode(',',$data['crafts']).')')),
+                    Enum_QualityControlStatus::Normal => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('status','=',Enum_QualityControlStatus::Normal)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->and_where('qualitycontrol.craft_id', 'IN', DB::expr('('.implode(',',$data['crafts']).')')),
+                    Enum_QualityControlStatus::Repaired => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('status','=',Enum_QualityControlStatus::Repaired)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->and_where('qualitycontrol.craft_id', 'IN', DB::expr('('.implode(',',$data['crafts']).')')),
+                    Enum_QualityControlStatus::Invalid => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('status','=',Enum_QualityControlStatus::Invalid)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->and_where('qualitycontrol.craft_id', 'IN', DB::expr('('.implode(',',$data['crafts']).')')),
                 ];
 
             }else{
@@ -332,15 +332,15 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                 ];
 
                 $filteredCraftsParams['mngrApprovalStatuses'] = [
-                    Enum_QualityControlApproveStatus::Waiting => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('craft_id','=',(int)$data['crafts'][0])->and_where('approval_status','=',Enum_QualityControlApproveStatus::Waiting)->and_where('qualitycontrol.created_at','BETWEEN',DB::expr($data['from'].' AND '.$data['to'])),
-                    Enum_QualityControlApproveStatus::ForRepair => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('craft_id','=',(int)$data['crafts'][0])->and_where('approval_status','=',Enum_QualityControlApproveStatus::ForRepair)->and_where('qualitycontrol.created_at','BETWEEN',DB::expr($data['from'].' AND '.$data['to'])),
-                    Enum_QualityControlApproveStatus::Approved => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('craft_id','=',(int)$data['crafts'][0])->and_where('approval_status','=',Enum_QualityControlApproveStatus::Approved)->and_where('qualitycontrol.created_at','BETWEEN',DB::expr($data['from'].' AND '.$data['to'])),
+                    Enum_QualityControlApproveStatus::Waiting => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('craft_id','=',(int)$data['crafts'][0])->and_where('approval_status','=',Enum_QualityControlApproveStatus::Waiting)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to'])),
+                    Enum_QualityControlApproveStatus::ForRepair => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('craft_id','=',(int)$data['crafts'][0])->and_where('approval_status','=',Enum_QualityControlApproveStatus::ForRepair)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to'])),
+                    Enum_QualityControlApproveStatus::Approved => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('craft_id','=',(int)$data['crafts'][0])->and_where('approval_status','=',Enum_QualityControlApproveStatus::Approved)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to'])),
                 ];
                 $filteredCraftsParams['statuses'] = [
-                    Enum_QualityControlStatus::Existing => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('craft_id','=',(int)$data['crafts'][0])->and_where('status','=',Enum_QualityControlStatus::Existing)->and_where('qualitycontrol.created_at','BETWEEN',DB::expr($data['from'].' AND '.$data['to'])),
-                    Enum_QualityControlStatus::Normal =>  ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('craft_id','=',(int)$data['crafts'][0])->and_where('status','=',Enum_QualityControlStatus::Normal)->and_where('qualitycontrol.created_at','BETWEEN',DB::expr($data['from'].' AND '.$data['to'])),
-                    Enum_QualityControlStatus::Repaired => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('craft_id','=',(int)$data['crafts'][0])->and_where('status','=',Enum_QualityControlStatus::Repaired)->and_where('qualitycontrol.created_at','BETWEEN',DB::expr($data['from'].' AND '.$data['to'])),
-                    Enum_QualityControlStatus::Invalid => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('craft_id','=',(int)$data['crafts'][0])->and_where('status','=',Enum_QualityControlStatus::Invalid)->and_where('qualitycontrol.created_at','BETWEEN',DB::expr($data['from'].' AND '.$data['to'])),
+                    Enum_QualityControlStatus::Existing => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('craft_id','=',(int)$data['crafts'][0])->and_where('status','=',Enum_QualityControlStatus::Existing)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to'])),
+                    Enum_QualityControlStatus::Normal =>  ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('craft_id','=',(int)$data['crafts'][0])->and_where('status','=',Enum_QualityControlStatus::Normal)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to'])),
+                    Enum_QualityControlStatus::Repaired => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('craft_id','=',(int)$data['crafts'][0])->and_where('status','=',Enum_QualityControlStatus::Repaired)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to'])),
+                    Enum_QualityControlStatus::Invalid => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('craft_id','=',(int)$data['crafts'][0])->and_where('status','=',Enum_QualityControlStatus::Invalid)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to'])),
                 ];
             }
 

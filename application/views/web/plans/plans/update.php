@@ -1,16 +1,8 @@
 <?defined('SYSPATH') OR die('No direct script access.');?>
-<?php
-/**
- * Created by PhpStorm.
- * User: SUR0
- * Date: 23.03.2017
- * Time: 15:26
- */
 
-?>
 <?$disabled = $item->hasQualityControl() ? ' disabled-input': ''?>
 <div id="update-plan-modal" class="modal fade" data-backdrop="static" data-keyboard="false" role="dialog">
-    <div class="modal-dialog q4_project_modal plans-details-dialog">
+    <div class="modal-dialog q4_project_modal modal-dialog-1170">
         <form class="q4_form" action="<?=$action?>" data-ajax="true" method="post">
         <input type="hidden" value="" name="x-form-secure-tkn"/>
             <!-- Modal content-->
@@ -20,16 +12,22 @@
                         <button type="button" class="close q4-close-modal" data-dismiss="modal"><i class="q4bikon-close"></i></button>
                         <div class="clear"></div>
                     </div>
+
                     <div class="q4_modal_sub_header">
-                        <h3><?=__('Plan Details')?> | <?=__("File name")?>: <a href="<?=$item->file()->originalFilePath()?>" target="_blank"><?=$item->file()->original_name?></a></h3>
+                        <h3><?=__('Plan Details')?> | <?=__("File name")?>: <a href="<?=$item->file()->originalFilePath()?>" target="_blank"><?=$item->file()->original_name?></a> </h3>
+                        <div class="q4_modal_sub_header-right">
+                            <span><?=__('Upload date')?></span>
+                            <input type="text" class="table_input disabled-input" value="<?=date('d/m/Y',$item->created_at)?>">
+                        </div>
                     </div>
+
                 </div>
                 <div class="modal-body bb-modal">
                     <div class="plans-modal-dialog-top">
                         <div class="row">
                             <div class="form-group col-28 rtl-float-right">
                                 <label class="table_label"><?=__('Plan name')?></label>
-                                <input type="text" class="table_input<?=$disabled?>" name="name" value="<?=$item->file() ? $item->file()->getName()  : $item->name;?>">
+                                <input type="text" class="table_input<?=$disabled?>" name="name" value="<?=$item->name?>">
                             </div>
                             <div class="form-group col-28 rtl-float-right">
                                 <label class="table_label"><?=__('Property')?></label>
@@ -62,9 +60,9 @@
                                 </div>
                             </div>
                             <div class="form-group col-16 rtl-float-right">
-                                <label class="table_label"><?=__('Upload date')?></label>
+                                <label class="table_label">Sheet Number</label>
                                 <div class="input-group form-group">
-                                    <input type="text" class="table_input disabled-input" value="<?=date('d/m/Y',$item->created_at)?>">
+                                    <input type="text" class="table_input" name="sheet_number" value="<?=$item->sheet_number?>">
                                 </div>
                             </div>
                         </div>
@@ -213,9 +211,9 @@
                                 <label class="table_label"><?=__('Scale')?></label>
                                 <input type="text" class="table_input<?=$disabled?>" name="scale" value="<?=$item->scale?>">
                             </div>
-                            <div class="form-group col-14 rtl-float-right">
+                            <div class="form-group col-14 rtl-float-right relative">
                                 <label class="table_label"><?=__('Edition')?></label>
-                                <input type="text" class="table_input<?=$disabled?>" name="edition" value="<?=$item->edition?>">
+                                <input type="text" class="table_input<?=$disabled?> q4_required " name="edition" value="<?=$item->edition?>">
                             </div>
                             <div class="form-group col-28 rtl-float-right">
                                 <label class="table_label"><?=__('Status')?></label>
@@ -228,7 +226,6 @@
                             </div>
                         </div>
                     </div>
-
 
 
                     <div class="plans-modal-dialog-bottom">
@@ -296,7 +293,7 @@
 
                         <div class="row">
                             <div class="form_row">
-                                <div class="form-group col-md-6 rtl-float-right">
+                                <div class="form-group col-md-12 rtl-float-right">
                                     <div class="mt-15 mb-15">
                                         <label class="table_label"><?=__('Description')?></label>
                                     </div>
@@ -304,63 +301,13 @@
                                         <textarea class="modal-plans-details-textarea" name="description"><?=$item->description?></textarea>
                                     </div>
                                 </div>
-                                <div class="form-group col-md-6 rtl-float-right">
-                                <?$files = $item->extra_files->where('status','=',Enum_FileStatus::Active)->order_by("id","DESC")->find_all()?>
 
-                                    <div class="wrap-image-lists">
-                                        <div class="modal-images-list-box absoluted">
-                                            <a href="#" class="q4-btn-lg light-blue-bg modal-load-images"><?=__('Load files')?></a>
-                                            <div class="hide-upload">
-                                                <input type="file" class="load-images-input" data-id="<?=uniqid()?>" multiple name="images[]">
-                                            </div>
-                                        </div>
-                                        <div class="mt-15 mb-15">
-                                            <label class=" table_label"><?=__('File(s) list').'(<span class="count-fl-list">'.count($files).'</span>)';?></label>
-                                        </div>
-                                    </div>
-
-
-                                    <div id="new-plan-images-list" class="modal-images-list-table images-list"><!--details-images-list-->
-                                        <table>
-                                            <tbody>
-                                                <?$fileIterator = 1;?>
-                                                <?foreach ($files as $file):?>
-
-                                                <tr>
-                                                    <td data-th="<?=__('Image')?>">
-                                                            <span class="modal-tasks-image-action">
-                                                                <a href="<?=$file->originalFilePath()?>" title="<?=$file->original_name?>" target="_blank">
-                                                                    <span class="modal-tasks-image-number"><?=$fileIterator++?>.</span>
-                                                                    <span class="modal-tasks-image-name"><?=$file->original_name?></span>
-                                                                    <span class="modal-img-upload-date">(<?=__('uploaded')?>: <?=date('d.m.Y H:i',$file->created_at)?>)</span>
-                                                                </a>
-                                                            </span>
-                                                    </td>
-                                                    <td data-th="<?=__('Download')?>" class="modal-tasks-image-option">
-                                                        <span class="modal-tasks-image-action">
-                                                            <a href="<?=$file->originalFilePath()?>" class="download_file" download="<?=$file->original_name?>">
-                                                                <i class="q4bikon-download"></i>
-                                                            </a>
-                                                        </span>
-                                                    </td>
-                                                    <td data-th="<?=__('Delete')?>" class="modal-tasks-image-option">
-                                                        <span class="modal-tasks-image-action">
-                                                            <span class="delete_row" data-url="<?=URL::site('/projects/delete_plans_file/'.$_PROJECT->id).'/'.$item->id.'/'.$file->token?>"><i class="q4bikon-delete"></i></span>
-                                                        </span>
-                                                    </td>
-
-                                                </tr>
-                                                <?endforeach;?>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
                             </div>
 
                         </div>
                     </div>
                 </div>
-                <div class="panel-modal-footer text-align">
+                <div class="modal-footer text-align">
                     <div class="row">
                         <div class="col-sm-12">
                             <a href="#" class="inline_block_btn orange_button q4_form_submit update-plan-confirm"><?=__('Update')?></a>

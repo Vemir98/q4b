@@ -9,7 +9,7 @@
 ?>
 
 <div id="new-plans-modal" class="modal new-plans-modal" data-backdrop="static" data-keyboard="false" role="dialog">
-    <div class="modal-dialog q4_project_modal plans-details-dialog">
+    <div class="modal-dialog q4_project_modal modal-dialog-1170">
         <form class="q4_form" action="<?=$action?>" data-ajax="true" method="post">
             <input type="hidden" value="" name="x-form-secure-tkn"/>
             <!-- Modal content-->
@@ -181,7 +181,7 @@
 
                 </div>
             </div>
-                <div class="panel-modal-footer text-align">
+                <div class="modal-footer text-align">
                     <div class="row">
                         <div class="col-sm-12">
                             <a href="#" class="q4-btn-lg orange q4_form_submit disabled-gray-button"><?=__('Update')?></a>

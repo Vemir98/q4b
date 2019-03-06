@@ -41,7 +41,7 @@
                     </div>
                 </div>
             </div>
-            <div class="panel-modal-footer text-center form_row">
+            <div class="modal-footer text-center form_row">
                 <div class="row">
                     <div class="col-sm-12">
                         <a href="#" id="change-main-image" class="change-main-image"><?=__('Change main image')?></a>

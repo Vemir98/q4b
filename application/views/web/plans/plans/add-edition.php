@@ -1,15 +1,7 @@
 <?defined('SYSPATH') OR die('No direct script access.');?>
-<?php
-/**
- * Created by PhpStorm.
- * User: SUR0
- * Date: 23.03.2017
- * Time: 17:11
- */
-?>
 
 <div id="new-plans-modal" class="modal new-plans-modal" data-backdrop="static" data-keyboard="false" role="dialog">
-    <div class="modal-dialog q4_project_modal plans-details-dialog">
+    <div class="modal-dialog q4_project_modal modal-dialog-1170 plans-details-dialog">
         <form class="q4_form" action="<?=$action?>" data-ajax="true" method="post">
             <input type="hidden" value="" name="x-form-secure-tkn"/>
             <!-- Modal content-->
@@ -32,7 +24,7 @@
                         <div class="row">
                             <div class="form-group col-28 rtl-float-right">
                                 <label class="table_label"><?=__('Plan name')?></label>
-                                <input type="text" class="table_input disabled-input" value="<?=$item->file() ? $item->file()->getName() : $item->name;?>">
+                                <input type="text" class="table_input disabled-input" value="<?=$item->name;?>">
                             </div>
                             <div class="form-group col-28 rtl-float-right">
                                 <label class="table_label"><?=__('Property')?></label>
@@ -94,6 +86,12 @@
                                 </div>
                             </div>
 
+                            <div class="form-group col-16 rtl-float-right">
+                                <label class="table_label">Sheet Number</label>
+                                <div class="input-group form-group">
+                                    <input type="text" class="table_input plans-sheet-number disabled-input" value="<?=$item->sheet_number?>" disabled name="sheet_number">
+                                </div>
+                            </div>
                         </div>
 
                         <div class="row">
@@ -181,7 +179,7 @@
 
                 </div>
             </div>
-                <div class="panel-modal-footer text-align">
+                <div class="modal-footer text-align">
                     <div class="row">
                         <div class="col-sm-12">
                             <a href="#" class="q4-btn-lg orange q4_form_submit disabled-gray-button"><?=__('Update')?></a>

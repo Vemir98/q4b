@@ -105,6 +105,7 @@
 
             form.find('select.q4_select').each(function() {
                 var element = $(this);
+
                 if (!element.val()) {
                     element.addClass('error');
                     errorText = empty_select[_current_lang];
@@ -156,6 +157,20 @@
             }
         },
 
+        validateSelect:function(element, message){
+
+            if(element.closest('.select-wrapper').length == 1){
+                element.closest('.select-wrapper').append('<div class="q4_error_message">' +
+                    message +
+                    '</div>');
+            }
+            if(element.closest('td').length == 1){
+                element.closest('td').append('<div class="q4_error_message">' +
+                    message +
+                    '</div>');
+            }
+        },
+
 
         /**
          * Remove error messages from form fields
@@ -201,7 +216,7 @@
                         var self = $(el);
                         var planId = self.data('planid');
 
-                        self.closest('tr').find('input[type=checkbox]').closest('td').removeClass('disabled-input')
+                        self.closest('tr').find('input[type=checkbox]').closest('td').removeClass('disabled-input');
 
 
                         if(planId!=undefined && methods.in_array(planId,selected)){
@@ -302,13 +317,13 @@
 
         },
 
-        imageToBase64: function(selector,file){
+        imageToBase64: function(selector,file,pluginClass){
 
             var dataSrc = 'new';
             var reader = new FileReader();
             reader.onload = function() {
                 dataSrc = reader.result;
-                $(document).find('.call-lit-plugin.'+selector).data('url',dataSrc);
+                $(document).find(pluginClass+'.'+selector).data('url',dataSrc);
             }
             reader.readAsDataURL(file);
         },
@@ -353,11 +368,17 @@
                 methods.updateContentOnChange();
             }, 500);
         },
+        updateContentPlans: function(){
+
+            var windowWidth = window.innerWidth;
+            methods.setScrollBarWidth($(document).find('.tab_panel').find('.scrollable-table'), windowWidth);
+
+        },
         updateCurrentOnChange: function(selector){
 
             methods.setCarouselDirection(selector, 10);
             methods.owlPagination(selector);
-            methods.setScrollbarDirection('.scrollable-table');
+            //methods.setScrollbarDirection('.scrollable-table');
         },
         utf8_encode: function (str_data) { // Encodes an ISO-8859-1 string to UTF-8
 
@@ -454,20 +475,20 @@
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
 
-                $(element).closest('.hide-upload').siblings(".camera-bg").hide();
-                $(element).closest('.hide-upload').siblings(".preview-user-image").removeClass('hidden');
+                $(element).closest('.hide-upload').siblings(".camera-default-image").hide();
+                $(element).closest('.hide-upload').siblings(".show-uploaded-image").removeClass('hidden');
 
                 reader.onload = function(e) {
-                    $(element).closest('.hide-upload').siblings(".preview-user-image").attr('src', e.target.result);
+                    $(element).closest('.hide-upload').siblings(".show-uploaded-image").attr('src', e.target.result);
                 }
 
                 reader.readAsDataURL(input.files[0]);
 
             }
 
-            if ($(element).closest('.upload-logo').hasClass('error')) {
+            if ($(element).closest('.up-box').hasClass('error')) {
                 $(element).removeClass('error');
-                $(element).closest('.upload-logo').removeClass('error');
+                $(element).closest('.up-box').removeClass('error');
             }
 
 
@@ -507,8 +528,11 @@
                     } else {
                         //TO DO добавить функционал для планов (plugin)
                         var classPlugin = modalId.indexOf('plan') !=-1 ? '' : 'call-lit-plugin';
+                        // if(modalId=="klir"){
+                        //     classPlugin = 'call-lit-plugin-without-modal';
+                        // }
                         var selector = "id" + Math.random().toString(9).replace('.', '');
-                        $.fn.utilities('imageToBase64', selector, standardFiles[i]);
+                        $.fn.utilities('imageToBase64', selector, standardFiles[i],'.'+classPlugin);
                         $(input).closest('.modal').find('.modal-images-list-table table tbody')
                             .prepend('<tr class="dynamically-appended">' +
                                        '<td>' +
@@ -683,6 +707,46 @@
             self.siblings('.panel_content').slideToggle(300);
         },
 
+        generateMultiSelectFloor: function (min, max) {
+            // var minF = min<=max ?  min : max;
+            // var maxF = min>=max ?  max : min;
+
+
+            var html = '<div class="multi-select-box comma">'  +
+                '<div class="select-imitation q4-form-input floor-numbers">'  +
+                '<span class="select-imitation-title"></span>'  +
+
+                '<div class="over-select"></div><i class="arrow-down q4bikon-arrow_bottom"></i>'  +
+                '</div>'  +
+                '<div class="checkbox-list-no-scroll hidden">'  ;
+            var select ='<select class="hidden-select" multiple>';
+
+            for(var i = min; i <= max; i++){
+                html +=
+                '<div class="checkbox-list-row">'  +
+                        '<span class="checkbox-text">'  +
+                        '<label class="checkbox-wrapper-multiple inline" data-val="'+i+'">'  +
+                        '<span class="checkbox-replace"></span>'  +
+                        '<i class="checkbox-list-tick q4bikon-tick"></i>'  +
+                        '</label>'  +
+                        '<span class="checkbox-text-content bidi-override">'  +
+
+                   i+
+
+                '</span>'  +
+                    '</span></div>';
+
+                select += '<option value="'+i+'">'+i+'</option>';
+
+
+            }
+            html +=
+                '</div>';
+
+            select +='</select>';
+
+            return html +select + '</div>';
+        }
 
     };
 

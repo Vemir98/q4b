@@ -111,7 +111,7 @@
                     </div>
                 </div>
 
-                <div class="panel-modal-footer text-align">
+                <div class="modal-footer text-align">
                     <a href="#" class="inline_block_btn orange_button cc_form_submit submit"><?=__('Update')?></a>
                 </div>
             </form>

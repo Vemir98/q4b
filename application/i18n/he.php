@@ -43,7 +43,7 @@ return [
     'results from'=>'תוצאות',
     'Project'=>'פרויקט',
     'Projects'=>'פרויקטים',
-    'Menu _Projects'=>'פרויקטים/בקרות',
+    'Menu _Projects'=>'פרויקטים',
     'Tooltip _Projects' => 'פרויקטים/בקרות',
     'Country'=>'מדינה',
     'Status'=>'סטטוס',
@@ -154,6 +154,7 @@ return [
     'pr_stage_4'=>'עבודות גימורים',
     'pr_stage_5'=>'עבודות פיתוח',
     'pr_stage_6'=>'מסירות',
+    'pr_stage_7'=>'מערך בדיקות',
     'Project images'=>'תמונות הפרויקט',
     'Main Image'=>'תמונה ראשי',
     'Change main image'=>'החלפת תמונה ראשית',
@@ -253,13 +254,14 @@ return [
     'suspended' => 'מוקפא',
     'waiting' => 'ממתין לאישור',
     'for_repair' => 'לתיקון',
-    'not_compatible_with_craft' => 'לא תואם פתיחת מלאכה',
-    'not_standard' => 'לא תואם תקן',
-    'does_not_match' => 'לא תואם הסכם/מפרט',
-    'not_compatible_with_plan' => 'לא תואם תוכנית/סטנדרט',
-    'for_immediate_treatment' => 'לטיפול מידי',
-    'do_not_go_th_stage' => 'אין לעבור שלב/מלאכה',
-    'do_not_prc_without_suv_approve' => 'אין להמשיך ללא אישור פיקוח',
+    'not_compatible_with_craft' => 'מהותי',
+    'not_standard' => 'ויזואלי',
+    'does_not_match' => 'אינו תואם מפרט',
+    'not_compatible_with_plan' => 'אינו תואם תוכניות',
+    'for_immediate_treatment' => 'ליקוי ביצוע',
+    'do_not_go_th_stage' => 'תאום תכנון',
+    'do_not_prc_without_suv_approve' => 'תיאום ניהול עבודה',
+    'compliance_of_materials' => 'התאמת חומרים',
     'Element number' => 'שם/מספר מרחב',
     'Element ID' => 'מספר סידורי',
     'Element type' => 'סוג מרחב',
@@ -270,8 +272,8 @@ return [
     'Responsible profession' => 'באחריות',
     'Tasks List' => 'רשימת בדיקות',
     'Conditions' => 'התניות',
-    'Severity Level' => 'דרגות חומרה',
-    'Conditions List' => 'רשימת התניות',
+    'Severity Level' => 'רמת חומרה',
+    'Conditions List' => 'ליקויים',
     'Viewed by' => 'נצפה על ידי',
     'Choose Plan' => 'לבחירת תוכנית',
     'Confirm' => 'לאשר',
@@ -460,7 +462,7 @@ return [
     'Select type' => 'בחר/י סוג',
     'Print date' => 'תאריך הדפסה',
     'Departure date'=>'תאריך שליחה',
-    'Received date'=>'תאריך קבלה',
+    'Received date'=>'התקבל חתום',
     'Recipient person' => 'שם המקבל',
     'Back to list of plans' => 'חזרה לרשימת התוכניות',
     'Date tracking' => 'טבלת מעקב',
@@ -620,6 +622,44 @@ return [
 
 "Crop" => "חיתוך",
 
+"Field Invalid Condition Is Required" => "נדרש למלא שדה רשימת התניות",
+
+"Field Invalid Severity Is Required" => "נדרש למלא שדה דרגות חומרה",
+
+"Leave" => "להפסיק",
+
+"Plan Sync Finished" => "סנכרון תוכנית הסתיים",
+
+"Download Finished" => "ההורדה הסתיימה",
+
+"Synchronising Plan" => "סנכרון תוכנית",
+
+"Removing Plans" => "הסרת תוכניות",
+
+"Downloading Invalid Image" => "מוריד תמונה של ליקויים",
+
+"Removing Invalid Images" => "הסרת תמונות של ליקויים",
+
+"Translations" => "תרגומים",
+
+"Invalid Forms" => "בקרות בסטטוס לא תקין",
+
+"Professions and Specialties" => "מלאכות ומקצועות",
+
+"Without a file" => "ללא קובץ",
+"With a file" => "עם קובץ",
+"All" => "הכל",
+"Tracking" => "מעקב",
+"Delivery" => "מסירה",
+"Copy" => "להעתיק",
+"Sheet Number" => "מספר גיליון",
+"File" => "קובץ",
+"Updates note" => "מהות העדכון",
+"Delivered date" => "נמסר לשטח",
+
+"Add plans" =>  "הוספת תוכניות",
+"Please  fill all fields" => "בבקשה תמלא את כל השדות",
+
 
 
 
@@ -666,5 +706,11 @@ return [
     'Assignment. Any attempt by Licensee' => 'המחאה. כל ניסיון של המשתמש להעניק רישיון משנה, להמחות או להעביר זכויות, חובות או התייחבויות המפורטות להלן, למעט בהתאם להוראות תנאי השימוש, בטל. אין לפרש דבר מה בהסכם זה כמונע מהחברה להעביר כל אחת או חלק מזכויותיו או מחובותיו לפי הסכם זה לצד שלישי.',
     'Interpretation. In the event of any conflict' => 'פרשנות. במקרה של סתירה או חוסר עקביות בין תנאי השימוש לבין כל הסכם נוסף, אזי למעט במידה שכל הסכם נוסף יחליף במפורש או יבטל סעיף מסוים של תנאי השימוש, תנאי השימוש זה יחול ויגבר על חוסר העקביות.',
     //end of translation
+    ':user | Quality control # :id | :project' => ':user | בקרת איכות # :id | :project',// todo:: WTT
+    ':user | Report | :project' => ':user | דו״ח | :project',// todo:: WTT
+    'Filter by project'=>'הצג לפי  פרויקט',
+    'Search By Name'=>'חפש לפי שם או דוא"ל',
+    'Tracking file'=>'קובץ חתום',
+    'str_'=>'-',
     ''=>'',
 ];

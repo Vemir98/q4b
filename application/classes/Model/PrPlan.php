@@ -167,21 +167,34 @@ class Model_PrPlan extends MORM
 
     public function cloneIntoObject(Model_PrObject $object){
         $plan = ORM::factory('PrPlan');
-        $plan->values($this->as_array(),['name','edition','description','project_id','date','profession_id','scale','status']);
+        $plan->values($this->as_array(),['name','date','scale']);
+        $plan->project_id = $object->project_id;
+        $plan->object_id = $object->id;
         $plan->scope = self::getNewScope();
+
         if($this->place_id){
             $place = $object->places->where('number','=',$this->place->number)->find();
             if($place->loaded()){
                 $plan->place_id = $place->id;
             }
         }
-        $plan->object_id = $object->id;
-        if($this->file()->loaded()){
-            $name = $this->file()->getName();
-        }else{
-            $name = $this->name;
-        }
-        $plan->name = trim($name).' (copy)';
+
+        $copyPlanProfession = $object->project->company->professions->where('name','LIKE','%'. trim($this->profession->name) .'%')->find();
+
+        if(! $copyPlanProfession->loaded()) return false;
+
+        $plan->profession_id = $copyPlanProfession->id;
+
+//        if($this->file()->loaded()){ //Plan name is file name
+//            $name = $this->file()->getName();
+//        }else{
+//            $name = $this->name;
+//        }
+//        $plan->name = trim($name);
+
+        $plan->sheet_number = $this->sheet_number;
+        $plan->name = $this->name;
+        $plan->edition = 1; // todo:: WTF ???
         $plan->save();
         $floors = $this->floors->find_all();
         if(count($floors)){
@@ -190,17 +203,17 @@ class Model_PrPlan extends MORM
             }
         }
 
-        $files = $this->files->find_all();
-        foreach($files as $file){
-            $newFile = ORM::factory('PlanFile')->values(Arr::extract($file->as_array(),['name','original_name','mime','ext','path','status']));
-            $newFile->name = uniqid().'.'.$newFile->ext;
-            $newFile->token = md5($newFile->name).base_convert(microtime(false), 10, 36);
-            $newFile->save();
-            if (!copy($file->fullFilePath(), $newFile->fullFilePath())) {
-                throw new HDVP_Exception('Error while copy file');
-            }
-            $plan->add('files',$newFile->id);
-        }
+//        $files = $this->files->find_all();
+//        foreach($files as $file){
+//            $newFile = ORM::factory('PlanFile')->values(Arr::extract($file->as_array(),['name','original_name','mime','ext','path','status']));
+//            $newFile->name = uniqid().'.'.$newFile->ext;
+//            $newFile->token = md5($newFile->name).base_convert(microtime(false), 10, 36);
+//            $newFile->save();
+//            if (!copy($file->fullFilePath(), $newFile->fullFilePath())) {
+//                throw new HDVP_Exception('Error while copy file');
+//            }
+//            $plan->add('files',$newFile->id);
+//        }
 
         return $plan;
     }
@@ -235,8 +248,17 @@ class Model_PrPlan extends MORM
     public function hasQualityControl(){
         return (bool) $this->quality_controls->count_all();
     }
+
+    public function hasFile(){
+        return (bool) ($this->file()->loaded() and $this->has_file);
+    }
+
     public function file(){
         return $this->files->order_by('id','DESC')->find();
+    }
+
+    public function getProfession(){
+        return $this->profession;
     }
 
     public static function getPreResultItems($project_id){
@@ -247,5 +269,10 @@ class Model_PrPlan extends MORM
   LEFT JOIN files_custom_names fcn ON f.id = fcn.file_id 
   LEFT JOIN pr_places pp1 ON pp.place_id = pp1.id
   WHERE pp.project_id = '.(int)$project_id)->execute()->as_array();
+    }
+
+    public function isDeliveredAndReceived()
+    {
+        return (bool) ($this->delivered_at and $this->received_at);
     }
 }

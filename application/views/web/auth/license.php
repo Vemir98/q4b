@@ -91,7 +91,7 @@
                         <p><span class="num">25 </span><?=__('Interpretation. In the event of any conflict')?></p>
                     </div>
                 </div>
-                <div class="panel-modal-footer text-right-left">
+                <div class="modal-footer text-right-left">
                     <div class="row">
                         <div class="col-md-12">
                             <span class="q4-btn-lg light-blue-bg submit agree-with-terms"><?=__('Confirm')?></span>

@@ -23,22 +23,22 @@
                         <div class="row">
 
                             <div class="col-lg-3">
-                                <div class="set-image-block centered" data-id="projects">
-                                    <div class="upload-logo">
+                                <div class="set-image-block centered q4-file-upload" data-id="projects">
+                                    <div class="upload-logo up-box">
                                         <div class="hide-upload">
                                             <input type="file" accept=".jpg,.jpe,.jpeg,.png,.gif,.tif,.tiff" class="upload-user-logo"  name="images" />
                                         </div>
                                         <?if(!$_PROJECT->image_id):?>
-                                            <div class="camera-bg">
+                                            <div class="camera-bg camera-default-image">
                                                 <img src="/media/img/camera.png" class="camera" alt="camera">
                                             </div>
-                                            <img class="hidden preview-user-image" alt="preview image">
+                                            <img class="hidden preview-user-image show-uploaded-image" alt="preview image">
                                         <?else:?>
-                                            <img  class="preview-user-image" src="<?=$_PROJECT->main_image->originalFilePath()?>" alt="preview user image">
+                                            <img  class="preview-user-image show-uploaded-image" src="<?=$_PROJECT->main_image->originalFilePath()?>" alt="preview user image">
                                         <?endif?>
                                     </div>
                                      <?if(!Auth::instance()->get_user()->is('project_admin')&&!Auth::instance()->get_user()->is('project_supervisor')&&!Auth::instance()->get_user()->is('project_adviser')&&!Auth::instance()->get_user()->is('project_visitor')):?>
-                                        <a href="#" class="form-control light_blue_btn set-image-link"><?=__('Load projects images')?></a>
+                                        <a href="#" class="form-control light_blue_btn set-image-link trigger-image-upload"><?=__('Load projects images')?></a>
                                         <a href="#" data-url="<?=URL::site('projects/get_images/'.$_PROJECT->id)?>" class="form-control dark_blue_button see-project-images" data-toggle="modal" data-target="#see-project-images-modal"><?=__('See projects images')?></a>
                                     <?endif; ?>
                                 </div>
@@ -50,7 +50,7 @@
                                         <label class="table_label"><?=__('Project name')?></label>
                                         <div class="form-group form_row">
                                             <i class="input_icon q4bikon-project"></i>
-                                            <input type="text" name="name" class="q4-form-input symbol form_input q4_required" value="<?=$_PROJECT->name?>"/>
+                                            <input type="text" name="name" class="q4-form-input symbol q4_required" value="<?=$_PROJECT->name?>"/>
                                         </div>
                                     </div>
                                     <div class="col-lg-6 col-md-12 col-sm-12">
@@ -60,7 +60,7 @@
                                              <div class="select-wrapper select_large">
                                                 <i class="q4bikon-arrow_bottom"></i>
 
-                                                <select class="q4-select q4-form-input form_input select-icon-pd q4_select" name="status">
+                                                <select class="q4-select q4-form-input select-icon-pd q4_select" name="status">
                                                     <?foreach(Enum_ProjectStatus::toArray() as $status):?>
                                                         <?if($status == $_PROJECT->status):?>
                                                             <option value="<?=$status?>" selected="selected"><?=ucfirst(__($status))?></option>
@@ -79,8 +79,8 @@
                                         <label class="table_label"><?=__('Company')?></label>
                                         <div class="form-group form_row">
                                             <i class="input_icon q4bikon-companies"></i>
-                                            <input type="text" class="q4-form-input symbol form_input disabled-input" value="<?=$_PROJECT->company->name?>"/>
-                                            <input type="hidden" class="form_input disabled-input" name="company_id" value="<?=$_PROJECT->company->id?>"/>
+                                            <input type="text" class="q4-form-input symbol disabled-input" value="<?=$_PROJECT->company->name?>"/>
+                                            <input type="hidden" class="disabled-input" name="company_id" value="<?=$_PROJECT->company->id?>"/>
                                         </div>
 
                                     </div>
@@ -88,7 +88,7 @@
                                         <label class="table_label"><?=__('Project ID')?></label>
                                         <div class="form-group form_row">
                                             <i class="input_icon q4bikon-company_id"></i>
-                                            <input name="project_id" type="text" class="q4-form-input symbol form_input" value="<?=$_PROJECT->project_id?>"/>
+                                            <input name="project_id" type="text" class="q4-form-input symbol" value="<?=$_PROJECT->project_id?>"/>
                                         </div>
                                     </div>
                                 </div>
@@ -97,7 +97,7 @@
                                         <label class="table_label"><?=__('Address')?></label>
                                         <div class="form-group form_row">
                                             <i class="input_icon q4bikon-address"></i>
-                                            <input type="text" class="q4-form-input symbol form_input" name="address" value="<?=$_PROJECT->address?>"/>
+                                            <input type="text" class="q4-form-input symbol" name="address" value="<?=$_PROJECT->address?>"/>
                                         </div>
                                     </div>
 
@@ -126,7 +126,7 @@
                                         <label class="table_label"><?=__('Owner')?></label>
                                         <div class="form-group form_row">
                                             <i class="input_icon q4bikon-username"></i>
-                                            <input type="text" name="owner" class="q4-form-input symbol form_input" value="<?=$_PROJECT->owner?>"/>
+                                            <input type="text" name="owner" class="q4-form-input symbol" value="<?=$_PROJECT->owner?>"/>
                                         </div>
                                     </div>
                                 </div>

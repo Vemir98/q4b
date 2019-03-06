@@ -337,7 +337,7 @@ class Controller_Api_Projects extends HDVP_Controller_API
             foreach ($plans as $plan){
                 $planItems[$plan['id']] = [
                     'id' => $plan['id'],
-                    'name' => $this->planFileName($plan),
+                    'name' => $plan['name'],
                     'file' => $this->planFileLink($plan),
                     'createdAt' => $plan['createdAt'],
                     'createdBy' => $plan['createdBy'],
@@ -403,7 +403,11 @@ class Controller_Api_Projects extends HDVP_Controller_API
         $filename[] = 'jpg';
         $filename = implode('.',$filename);
         if(!file_exists(DOCROOT.implode('/',[$plan['filePath'],$filename]))){
-            $filename = $plan['fileName'];
+            $filename = preg_replace('~.jpg$~','.png',$filename);
+            if(!file_exists(DOCROOT.implode('/',[$plan['filePath'],$filename]))){
+                $filename = $plan['fileName'];
+            }
+
         }
 
         return '/'.implode('/',[$plan['filePath'],$filename]);
@@ -450,6 +454,7 @@ class Controller_Api_Projects extends HDVP_Controller_API
                 'message',
                 'unique_token'
             ]);
+
         $clientData['unique_token'] = (int) $clientData['unique_token'];
         if($clientData['unique_token']){
             $tmpQc = ORM::factory('QualityControl',['unique_token' => $clientData['unique_token']]);
@@ -533,6 +538,131 @@ class Controller_Api_Projects extends HDVP_Controller_API
 
                 }
             }
+            $qc->add('tasks',$clientData['tasks']);
+            if(!empty(trim($message)))
+                ORM::factory('QcComment')->values(['message' => $message, 'qcontrol_id' => $qc->pk()])->save();
+            Database::instance()->commit();
+        }catch (ORM_Validation_Exception $e){
+            Database::instance()->rollback();
+            throw API_Exception::factory(500,'Incorrect data');
+        }catch (HDVP_Exception $e){
+            Database::instance()->rollback();
+            throw API_Exception::factory(500,'Incorrect data');
+        }catch (Exception $e){
+            Database::instance()->rollback();
+            throw API_Exception::factory(500,'Operation Error');
+        }
+    }
+
+    public function action_update_qcontrol(){
+        $qcId = (int)$this->request->param('id');
+        $qc = ORM::factory('QualityControl',$qcId);
+        if( ! $qc->loaded() OR !$this->_user->canUseProject($qc->project)){
+            throw new HTTP_Exception_404;
+        }
+        $clientData = Arr::extract($_POST,
+            [
+                'approval_status',
+                'status',
+                'due_date',
+                'description',
+                'severity_level',
+                'condition_list',
+                'plan_id',
+                'project_stage',
+                'craft_id',
+                'tasks',
+                'profession_id',
+                'craft_id',
+                'message'
+            ]);
+
+        $clientData['tasks'] = array_values($clientData['tasks']);
+        $project = $qc->project;
+        if(!empty(trim($clientData['description'])))
+            $clientData['description'] = '['.date('d/m/Y').'] '.$clientData['description'].PHP_EOL;
+        $date = DateTime::createFromFormat('d/m/Y',$clientData['due_date']);
+        if($date == null){
+            throw API_Exception::factory(500,'Incorrect date format');
+        }
+        $clientData['due_date'] = $date->getTimestamp();
+        $message = $clientData['message'];
+        if($clientData['status'] != Enum_QualityControlStatus::Invalid){
+            $clientData['severity_level']= $clientData['condition_list'] = null;
+        }
+        try{
+            Database::instance()->begin();
+            if(empty($clientData['tasks'])){
+                throw API_Exception::factory(500,'Empty Tasks');
+            }
+            $project->makeProjectPaths();
+            $files = $this->_pFArr();
+            if(!empty($files) AND !empty($files['images'])){
+                foreach ($files['images'] as $key => $image){
+                    $uploadedFiles[] = [
+                        'name' => str_replace($project->qualityControlPath().DS,'',Upload::save($image,null,$project->qualityControlPath())),
+                        'original_name' => $image['name'],
+                        'ext' => Model_File::getFileExt($image['name']),
+                        'mime' => $image['type'],
+                        'path' => str_replace(DOCROOT,'',$project->qualityControlPath()),
+                        'token' => md5($image['name']).base_convert(microtime(false), 10, 36),
+                    ];
+                }
+            }
+            if($qc->userHasExtraPrivileges($this->_user)){
+                if($qc->craft_id != (int)$clientData['craft_id']){
+                    if(empty($data['craft_id'])){
+                        throw new HDVP_Exception('Speciality can not be empty');
+                    }
+                    $qc->craft_id = (int)$data['craft_id'];
+                }
+            }
+            $qc->approval_status = $clientData['approval_status'];
+            $qc->due_date = $clientData['due_date'];
+            $qc->status = $clientData['status'];
+            $qc->severity_level = $clientData['severity_level'];
+            $qc->condition_list = $clientData['condition_list'];
+            $qc->description = $clientData['description'];
+            $qc->plan_id = $clientData['plan_id'];
+            $qc->profession_id = $clientData['profession_id'];
+            $qc->project_stage = $clientData['project_stage'];
+            $qc->approved_by = Auth::instance()->get_user()->id;
+            $qc->approved_at = time();
+            $qc->save();
+            if(!empty($uploadedFiles)){
+                foreach ($uploadedFiles as $idx => $image){
+                    $image = ORM::factory('Image')->values($image)->save();
+                    $qc->add('images', $image->pk());
+
+                    $img = new JBZoo\Image\Image($project->qualityControlPath().DS.$image->name);
+                    $img->saveAs($project->qualityControlPath().DS.$image->name,50);
+                }
+            }
+            $imgData = $this->_GNormPArr('images');
+            if(!empty($imgData)){
+                foreach ($imgData as $img){
+                    if(isset($img['name'])){
+                        $imgData = Arr::extract($img,['source','name']);
+                        $image = $this->saveBase64Image($imgData['source'],$imgData['name'],$qc->project->qualityControlPath());
+                        $qc->add('images', $image->pk());
+                    }else{
+                        if(!isset($img['id'])) throw  new HTTP_Exception_404;
+                        $imgData = Arr::extract($img,['source','id']);
+                        $file = ORM::factory('PlanFile',$imgData['id']);
+                        if( ! $file->loaded()) throw API_Exception::factory(500,'Incorrect file Identifier');
+                        $filename = $file->getName();
+                        $tmp = explode('.',$filename);
+                        if(count($tmp) > 1){
+                            unset($tmp[count($tmp)-1]);
+                        }
+                        $filename = implode('.',$tmp).'.png';
+                        $image = $this->saveBase64Image($imgData['source'],$filename,$qc->project->qualityControlPath());
+                        $qc->add('images', $image->pk());
+                    }
+
+                }
+            }
+            $qc->remove('tasks');
             $qc->add('tasks',$clientData['tasks']);
             if(!empty(trim($message)))
                 ORM::factory('QcComment')->values(['message' => $message, 'qcontrol_id' => $qc->pk()])->save();
@@ -647,25 +777,33 @@ class Controller_Api_Projects extends HDVP_Controller_API
         }
 
         $projects = ORM::factory('Project')->where('id','IN',DB::expr($cmpIds))->find_all();
-        if(count($projects)){
-            foreach ($projects as $p){
-                $prjIds[] = $p->id;
-            }
-            $prjIds = '('.implode(',',$prjIds).')';
-        }
-        $qc = ORM::factory('QualityControl')->where('project_id','IN',DB::expr($prjIds))->and_where('status','=',Enum_QualityControlStatus::Invalid)->find_all();
+        $usrProjects = ORM::factory('UserProjectsRelation')->getProjectIdsForUser($this->_user->id);
+//        if(count($projects)){
+//            foreach ($projects as $p){
+//                $prjIds[] = $p->id;
+//            }
+//            $prjIds = Arr::merge($prjIds,$usrProjects);
+//            $prjIds = array_unique($prjIds);
+//            $prjIds = '('.implode(',',$prjIds).')';
+//        }
+        $qc = ORM::factory('QualityControl')
+            ->with('project')
+//            ->where('qualitycontrol.project_id','IN',DB::expr($prjIds))
+            ->where('qualitycontrol.status','=',Enum_QualityControlStatus::Invalid)->find_all();
         $qcIds = [];
         foreach ($qc as $q){
             $qcIds[] = $q->id;
             $this->_responseData['items'][] = [
                 'id' => $q->id,
                 'projId' => $q->project_id,
+                'cmpID' => $q->project->company_id,
                 'objId' => $q->object_id,
                 'floorId' => $q->floor_id,
                 'placeId' => $q->place_id,
                 'spaceId' => $q->space_id,
                 'planId' => $q->plan_id,
                 'tasks' => [],
+                'files' => $this->getQualityControlImages($q),
                 'professionId' => $q->profession_id,
                 'craftId' => $q->craft_id,
                 'placeType' => $q->place_type,
@@ -698,7 +836,39 @@ class Controller_Api_Projects extends HDVP_Controller_API
                         $this->_responseData['items'][$i]['tasks'] = $qcIds[$this->_responseData['items'][$i]['id']];
                     }
                 }
+
+
+                if($this->_user->getRelevantRole('priority') > Enum_UserPriorityLevel::Corporate){
+                    //если компании
+                    if($this->_user->getRelevantRole('priority') <= Enum_UserPriorityLevel::Company){
+                        foreach($this->_responseData['items'] as $key => $item){
+                            if($item['cmpId'] != $this->_user->company_id){
+                                if(!in_array($item['projId'],$usrProjects)){
+                                    unset($this->_responseData['items'][$key]);
+                                }
+                            }
+                        }
+                    }else{//если проект
+                        foreach($this->_responseData['items'] as $key => $item){
+                            if(!in_array($item['projId'],$usrProjects)){
+                                unset($this->_responseData['items'][$key]);
+                            }
+                        }
+                    }
+
+                }
             }
         }
+    }
+
+    private function getQualityControlImages($qc)
+    {
+        $output = [];
+
+        foreach($qc->images->find_all() as $f){
+            $output []= URL::base('https').implode('/',[$f->path, $f->name]);
+        }
+        return $output;
+
     }
 }
