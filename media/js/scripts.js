@@ -490,7 +490,7 @@ $(document).ready(function() {
         }
         if (!$(this).hasClass('literally-canvas-modal') && !$(this).hasClass('quality-control-modal-mobile') && !alert) {
             var sidebarWidth = $(".sidebar").is(':visible') ? $(".sidebar").width() : 0
-            $.fn.utilities('updateContentOnChangeNew', $(this).find('.modal-dialog').width()-sidebarWidth + 60);
+            $.fn.utilities('updateContentOnChangeNew', $(this).find('.modal-dialog').width()-sidebarWidth);
 
             // $.fn.utilities('tableScrollableContent');
         }
@@ -498,6 +498,9 @@ $(document).ready(function() {
 
     $(document).on('hide.bs.modal', '.modal', function() {
         console.log("RESIZE")
+            var sidebarWidth = $(".sidebar").is(':visible') ? $(".sidebar").width() : 0
+
+        $.fn.utilities('updateContentOnChangeNew', $(this).find('.modal-dialog').width()-sidebarWidth + 60);
         //$.fn.utilities('updateContentOnChangeNew', $(window).width()-$(".sidebar").width()-40);
     });
     /******* Show/Hide users profile drop down menu ******/
@@ -628,7 +631,11 @@ $(document).ready(function() {
      ***********************************************************************/
     $(document).on('click', '.call-lit-plugin', function(e) {
         e.preventDefault();
+
         var self = $(this);
+
+        //callLitPlugin(self);
+
         var isCreate = self.closest('.modal').hasClass('create-modal') ? "create" : false;
         var inputDataId = self.data('inputid');
         var countInput = self.data('index')
@@ -645,10 +652,38 @@ $(document).ready(function() {
         currentClass = (currentClass != 'call-lit-plugin') ? currentClass : '';
         $(document).find('.literally-canvas-modal').remove();
         var imageSrc = self.data('url');
+
         var setModalHeight = $(window).height() * 0.70;
-        var modalLiterallyCanvas = '<div id="literally-canvas-modal" data-backdrop="static" data-keyboard="false" class="modal no-delete fade literally-canvas-modal" role="dialog">' + '<div id="sketch-image-dialog" class="modal-dialog q4_project_modal literally-canvas-dialog">' + '<div class="modal-content">' + '<div class="modal-header q4_modal_header">' + '<div class="q4_modal_header-top">' + '<button type="button" class="close q4-close-modal" data-dismiss="modal">' + '<i class="q4bikon-close"></i>' + '</button>' + '<div class="clear"></div>' + '</div>' + '<div class="q4_modal_sub_header">' + '<h3>' + __('Edit image') + '</h3>' + '</div>' + '</div>' + '<div class="modal-body sketchpad-modal-body" style="height: ' + setModalHeight + 'px; ">' + '<div class="wrap-literally-canvas"></div>' + '</div>' + '<div class="modal-loader" style="height:' + setModalHeight + '">' + '<div class="loader" ></div>' + '</div>' + '<div class="modal-footer text-align">' + '<a href="#" class="btn btn-primary save-sketch export-canvas-button" data-ext="' + ext + '" data-url="/projects/' + controller + qcId + fileId + '">' + __('Save') + '</a>' + '</div>' + '</div>' + '</div>' + '</div>';
+        var modalLiterallyCanvas =
+        '<div id="literally-canvas-modal" data-backdrop="static" data-keyboard="false" class="modal no-delete fade literally-canvas-modal" role="dialog">' +
+            '<div id="sketch-image-dialog" class="modal-dialog q4_project_modal literally-canvas-dialog">' +
+                '<div class="modal-content">' +
+                    '<div class="modal-header q4_modal_header">' +
+                        '<div class="q4_modal_header-top">' +
+                            '<button type="button" class="close q4-close-modal" data-dismiss="modal">' +
+                                '<i class="q4bikon-close"></i>' +
+                            '</button>' +
+                            '<div class="clear"></div>' +
+                        '</div>' +
+                        '<div class="q4_modal_sub_header">' +
+                            '<h3>' + __('Edit image') + '</h3>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="modal-body sketchpad-modal-body" style="height: ' + setModalHeight + 'px; ">' +
+                        '<div class="wrap-literally-canvas"></div>' +
+                    '</div>' +
+                        '<div class="modal-loader" style="height:' + setModalHeight + '">' +
+                        '<div class="loader" ></div>' +
+                   '</div>' +
+                    '<div class="modal-footer text-align">' +
+                        '<a href="#" class="btn btn-primary save-sketch export-canvas-button" data-ext="' + ext + '" data-url="/projects/' + controller + qcId + fileId + '">' + __('Save') + '</a>' +
+                    '</div>' +
+                '</div>' +
+            '</div>' +
+        '</div>';
         var backgroundImage = new Image();
         backgroundImage.src = imageSrc.indexOf('base64') != -1 ? imageSrc : imageSrc + '?' + Q4U.timestamp();
+
         backgroundImage.addEventListener('load', loadImage, false);
         $(document).find('body').append(modalLiterallyCanvas);
         $(document).find('.literally-canvas-modal').modal('show');
@@ -699,6 +734,7 @@ $(document).ready(function() {
                 window.dispatchEvent(new Event('resize'));
                 var canvasWidth = $('.literally-canvas-modal .lc-drawing canvas').attr('width');
                 var canvasHeight = $('.literally-canvas-modal .lc-drawing canvas').attr('height');
+
                 $(document).find('.export-canvas-button').on('click', function(e) {
                     e.preventDefault();
                     $('#' + modalId).find('.hide-upload').find("input[data-remove=" + inputDataId + "_" + countInput + "]").remove();
@@ -735,26 +771,52 @@ $(document).ready(function() {
                             delete FILES_BUFFER[currentDataId + '_' + currentIndex]
                         }
                         var index = Q4U.timestamp();
-                        self.data("url", imageBase64);
+                        if (self.data('url').indexOf('base64') != -1 ) {
+
+                            self.data("url", imageBase64);
+                        }
                         if (controller == 'add_quality_control_image_from_raw_plan') {
                             $('.qc-image-list-mobile').trigger('destroy.owl.carousel').removeClass('owl-carousel owl-loaded');
                             $('.qc-image-list-mobile').find('.owl-stage-outer').children().unwrap();
                             $('.qc-image-list-mobile').find('.owl-stage').remove();
-                            $('#' + modalId).find('.modal-images-list-table table tbody').prepend('<tr class="plan-raw-tr">' + '<td>' + '<a data-url="' + imageBase64 + '" title="' + planName + '" data-controller="add_quality_control_image_from_raw_data"  class="call-lit-plugin">' + '<span class="modal-tasks-image-number"></span>' + '<span class="modal-tasks-image-name"> ' + planName + '</span>' + '<span class="modal-img-upload-date"></span>' + '</a>' + '</td>' + '<td class="modal-tasks-image-option">' + '<a class="download_file disabled-gray-button" download="' + planName + '">' + '<i class="q4bikon-download"></i>' + '</a>' + '</td>' + '<td class="modal-tasks-image-option">' + '<span>' + '<a href="#" class="delete-image-row delete_row disabled-gray-button"><i class="q4bikon-delete"></i></a>' + '</span>' + '</td>' + '</tr>');
-                            $('#' + modalId).find('.qc-image-list-mobile').prepend('<div class="item qc-image-list-mobile-item">' + '<a data-url="' + imageBase64 + '" title="' + planName + '" data-controller="add_quality_control_image_from_raw_data" class="call-lit-plugin">' + '<span class="modal-tasks-image-number"></span>' + '<span class="modal-tasks-image-name"> ' + planName + '</span>' + '<span class="modal-img-upload-date"></span>' + '</a>' + '<div class="qc-image-list-mobile-item-options">' + '<span class="circle-sm red delete-image-row">' + '<i class="q4bikon-delete"></i>' + '</span>' + '</div>' + '</div>');
+                            var imagePrepend = getPrependContent(planName, imageBase64);
+
+                            $('#' + modalId).find('.modal-images-list-table table tbody').prepend(imagePrepend);
+
+
+                            var imagePrependMobile = getPrependContentMobile(planName, imageBase64);
+                            // '<div class="item qc-image-list-mobile-item">' +
+                            //     '<a data-url="' + imageBase64 + '" title="' + planName + '" data-controller="add_quality_control_image_from_raw_data" class="call-lit-plugin">' +
+                            //         '<span class="modal-tasks-image-number"></span>' +
+                            //         '<span class="modal-tasks-image-name"> ' + planName +
+                            //         '</span>' +
+                            //         '<span class="modal-img-upload-date"></span>' +
+                            //     '</a>' +
+                            //      '<div class="qc-image-list-mobile-item-options">' +
+                            //          '<span class="circle-sm red delete-image-row disabled-gray-button">' +
+                            //              '<i class="q4bikon-delete"></i>' +
+                            //          '</span>' +
+                            //      '</div>' +
+                            // '</div>'
+                               console.log("modal",getPrependContentMobile(planName, imageBase64))
+                            $('#' + modalId).find('.qc-image-list-mobile').prepend(getPrependContentMobile(planName, imageBase64));
                             $('#' + modalId).find('.hide-upload').append('<input type="hidden" value="' + imageBase64 + '" class="plan-raw-val" name="images_' + index + '_source">' + '<input type="hidden" value="' + planId + '" class="plan-raw-val" name="images_' + index + '_id">');
                             $('#' + modalId).find('.modal-images-list-table table').find('tr').each(function(i, el) {
                                 var self = $(el);
                                 self.find('.modal-tasks-image-number').text(i + 1 + '.');
                             })
+
                             $('#' + modalId).find('.qc-image-list-mobile .item').each(function(i, el) {
                                 var self = $(el);
                                 self.find('.modal-tasks-image-number').text(i + 1 + '.');
                             })
+
                             $.fn.utilities('setCarouselDirection', ".qc-image-list-mobile", 10);
                             $.fn.utilities('owlPagination', '.q4-owl-carousel');
                         } else {
-                            $('#' + modalId).find('.hide-upload').append('<input type="hidden" value="' + imageBase64 + '" data-remove="' + inputDataId + '_' + countInput + '" class="load-images-input" name="images_' + index + '_source">' + '<input type="hidden" value="' + imageName + '" data-remove="' + inputDataId + '_' + countInput + '" class="load-images-input" name="images_' + index + '_name">');
+                            var hiddenInput =
+                                '<input type="hidden" value="' + imageBase64 + '" data-remove="' + inputDataId + '_' + countInput + '" class="load-images-input" name="images_' + index + '_source">' + '<input type="hidden" value="' + imageName + '" data-remove="' + inputDataId + '_' + countInput + '" class="load-images-input" name="images_' + index + '_name">';
+                            $('#' + modalId).find('.hide-upload').append(hiddenInput);
                         }
                         $('#literally-canvas-modal').modal('hide');
                         $('#literally-canvas-modal').remove();
@@ -804,6 +866,45 @@ $(document).ready(function() {
             }, 1000)
         }
     });
+
+
+    function getPrependContent(planName,imageBase64){
+       return '<tr class="plan-raw-tr">' +
+            '<td>' +
+                '<a data-url="' + imageBase64 + '" title="' + planName + '" data-controller="add_quality_control_image_from_raw_data"  class="call-lit-plugin">' +
+                    '<span class="modal-tasks-image-number"></span>' +
+                    '<span class="modal-tasks-image-name"> ' + planName + '</span>' +
+                    '<span class="modal-img-upload-date"></span>' +
+                '</a>' +
+            '</td>' +
+            '<td class="modal-tasks-image-option">' +
+                '<a class="download_file disabled-gray-button" download="' + planName + '">' +
+                    '<i class="q4bikon-download"></i>' +
+                '</a>' +
+            '</td>' +
+            '<td class="modal-tasks-image-option">' +
+                 '<span>' +
+                 '<a href="#" class="delete-image-row delete_row disabled-gray-button"><i class="q4bikon-delete"></i></a>' +
+                 '</span>' +
+                '</td>' +
+        '</tr>';
+    }
+    function getPrependContentMobile(planName,imageBase64){
+       return '<div class="item qc-image-list-mobile-item">' +
+            '<a data-url="' + imageBase64 + '" title="' + planName + '" data-controller="add_quality_control_image_from_raw_data" class="call-lit-plugin">' +
+                '<span class="modal-tasks-image-number"></span>' +
+                '<span class="modal-tasks-image-name"> ' + planName +
+                '</span>' +
+                '<span class="modal-img-upload-date"></span>' +
+            '</a>' +
+             '<div class="qc-image-list-mobile-item-options">' +
+                 '<span class="circle-sm red delete-image-row disabled-gray-button">' +
+                     '<i class="q4bikon-delete"></i>' +
+                 '</span>' +
+             '</div>' +
+        '</div>';
+    }
+
     /************************************************************************
      ****************** End of jQuery Literally Canvas Plugin *****************
      ***********************************************************************/
@@ -904,11 +1005,26 @@ $(document).ready(function() {
         if ($('#quality-control-modal').is(':visible')) {
             var modalWidth = $('#quality-control-modal').find('.modal-dialog').width();
             var tasksItemCount = $('#quality-control-modal').find('.tasks-full-description li:visible').length;
+            var sidebarWidth = $(".sidebar").is(':visible') ? $(".sidebar").width() : 0
+
             var tasksItemsWidth = tasksItemCount * (350 + 40) + 20;
             var $resizedSlider = $('#quality-control-modal').find('.tasks-full-description-box');
             $('.tasks-full-description-box').width(modalWidth - 40);
             $('.tasks-full-description').width(tasksItemsWidth);
+            $.fn.utilities('updateContentOnChangeNew', $(this).find('.modal-dialog').width()-sidebarWidth + 60);
         }
+        normalizeTasksList();
+        // if ($('.qc-create-window').is(':visible')) {
+        //     var modalWidth = $('.qc-create-window').find('.modal-dialog').width();
+        //     var tasksItemCount = $('.qc-create-window').find('.tasks-full-description li:visible').length;
+        //     var sidebarWidth = $(".sidebar").is(':visible') ? $(".sidebar").width() : 0
+
+        //     var tasksItemsWidth = tasksItemCount * (350 + 40) + 20;
+        //     var $resizedSlider = $('.qc-create-window').find('.tasks-full-description-box');
+        //     $('.tasks-full-description-box').width(modalWidth - 40);
+        //     $('.tasks-full-description').width(tasksItemsWidth);
+        //     $.fn.utilities('updateContentOnChangeNew', $('.qc-create-window').find('.modal-dialog').width()-sidebarWidth + 60);
+        // }
         var jCarusel = $('.wrap-property-structure-list');
         if (jCarusel.length > 0) {
             $.fn.utilities('setScrollBarWidth', $('.wrap-property-structure-list li'), windowWidth + 30);
@@ -927,6 +1043,8 @@ $(document).ready(function() {
             $.fn.utilities('setCarouselWidth', '.q4-wrap-mobile', windowWidth);
         }
         $.fn.utilities('updateContentPlans');
+        var sidebarWidth = $(".sidebar").is(':visible') ? $(".sidebar").width() : 0
+        $.fn.utilities('updateContentOnChangeNew', $(window).width()-sidebarWidth)
     });
     $(document).on('click', '.trigger-image-upload', function(e) {
         e.stopPropagation();
@@ -1064,17 +1182,8 @@ $(document).ready(function() {
             }
         })
         var self = $('#quality-control-modal');
-        //self.find('.tasks-full-description-box').mCustomScrollbar("destroy");
-        var modalWidth = $('#quality-control-modal').find('.modal-dialog').width();
-        modalWidth = modalWidth ? modalWidth : $('.qc-create-window').width();
-        $('.qc-tasks-list-mobile').trigger('destroy.owl.carousel').removeClass('owl-carousel owl-loaded');
-        $('.qc-tasks-list-mobile').find('.owl-stage-outer').children().unwrap();
-        $('.qc-tasks-list-mobile').find('.owl-stage-outer').remove()
-        var tasksItemCount = $('.tasks-full-description li:visible').length;
-        var tasksItemsWidth = (tasksItemCount + 1) * (350 + 30);
-        // Add scroll to tasks
-        $('.tasks-full-description-box').width(modalWidth - 60);
-        $('.tasks-full-description').width(tasksItemsWidth);
+        normalizeTasksList();
+
         if (craftVal == selectedCrafts) {
             var selectedCrafts = self.find('.qc-tasks-list .hidden-select').data('selected-tasks').split(',');
             self.find('.qc-tasks-list .hidden-select').val(selectedCrafts);
@@ -1082,11 +1191,28 @@ $(document).ready(function() {
         }
         $.fn.utilities('updateCurrentOnChange', '.qc-tasks-list-mobile');
         $(window).trigger('resize');
-        // self.find('.tasks-full-description-box').mCustomScrollbar({ axis: "x" });
-        // self.find('.tasks-full-description .task-item-txt').mCustomScrollbar({ axis: "y" });
-        // self.find('.tasks-full-description-mobile .task-item-txt').mCustomScrollbar({ axis: "y" });
-        // $.fn.utilities('updateContentOnChange');
     });
+
+    function normalizeTasksList(){
+        var modalWidth = $('#quality-control-modal').find('.modal-dialog').width();
+        modalWidth = modalWidth ? modalWidth : $('.qc-create-window').width();
+        $('.qc-tasks-list-mobile').trigger('destroy.owl.carousel').removeClass('owl-carousel owl-loaded');
+        $('.qc-tasks-list-mobile').find('.owl-stage-outer').children().unwrap();
+        $('.qc-tasks-list-mobile').find('.owl-stage-outer').remove()
+        var tasksItemCount = $('.tasks-full-description li:visible').length;
+        var sidebarWidth = $(".sidebar").is(':visible') ? $(".sidebar").width() : 0;
+
+        var tasksItemsWidth = (tasksItemCount + 1) * (350 + 30)-20;
+        // Add scroll to tasks
+        $('.tasks-full-description-box').width(modalWidth - 60);
+        if($('.qc-create-window').width()){
+
+            $(".tasks-full-description-box").width($(window).width()-sidebarWidth - 100);
+            // console.log("$(window).width()", $(window).width()-sidebarWidth - 100);
+
+        }
+        $('.tasks-full-description').width(tasksItemsWidth);
+    }
     $(document).on('click', '.qc-tasks-list li', function(e) {
         e.preventDefault();
         var el = $(document).find('.modal').find('select[name=tasks] option[value=' + $(this).children('a').data('id') + ']');
@@ -1121,132 +1247,7 @@ $(document).ready(function() {
             el.prop('selected', true);
         }
     });
-    // $(document).on('change', '.qc-craft', function() {
-    //     var attrs = ($(this).find('option:selected').data('professions')).toString().split(',');
-    //     var selectedCraftId = $(this).val();
-    //     var needReselect = true;
-    //     $.each(attrs, function(key, val) {
-    //         if (selectedCraftId == val) {
-    //             needReselect = false;
-    //         }
-    //     });
-    //     if (needReselect) {
-    //         $(document).find('.qc-profession').val(attrs[0]);
-    //     }
-    //
-    //     $(document).find('.qc-profession option').each(function() {
-    //         var crafts = ($(this).data('crafts')).toString().split(',');
-    //         if (crafts.indexOf($('.qc-craft').val()) == -1) {
-    //             $(this).css('display', 'none');
-    //         } else {
-    //             $(this).css('display', 'block');
-    //         }
-    //
-    //     });
-    //
-    // });
-    /*
-    $(document).on('change', '.qc-craft', function() {
 
-        var craftVal = $(document).find('.qc-craft').val();
-        var selectedCrafts = $(document).find('.qc-craft').data('selected-crafts');
-
-        $(document).find('select[name=tasks] option').each(function() {
-
-            var crafts = ($(this).data('crafts')).toString().split(',');
-            var el = $('.qc-tasks-list a[data-id=' + $(this).val() + ']');
-            var elMobile = $('.qc-tasks-list-mobile a[data-id=' + $(this).val() + ']');
-            if ((crafts.indexOf(craftVal) == -1)) {
-                $(this).removeAttr('selected');
-                this.selected = false;
-                // el.parents('li').removeClass('selected');
-                // elMobile.closest('div.item').removeClass('selected')
-                el.parents('li').addClass('hidden');
-                elMobile.closest('div.item').addClass('hidden');
-            } else {
-                el.parents('li').removeClass('hidden');
-                elMobile.parents('div.item').removeClass('hidden');
-            }
-        });
-
-
-        var itemCount = 0;
-        $(document).find('#choose-plan-modal table.responsive_table tbody tr').each(function(i,el){
-            var selfTr = $(el);
-            var craftsArray = JSON.parse('"' + selfTr.data('crafts') + '"');
-            if(craftsArray.length && craftsArray.indexOf(craftVal) == -1){
-                selfTr.addClass('hidden');
-
-            }else{
-                selfTr.removeClass('hidden');
-                itemCount++;
-            }
-        });
-
-        itemCount = 0;
-        $(document).find('#choose-plan-modal-mobile .q4-carousel-table .item').each(function(i,el){
-            var selfTr = $(el);
-            var craftsArray = JSON.parse('"' + selfTr.data('crafts') + '"');
-            if(craftsArray.length && craftsArray.indexOf(craftVal) == -1){
-                selfTr.addClass('hidden');
-
-            }else{
-                selfTr.removeClass('hidden');
-                itemCount++;
-            }
-        });
-
-        var self = $('#quality-control-modal');
-        var selfMobile = $('#quality-control-modal-mobile');
-        var modalWidth = self.find('.modal-dialog').width();
-        $('.qc-tasks-list-mobile').trigger('destroy.owl.carousel').removeClass('owl-carousel owl-loaded');
-        $('.qc-tasks-list-mobile').find('.owl-stage-outer').children().unwrap();
-        $('.qc-tasks-list-mobile').find('.owl-stage-outer').remove()
-        var tasksItemCount = $('.tasks-full-description li:visible').length;
-
-        var tasksItemsWidth = tasksItemCount * (350 + 30)+20;
-        // Add scroll to tasks
-        $('.tasks-full-description-box').width(modalWidth - 40);
-        $('.tasks-full-description').width(tasksItemsWidth);
-
-
-
-        if(craftVal == selectedCrafts){
-            var selectedCrafts = self.find('.qc-tasks-list .hidden-select').data('selected-tasks').split(',');
-
-            self.find('.qc-tasks-list .hidden-select').val(selectedCrafts);
-            selfMobile.find('.qc-tasks-list-mobile .hidden-select');
-        }
-
-        $.fn.utilities('updateCurrentOnChange','.qc-tasks-list-mobile');
-        $(window).trigger('resize');
-
-    }); */
-    /*
-        $(document).on('click', '.qc-tasks-list li', function(e) {
-            e.preventDefault();
-            var el = $(document).find('.modal').find('select[name=tasks] option[value=' + $(this).children('a').data('id') + ']');
-            if (el.is(':selected')) {
-                $(this).removeClass('selected');
-                el.prop('selected',false);
-            }else {
-                $(this).addClass('selected');
-                el.prop('selected',true);
-            }
-        }); */
-    /*
-        $(document).on('click', '.qc-tasks-list-mobile .item', function(e) {
-            e.preventDefault();
-            var el = $(document).find('.modal').find('select[name=tasks] option[value=' + $(this).children('a').data('id') + ']');
-
-            if (el.is(':selected')) {
-                $(this).removeClass('selected');
-                el.prop('selected',false);
-            }else {
-                $(this).addClass('selected');
-                el.prop('selected',true);
-            }
-        }); */
     $(document).on('change', '.qc-craft', function() {
         var attrs = ($(this).find('option:selected').data('professions')).toString().split(',');
         var selectedCraftId = $(this).val();

@@ -19,7 +19,10 @@ foreach ($usedTasks as $task) {
                 <span class="selected-tick"><i class="q4bikon-tick"></i></span>
                 <h4><?=__('Task')?> <?=$task->id?></h4>
                 <div class="task-item-txt">
-                    <p><?=$task->name?></p>
+                    <?$desc = explode("\n",$task->name);
+                    foreach ($desc as $line) {?>
+                        <p><?=$line?></p>
+                    <?}?>
                 </div>
             </a>
         </li>

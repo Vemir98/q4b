@@ -49,7 +49,7 @@ foreach($plans as $plan):?>
                                 <?$file = $plan->files->where('status','=',Enum_FileStatus::Active)->find()?>
                                 <li>
 
-                                    <a data-fileid="<?=$file->id?>" data-url="<?=$file->getImageLink()?>" data-fileid="<?=$file->id?>" data-ext="<?=$file->mime?>" data-controller="add_quality_control_image_from_raw_plan"  class="call-lit-plugin" title="<?=$file->original_name?>"><img src="/media/img/choose-format/format-<?=strtolower($file->ext)?>.png" alt="<?=$file->ext?>"/></a>
+                                    <a data-fileid="<?=$file->id?>" data-url="<?=$file->getImageLink().'?'.uniqid()?>" data-fileid="<?=$file->id?>" data-ext="<?=$file->mime?>" data-controller="add_quality_control_image_from_raw_plan"  class="call-lit-plugin" title="<?=$file->original_name?>"><img src="/media/img/choose-format/format-<?=strtolower($file->ext)?>.png" alt="<?=$file->ext?>"/></a>
                                 </li>
 
                             </ul>
