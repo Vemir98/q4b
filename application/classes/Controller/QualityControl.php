@@ -17,6 +17,9 @@ class Controller_QualityControl extends HDVP_Controller_Template
             'GET' => 'read'
         ]
     ];
+
+    public $company, $project;
+
     public function action_create(){
 
         View::set_global('_PROJECT', $this->project);

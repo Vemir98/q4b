@@ -371,15 +371,4 @@ $(document).ready(function() {
 
         });
     });
-
-
-    /**
-     *  Show Console
-     */
-    $(document).find('.mobile_item--link-group').closest('.content').addClass('mobile-bg');
-    $(document).on('click', '#show_console', function() {
-        $(this).closest('.mobile_item--link-group').hide();
-        $(this).closest('.mobile_item--link-group').closest('.content').removeClass('mobile-bg');
-        $(this).closest('#dashboard-content').find('.dashboard-console').show();
-    });
 });

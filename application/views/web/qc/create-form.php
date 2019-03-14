@@ -129,7 +129,7 @@
                                         <label class="table_label"><?=__('Plan')?></label>
                                         <div class="qc-choose-plan">
                                             <a href="#" data-toggle="modal" data-target="#choose-plan-modal" class="inline_block_btn blue-light-button choose-plan" style="height: 30px;margin: -1px 0 0 0;line-height: 30px;
-                                                "><?=__('Choose plan')?></a>
+                                                    "><?=__('Choose plan')?></a>
                                         </div>
                                     </div>
                                 </div>
@@ -253,79 +253,80 @@
 
 
 
-    <div id="choose-plan-modal" class="choose-plan-modal modal no-delete klris-glox" role="dialog">
-        <div class="modal-dialog modal-dialog-1170">
-            <form class="q4_form" action="<?=1?>" data-ajax="true" method="post">
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header q4_modal_header">
-                        <div class="q4_modal_header-top">
-                            <button type="button" class="close q4-close-modal"><i class="q4bikon-close"></i></button>
-                            <div class="clear"></div>
-                        </div>
-                        <div class="q4_modal_sub_header">
-                            <h3><?=__('Choose a plan')?></h3>
-                        </div>
+<div id="choose-plan-modal" class="choose-plan-modal modal no-delete klris-glox" role="dialog">
+    <div class="modal-dialog modal-dialog-1170">
+        <form class="q4_form" action="<?=1?>" data-ajax="true" method="post">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header q4_modal_header">
+                    <div class="q4_modal_header-top">
+                        <button type="button" class="close q4-close-modal"><i class="q4bikon-close"></i></button>
+                        <div class="clear"></div>
                     </div>
-                    <div class="modal-body bb-modal">
-
-                        <div class="plans-modal-dialog-bottom">
-                            <table class="rwd-table responsive_table table scrollable-tbody">
-                                <thead>
-                                <tr>
-                                    <th class="td-50"><?=__('')?></th>
-                                    <th data-field="Name/Type" data-sortable="true" class="td-cell-10"><?=__('Name/Type')?></th>
-                                    <th data-field="Profession" data-sortable="true" class="td-cell-10"><?=__('Profession')?></th>
-                                    <th data-field="Floor" class="td-10" data-sortable="true"><?=__('Floor')?></th>
-                                    <th data-field="Element number" data-sortable="true" class="w-10"><?=__('Element number')?></th>
-                                    <th data-field="Edition" data-sortable="true" class="w-10"><?=__('Edition')?></th>
-                                    <th data-field="Date" data-sortable="true" class="td-10"><?=__('Date')?></th>
-                                    <th data-field="Image" data-sortable="true" class="td-10"><?=__('Image')?></th>
-                                </tr>
-                                </thead>
-                                <tbody class="qc-v-scroll qc-plans-list">
-                                </tbody>
-                            </table>
-
-
-                        </div>
+                    <div class="q4_modal_sub_header">
+                        <h3><?=__('Choose a plan')?></h3>
                     </div>
-                    <div class="modal-footer text-align">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <a href="#" class="inline_block_btn blue-light-button confirm-plan1"><?=__('Confirm')?></a>
-                            </div>
+                </div>
+                <div class="modal-body bb-modal">
+
+                    <div class="plans-modal-dialog-bottom">
+                        <table class="rwd-table responsive_table table scrollable-tbody">
+                            <thead>
+                            <tr>
+                                <th class="td-50"><?=__('')?></th>
+                                <th data-field="Name/Type" data-sortable="true" class="td-cell-10"><?=__('Name/Type')?></th>
+                                <th data-field="Profession" data-sortable="true" class="td-cell-10"><?=__('Profession')?></th>
+                                <th data-field="Floor" class="td-10" data-sortable="true"><?=__('Floor')?></th>
+                                <th data-field="Element number" data-sortable="true" class="w-10"><?=__('Element number')?></th>
+                                <th data-field="Edition" data-sortable="true" class="w-10"><?=__('Edition')?></th>
+                                <th data-field="Date" data-sortable="true" class="td-10"><?=__('Date')?></th>
+                                <th data-field="Image" data-sortable="true" class="td-10"><?=__('Image')?></th>
+                            </tr>
+                            </thead>
+                            <tbody class="qc-v-scroll qc-plans-list">
+                            </tbody>
+                        </table>
+
+
+                    </div>
+                </div>
+                <div class="modal-footer text-align">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <a href="#" class="inline_block_btn blue-light-button confirm-plan1"><?=__('Confirm')?></a>
                         </div>
                     </div>
                 </div>
-            </form>
+            </div>
+        </form>
 
-        </div>
     </div>
+</div>
 
 
 <script>
-    (function($) {
-    <?$u = []?>
-    <?foreach ($projects as $key => $project): ?>
-    <?$name = str_replace("'"," ",$project->name)?>
-    <?$u[] = "{value: '{$name}', data: '{$project->id}'}"?>
-    <?endforeach;?>
-    <? $u = implode(",\n",$u)?>
-    var projects = [
-        <?=$u?>
-    ];
 
-    $('.qc-project').autocomplete({
-        lookup: projects,
-        minChars: 0,
-        onSelect: function (suggestion) {
-            if(suggestion.data) {
-                $(document).find('input[name="project_id"]').val(suggestion.data).change();
-                $('.qc-project').blur();
+    (function($) {
+        <?$u = []?>
+        <?foreach ($projects as $key => $project): ?>
+        <?$name = str_replace("'"," ",$project->name)?>
+        <?$u[] = "{value: '{$name}', data: '{$project->id}'}"?>
+        <?endforeach;?>
+        <? $u = implode(",\n",$u)?>
+        var projects = [
+            <?=$u?>
+        ];
+
+        $('.qc-project').autocomplete({
+            lookup: projects,
+            minChars: 0,
+            onSelect: function (suggestion) {
+                if(suggestion.data) {
+                    $(document).find('input[name="project_id"]').val(suggestion.data).change();
+                    $('.qc-project').blur();
+                }
             }
-        }
-    });
+        });
 
         $('.qc-project').on('focus',function(){
             if($(this).val().length){
