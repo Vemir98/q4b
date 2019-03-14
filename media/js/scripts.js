@@ -497,7 +497,7 @@ $(document).ready(function() {
     });
 
     $(document).on('hide.bs.modal', '.modal', function() {
-        console.log("RESIZE")
+        //console.log("RESIZE")
             var sidebarWidth = $(".sidebar").is(':visible') ? $(".sidebar").width() : 0
 
         $.fn.utilities('updateContentOnChangeNew', $(this).find('.modal-dialog').width()-sidebarWidth + 60);
@@ -798,7 +798,7 @@ $(document).ready(function() {
                             //          '</span>' +
                             //      '</div>' +
                             // '</div>'
-                               console.log("modal",getPrependContentMobile(planName, imageBase64))
+                               //console.log("modal",getPrependContentMobile(planName, imageBase64))
                             $('#' + modalId).find('.qc-image-list-mobile').prepend(getPrependContentMobile(planName, imageBase64));
                             $('#' + modalId).find('.hide-upload').append('<input type="hidden" value="' + imageBase64 + '" class="plan-raw-val" name="images_' + index + '_source">' + '<input type="hidden" value="' + planId + '" class="plan-raw-val" name="images_' + index + '_id">');
                             $('#' + modalId).find('.modal-images-list-table table').find('tr').each(function(i, el) {
@@ -989,6 +989,7 @@ $(document).ready(function() {
         $.fn.utilities('updateContentPlans');
     }
     $(window).on('resize', function() {
+        // console.log('RESIZED')
         var windowWidth = $(this).width();
         if ($('.panel_header').hasClass('open')) {
             // $.fn.utilities('setScrollbarDirection', '.scrollable-table');
@@ -1002,29 +1003,19 @@ $(document).ready(function() {
                 $panelContent.find('.scrollable-table').width(100 + "%");
             }
         }
-        if ($('#quality-control-modal').is(':visible')) {
-            var modalWidth = $('#quality-control-modal').find('.modal-dialog').width();
-            var tasksItemCount = $('#quality-control-modal').find('.tasks-full-description li:visible').length;
-            var sidebarWidth = $(".sidebar").is(':visible') ? $(".sidebar").width() : 0
-
-            var tasksItemsWidth = tasksItemCount * (350 + 40) + 20;
-            var $resizedSlider = $('#quality-control-modal').find('.tasks-full-description-box');
-            $('.tasks-full-description-box').width(modalWidth - 40);
-            $('.tasks-full-description').width(tasksItemsWidth);
-            $.fn.utilities('updateContentOnChangeNew', $(this).find('.modal-dialog').width()-sidebarWidth + 60);
-        }
-        normalizeTasksList();
-        // if ($('.qc-create-window').is(':visible')) {
-        //     var modalWidth = $('.qc-create-window').find('.modal-dialog').width();
-        //     var tasksItemCount = $('.qc-create-window').find('.tasks-full-description li:visible').length;
+        // if ($('#quality-control-modal').is(':visible')) {
+        //     var modalWidth = $('#quality-control-modal').find('.modal-dialog').width();
+        //     var tasksItemCount = $('#quality-control-modal').find('.tasks-full-description li:visible').length;
         //     var sidebarWidth = $(".sidebar").is(':visible') ? $(".sidebar").width() : 0
 
         //     var tasksItemsWidth = tasksItemCount * (350 + 40) + 20;
-        //     var $resizedSlider = $('.qc-create-window').find('.tasks-full-description-box');
+        //     var $resizedSlider = $('#quality-control-modal').find('.tasks-full-description-box');
         //     $('.tasks-full-description-box').width(modalWidth - 40);
         //     $('.tasks-full-description').width(tasksItemsWidth);
-        //     $.fn.utilities('updateContentOnChangeNew', $('.qc-create-window').find('.modal-dialog').width()-sidebarWidth + 60);
+        //     $.fn.utilities('updateContentOnChangeNew', $(this).find('.modal-dialog').width()-sidebarWidth + 60);
         // }
+        $.fn.utilities('normalizeTasksList');
+
         var jCarusel = $('.wrap-property-structure-list');
         if (jCarusel.length > 0) {
             $.fn.utilities('setScrollBarWidth', $('.wrap-property-structure-list li'), windowWidth + 30);
@@ -1042,9 +1033,6 @@ $(document).ready(function() {
             $.fn.utilities('setCarouselWidth', '.q4-carousel-table-wrap', windowWidth);
             $.fn.utilities('setCarouselWidth', '.q4-wrap-mobile', windowWidth);
         }
-        $.fn.utilities('updateContentPlans');
-        var sidebarWidth = $(".sidebar").is(':visible') ? $(".sidebar").width() : 0
-        $.fn.utilities('updateContentOnChangeNew', $(window).width()-sidebarWidth)
     });
     $(document).on('click', '.trigger-image-upload', function(e) {
         e.stopPropagation();
@@ -1115,6 +1103,7 @@ $(document).ready(function() {
     $(document).on('change', '.qc-craft', function() {
         var craftVal = $(document).find('.qc-craft').val();
         var selectedCrafts = $(document).find('.qc-craft').data('selected-crafts');
+        console.log("selectedCrafts", selectedCrafts);
         $(document).find('select[name=tasks] option').each(function() {
             var crafts = ($(this).data('crafts')).toString().split(',');
             var usedCrafts = ($(this).data('usedcrafts')).toString().split(',')
@@ -1124,11 +1113,11 @@ $(document).ready(function() {
                 $(this).removeAttr('selected');
                 this.selected = false;
                 if (!el.parents('li').hasClass('used-task')) {
-                    el.parents('li').removeClass('selected');
+                    // el.parents('li').removeClass('selected');
                 }
                 if (!elMobile.closest('div.item').hasClass('used-task')) {
                     // el.parents('li').removeClass('selected');
-                    elMobile.closest('div.item').removeClass('selected')
+                    // elMobile.closest('div.item').removeClass('selected')
                 }
                 el.parents('li').addClass('hidden')
                 elMobile.closest('div.item').addClass('hidden')
@@ -1181,38 +1170,23 @@ $(document).ready(function() {
                 itemCount++;
             }
         })
-        var self = $('#quality-control-modal');
-        normalizeTasksList();
 
+        var self = $('#quality-control-modal');
+        //self.find('.qc-tasks-list .hidden-select').data('selected-tasks')
         if (craftVal == selectedCrafts) {
-            var selectedCrafts = self.find('.qc-tasks-list .hidden-select').data('selected-tasks').split(',');
-            self.find('.qc-tasks-list .hidden-select').val(selectedCrafts);
-            selfMobile.find('.qc-tasks-list-mobile .hidden-select');
+            var selectedTasks = self.find('.qc-tasks-list').closest('div').find('.hidden-select').data('selected-tasks') ? self.find('.qc-tasks-list').closest('div').find('.hidden-select').data('selected-tasks').split(',') : [];
+            self.find('.qc-tasks-list').closest('div').find('.hidden-select').val(selectedTasks);
+            var selectedTasksMobile = $(document).find('.qc-tasks-list-mobile').closest('div').find('.hidden-select').data('selected-tasks') ? selfMobile.find('.qc-tasks-list-mobile').closest('div').find('.hidden-select').split(',') : [];
+
+            $(document).find('.qc-tasks-list-mobile').closest('div').find('.hidden-select').val(selectedTasksMobile);
         }
-        $.fn.utilities('updateCurrentOnChange', '.qc-tasks-list-mobile');
+        var sidebarWidth = $(".sidebar").is(':visible') ? $(".sidebar").width() : 60;
+        $.fn.utilities('normalizeTasksList');
+        $.fn.utilities('updateContentOnChangeNew', $(window).innerWidth()-sidebarWidth);
+
         $(window).trigger('resize');
     });
 
-    function normalizeTasksList(){
-        var modalWidth = $('#quality-control-modal').find('.modal-dialog').width();
-        modalWidth = modalWidth ? modalWidth : $('.qc-create-window').width();
-        $('.qc-tasks-list-mobile').trigger('destroy.owl.carousel').removeClass('owl-carousel owl-loaded');
-        $('.qc-tasks-list-mobile').find('.owl-stage-outer').children().unwrap();
-        $('.qc-tasks-list-mobile').find('.owl-stage-outer').remove()
-        var tasksItemCount = $('.tasks-full-description li:visible').length;
-        var sidebarWidth = $(".sidebar").is(':visible') ? $(".sidebar").width() : 0;
-
-        var tasksItemsWidth = (tasksItemCount + 1) * (350 + 30)-20;
-        // Add scroll to tasks
-        $('.tasks-full-description-box').width(modalWidth - 60);
-        if($('.qc-create-window').width()){
-
-            $(".tasks-full-description-box").width($(window).width()-sidebarWidth - 100);
-            // console.log("$(window).width()", $(window).width()-sidebarWidth - 100);
-
-        }
-        $('.tasks-full-description').width(tasksItemsWidth);
-    }
     $(document).on('click', '.qc-tasks-list li', function(e) {
         e.preventDefault();
         var el = $(document).find('.modal').find('select[name=tasks] option[value=' + $(this).children('a').data('id') + ']');
@@ -1642,8 +1616,7 @@ $(document).ready(function() {
                         $(window).trigger('resize');
                         var self = $(document).find('#' + modalId);
                         var modalWidth = self.find('.modal-dialog').width();
-                        var tasksItemCount = $('.tasks-full-description li:visible').length;
-                        var tasksItemsWidth = tasksItemCount * (350 + 40);
+                        normalizeTasksList();
                         // Add scroll to tasks
                         self.find('.tasks-full-description-box').width(modalWidth - 40);
                         self.find('.tasks-full-description').width(tasksItemsWidth);

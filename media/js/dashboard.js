@@ -106,15 +106,11 @@ $(document).ready(function() {
                         }).show();
 
                     setTimeout(function() {
-                        var self = $(document).find('#' + modalId);
-                        var modalWidth = self.find('.modal-dialog').width();
 
-                        var tasksItemCount = $('.tasks-full-description li:visible').length;
-                        var tasksItemsWidth = tasksItemCount * (350 + 40);
+                        $.fn.utilities('normalizeTasksList');
 
-                        // Add scroll to tasks
-                        self.find('.tasks-full-description-box').width(modalWidth - 40);
-                        self.find('.tasks-full-description').width(tasksItemsWidth);
+
+
 
 
                     }, 300)
@@ -358,7 +354,7 @@ $(document).ready(function() {
         }
 
     });
-    
+
 
     $(document).on('change', 'select[name=project_stage],.qc-craft', function() {
         $(document).find('.qc-profession option').each(function() {
@@ -371,13 +367,7 @@ $(document).ready(function() {
 
             });
 
-            var modalWidth = $('#quality-control-modal').find('.modal-dialog').width();
-            var tasksItemCount = $('.tasks-full-description li:visible').length;
-            var tasksItemsWidth = tasksItemCount * (350 + 30)+20;
-
-            // Add scroll to tasks
-            $('.tasks-full-description-box').width(modalWidth - 40);
-            $('.tasks-full-description').width(tasksItemsWidth);
+            $.fn.utilities('normalizeTasksList');
 
         });
     });

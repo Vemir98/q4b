@@ -10,3 +10,4 @@ nbproject
 build
 composer.lock
 composer.phar
+sftp-config.json

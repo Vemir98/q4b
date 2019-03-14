@@ -270,7 +270,7 @@
                     <div class="modal-body bb-modal">
 
                         <div class="plans-modal-dialog-bottom">
-                            <table class="rwd-table responsive_table table scrollable-tbody" data-toggle="table">
+                            <table class="rwd-table responsive_table table scrollable-tbody">
                                 <thead>
                                 <tr>
                                     <th class="td-50"><?=__('')?></th>
