@@ -602,7 +602,7 @@ h6 {
 
 .mobile_item-create-qc{
   display: block;
-  height: 53px;
+  height: 79px;
   background: #005c87;
   color: #FFFFFF;
   text-align: center;
@@ -620,6 +620,13 @@ h6 {
   display: inline-block;
   vertical-align: middle;
   color: #FFFFFF;
+}
+.mobile_item-create-qc > i{
+  margin-right: 17px;
+}
+.rtl .mobile_item-create-qc > i{
+  margin-right: 0;
+  margin-left: 17px;
 }
 
 @media (max-width: 992px) {
