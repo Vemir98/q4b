@@ -88,13 +88,14 @@ table {
 
 
 /* Mobile font icons */
+
 @font-face {
   font-family: 'q4b-mobile-icons';
-  src:  url('../fonts/mobile-icons_svg/q4b-mobile-icons.eot?34kwxv');
-  src:  url('../fonts/mobile-icons_svg/q4b-mobile-icons.eot?34kwxv#iefix') format('embedded-opentype'),
-  url('../fonts/mobile-icons_svg/q4b-mobile-icons.ttf?34kwxv') format('truetype'),
-  url('../fonts/mobile-icons_svg/q4b-mobile-icons.woff?34kwxv') format('woff'),
-  url('../fonts/mobile-icons_svg/q4b-mobile-icons.svg?34kwxv#q4b-mobile-icons') format('svg');
+  src:  url('../fonts/mobile-icons_svg/q4b-mobile-icons.eot?yiyca1');
+  src:  url('../fonts/mobile-icons_svg/q4b-mobile-icons.eot?yiyca1#iefix') format('embedded-opentype'),
+  url('../fonts/mobile-icons_svg/q4b-mobile-icons.ttf?yiyca1') format('truetype'),
+  url('../fonts/mobile-icons_svg/q4b-mobile-icons.woff?yiyca1') format('woff'),
+  url('../fonts/mobile-icons_svg/q4b-mobile-icons.svg?yiyca1#q4b-mobile-icons') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -114,6 +115,9 @@ table {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.q4b-mobile-manager_console:before {
+  content: "\e906";
+}
 .q4b-mobile-consultation:before {
   content: "\e902";
 }
@@ -126,12 +130,8 @@ table {
 .q4b-mobile-Reports:before {
   content: "\e905";
 }
-.q4b-mobile-arrow_down:before {
-  content: "\e900";
-}
-.q4b-mobile-arrow_up:before {
-  content: "\e901";
-}
+
+
 
 
 /* Background gradients for status */
@@ -613,12 +613,16 @@ h6 {
   border-radius: 15px;
   border: 1px solid #005c87;
   text-decoration: none;
-  padding-top: 14px;
+  line-height: 79px;
 }
 .mobile_item-create-qc > i,
 .mobile_item-create-qc > span {
   display: inline-block;
   vertical-align: middle;
+  color: #FFFFFF;
+}
+.rtl .mobile_item-create-qc > i,
+.rtl .mobile_item-create-qc > span {
   color: #FFFFFF;
 }
 .mobile_item-create-qc > i{
@@ -12613,6 +12617,13 @@ header {
   .rtl .report-project-desc .report-project-desc-list ul li .range-val span {
     margin: 5px 0px 5px 0px; }
 
+  .content {
+    padding: 20px 15px 25px 15px;
+    background: url(../img/mobile-bg.jpg) no-repeat;
+    background-size: 100% 100%;
+    position: relative;
+  }
+
 }
 
 @media (max-width: 480px) {
@@ -12668,9 +12679,6 @@ header {
 
   .content {
     padding: 20px 15px 25px 15px;
-    background: url(../img/mobile-bg.jpg) no-repeat;
-    background-size: 100% 100%;
-    position: relative;
   }
     .content .content_companies .content_companies_filter {
       text-align: center;
