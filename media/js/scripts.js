@@ -497,7 +497,7 @@ $(document).ready(function() {
     });
 
     $(document).on('hide.bs.modal', '.modal', function() {
-        console.log("RESIZE")
+        //console.log("RESIZE")
             var sidebarWidth = $(".sidebar").is(':visible') ? $(".sidebar").width() : 0
 
         $.fn.utilities('updateContentOnChangeNew', $(this).find('.modal-dialog').width()-sidebarWidth + 60);
@@ -798,7 +798,7 @@ $(document).ready(function() {
                             //          '</span>' +
                             //      '</div>' +
                             // '</div>'
-                               console.log("modal",getPrependContentMobile(planName, imageBase64))
+                               //console.log("modal",getPrependContentMobile(planName, imageBase64))
                             $('#' + modalId).find('.qc-image-list-mobile').prepend(getPrependContentMobile(planName, imageBase64));
                             $('#' + modalId).find('.hide-upload').append('<input type="hidden" value="' + imageBase64 + '" class="plan-raw-val" name="images_' + index + '_source">' + '<input type="hidden" value="' + planId + '" class="plan-raw-val" name="images_' + index + '_id">');
                             $('#' + modalId).find('.modal-images-list-table table').find('tr').each(function(i, el) {
