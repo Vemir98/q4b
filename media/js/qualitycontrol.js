@@ -183,7 +183,7 @@ $(document).on('change','input[name="project_id"]',function(){
     $(document).on('click', '.confirm-plan1', function(e) {
         e.preventDefault();
         var html = $(document).find('input[name=plan]:checked').closest('td').find('.pln-data').html();
-        console.log(html);
+        //console.log(html);
         $(document).find('.property-quality-control-name').html(html);
         $(document).find('.property-quality-control-name').removeClass('hide');
         $(document).find('.property-quality-control-name .hide').removeClass('hide');
