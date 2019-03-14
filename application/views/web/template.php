@@ -28,6 +28,7 @@ $detector = new Mobile_Detect;
     <script src="/media/js/bootstrap.min.js"></script>
     <script src="/media/js/bootstrap-table.min.js"></script>
     <script src="/media/js/utilities.js" type="text/javascript" ></script>
+    <script src="/media/js/jquery.autocomplete.js"></script>
     <script src="/media/js/scripts.js"></script>
     <script src="/media/js/<?=Inflector::singular(strtolower(Request::current()->controller()))?>.js"></script>
 

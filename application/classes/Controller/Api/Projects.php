@@ -337,7 +337,7 @@ class Controller_Api_Projects extends HDVP_Controller_API
             foreach ($plans as $plan){
                 $planItems[$plan['id']] = [
                     'id' => $plan['id'],
-                    'name' => $this->planFileName($plan),
+                    'name' => $plan['name'],
                     'file' => $this->planFileLink($plan),
                     'createdAt' => $plan['createdAt'],
                     'createdBy' => $plan['createdBy'],
@@ -454,6 +454,7 @@ class Controller_Api_Projects extends HDVP_Controller_API
                 'message',
                 'unique_token'
             ]);
+
         $clientData['unique_token'] = (int) $clientData['unique_token'];
         if($clientData['unique_token']){
             $tmpQc = ORM::factory('QualityControl',['unique_token' => $clientData['unique_token']]);
@@ -665,7 +666,6 @@ class Controller_Api_Projects extends HDVP_Controller_API
             $qc->add('tasks',$clientData['tasks']);
             if(!empty(trim($message)))
                 ORM::factory('QcComment')->values(['message' => $message, 'qcontrol_id' => $qc->pk()])->save();
-            $this->setResponseData('triggerEvent','qualityControlUpdated');
             Database::instance()->commit();
         }catch (ORM_Validation_Exception $e){
             Database::instance()->rollback();

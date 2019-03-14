@@ -9,13 +9,14 @@
 
 $items = [
     [
-        'slug' => 'quality_control',
-        'text' => 'Quality control',
-        'tooltip' => 'Quality control',
+        'slug' => 'quality_control/create',
+        'text' => 'Create Quality Control',
+        'tooltip' => 'Create Quality Control',
         'icon' => 'q4bikon-tick',
-        'resource' => 'Controller_QControls',
+        'resource' => 'Controller_QualityControl',
         'priority' => Enum_UserPriorityLevel::Project
-    ], [
+    ],
+    [
         'slug' => 'dashboard',
         'text' => 'Dashboard',
         'tooltip' => 'Dashboard',
@@ -73,7 +74,14 @@ $items = [
     ],
 
 ];
+$detector = new Mobile_Detect; // todo:: Just add Plans page for Mobile devices
+$isMobile = $detector->isMobile(); // Just add Plans page for Mobile devices
+
 foreach ($items as $key => $i){
+    if($isMobile and ($i['slug'] == 'plans')){ // Just add Plans page for Mobile devices
+        unset($items[$key]); // Just add Plans page for Mobile devices
+    } // Just add Plans page for Mobile devices
+
     if(!Usr::can(Usr::READ_PERM,$i['resource'],$i['priority'])){
         unset($items[$key]);
     }

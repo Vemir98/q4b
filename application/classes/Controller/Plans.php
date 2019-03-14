@@ -133,7 +133,7 @@ class Controller_Plans extends HDVP_Controller_Template
             foreach ($result['items'] as $item){
                 $projectIds [] = $item->id;
             }
-            $this->template->content = View::make('plans/project-list', $result + ['filterProjects' => $filterProjects, 'projectsEmptyPlans' => Model_Project::getProjectsWithoutPlansSpecialities($projectIds)]);
+            $this->template->content = View::make('plans/project-list', $result + ['filterProjects' => $filterProjects]);
         }
     }
 
@@ -1486,10 +1486,16 @@ class Controller_Plans extends HDVP_Controller_Template
             $this->project->plans->where('project_id','=','not found');
         }
 
-        $withFileCount = clone($query);
-        $withFileCount = $withFileCount->and_where('prplan.has_file','=',1)->find_all()->count();
-        $withoutFileCount = clone($query);
-        $withoutFileCount = $withoutFileCount->and_where('prplan.has_file','=',0)->find_all()->count();
+        $withFileCount = 0;
+        $withoutFileCount = 0;
+
+        if(isset($query)){
+            $withFileCount = clone($query);
+            $withFileCount = $withFileCount->and_where('prplan.has_file','=',1)->find_all()->count();
+            $withoutFileCount = clone($query);
+            $withoutFileCount = $withoutFileCount->and_where('prplan.has_file','=',0)->find_all()->count();
+
+        }
 
         $paginationSettings = [
             'items_per_page' => 15,
@@ -1671,15 +1677,20 @@ class Controller_Plans extends HDVP_Controller_Template
 
                     $planFile = $plan->file();
 
-                    if($planFile->loaded()){
-                        $planFile->customName(Arr::get($c,'name'));
-
-                        $planFile->sheet_number = Arr::get($c,'sheet_number');
-                        $planFile->save();
-                    }
+//                    if($planFile->loaded()){ // todo:: Understand WTF ?
+//                        $planFile->customName(Arr::get($c,'name'));
+//
+//                        $planFile->sheet_number = Arr::get($c,'sheet_number');
+//                        $planFile->save();
+//                    }else{
+                        $plan->sheet_number = Arr::get($c,'sheet_number');
+                        $plan->name = Arr::get($c,'name');
+//                    }
 
                     $plan->delivered_at = Arr::get($c,'delivered_at');
                     $plan->received_at = Arr::get($c,'received_at');
+
+                    $plan->date = DateTime::createFromFormat('d/m/Y',Arr::get($c,'date'))->getTimestamp();
 
                     if(Arr::get($c,'edition') !== ''){
                         $plan->edition = Arr::get($c,'edition');
@@ -1896,15 +1907,13 @@ class Controller_Plans extends HDVP_Controller_Template
                 Database::instance()->begin();
 
                 foreach($plansData as $pid => $c) {
-                    $fileData = [
-                        'sheet_number' => Arr::get($c,'sheet'),
-                        'path' => str_replace(DOCROOT,'',$this->project->plansPath()),
-                    ];
-
                     $data['date'] = time();//DateTime::createFromFormat('d/m/Y',$data['date'])->getTimestamp();
                     $plan = ORM::factory('PrPlan')->values($data);
                     $plan->scope = Model_PrPlan::getNewScope();
                     $plan->project_id = $this->project->id;
+                    $plan->sheet_number = Arr::get($c,'sheet');
+                    $plan->name = Arr::get($c,'name');
+                    $plan->edition = 1; // todo:: WTF ???
                     $plan->save();
                     $object = ORM::factory('PrObject',$plan->object_id);
 
@@ -1922,10 +1931,6 @@ class Controller_Plans extends HDVP_Controller_Template
                     foreach ($floors as $floor){
                         $plan->add('floors',$floor);
                     }
-
-                    $file = ORM::factory('PlanFile')->values($fileData)->save();
-                    $plan->add('files', $file->pk());
-                    $file->customName(Arr::get($c,'name'));
 
                     $this->setResponseData('triggerEvent','projectPlanCreated');
                     $this->setResponseData('id',$plan->id);
@@ -2005,7 +2010,6 @@ class Controller_Plans extends HDVP_Controller_Template
                 if($f->loaded()){
                     $f->customName($data['name']);
 
-                    $f->sheet_number = Arr::get($data,'sheet_number');
                     $f->save();
                 }
                 if( ! $plan->place_id){
@@ -2113,10 +2117,11 @@ class Controller_Plans extends HDVP_Controller_Template
             }
             try{
                 Database::instance()->begin();
-                $data = Arr::extract($this->post(),['edition','description','date','scale','status','sheet_number']);
+                $data = Arr::extract($this->post(),['edition','description','date','scale','status']);
                 $data['date'] = DateTime::createFromFormat('d/m/Y',$data['date'])->getTimestamp();
                 $newPlan = ORM::factory('PrPlan')->values($data);
                 $newPlan->name = $plan->name;
+                $newPlan->sheet_number = $plan->sheet_number;
                 $newPlan->place_id = $plan->place_id;
                 $newPlan->scope = $plan->scope;
                 $newPlan->project_id = $plan->project_id;
@@ -2130,6 +2135,9 @@ class Controller_Plans extends HDVP_Controller_Template
                         $newPlan->add('floors',$floor);
                     }
 
+                }
+                foreach ($plan->crafts->find_all() as $craft){
+                    $newPlan->add('crafts',$craft);
                 }
                 $this->project->makeProjectPaths();
                 if(!empty($this->files()) AND !empty($this->files()['file'])){
@@ -2145,18 +2153,13 @@ class Controller_Plans extends HDVP_Controller_Template
                 }
                 if(!empty($uploadedFiles)){
                     foreach ($uploadedFiles as $file){
-                        $file = ORM::factory('PlanFile')->values($file)->save();
-                        $newPlan->add('files', $file->pk());
-                        Event::instance()->fire('onPlanFileAdded',['sender' => $this,'item' => $file]);
+                        $PlanFile = ORM::factory('PlanFile')->values($file)->save();
+                        $newPlan->add('files', $PlanFile->pk());
+                        Event::instance()->fire('onPlanFileAdded',['sender' => $this,'item' => $PlanFile]);
                     }
-                    $f = $plan->file();
+                    $f = $plan->file(); // todo:: WTF ?
                     if($f->hasCustomName()){
-                        $file->customName($f->customName());
-                    }
-
-                    if($file->loaded()){
-                        $file->sheet_number = Arr::get($data,'sheet_number');
-                        $file->save();
+                        $PlanFile->customName($f->customName());
                     }
                 }
                 Database::instance()->commit();
@@ -2190,6 +2193,7 @@ class Controller_Plans extends HDVP_Controller_Template
         $this->_checkForAjaxOrDie();
 
         $projectId = (int) $this->request->param('project_id');
+        $objectId = (int) $this->request->param('object_id');
         $this->project = ORM::factory('Project',$projectId);
 
         $projects = ORM::factory('Project');
@@ -2211,7 +2215,7 @@ class Controller_Plans extends HDVP_Controller_Template
         }
 
         $professions = [];
-        $plans = $this->project->plans->find_all();
+        $plans = $this->project->plans->where('object_id', '=', $objectId)->find_all();
 
         foreach($plans as $plan){
             if( ! in_array($plan->profession_id,$professions)){
@@ -2242,16 +2246,21 @@ class Controller_Plans extends HDVP_Controller_Template
                 }
 
                 $professionsIds = '('.implode(',',$copyToProfessions).')';
-                
-                $copyToPlans = $this->project->plans->where('profession_id', 'IN', DB::expr($professionsIds))->find_all();
+
+                $copyToPlans = $this->project
+                    ->plans
+                    ->where('profession_id', 'IN', DB::expr($professionsIds))
+                    ->where('object_id', '=', $objectId)
+                    ->where('prplan.id','IN',DB::expr(' (SELECT max(pp.id) id FROM pr_plans pp WHERE pp.project_id='.$this->project->id.' GROUP BY pp.scope ORDER BY pp.id DESC)'))
+                    ->find_all();
 
                 foreach ($copyToPlans as $copyToPlan) {
-                    $copyToPlan->cloneIntoObject($copyToObject);
+                    $copyToPlan->cloneIntoObject(clone $copyToObject);
                 }
 
                 Database::instance()->commit();
                 
-                $this->setResponseData('projectPlansForm',View::make('projects/plans/list',
+                $this->setResponseData('projectPlansForm',View::make('plans/plans/list',
                     $this->_getPlanListPaginatedData($this->project, isset($object) ? $object : null, !empty($professionIds) ? $professionIds : null)
                     ));
                 $this->setResponseData('triggerEvent','projectPlansUpdated');
@@ -2267,7 +2276,7 @@ class Controller_Plans extends HDVP_Controller_Template
                 'professions' => $professions,
                 'projects' => $projects,
                 'objects' => $this->project->objects->find_all(),
-                'action' => URL::site('plans/copy_plan/'. $projectId)
+                'action' => URL::site('plans/copy_plan/'. $projectId .'/object_id/'. $objectId)
             ]));
         }
     }
@@ -2335,34 +2344,36 @@ class Controller_Plans extends HDVP_Controller_Template
         $projectId = $this->getUIntParamOrDie($this->request->param('id'));
         $this->project = ORM::factory('Project',$projectId);
         $plans = $this->getNormalizedPostArr('plans');
+
         if(!empty($plans)){
             $plans = array_keys($plans);
         }
-            try{
-                if(!$this->project->loaded() OR !$this->_user->canUseProject($this->project)) {
-                    throw new HDVP_Exception('Access Denied');
-                }
-                Database::instance()->begin();
-                if(!empty($plans)){
-                    $tracking = ORM::factory('PlanTracking');
-                    $tracking->project_id = $this->project->id;
-                    $tracking->save();
-                    $tracking->add('plans',$plans);
-                    $this->setResponseData('id',$tracking->id);
-                }else{
-                    throw new HDVP_Exception('Plans can not be empty');
-                }
-                Database::instance()->commit();
-            }catch (ORM_Validation_Exception $e){
-                Database::instance()->rollback();
-                $this->_setErrors($e->errors('validation'));
-            }catch (HDVP_Exception $e){
-                Database::instance()->rollback();
-                $this->_setErrors($e->getMessage());
-            }catch (Exception $e){
-                Database::instance()->rollback();
-                $this->_setErrors('Operation Error');
+
+        try{
+            if(!$this->project->loaded() OR !$this->_user->canUseProject($this->project)) {
+                throw new HDVP_Exception('Access Denied');
             }
+            Database::instance()->begin();
+            if(!empty($plans)){
+                $tracking = ORM::factory('PlanTracking');
+                $tracking->project_id = $this->project->id;
+                $tracking->save();
+                $tracking->add('plans',$plans);
+                $this->setResponseData('id',$tracking->id);
+            }else{
+                throw new HDVP_Exception('Plans can not be empty');
+            }
+            Database::instance()->commit();
+        }catch (ORM_Validation_Exception $e){
+            Database::instance()->rollback();
+            $this->_setErrors($e->errors('validation'));
+        }catch (HDVP_Exception $e){
+            Database::instance()->rollback();
+            $this->_setErrors($e->getMessage());
+        }catch (Exception $e){
+            Database::instance()->rollback();
+            $this->_setErrors('Operation Error');
+        }
 
     }
 
@@ -3517,5 +3528,4 @@ class Controller_Plans extends HDVP_Controller_Template
         }
         return $output;
     }
-
 }

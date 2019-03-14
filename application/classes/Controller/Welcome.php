@@ -228,4 +228,42 @@ FROM pr_plans_files
         }
     }
 
+//    public function action_exchange_sheet_numbers()
+//    {
+//        $plans = ORM::factory('PrPlan')
+//            ->find_all();
+//
+//        foreach ($plans as $plan) {
+//            $plan->sheet_number = $plan->file()->sheet_number;
+//            $plan->save();
+//
+//            echo "<pre>";
+//            print_r($plan->id);
+//            echo "</pre>";
+//        }
+//    }
+
+//    public function action_backup_plan_names()
+//    {
+//        ini_set('max_execution_time', 300);
+//
+//        $plans = ORM::factory('PrPlan')
+//            ->where('name', '=', NULL)
+//            ->find_all();
+//
+//        foreach ($plans as $plan) {
+//            $file = $plan->file();
+//
+//            if($file->loaded()){
+//                $name = $file->getName();
+//                $plan->name = $name;
+//
+//                $plan->save();
+//            }
+//
+//            echo "<pre>";
+//            print_r($plan->id);
+//            echo "</pre>";
+//        }
+//    }
 } // End Welcome

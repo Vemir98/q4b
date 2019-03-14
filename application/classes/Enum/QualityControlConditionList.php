@@ -11,4 +11,5 @@ class Enum_QualityControlConditionList extends Enum
     const ForImmediateTreatment = 'for_immediate_treatment';
     const DoNotGoThroughStage = 'do_not_go_th_stage';
     const DoNotProceedWithoutSvApprove = 'do_not_prc_without_suv_approve';
+    const ComplianceOfMaterials = 'compliance_of_materials';
 }

@@ -43,36 +43,36 @@
         <div class="content-projects-list">
             <ul class="q4-list-items">
                 <?foreach($items as $i):?>
-                <li class="q4-list-item">
-                    <?$countNew = $i->quality_controls->where('created_at','>',strtotime(date('d-m-Y H:i:s'))-86400)->count_all();?>
-                    <?if($countNew > 0):?>
-                        <span class="q4-list-item-st"><?=__('New QC')?> (<span class="q4-list-item-st-number"><?=$countNew?></span>)</span>
-                    <?endif;?>
-                    <figure>
-                        <?if($i->image_id):?>
-                            <a href="<?=URL::site('plans/update/'.$i->id)?>"><img src="<?=$i->main_image->originalFilePath()?>" alt="<?=$i->name?>"></a>
-                        <?else:?>
-                            <a href="<?=URL::site('plans/update/'.$i->id)?>"><img src="/media/img/camera.png" alt="<?=$i->name?>"></a>
-                        <?endif?>
-                        <figcaption><a href="<?=URL::site('plans/update/'.$i->id)?>"><?=$i->name?></a></figcaption>
-                    </figure>
+                    <li class="q4-list-item">
+                        <?$countNew = $i->quality_controls->where('created_at','>',strtotime(date('d-m-Y H:i:s'))-86400)->count_all();?>
+                        <?if($countNew > 0):?>
+                            <span class="q4-list-item-st"><?=__('New QC')?> (<span class="q4-list-item-st-number"><?=$countNew?></span>)</span>
+                        <?endif;?>
+                        <figure>
+                            <?if($i->image_id):?>
+                                <a href="<?=URL::site('plans/update/'.$i->id)?>"><img src="<?=$i->main_image->originalFilePath()?>" alt="<?=$i->name?>"></a>
+                            <?else:?>
+                                <a href="<?=URL::site('plans/update/'.$i->id)?>"><img src="/media/img/camera.png" alt="<?=$i->name?>"></a>
+                            <?endif?>
+                            <figcaption><a href="<?=URL::site('plans/update/'.$i->id)?>"><?=$i->name?></a></figcaption>
+                        </figure>
 
-                     <?if(isset($projectsEmptyPlans[$i->id]) ):?>
-                        <span style="position: absolute;bottom: 0;right: 0;background: #1ebae5;color: #ffffff;text-align: center;padding: 5px 6px;font-size: 14px;font-weight: normal;font-style: normal;font-family: 'proxima_nova_rgregular', Arial, Helvetica, sans-serif;-webkit-border-radius: 0px 0px 6px 0px;-moz-border-radius: 0px 0px 6px 0px;-ms-border-radius: 0px 0px 6px 0px;border-radius: 0px 0px 6px 0px;">(<span class=""><?=$projectsEmptyPlans[$i->id]?></span>) <?=__('Not associated plans')?> </span>
-                    <?endif;?>
-                    <div class="wrap-projects-list-items">
-                        <span class="q4-list-item-info title"><?=__('Company')?>: <span class="project-list-c-name"><?=$i->company->name?></span></span>
-                        <span class="q4-list-item-info"><?=__('Start Date')?>: <span class="project-list-date"><?=date('d/m/Y',$i->start_date)?></span></span>
-                        <span class="q4-list-item-info"><?=__('End Date')?>: <span class="project-list-date"><?=date('d/m/Y',$i->end_date)?></span></span>
-                        <span class="q4-list-item-info"><?=__('Status')?>: <span class="status inactive"></span> <?=__($i->status)?></span>
-                    </div>
-                    <div class="q4-list-item-desc">
-                        <p>
-                            <?=$i->description?>
-                        </p>
-                    </div>
+<!--                        --><?//if(isset($projectsEmptyPlans[$i->id]) ):?>
+<!--                            <span style="position: absolute;bottom: 0;right: 0;background: #1ebae5;color: #ffffff;text-align: center;padding: 5px 6px;font-size: 14px;font-weight: normal;font-style: normal;font-family: 'proxima_nova_rgregular', Arial, Helvetica, sans-serif;-webkit-border-radius: 0px 0px 6px 0px;-moz-border-radius: 0px 0px 6px 0px;-ms-border-radius: 0px 0px 6px 0px;border-radius: 0px 0px 6px 0px;">(<span class="">--><?//=$projectsEmptyPlans[$i->id]?><!--</span>) --><?//=__('Not associated plans')?><!-- </span>-->
+<!--                        --><?//endif;?>
+                        <div class="wrap-projects-list-items">
+                            <span class="q4-list-item-info title"><?=__('Company')?>: <span class="project-list-c-name"><?=$i->company->name?></span></span>
+                            <span class="q4-list-item-info"><?=__('Start Date')?>: <span class="project-list-date"><?=date('d/m/Y',$i->start_date)?></span></span>
+                            <span class="q4-list-item-info"><?=__('End Date')?>: <span class="project-list-date"><?=date('d/m/Y',$i->end_date)?></span></span>
+                            <span class="q4-list-item-info"><?=__('Status')?>: <span class="status inactive"></span> <?=__($i->status)?></span>
+                        </div>
+                        <div class="q4-list-item-desc">
+                            <p>
+                                <?=$i->description?>
+                            </p>
+                        </div>
 
-                </li>
+                    </li>
                 <?endforeach?>
             </ul>
 

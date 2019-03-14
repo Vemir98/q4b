@@ -134,6 +134,17 @@ $(document).ready(function() {
 
     });
 
+    $(document).on('change','.select-structure', function(){
+        var $self = $(this);
+        var value = $self.val();
+
+        if(value == 0){
+            $(document).find('.copy-plan').addClass('disabled-link');
+        } else {
+            $(document).find('.copy-plan').removeClass('disabled-link');
+        }
+    });
+
 
 
     $(document).on('change','.modal .plan-place-number',function(){
@@ -267,9 +278,10 @@ $(document).ready(function() {
 
 
                     setTimeout(function(){
-
                         $.fn.utilities('updateContentOnChange');
                         $('.selectpicker').selectpicker({size:3,dropupAuto:false});
+
+                        eventAfterUpdate();
                     }, 300);
 
                     $('[data-toggle="table"]').bootstrapTable();
@@ -439,16 +451,8 @@ $(document).ready(function() {
             }
 
         });
-        var checked = $('table .enable-plan-action input[type=checkbox]:checked').length;
 
-        if(checked > 0){
-            $(document).find('.plans-to-print-link, .plans-to-send').removeClass('disabled-link');
-        } else {
-
-            $(document).find('.plans-to-print-link, .plans-to-send').addClass('disabled-link');
-
-        }
-
+        eventAfterUpdate();
     });
 
     $(document).on('click', currentPage.filterTracking, function(e) {
@@ -888,21 +892,21 @@ $(document).ready(function() {
 
         if (! sheetNumber) {
             rowTemplate.addClass('warning');
-            Q4U.alert(__('Please check all rows'));
+            Q4U.alert(__('Please  fill all fields'));
 
             return false;
         }
 
         if (! planName) {
             rowTemplate.addClass('warning');
-            Q4U.alert(__('Please check all rows'));
+            Q4U.alert(__('Please  fill all fields'));
 
             return false;
         }
 
         if (! floors) {
             rowTemplate.addClass('warning');
-            Q4U.alert(__('Please check all rows'));
+            Q4U.alert(__('Please  fill all fields'));
 
             return false;
         }
@@ -1027,15 +1031,33 @@ $(document).ready(function() {
                 }
             }
         });
+    });
 
+    $(document).on('change', '.select-project-get-objects', function(e) {
+        e.preventDefault();
 
+        var url = $(this).data('url') +'/'+ $(this).find('option:selected').val()
 
+        Q4U.ajaxGetRequest(url, {
+            successCallback: function(data) {
+                if (data.getData().objects) {
+                    var objects = data.getData().objects;
+                    $(document).find('.modal .select-objects-for-copy').html(objects);
+                    $(document).find('.modal .demo-option').remove();
+
+                    copyPlanModalCheckboxValidation();
+                }
+            }
+        });
     });
 
     $(document).on('click', '.copy-plan', function(e) {
         e.preventDefault();
 
-        Q4U.ajaxGetRequest($(this).data('url'), {
+        var url = $(this).data('url');
+        url += '/object_id/' + $(document).find('.select-structure').val();
+
+        Q4U.ajaxGetRequest(url, {
             successCallback: function(data) {
                 if (data.getData().modal) {
                     var modal = data.getData().modal;
@@ -1133,17 +1155,11 @@ $(document).ready(function() {
     });
 
     $(document).on('click', '.enable-plan-action > .checkbox-wrapper', function () {
+        eventAfterUpdate();
+    });
 
-        var checked = $('table .enable-plan-action input[type=checkbox]:checked').length;
-
-        if(checked > 0){
-            $(document).find('.plans-to-print-link, .plans-to-send').removeClass('disabled-link');
-        } else {
-
-            $(document).find('.plans-to-print-link, .plans-to-send').addClass('disabled-link');
-
-        }
-
+    $(document).on('click', '.professions-list-checkbox > .checkbox-wrapper', function () {
+        copyPlanModalCheckboxValidation();
     });
 
 
@@ -1187,10 +1203,11 @@ $(document).ready(function() {
 
     /**Print Plans in projects page */
     $(document).on('click', '.plans-to-print-link', function() {
+        var printLandscape = $(document).find('.print-landscape-mode');
+        printLandscape.find('.printable-table-other').html('');
 
         $(document).find('.enable-plan-action label.checkbox-wrapper input[type=checkbox]:checked').each(function(i,el){
             var self = $(el);
-            var printLandscape = $(document).find('.print-landscape-mode');
             var table = printLandscape.find('.printable-table-first .page-break');
             // var firstPage = $(document).find('.print-landscape-mode .first-page');
             var tablePrintTd = self.closest('tr').find('.table-print-td');
@@ -1254,7 +1271,6 @@ $(document).ready(function() {
 
         $('body>.print-landscape-mode').remove();
 
-        var printLandscape = $(document).find('.print-landscape-mode');
         var table = printLandscape.find('.printable-table-first .page-break');
         var firstPage = $(document).find('.print-landscape-mode .first-page');
         var error = '';
@@ -1314,7 +1330,6 @@ $(document).ready(function() {
                 }
             },
         });
-
     });
 
 
@@ -1845,7 +1860,26 @@ $(document).ready(function() {
         });
     });
 
+    function eventAfterUpdate(){
+        var checked = $('table .enable-plan-action input[type=checkbox]:checked').length;
 
+        if(checked > 0){
+            $(document).find('.plans-to-print-link, .plans-to-send').removeClass('disabled-link');
+        } else {
+            $(document).find('.plans-to-print-link, .plans-to-send').addClass('disabled-link');
+        }
+    }
+
+    function copyPlanModalCheckboxValidation(){
+        var checked = $(document).find('.professions-list-checkbox input[type=checkbox]:checked').length;
+        var selectedProject = $(document).find('.select-project-get-objects option:selected').val();
+
+        if(checked > 0 && selectedProject != 0){
+            $(document).find('.copy-plans-to-another').removeClass('disabled-link');
+        } else {
+            $(document).find('.copy-plans-to-another').addClass('disabled-link');
+        }
+    }
 
     $('body').on('planListUpdated', function(e, data) {
 

@@ -54,7 +54,7 @@
                         <select class="q4-select q4-form-input" onchange="document.location=this.options[this.selectedIndex].value">
                             <option value=""><?=__('Please select')?></option>
                             <?foreach ($filterProjects as $item): ?>
-                                <option value="<?=URL::site('projects/update/'.$item->id)?>"><?=$item->name?></option>
+                                <option value="<?=URL::site('plans/update/'.$item->id)?>"><?=$item->name?></option>
                             <?endforeach ?>
                         </select>
                     </div>
@@ -97,11 +97,11 @@
                                 <span class="q4-list-item-st"><?=__('New QC')?> (<span class="q4-list-item-st-number"><?=$countNew?></span>)</span>
                             <?endif;?>
                             <figure class="mobile-figure">
-                                 <a href="<?=URL::site('projects/company_project_update/'.$i->id)?>">
+                                 <a href="<?=URL::site('plans/update/'.$i->id)?>">
                                     <img src="<?=$i->main_image->originalFilePath()?>" alt="projects logo">
                                 </a>
                                 <figcaption class="mobile-fig-caption">
-                                    <a href="<?=URL::site('projects/company_project_update/'.$i->id)?>"><?=$i->name?></a>
+                                    <a href="<?=URL::site('plans/update/'.$i->id)?>"><?=$i->name?></a>
                                 </figcaption>
                             </figure>
                             <?if(isset($projectsEmptyPlans[$i->id]) ):?>

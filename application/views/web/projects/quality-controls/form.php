@@ -11,7 +11,7 @@
 ?>
 
 <div id="quality-control-modal" class="create-modal modal fade" data-backdrop="static" data-keyboard="false" role="dialog" data-qcid="<?=$item->id?>">
-    <div class="modal-dialog q4_project_modal modal-dialog-1070">
+    <div class="modal-dialog q4_project_modal quality-control-dialog">
         <form id="qc-form-id" class="q4_form" data-submit="false" action="<?=URL::site('/projects/quality_control/'.$item->id)?>"  data-ajax="true" method="post">
         <input type="hidden" value="" name="x-form-secure-tkn"/>
             <div class="modal-content">
@@ -185,7 +185,7 @@
 
 
                                     }
-                                       // echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($usedTasks); echo "</pre>";
+                                        //echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($usedTasks); echo "</pre>";
                                 ?>
                         <div class="tasks-full-description-box">
                             <ul class="tasks-full-description qc-tasks-list">
@@ -196,7 +196,10 @@
                                             <span class="selected-tick"><i class="q4bikon-tick"></i></span>
                                             <h4><?=__('Task')?> <?=$task->id?></h4>
                                             <div class="task-item-txt">
-                                                <p><?=$task->name?></p>
+                                                <?$desc = explode("\n",$task->name);
+                                                foreach ($desc as $line) {?>
+                                                    <p><?=$line?></p>
+                                                <?}?>
                                             </div>
                                         </a>
                                     </li>
@@ -212,7 +215,6 @@
                                     if(empty($c)) continue;
                                     $taskId = $task->id;
                                     $usedCraftsArray = isset($usedTasks->$taskId)? $usedTasks->$taskId->crafts: [];
-                                    //echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r(@$usedTasks->$taskId); echo "</pre>";
                                     ?>
                                     <option value="<?=$task->id?>" data-usedcrafts="<?=implode(',',$usedCraftsArray)?>" data-crafts="<?=implode(',',$c)?>" ><?=$task->name?></option>
                                 <?endforeach?>
@@ -312,7 +314,7 @@
                         </div>
                     </div>
                 </div>
-               <div class="modal-footer text-align">
+               <div class="panel-modal-footer text-right">
                 <div class="row">
                     <div class="col-sm-12">
                         <a href="#" class="inline_block_btn orange_button q4-form-submit q4_form_submit"><?=__('Create')?></a>
@@ -325,7 +327,7 @@
 </div>
 
     <div id="choose-plan-modal" class="choose-plan-modal modal no-delete" role="dialog">
-        <div class="modal-dialog modal-dialog-1170">
+        <div class="modal-dialog choose-plan-dialog">
             <form class="q4_form" action="<?=1?>" data-ajax="true" method="post">
                 <!-- Modal content-->
                 <div class="modal-content">
@@ -460,7 +462,7 @@
 
                         </div>
                     </div>
-                    <div class="modal-footer text-align">
+                    <div class="panel-modal-footer text-right">
                         <div class="row">
                             <div class="col-sm-12">
                                 <a href="#" class="inline_block_btn blue-light-button confirm-plan"><?=__('Confirm')?></a>

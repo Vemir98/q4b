@@ -183,23 +183,28 @@ class Controller_Auth extends HDVP_Controller_Template
 
     private function getRedirectUri($outspread){
         $output = '';
-        switch ($outspread) {
-            case Enum_UserOutspread::General:
-                $output = 'dashboard';
-                break;
-            case Enum_UserOutspread::Corporate:
-                $output = 'companies';
-                break;
-            case Enum_UserOutspread::Company:
-                $output = 'companies/update/' . Auth::instance()->get_user()->company_id;
-                break;
-            case Enum_UserOutspread::Project:
-                if(Auth::instance()->get_user()->is('project_visitor'))
-                    $output = 'reports';
-                else
-                    $output = 'projects';
-                break;
+        if(Auth::instance()->get_user()->can('update','Controller_QualityControl')){
+            $output = 'quality_control/create';
+        }else{
+            switch ($outspread) {
+                case Enum_UserOutspread::General:
+                    $output = 'dashboard';
+                    break;
+                case Enum_UserOutspread::Corporate:
+                    $output = 'companies';
+                    break;
+                case Enum_UserOutspread::Company:
+                    $output = 'companies/update/' . Auth::instance()->get_user()->company_id;
+                    break;
+                case Enum_UserOutspread::Project:
+                    if(Auth::instance()->get_user()->is('project_visitor'))
+                        $output = 'reports';
+                    else
+                        $output = 'projects';
+                    break;
+            }
         }
+
         return URL::withLang($output,Language::getLangByIso2(Auth::instance()->get_user()->lang)->slug);
     }
 }

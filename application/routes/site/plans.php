@@ -44,7 +44,7 @@ Route::set('site.plans.trackingList2','plans/tracking_list/<id>(/filter/<filter>
         'action' => 'tracking_list',
         'page' => 1,
     ]);
-Route::set('site.plans.copy','plans/copy_plan/<project_id>',['project_id' => '[0-9]+'])
+Route::set('site.plans.copy','plans/copy_plan/<project_id>/object_id/<object_id>',['project_id' => '[0-9]+', 'object_id' => '[0-9]+'])
     ->defaults([
         'controller' => 'plans',
         'action' => 'copy_plan',

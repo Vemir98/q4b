@@ -167,22 +167,34 @@ class Model_PrPlan extends MORM
 
     public function cloneIntoObject(Model_PrObject $object){
         $plan = ORM::factory('PrPlan');
-        $plan->values($this->as_array(),['name','edition','description','date','profession_id','scale','status']);
+        $plan->values($this->as_array(),['name','date','scale']);
         $plan->project_id = $object->project_id;
+        $plan->object_id = $object->id;
         $plan->scope = self::getNewScope();
+
         if($this->place_id){
             $place = $object->places->where('number','=',$this->place->number)->find();
             if($place->loaded()){
                 $plan->place_id = $place->id;
             }
         }
-        $plan->object_id = $object->id;
-        if($this->file()->loaded()){
-            $name = $this->file()->getName();
-        }else{
-            $name = $this->name;
-        }
-        $plan->name = trim($name);
+
+        $copyPlanProfession = $object->project->company->professions->where('name','LIKE','%'. trim($this->profession->name) .'%')->find();
+
+        if(! $copyPlanProfession->loaded()) return false;
+
+        $plan->profession_id = $copyPlanProfession->id;
+
+//        if($this->file()->loaded()){ //Plan name is file name
+//            $name = $this->file()->getName();
+//        }else{
+//            $name = $this->name;
+//        }
+//        $plan->name = trim($name);
+
+        $plan->sheet_number = $this->sheet_number;
+        $plan->name = $this->name;
+        $plan->edition = 1; // todo:: WTF ???
         $plan->save();
         $floors = $this->floors->find_all();
         if(count($floors)){
@@ -257,5 +269,10 @@ class Model_PrPlan extends MORM
   LEFT JOIN files_custom_names fcn ON f.id = fcn.file_id 
   LEFT JOIN pr_places pp1 ON pp.place_id = pp1.id
   WHERE pp.project_id = '.(int)$project_id)->execute()->as_array();
+    }
+
+    public function isDeliveredAndReceived()
+    {
+        return (bool) ($this->delivered_at and $this->received_at);
     }
 }

@@ -276,6 +276,8 @@
 
         },
 
+
+
         setCarouselWidth: function(selector, winWidth) {
 
             winWidth = winWidth != undefined ? winWidth: '';
@@ -317,13 +319,13 @@
 
         },
 
-        imageToBase64: function(selector,file){
+        imageToBase64: function(selector,file,pluginClass){
 
             var dataSrc = 'new';
             var reader = new FileReader();
             reader.onload = function() {
                 dataSrc = reader.result;
-                $(document).find('.call-lit-plugin.'+selector).data('url',dataSrc);
+                $(document).find(pluginClass+'.'+selector).data('url',dataSrc);
             }
             reader.readAsDataURL(file);
         },
@@ -528,8 +530,11 @@
                     } else {
                         //TO DO добавить функционал для планов (plugin)
                         var classPlugin = modalId.indexOf('plan') !=-1 ? '' : 'call-lit-plugin';
+                        // if(modalId=="klir"){
+                        //     classPlugin = 'call-lit-plugin-without-modal';
+                        // }
                         var selector = "id" + Math.random().toString(9).replace('.', '');
-                        $.fn.utilities('imageToBase64', selector, standardFiles[i]);
+                        $.fn.utilities('imageToBase64', selector, standardFiles[i],'.'+classPlugin);
                         $(input).closest('.modal').find('.modal-images-list-table table tbody')
                             .prepend('<tr class="dynamically-appended">' +
                                        '<td>' +
