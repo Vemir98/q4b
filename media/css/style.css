@@ -553,6 +553,9 @@ h6 {
 
 .wrap-floats {
   overflow: hidden; }
+.dashboard-console{
+  display: none;
+}
 .mobile_item--link-wrapper {
   margin: 95px auto 30px;
   text-align: center;
@@ -12617,7 +12620,7 @@ header {
   .rtl .report-project-desc .report-project-desc-list ul li .range-val span {
     margin: 5px 0px 5px 0px; }
 
-  .content {
+  .content.mobile-bg {
     padding: 20px 15px 25px 15px;
     background: url(../img/mobile-bg.jpg) no-repeat;
     background-size: 100% 100%;
