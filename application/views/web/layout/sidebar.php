@@ -15,8 +15,7 @@ $items = [
         'icon' => 'q4bikon-tick',
         'resource' => 'Controller_QualityControl',
         'priority' => Enum_UserPriorityLevel::Project
-    ],
-    [
+    ], [
         'slug' => 'dashboard',
         'text' => 'Dashboard',
         'tooltip' => 'Dashboard',

@@ -9,14 +9,13 @@
  */
 
 ?>
-<div class="modal create-modal qc-create-window quality-control-dialog-mobile q4-mobile-layout qc-content" id="klir" style="position: inherit!important; display: block!important; margin: auto; overflow: hidden !important;">
-    <div class="dashboard-console">
+<div class="modal create-modal qc-create-window quality-control-dialog-mobile q4-mobile-layout" id="klir" style="position: inherit!important; display: block!important; margin: auto; overflow: hidden !important;">
+    <div id="qc-content" class="qc-content">
         <form id="qc-form" class="q4_form" data-submit="false" action="<?=URL::site('/quality_control/create')?>"  data-ajax="true" method="post">
             <input type="hidden" value="" name="x-form-secure-tkn"/>
             <input type="hidden" value="" name="place_id">
             <div>
                 <div>
-
                     <div class="plans-modal-dialog-top">
 
                         <div class="form_row form-group">
@@ -266,34 +265,31 @@
             </div>
         </form>
     </div>
-
-    <div class="mobile_item--link-group">
-        <div class="mobile_item--link-wrapper">
-            <a id="show_console" class="mobile_item--link">
-                <i class="mobile_item--link-icon q4b-mobile-manager_console"></i>
-                <span class="mobile_item--link-title">Manager Console</span>
-            </a>
-            <a href="<?= URL::site('plans') ?>" class="mobile_item--link">
-                <i class="mobile_item--link-icon q4b-mobile-plan"></i>
-                <span class="mobile_item--link-title">Plans</span>
-            </a>
-            <a href="<?= URL::site('reports') ?>" class="mobile_item--link">
-                <i class="mobile_item--link-icon q4b-mobile-Reports"></i>
-                <span class="mobile_item--link-title">Reports</span>
-            </a>
-            <a href="<?= URL::site('consultants') ?>" class="mobile_item--link">
-                <i class="mobile_item--link-icon q4b-mobile-consultation"></i>
-                <span class="mobile_item--link-title">Consulting and Auditors</span>
-            </a>
-        </div>
-
-        <a href="<?= URL::site('quality_control/create') ?>" class="mobile_item-create-qc">
-            <i class="q4b-mobile-create_qc"></i>
-            <span>Create Quality Control</span>
+</div>
+<div class="mobile_item--link-group">
+    <div class="mobile_item--link-wrapper">
+        <a href="<?= URL::site('dashboard') ?>" class="mobile_item--link">
+            <i class="mobile_item--link-icon q4b-mobile-manager_console"></i>
+            <span class="mobile_item--link-title"><?= __('Dashboard') ?></span>
+        </a>
+        <a href="<?= URL::site('plans') ?>" class="mobile_item--link">
+            <i class="mobile_item--link-icon q4b-mobile-plan"></i>
+            <span class="mobile_item--link-title"><?= __('Plans') ?></span>
+        </a>
+        <a href="<?= URL::site('reports') ?>" class="mobile_item--link">
+            <i class="mobile_item--link-icon q4b-mobile-Reports"></i>
+            <span class="mobile_item--link-title"><?= __('Reports') ?></span>
+        </a>
+        <a href="<?= URL::site('consultants') ?>" class="mobile_item--link">
+            <i class="mobile_item--link-icon q4b-mobile-consultation"></i>
+            <span class="mobile_item--link-title"><?= __('Menu_Consultants And Auditors') ?></span>
         </a>
     </div>
+    <a id="show_console" class="mobile_item-create-qc">
+        <i class="q4b-mobile-create_qc"></i>
+        <span><?= __('Create Quality Control') ?></span>
+    </a>
 </div>
-
 
 
 <div id="choose-plan-modal-mobile" class="choose-plan-modal modal no-delete klris-glox" role="dialog">
@@ -311,16 +307,11 @@
                     </div>
                 </div>
                 <div class="modal-body bb-modal">
-
                     <div class="plans-modal-dialog-bottom">
                         <table class="rwd-table responsive_table table" data-toggle="table">
-
-
                             <tbody class="qc-v-scroll qc-plans-list">
                             </tbody>
                         </table>
-
-
                     </div>
                 </div>
                 <div class="modal-footer text-align">
@@ -332,7 +323,6 @@
                 </div>
             </div>
         </form>
-
     </div>
 </div>
 
@@ -381,7 +371,7 @@
         $(document).on('click', '#show_console', function() {
             $(this).closest('.mobile_item--link-group').hide();
             $(this).closest('.mobile_item--link-group').closest('.content').removeClass('mobile-bg');
-            $(this).closest('.qc-content').find('.dashboard-console').show();
+            $(document).find('#qc-content').show();
         });
     })(jQuery);
 </script>
