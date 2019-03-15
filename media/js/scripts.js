@@ -442,7 +442,7 @@ $(document).ready(function() {
         $(this).find('.owl-controls').find('.owl-start-number').text(current + 1);
     });
     $(document).on('hidden.bs.modal', '.modal', function() {
-        var siktir = false;
+        var doDelete = false;
         var i = 0;
         var alert = false;
         var modalId = $(this).attr('id')
@@ -457,15 +457,15 @@ $(document).ready(function() {
             }
         }
         $(document).find('.modal').each(function() {
-            if ($(this).hasClass('klris-glox')) {
-                siktir = true;
+            if ($(this).hasClass('no-delete-v2')) {
+                doDelete = true;
             }
             if ($(this).is(':visible')) {
                 i++;
             }
         });
 
-        if (siktir) return;
+        if (doDelete) return;
         if (!i || $('.modal').length < 1) {
             $('.modal').remove()
             $(document).find('body').removeClass('modal-open');

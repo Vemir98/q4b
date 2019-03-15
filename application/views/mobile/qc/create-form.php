@@ -9,7 +9,7 @@
  */
 
 ?>
-<div class="modal create-modal qc-create-window quality-control-dialog-mobile q4-mobile-layout" id="klir" style="position: inherit!important; display: block!important; margin: auto; overflow: hidden !important;">
+<div class="modal create-modal qc-create-window quality-control-dialog-mobile q4-mobile-layout" id="qc-create" style="position: inherit!important; display: block!important; margin: auto; overflow: hidden !important;">
     <div id="qc-content" class="qc-content">
         <form id="qc-form" class="q4_form" data-submit="false" action="<?=URL::site('/quality_control/create')?>"  data-ajax="true" method="post">
             <input type="hidden" value="" name="x-form-secure-tkn"/>
@@ -292,7 +292,7 @@
 </div>
 
 
-<div id="choose-plan-modal-mobile" class="choose-plan-modal modal no-delete klris-glox" role="dialog">
+<div id="choose-plan-modal-mobile" class="choose-plan-modal modal no-delete no-delete-v2" role="dialog">
     <div class="modal-dialog modal-dialog-1170">
         <form class="q4_form" action="<?=1?>" data-ajax="true" method="post">
             <!-- Modal content-->
@@ -365,7 +365,7 @@
         });
 
         /**
-         *  Show Console
+         *  Show Create QC
          */
         $(document).find('.mobile_item--link-group').closest('.content').addClass('mobile-bg');
         $(document).on('click', '#show_console', function() {

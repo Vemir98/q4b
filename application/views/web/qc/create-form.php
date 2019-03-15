@@ -9,7 +9,7 @@
  */
 
 ?>
-<div class="modal create-modal qc-create-window" id="klir" style="position: inherit!important; display: block!important;">
+<div class="modal create-modal qc-create-window" id="qc-create" style="position: inherit!important; display: block!important;">
     <form id="qc-form" class="q4_form" data-submit="false" action="<?=URL::site('/quality_control/create')?>"  data-ajax="true" method="post">
         <input type="hidden" value="" name="x-form-secure-tkn"/>
         <input type="hidden" value="" name="place_id">
@@ -253,7 +253,7 @@
 
 
 
-<div id="choose-plan-modal" class="choose-plan-modal modal no-delete klris-glox" role="dialog">
+<div id="choose-plan-modal" class="choose-plan-modal modal no-delete no-delete-v2" role="dialog">
     <div class="modal-dialog modal-dialog-1170">
         <form class="q4_form" action="<?=1?>" data-ajax="true" method="post">
             <!-- Modal content-->

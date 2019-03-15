@@ -555,7 +555,7 @@
                     } else {
                         //TO DO добавить функционал для планов (plugin)
                         var classPlugin = modalId.indexOf('plan') !=-1 ? '' : 'call-lit-plugin';
-                        // if(modalId=="klir"){
+                        // if(modalId=="qc-create"){
                         //     classPlugin = 'call-lit-plugin-without-modal';
                         // }
                         var selector = "id" + Math.random().toString(9).replace('.', '');
