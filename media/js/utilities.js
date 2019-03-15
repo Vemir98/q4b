@@ -265,7 +265,6 @@
                 self = $(this);
                 self.data('structurecount',self.find('.item:visible').length)
             })
-            //console.log('sel',$(selector))
             if ($(document).find('html').hasClass('rtl')) {
 
                 $(document).find(selector).owlCarousel({
