@@ -266,4 +266,64 @@ FROM pr_plans_files
 //            echo "</pre>";
 //        }
 //    }
+
+//    public function action_copy_project_tasks_to_another_project()
+//    {
+//        ini_set('max_execution_time', 300);
+//
+//        $fromProjectId = 60;
+//        $toProjectId = 63;
+//
+//        $fromProject = ORM::factory('Project', $fromProjectId);
+//
+//        $fromTasks = $fromProject->tasks->find_all();
+//        try{
+//            Database::instance()->begin();
+//
+//            foreach ($fromTasks as $fromTask) {
+//                $toProject = ORM::factory('Project', $toProjectId);
+//
+//                $toCompanyCrafts = $toProject->company->crafts;
+//
+//                $fromCraft = $fromTask->crafts->order_by('id','DESC')->find();
+//
+//                $toTask = ORM::factory('PrTask');
+//
+//                $toTask->project_id = $toProjectId;
+//                $toTask->name = $fromTask->name;
+//                $toTask->status = $fromTask->status;
+//
+//                $toTask->save();
+//
+//                $toCompanyCrafts = $toCompanyCrafts->where('name', 'LIKE', '%'. trim($fromCraft->name) .'%')->find();
+//
+//                $toCraftRel = ORM::factory('PrCraftRel');
+//
+//                $toCraftRel->task_id = $toTask->id;
+//                $toCraftRel->craft_id = $toCompanyCrafts->id;
+//
+//                $toCraftRel->save();
+//            }
+//
+//            Database::instance()->commit();
+//        }catch (HDVP_Exception $e){
+//            Database::instance()->rollback();
+//            echo "<pre>";
+//            print_r($e);
+//            echo "</pre>";
+//            die;
+//        }catch (ORM_Validation_Exception $e){
+//            Database::instance()->rollback();
+//            echo "<pre>";
+//            print_r($e);
+//            echo "</pre>";
+//            die;
+//        }catch(Exception $e){
+//            Database::instance()->rollback();
+//            echo "<pre>";
+//            print_r($e);
+//            echo "</pre>";
+//            die;
+//        }
+//    }
 } // End Welcome
