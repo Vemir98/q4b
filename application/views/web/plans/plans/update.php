@@ -60,7 +60,7 @@
                                 </div>
                             </div>
                             <div class="form-group col-16 rtl-float-right">
-                                <label class="table_label">Sheet Number</label>
+                                <label class="table_label"><?=__('Sheet Number')?></label>
                                 <div class="input-group form-group">
                                     <input type="text" class="table_input" name="sheet_number" value="<?=$item->sheet_number?>">
                                 </div>
@@ -111,7 +111,7 @@
                             <?$disabledPlace = $item->place->loaded() && !$disabled  ? '':' disabled-input'?>
                             <div class="form-group col-14 rtl-float-right">
                                 <label class="table_label"><?=__('Element id')?></label>
-                                <input name="place_number" value="<?=$item->place->number?>" data-url="<?=URL::site('projects/get_custom_number/')?>" type="text" class="q4-form-input plan-place-number<?=$disabled?>">
+                                <input name="place_number" value="<?=$item->place->number?>" data-url="<?=URL::site('plans/get_custom_number/')?>" type="text" class="q4-form-input plan-place-number<?=$disabled?>">
 
                             </div>
                             <div class="form-group col-14 rtl-float-right">

@@ -474,14 +474,8 @@ class Controller_Projects extends HDVP_Controller_Template
                 ->set('companies',$companies)
                 ->set('objectsCount',$projectObjectsCount)
                 ->set('users',$this->project->users->find_all())
-                ->set('tasks',$this->project->tasks->order_by('id','DESC')->find_all())
-                ->set('plansView',View::make('projects/plans/list',
-                    $this->_getPlanListPaginatedData($this->project)
-                ));
+                ->set('tasks',$this->project->tasks->order_by('id','DESC')->find_all());
         }
-
-
-
     }
 
     public function action_get_images(){
