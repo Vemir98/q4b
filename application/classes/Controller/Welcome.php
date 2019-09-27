@@ -273,7 +273,7 @@ FROM pr_plans_files
 //    {
 //        ini_set('max_execution_time', 300);
 //
-//        $projectId = 75;
+//        $projectId = 76;
 //
 //        $tasks = ORM::factory('PrTask')
 //            ->where('project_id', '=', $projectId)
@@ -295,7 +295,7 @@ FROM pr_plans_files
 //        ini_set('max_execution_time', 300);
 //
 //        $fromProjectId = 60;
-//        $toProjectId = 75;
+//        $toProjectId = 76;
 //
 //        $fromProject = ORM::factory('Project', $fromProjectId);
 //

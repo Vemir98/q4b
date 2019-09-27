@@ -30,7 +30,7 @@
                     <?endforeach;?>
                 </ul>
             </div>
-            <a href="#" class="show-filter"><?=__('Filter')?></a>
+            <a href="#" class="show-filter"><?=__('Crafts List')?></a>
         </div>
         <div class="report-project-desc f0" style="margin-top: 25px;">
             <div class="report-project-desc-image">
@@ -97,7 +97,7 @@
                 <div class="property-structure-list">
                     <ul id="structure-<?=$floor->id?>" class="property-structure-list-items">
                         <?foreach ($floor->places->order_by('ordering',($floor->number < 0) ? 'DESC' :'ASC')->find_all() as $place):?>
-                        <li data-crafts="<?=$placeCrafts[$place->id]?>">
+                        <li data-crafts="<?=@$placeCrafts[$place->id]?>">
                             <div class="apartment-box">
                                 <div class="apartment-box-top <?if($place->type == Enum_ProjectPlaceType::PrivateS):?>blue<?else:?>gray<?endif?>">
                                     <span class="apartment-box-top-icon"><i class="q4bikon-<?=$place->type?>"></i></span>

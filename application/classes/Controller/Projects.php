@@ -926,7 +926,8 @@ class Controller_Projects extends HDVP_Controller_Template
             throw new HTTP_Exception_404();
         }
 
-        $query = $place->quality_control->where('craft_id','IN',DB::expr('('.$crafts.')'));
+//        $query = $place->quality_control->where('craft_id','IN',DB::expr('('.$crafts.')'));
+        $query = $place->quality_control; // todo:: Changed by ArmSALArm
         $selectedStatus = 'all';
 
         $qualityControls['statuses'] = ['all' =>'All'] + Enum_QualityControlApproveStatus::toArray();
