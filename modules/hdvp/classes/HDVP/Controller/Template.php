@@ -51,18 +51,8 @@ class HDVP_Controller_Template extends HDVP_Controller
     public function __construct(Request $request, Response $response)
     {
         parent::__construct($request, $response);
-
-        //$this->_auth = Auth::instance();
-        if(!$this->_auth->logged_in() AND ($request->action() != 'login' AND $request->action() != 'logout')){
-            $tkn = $this->request->headers('Auth-Token');
-            if(!empty($tkn)){
-                $authToken = ORM::factory('UToken',['token' => $tkn, 'type' => 'application']);
-                if($authToken->loaded()){
-                    $this->_auth->force_login($authToken->user);
-                    $this->_user = $this->_auth->get_user();
-                }
-            }
-        }
+        
+        $this->_auth = Auth::instance();
         if(Request::current()->is_initial()){
             //если пользователь хотябы раз был на сайте то редиректим на страницу входа иначе страница не найдена
             if(! $this->_isAjax AND !Auth::instance()->logged_in()){

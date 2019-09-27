@@ -557,7 +557,7 @@ h6 {
   display: none;
 }
 .mobile_item--link-wrapper {
-  margin: 95px auto 30px;
+  margin: 35px auto 30px;
   text-align: center;
   font-size: 0;
 }
@@ -571,7 +571,7 @@ h6 {
   height: 180px;
   border-radius: 15px;
   border: 1px solid #FFFFFF;
-  margin: 7.5px;
+  margin: 5.5px;
   text-align: left;
 }
 .rtl .mobile_item--link {
@@ -2089,7 +2089,7 @@ ul li.tab_panel {
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 1080;
+  z-index: 99999999;
   background-color: rgba(0, 0, 0, 0.5); }
 
 @-webkit-keyframes spin {
@@ -3122,6 +3122,8 @@ label.q4-circle-checkbox {
     text-decoration: none; }
   .copy-element i {
     color: #ffffff;
+    font-size: 18px; }
+  .copy-element i {
     font-size: 16px; }
 .copy-element.w32{
   width:32px;
@@ -13170,9 +13172,9 @@ header {
 }
 @media (max-width: 380px) {
   .mobile_item--link {
-    max-width: 140px;
-    width: 140px;
-    height: 140px;
+    max-width: 150px;
+    width: 150px;
+    height: 150px;
   }
   .mobile_item--link-title {
     top: 85px;
@@ -13227,3 +13229,202 @@ header {
 .autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
 .autocomplete-group { padding: 2px 5px; }
 .autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
+.report-project-desc .report-project-desc-list ul:first-child{
+  border-right: none;
+}
+.report-project_status {
+  margin: 25px;
+}
+.report-project_status .report-status-result-multiple {
+  float: left;
+}
+.report-project_status .report-status-result-multiple > h3 span,
+.craft-title h3 > span{
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  position: relative;
+  top: 3px;
+  left: -5px;
+  border-radius: 20%;
+}
+.report-project_status .report-status-result-multiple:nth-child(odd) {
+  margin-right: 70px;
+}
+.report-status-result-second-table tr:first-child td,
+.report-status-result-second-table tr td:first-child{
+  background-color: #9bc5e0;
+  height: auto;
+  color: #005c87 !important;
+}
+.report-status-result-second-table tr:last-child td{
+  background-color: #29cbf7e8;
+}
+.table.report-status-result-second-table tr td{
+  height: auto;
+  color: #1ec0eb;
+}
+.table.report-status-result-second-table tr:last-child td{
+  color: #005c87;
+}
+.report-status-result-multiple textarea{
+  width: 100%;
+  height: 120px;
+  border: 1px solid #005c8a;
+  padding: 5px;
+  color: #005c87;
+}
+.general-opinion > h5 {
+  font-size: 14px;
+  text-align: left;
+  padding-left: 5px;
+  padding-right: 5px;
+  font-weight: bold;
+  line-height: 30px;
+  font-family: "proxima_nova_rgregular", Arial, Helvetica, sans-serif;
+}
+.general-opinion {
+  margin-top: 5px;
+}
+.general-opinion > h5 > span.circle{
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  background-color: #005c8a;
+  border-radius: 50%;
+  text-align: center;
+  color: white;
+  line-height: 17px;
+  font-weight: bold;
+  font-size: 18px;
+  margin-right: 5px;
+  margin-left: 5px;
+}
+.scnd-report .report-status-result-unit,
+.scnd-report .barchart-report{
+  direction: ltr;
+}
+.rtl .general-opinion > h5{
+  text-align: right;
+}
+
+.report-project_status .report-status-result-multiple:nth-child(odd) {
+  margin-right: 70px;
+}
+
+@media only screen and (max-width: 1620px) {
+  .report-project_status .report-status-result-multiple:nth-child(odd) {
+    margin-right: 20px;
+  }
+  .report-project_status .report-status-result-multiple {
+    width: 575px;
+  }
+}
+
+@media only screen and (max-width: 1511px) {
+  .report-project_status .report-status-result-multiple, .report-project_status .report-status-result-multiple table {
+    width: 100%;
+  }
+}
+
+@media only screen and (min-width: 1511px) {
+  .report-project_status {
+    width: 1170px;
+  }
+}
+.craft-title h3 {
+  text-align: left;
+  line-height: 2em;
+  font-size: 16px;
+  margin-top: 15px;
+  color: #1ebae5;
+}
+table.table.report-status-result-second-table.spec-tbl {
+  margin-top: -20px;
+}
+.saved-reports {
+  width: 40%;
+  border: 1px solid rgb(212, 225, 234);
+  height: 107px;
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+.saved-reports-header {
+  color: #005c87;
+  cursor: default;
+  font-size: 16px;
+  font-weight: bold;
+  font-style: normal;
+  font-family: "proxima_nova_rgregular", Arial, Helvetica, sans-serif;
+}
+.saved-reports > div {
+  overflow-y: scroll;
+  height: 86px;
+}
+.saved-reports table{
+  margin-left: 20px;
+}
+.saved-reports tr {
+  /*margin: 10px;*/
+  /*display: block;*/
+  font-size: 1.2em;
+  font-weight: 200;
+  font-family: "proxima_nova_rgregular", Arial, Helvetica, sans-serif;
+}
+.saved-reports td:first-child a{
+  text-decoration: underline;
+}
+.saved-reports td:first-child a:hover{
+  text-decoration: none;
+  color: #1ebae5;
+}
+.saved-reports td a.remove-report{
+  color: #003a63
+}
+
+.saved-reports td a.remove-report:hover{
+  color: #1ebae5;
+}
+.saved-reports td {
+  padding: 5px;
+}
+.saved-reports td a{
+  font-size: 16px;
+}
+
+@media only screen and (max-width: 1650px) {
+  .saved-reports {
+    margin-top: 20px;
+    width: 90%;
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .spec-details{
+    margin-top: 15px;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .saved-reports {
+    width: 100%;
+  }
+}
+.rtl .report-project_status .report-status-result-multiple > h3 span{
+  left: 5px;
+}
+
+.no-report{
+  font-size: 16px;
+  color: #708492;
+  font-family: "proxima_nova_rgregular", Arial, Helvetica, sans-serif !important;
+}
+
+.rtl .report-status-pie-top > h3{
+  direction: rtl;
+}
+
+.rtl .craft-title h3{
+  text-align: right;
+}

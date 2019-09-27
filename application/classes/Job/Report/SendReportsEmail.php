@@ -16,7 +16,7 @@ class Job_Report_SendReportsEmail
             $mail->to($email);
         }
         $mail->from('info@qforb.net');
-        $mail->subject($this->args['user']['name'].' - '.$this->args['subject']);
+        $mail->subject(html_entity_decode(__(':user | דו״ח | :project',[':user' => $this->args['user']['name'], ':project' => $this->args['project']])));
         $mail->reply($this->args['user']['email'],$this->args['user']['name']);
         $mail->body(View::factory($this->args['view'],[
             'link' => $this->args['link'],

@@ -120,10 +120,19 @@
                                     <span class="approve-option light-blue"><?=__('Responsible profession')?>: </span>
                                     <span class="approve-author dark-blue"> <?=$q->profession->name?> </span>
                                 </div>
+<!--                                <div>-->
+<!--                                    <span class="approve-option light-blue">--><?//=__('Approvement Status')?><!--: </span>-->
+<!--                                    <span class="approve-author dark-blue"> --><?//=__($q->approval_status)?><!-- </span>-->
+<!--                                </div>-->
+<!--                                <br>-->
                                 <div>
-                                    <span class="approve-option light-blue"><?=__('Approvement Status')?>: </span>
-                                    <span class="approve-author dark-blue"> <?=__($q->approval_status)?> </span>
+                                    <span class="approve-option light-blue"><?=__('Created by')?>: </span>
+                                    <span class="approve-author dark-blue"> <?=$q->createUser->name?> (<?=date('d.m.Y H:ia', $q->created_at)?>)</span>
                                 </div>
+<!--                                <div>-->
+<!--                                    <span class="approve-option light-blue">--><?//=__('Updated by')?><!--: </span>-->
+<!--                                    <span class="approve-author dark-blue"> --><?//if($q->updated_by):?><!----><?//=$q->updateUser->name?><!-- (--><?//=date('d.m.Y H:ia', $q->updated_at)?><!--)--><?//endif?><!--</span>-->
+<!--                                </div>-->
                             </div>
                         </div>
                     </div>

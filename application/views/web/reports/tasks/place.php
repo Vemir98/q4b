@@ -35,15 +35,22 @@
 									<tr>
 										<th ></th>
 										<th><?=__('Craft')?></th>
+                                        <th class="td-125"><?=__('Quantity')?></th>
 										<th class="td-100"><?=__('Checked')?></th>
 									</tr>
 								</thead>
 								<tbody>
 									<? $i = 0;
                                     foreach ($data as $one):?>
+                                        <?if(!(int)$one['used']) continue?>
 									<tr>
 										<td><?=++$i?></td>
 										<td><?=$one['name']?></td>
+                                        <?if((int)$one['used']):?>
+                                            <td><a class="get-report-details" href="<?=URL::site('reports/tasks/details/place/'.$place->id.'/'.$one['id'])?>"><?=(int)$one['used']?>/<?=(int)$one['total']?></a></td>
+                                        <?else:?>
+                                            <td><?=(int)$one['used']?>/<?=(int)$one['total']?></td>
+                                        <?endif?>
 										<td><?=$one['percent']?>%</td>
 									</tr>
 									<?endforeach; ?>

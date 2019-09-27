@@ -52,7 +52,7 @@ class Controller_Api_Companies extends HDVP_Controller_API
                 }else{
                     $availableClientIds[] = $item['id'];
                 }
-                if($clientItems[$item['id']] == $item['updatedAt']){
+                if($clientItems[$item['id']] >= $item['updatedAt']){
                     unset($this->_responseData['items'][$key]);
                 }
             }

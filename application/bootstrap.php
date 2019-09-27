@@ -144,6 +144,7 @@ Kohana::modules(array(
 	'pagination'  => MODPATH.'pagination',  // постраничная навигация
 	'phpexcel'  => MODPATH.'phpexcel',  // phpexcel
 	'imagefly'  => MODPATH.'imagefly',  // imagefly
+	'reports'  => MODPATH.'reports',  // reports
 	));
 
 /**

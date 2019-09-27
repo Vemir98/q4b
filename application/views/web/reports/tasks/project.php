@@ -38,6 +38,7 @@
 									<tr>
 										<th></th>
 										<th><?=__('Craft')?></th>
+                                        <th class="td-125"><?=__('Quantity')?></th>
 										<th class="td-100"><?=__('Checked')?></th>
 									</tr>
 								</thead>
@@ -47,6 +48,7 @@
 									<tr>
 										<td><?=++$i?></td>
 										<td><?=$one['name']?></td>
+                                        <td><?=(int)$one['total']?>/<?=(int)$one['used']?></td>
 										<td><?=$one['percent']?>%</td>
 									</tr>
 									<?endforeach; ?>
@@ -64,6 +66,7 @@
 									<tr>
 										<th></th>
 										<th><?=__('Craft')?></th>
+                                        <th class="td-125"><?=__('Quantity')?></th>
 										<th class="td-100"><?=__('Checked')?></th>
 									</tr>
 								</thead>
@@ -73,6 +76,7 @@
 									<tr>
 										<td><?=++$i?></td>
 										<td><?=$one['name']?></td>
+                                        <td><?=(int)$one['total']?>/<?=(int)$one['used']?></td>
 										<td><?=$one['percent']?>%</td>
 									</tr>
 									<?endforeach; ?>

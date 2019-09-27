@@ -1,3 +1,9 @@
-log
-local-storage
-cache
+/cache/
+/classes/
+/config/
+/local-storage/
+/vendor/
+/messages/
+/logs/
+/routes/
+*.gitignore

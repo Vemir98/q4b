@@ -170,25 +170,6 @@
                     '</div>');
             }
         },
-        normalizeTasksList:function(){
-            var modalWidth = $('#quality-control-modal').find('.modal-dialog').width();
-            console.log("modalWidth", modalWidth);
-            modalWidth = modalWidth ? modalWidth : $('.qc-create-window').width();
-
-            var tasksItemCount = $('.tasks-full-description li:visible').length;
-            console.log("tasksItemCount", tasksItemCount);
-            var sidebarWidth = $(".sidebar").is(':visible') ? $(".sidebar").width() : 0;
-
-            var tasksItemsWidth = (tasksItemCount + 1) * (350 + 40)-20;
-            // console.log("tasksItemsWidth", tasksItemsWidth);
-            // Add scroll to tasks
-            $('.tasks-full-description-box').width(modalWidth - 90);
-            if($('.qc-create-window').width()){
-                $(".tasks-full-description-box").width($(window).width()-sidebarWidth - 60);
-
-            }
-            $('.tasks-full-description').width(tasksItemsWidth);
-        },
 
 
         /**
@@ -298,15 +279,11 @@
 
 
         setCarouselWidth: function(selector, winWidth) {
-            if($(document).find(selector).length>0){
 
-                winWidth = winWidth != undefined ? winWidth: '';
-
-                var sidebarWidth = $('.sidebar').is(":visible") ? 335 : 90;
-                var carouselWrapWidth = winWidth - sidebarWidth;
-                $(document).find(selector).width(carouselWrapWidth);
-            }
-
+            winWidth = winWidth != undefined ? winWidth: '';
+            var sidebarWidth = $('.sidebar').is(":visible") ? 335 : 90;
+            var carouselWrapWidth = winWidth - sidebarWidth;
+            $(document).find(selector).width(carouselWrapWidth);
 
         },
         setModalCarouselWidth: function(selector, modalWidth) {
@@ -380,14 +357,13 @@
             var windowWidth = window.innerWidth;
             var width = modalWidth != undefined ? modalWidth : windowWidth;
             methods.setCarouselWidth('.q4-carousel-table-wrap', windowWidth);
-            methods.setCarouselWidth('.q4-wrap-mobile', width);
             methods.setModalCarouselWidth('.q4-wrap-mobile', width);
             methods.setModalCarouselWidth('.q4-carousel-table-wrap', width);
-
+            methods.setCarouselWidth('.q4-wrap-mobile', windowWidth);
             methods.setCarouselDirection(".q4-list-items-mobile", 10);
             methods.setScrollBarWidth($(document).find('.tab_panel').find('.panel_content.open .scrollable-table'), windowWidth);
             var widthT = methods.measureHiddenTable($(document).find('.tab_panel').find('.panel_content.open table.table'),true);
-            //$(document).find('.panel_content.open .tab_panel').find('.mCSB_container').width(widthT);
+            $(document).find('.panel_content.open .tab_panel').find('.mCSB_container').width(widthT);
             setTimeout(function() {
                 methods.setCarouselDirection(".tasks-full-description-mobile", 10);
                 methods.setCarouselDirection(".q4-owl-carousel", 10);
@@ -554,7 +530,7 @@
                     } else {
                         //TO DO добавить функционал для планов (plugin)
                         var classPlugin = modalId.indexOf('plan') !=-1 ? '' : 'call-lit-plugin';
-                        // if(modalId=="qc-create"){
+                        // if(modalId=="klir"){
                         //     classPlugin = 'call-lit-plugin-without-modal';
                         // }
                         var selector = "id" + Math.random().toString(9).replace('.', '');

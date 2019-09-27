@@ -12,4 +12,5 @@ class Enum_QualityControlStatus extends Enum
     const Normal = 'normal';
     const Invalid = 'invalid';
     const Repaired = 'repaired';
+
 }

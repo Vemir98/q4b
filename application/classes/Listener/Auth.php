@@ -13,7 +13,7 @@ class Listener_Auth
         $token = $user->utokens->where('type','=',Enum_UToken::RestorePassword)->find()->token;
         Queue::enqueue('mailing','Job_Auth_ResetPasswordEmail',[
             'email' => $user->email,
-            'url' => URL::site('reset_password/'.$token,'http'),
+            'url' => URL::site('reset_password/'.$token,'https'),
             'view' => 'emails/user/reset-password',
             'lang' => Language::getCurrent()->iso2,
         ], Carbon::now()->addSeconds(10)->timestamp);

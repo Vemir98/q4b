@@ -5,6 +5,24 @@
  * Date: 04.04.2017
  * Time: 11:50
  */
+//quality reports
+Route::set('site.quality.reports','reports/quality(/<action>)',['action' => '[a-z0-9_]+'])
+    ->defaults([
+        'controller' => 'QualityReports',
+    ]);
+Route::set('site.quality.reports2','reports/quality/send_reports/<id>',['action' => '[a-z0-9_]+', 'id' => '[p0-9-]+'])
+    ->defaults([
+        'controller' => 'QualityReports',
+        'action' => 'send_reports'
+    ]);
+Route::set('site.quality.reports1','reports/quality(/<action>/<id>)',['action' => '[a-z0-9_]+', 'id' => '[0-9]+'])
+    ->defaults([
+        'controller' => 'QualityReports',
+        'action' => 'index'
+    ]);
+
+
+//reports
 Route::set('site.reportsAdvanced','reports/advanced_filter')
     ->defaults([
         'controller' => 'reports',
@@ -30,8 +48,53 @@ Route::set('site.reports.tasks','reports/tasks/<projectId>(/<objectId>(/<floorId
         'controller' => 'reports',
         'action' => 'tasks'
     ]);
+
+
+//tasks reports
+Route::set('site.tasks.reports4','reports/tasks/property_item_quality_control_list/<id>/<craft_id>(/status/<status>)',['id' => '[0-9]+','craft_id' => '[0-9]+','status' => implode('|',Enum_QualityControlApproveStatus::toArray())])
+    ->defaults([
+        'controller' => 'TasksReports',
+        'action' => 'property_item_quality_control_list'
+    ]);
+Route::set('site.tasks.reports2','reports/tasks/details/<type>/<id>/<craft_id>(/<placeType>)',['type' => 'project|object|floor|place','id' => '[0-9]+','craft_id' => '[0-9]+','placeType' => 'public|private'])
+    ->defaults([
+        'controller' => 'TasksReports',
+        'action' => 'details'
+    ]);
+Route::set('site.tasks.reports3','reports/tasks/places/<type>/<id>/<craft_id>(/<placeType>)',['type' => 'project|object|floor','id' => '[0-9]+','craft_id' => '[0-9]+','placeType' => 'public|private'])
+    ->defaults([
+        'controller' => 'TasksReports',
+        'action' => 'places'
+    ]);
+Route::set('site.tasks.reports','reports/tasks(/<action>)',['action' => '[a-z0-9_]+'])
+    ->defaults([
+        'controller' => 'TasksReports',
+    ]);
+Route::set('site.tasks.reports1','reports/tasks(/<action>/<id>)',['action' => '[a-z0-9_]+', 'id' => '[0-9]+'])
+    ->defaults([
+        'controller' => 'TasksReports',
+        'action' => 'index'
+    ]);
+
+Route::set('site.place.reports2','reports/place/qc_list/<id>/<crafts>',['crafts' => '[0-9,]+', 'id' => '[0-9]+'])
+    ->defaults([
+        'controller' => 'PlaceReports',
+        'action' => 'qc_list'
+    ]);
+Route::set('site.place.reports1','reports/place(/<action>/<id>)',['action' => '[a-z0-9_]+', 'id' => '[0-9]+'])
+    ->defaults([
+        'controller' => 'PlaceReports',
+        'action' => 'index'
+    ]);
+
+Route::set('site.place.reports','reports/place(/<action>)',['action' => '[a-z0-9_]+'])
+    ->defaults([
+        'controller' => 'PlaceReports',
+    ]);
+
 Route::set('site.reports','reports(/<action>(/<id>))',['action' => '[a-z0-9_]+', 'id' => '[0-9]+'])
     ->defaults([
         'controller' => 'reports',
         'action' => 'index'
     ]);
+

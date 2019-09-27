@@ -18,7 +18,7 @@ class Job_Report_SendFccEmail
 
         //$mail->from($this->args['user']['email']);
         $mail->from('info@qforb.net');
-        $mail->subject($this->args['user']['name'].' - Quality Control #'.$this->args['item']);
+        $mail->subject(html_entity_decode($this->args['user']['name'].' - Quality Control #'.$this->args['item']));
         $mail->reply($this->args['user']['email'],$this->args['user']['name']);
         View::set_global('_SITE_URL','https://qforb.net');
         $mail->body(View::factory($this->args['view'],[

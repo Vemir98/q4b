@@ -112,7 +112,7 @@ abstract class Model_File extends MORM
             $ext = false;
         }
 
-        return $ext ?: null;
+        return strtolower($ext) ?: null;
     }
 
     public function originalFilePath(){

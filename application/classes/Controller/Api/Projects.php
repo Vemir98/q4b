@@ -68,7 +68,7 @@ class Controller_Api_Projects extends HDVP_Controller_API
                     }else{
                         $availableClientIds[] = $item['id'];
                     }
-                    if($projectsItems[$item['id']] == $item['updatedAt']){
+                    if($projectsItems[$item['id']] >= $item['updatedAt']){
                         unset($this->_responseData['items'][$key]);
                     }
                 }
@@ -173,7 +173,7 @@ class Controller_Api_Projects extends HDVP_Controller_API
                 }else{
                     $availableClientIds[] = $item['id'];
                 }
-                if($clientItems[$item['id']] == $item['updatedAt']){
+                if($clientItems[$item['id']] >= $item['updatedAt']){
                     unset($this->_responseData['items'][$key]);
                 }
             }
@@ -403,7 +403,7 @@ class Controller_Api_Projects extends HDVP_Controller_API
         $filename[] = 'jpg';
         $filename = implode('.',$filename);
         if(!file_exists(DOCROOT.implode('/',[$plan['filePath'],$filename]))){
-            $filename = preg_replace('~.jpg$~','.png',$filename);
+            $filename = preg_replace('~.jpg$~i','.png',$filename);
             if(!file_exists(DOCROOT.implode('/',[$plan['filePath'],$filename]))){
                 $filename = $plan['fileName'];
             }
@@ -764,6 +764,11 @@ class Controller_Api_Projects extends HDVP_Controller_API
     }
 
     public function action_invalid_qc(){
+        $id = (int)$this->request->param('id');
+        $project = ORM::factory('Project',$id);
+        if( $id AND (!$project->loaded() OR !$this->_user->canUseProject($project))){
+            throw new HTTP_Exception_404;
+        }
         $this->_responseData = [];//$this->_responseData['updated']
         $this->_responseData['items'] = [];
         $companies = $this->_user->availableCompanies();
@@ -842,6 +847,10 @@ class Controller_Api_Projects extends HDVP_Controller_API
                     //если компании
                     if($this->_user->getRelevantRole('priority') <= Enum_UserPriorityLevel::Company){
                         foreach($this->_responseData['items'] as $key => $item){
+                            if($id AND $item['projId'] != $project->id){
+                                unset($this->_responseData['items'][$key]);
+                                continue;
+                            }
                             if($item['cmpId'] != $this->_user->company_id){
                                 if(!in_array($item['projId'],$usrProjects)){
                                     unset($this->_responseData['items'][$key]);
@@ -850,12 +859,23 @@ class Controller_Api_Projects extends HDVP_Controller_API
                         }
                     }else{//если проект
                         foreach($this->_responseData['items'] as $key => $item){
+                            if($id AND $item['projId'] != $project->id){
+                                unset($this->_responseData['items'][$key]);
+                                continue;
+                            }
                             if(!in_array($item['projId'],$usrProjects)){
                                 unset($this->_responseData['items'][$key]);
                             }
                         }
                     }
 
+                }elseif ($id){
+                    foreach($this->_responseData['items'] as $key => $item){
+                        if($item['projId'] != $project->id){
+                            unset($this->_responseData['items'][$key]);
+                            continue;
+                        }
+                    }
                 }
             }
         }

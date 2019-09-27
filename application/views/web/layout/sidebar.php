@@ -44,7 +44,7 @@ $items = [
         'resource' => 'Controller_Plans',
         'priority' => Enum_UserPriorityLevel::Project
     ], [
-        'slug' => 'reports',
+        'slug' => 'reports/list',
         'text' => 'Reports',
         'tooltip' => 'Reports',
         'icon' => 'q4bikon-reports',

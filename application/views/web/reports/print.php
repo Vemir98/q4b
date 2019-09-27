@@ -174,7 +174,7 @@
                         <div>
                             <span class="approve-author"><?=__('Responsible profession')?>: <?=$q->profession->name?></span>
 
-                            <span class="approve-author"><?=__('Approvement Status')?>: <?=__($q->approval_status)?></span>
+<!--                            <span class="approve-author">--><?//=__('Approvement Status')?><!--: --><?//=__($q->approval_status)?><!--</span>-->
                             <!-- <span class="approve-author"> <?=__($q->approval_status)?> </span> -->
                         </div>
                     </div>

@@ -213,7 +213,7 @@ if(Auth::instance()->get_user()->is('project_supervisor')){//запрет на �
                                             <div class="task-item-txt">
                                                 <?$desc = explode("\n",$task->name);
                                                 foreach ($desc as $line) {?>
-                                                    <p><?=$line?></p>
+                                                    <p><?=html_entity_decode($line)?></p>
                                                 <?}?>
                                             </div>
                                         </a>

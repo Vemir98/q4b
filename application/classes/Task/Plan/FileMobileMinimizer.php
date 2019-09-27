@@ -18,7 +18,7 @@ FROM pr_plans_files
   INNER JOIN files
     ON pr_plans_files.file_id = files.id')->execute();
         foreach ($planFiles as $file){
-            $filename = $file['path'].'/'.$file['name'];
+            $filename = strtolower($file['path'].'/'.$file['name']);
             if(!strpos($filename,'.pdf')) continue;
             $jpgPath = mb_substr($filename,0,mb_strlen($filename)-4).'.jpg';
             $pngPath = mb_substr($filename,0,mb_strlen($filename)-4).'.png';

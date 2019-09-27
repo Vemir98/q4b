@@ -31,6 +31,10 @@ class Model_PrFloor extends ORM
             'foreign_key' => 'floor_id',
             'far_key' => 'plan_id',
             'through' => 'pr_floors_pr_plans',
+        ],
+        'quality_controls' => [
+            'model' => 'QualityControl',
+            'foreign_key' => 'floor_id'
         ]
     ];
 

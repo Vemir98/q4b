@@ -1,0 +1,1165 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: sur-s
+ * Date: 27.03.2019
+ * Time: 12:55
+ */
+$detector = new Mobile_Detect;
+$stats = $report->getStats();
+$reportEntity = count($report->getObjects()) ? 'objects' : 'projects';
+//Инстанс класа дебилизатор для этой тупорылой верстки
+$debilizator = new QReportDebilizator($report,$reportEntity);
+class QReportDebilizator {
+    private $_report;
+    private $_entType;
+    private $_entities;
+    private $_lastIdx = 0;
+    private $_stats;
+    private $_defects;
+    private $_defectsIdx = [];
+    public function __construct(QualityReport $report,$entityType)
+    {
+        $this->_report = $report;
+        $this->_entType = $entityType;
+        $this->_entities = $this->_report->getProjectsORObjects($this->_entType);
+        $this->_entities = array_values($this->_entities);
+        $this->_stats = $this->_report->getStats();
+        if($this->_report->hasSpecialityDetails()){
+            foreach ($this->_report->getCompanyCrafts() as $craft){
+                for($i=0; $i < count($this->_entities); $i++){
+                    if($this->_report->specHasResult($this->_stats[$this->_entType][$this->_entities[$i]['id']]['craftDefects'][$craft['id']]['total'])){
+                        $arr = $this->_stats[$this->_entType][$this->_entities[$i]['id']]['craftDefects'][$craft['id']];
+                    $arr['name'] = $craft['name'];
+                    $this->_defects[$this->_entities[$i]['id']][] = $arr;
+                    }
+                }
+            }
+        }
+    }
+
+    public function getMaxDefects($ent1,$ent2){
+        $cnt1 = count($this->_defects[$ent1['id']]);
+        $cnt2 = count($this->_defects[$ent2['id']]);
+        return $cnt1 > $cnt2 ? $cnt1 : $cnt2;
+    }
+    public function getEntityNexDefect($entity){
+        if(!empty($this->_defects[$entity['id']])){
+            if(!isset($this->_defectsIdx[$entity['id']])){
+                $this->_defectsIdx[$entity['id']] = 0;
+            }else{
+                $this->_defectsIdx[$entity['id']]++;
+            }
+
+            if(isset($this->_defects[$entity['id']][$this->_defectsIdx[$entity['id']]])){
+                return $this->_defects[$entity['id']][$this->_defectsIdx[$entity['id']]];
+            }
+            return null;
+        }
+        return null;
+    }
+
+    public function getEntityByIndex($idx){
+        $idx = (int)$idx;
+        $this->_lastIdx = $idx;
+        if(isset($this->_entities[$idx])){
+            return $this->_entities[$idx];
+        }
+        return null;
+    }
+
+    public function getHalfEntitiesCount(){
+        $cnt = count($this->_entities);
+        if($cnt){
+            $cnt = $cnt / 2;
+        }
+        return $cnt;
+    }
+
+    public function getFirstEntity(){
+        $this->_lastIdx = 0;
+        return $this->_entities[$this->_lastIdx];
+    }
+
+    public function getLastIdx(){
+        return $this->_lastIdx;
+    }
+
+    public function hasNextEntity(){
+        $idx = $this->_lastIdx + 1;
+        return isset($this->_entities[$idx]);
+    }
+
+    public function getNextEntity(){
+        $idx = $this->_lastIdx + 1;
+        return $this->_entities[$idx];
+    }
+
+    public function getColorForEntity($entity){
+        return $this->_stats[$this->_entType][$entity['id']]['color'];
+    }
+}
+?>
+<!DOCTYPE html>
+<html lang="<?=Language::getCurrent()->iso2?>" class="<?=Language::getCurrent()->direction?>" <?=$detector->isMobile() ? 'data-mobile="true"': '' ?>>
+<head>
+    <meta charset="UTF-8">
+    <title>Q4B</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="tkn" content="<?=Security::token(true)?>">
+    <meta name="fps" content="<?=(int)ini_get('upload_max_filesize')?>-<?=(int)ini_get('post_max_size')?>">
+    <meta name="base-uri" content="<?=URL::base()?>">
+    <meta name="current-uri" content="<?=Request::current()->uri()?>">
+    <script src="/media/js/jquery-2.2.4.min.js"></script>
+    <script src= "/media/js/zingchart.min.js"></script>
+
+</head>
+
+<body style="
+    text-align: center;
+    /*direction: ltr;*/
+">
+<table style="width: 100%;">
+    <tr>
+        <td>
+            <div name="top-block-main"
+                 style="
+            display: inline-block;
+            border: 1px solid rgba(82, 86, 89, 0.31);
+            border-radius: 8px;
+            width: 90%;
+            height: 150px;
+            margin: 20px 0;
+            text-align: left;
+            line-height: 150px;
+            font-family: sans-serif;
+            font-size: 15px;
+            ">
+
+                <div
+                        style="
+                display: inline-block;
+                width: 150px;
+                /*height: 100px;*/
+                padding: 25px 20px;
+                vertical-align: middle;
+                line-height: 1;
+                ">
+                    <img src="/<?=$report->getCompany()['logo']?>" alt=""
+                         style="
+                     width: auto;
+                     height: auto;
+                     max-height: 100%;
+                     max-width: 100%;
+                    ">
+                </div>
+
+                <div
+                        style="
+                display: inline-block;
+                vertical-align: middle;
+                line-height: 1;
+                ">
+                    <div style="margin-bottom: 10px;">
+                        <div style="
+                        display: inline-block;
+                        width: 15px;
+                        height: 15px;
+                        vertical-align: top;
+                        line-height: 15px;
+                        margin-right: 5px;
+                        ">
+                            <span class="light-blue">
+                                <i class="icon q4bikon-companies"></i>
+                            </span>
+                        </div>
+                        <span style="display: inline-block; color:#1ebae5; margin-right: 3px; vertical-align: top;"><?=__('Company name')?>:</span>
+                        <span style="display: inline-block; vertical-align: top;"><?=$report->getCompany()['name']?></span>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <div style="
+                        display: inline-block;
+                        width: 15px;
+                        height: 15px;
+                        vertical-align: top;
+                        line-height: 15px;
+                        margin-right: 5px;
+                        ">
+                            <span class="light-blue">
+                                <i class="icon q4bikon-project"></i>
+                            </span>
+                        </div>
+                        <span style="display: inline-block; color:#1ebae5; margin-right: 3px; vertical-align: top;"><?=__('Project name')?>:</span>
+                        <span style="display: inline-block; vertical-align: top;">
+                            <?if(!count($report->getObjects())):?>
+                                <?foreach ($report->getProjects() as $project):?>
+                                    <?$tmpProj[] = $project['name']?>
+                                <?endforeach;?>
+                                <?=implode(', ',$tmpProj)?>
+                            <?else:?>
+                                <?$tmpProj = $report->getProjects()?>
+                                <?=array_shift($tmpProj)['name']?>
+                            <?endif;?>
+                            <?unset($tmpProj)?>
+                        </span>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <div style="
+                        display: inline-block;
+                        width: 15px;
+                        height: 15px;
+                        vertical-align: top;
+                        line-height: 15px;
+                        margin-right: 5px;
+                        ">
+                            <span class="light-blue">
+                                <i class="q4bikon-date"></i></span>
+                        </div>
+                        <span style="display: inline-block; color:#1ebae5; margin-right: 3px; vertical-align: top;"><?=__('Report Range')?>:</span>
+                        <span style="display: inline-block; vertical-align: top;"><?=$report->getDateFrom(true)?> - <?=$report->getDateTo(true)?></span>
+                    </div>
+                    <?if(count($report->getObjects())):?>
+                        <div style="margin-bottom: 10px;">
+                            <span class="light-blue">
+                                <i class="q4bikon-date"></i>
+                            </span>
+                            <span style="display: inline-block; color:#1ebae5; margin-right: 3px; vertical-align: top;"><?=__('Structures')?>:</span>
+                            <span style="display: inline-block; vertical-align: top;">
+                                <?foreach ($report->getObjects() as $object):?>
+                                    <?$tmpObj[] = $object['name']?>
+                                <?endforeach;?>
+                                <?=implode(', ',$tmpObj)?>
+                                <? unset($tmpObj)?></span>
+                        </div>
+                    <?endif;?>
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr style="font-family: sans-serif; font-size: 15px;">
+        <td name="single-pie-chart-block" style="
+                box-sizing: border-box;
+                /*width: 45%;*/
+                width: 600px;
+                display: inline-block;
+                text-align: left;
+                border: 1px solid rgba(82, 86, 89, 0.31);
+                /*border-radius: 8px;*/
+                height: 350px;
+                vertical-align: top;
+                margin-right: 5px;
+                ">
+            <div>
+                <div style="
+                    background: #f2faff;
+                    color: #003a63;
+                    height: 56px;
+                    line-height: 56px;
+                    padding:  0 5px;
+                    border-bottom: 1px solid #d4e1ea;
+                    ">
+                    <span><?=__('Status statistics')?></span>
+                </div>
+                <div style="text-align: center; padding: 4px 0;position: relative;">
+                    <div style="
+                        width: 98%;
+                        height: auto;
+                        display: inline-block;
+                        ">
+                        <div id="piechart" class="piechart"></div>
+                    </div>
+                    <div style="color: #1ebae5;top: -300px; position: relative; z-index: 9999999;">
+                        <ul style="text-align: left;padding: 1em 5em;font-size: 14px;line-height: 20px;">
+                            <li><?=__(Enum_QualityControlStatus::Existing).' + '.__(Enum_QualityControlStatus::Normal)?>: <?=$report->getStats()['total']['percents']['a']?>%</li>
+                            <li><?=__(Enum_QualityControlStatus::Existing).' + '.__(Enum_QualityControlStatus::Normal).' + '.__(Enum_QualityControlStatus::Repaired)?>: <?=$report->getStats()['total']['percents']['b']?>%</li>
+                            <li><?=__('Fixed')?>:<?=$report->getStats()['total']['percents']['fixed']?>%</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </td>
+        <td name="single-pie-chart-block" style="
+                box-sizing: border-box;
+                /*width: 45%;*/
+                width: 600px;
+                display: inline-block;
+                text-align: left;
+                border: 1px solid rgba(82, 86, 89, 0.31);
+                /*border-radius: 8px;*/
+                height: 350px;
+                vertical-align: top;
+                margin-left: 5px;
+                ">
+            <div>
+                <div style="
+                    background: #f2faff;
+                    color: #003a63;
+                    height: 56px;
+                    line-height: 56px;
+                    padding:  0 5px;
+                    border-bottom: 1px solid #d4e1ea;
+                    ">
+                    <span><?=__('Status statistics (filtered)')?></span>
+                </div>
+                <div style="text-align: center; padding: 4px 0;position: relative;">
+                    <div style="
+                        width: 98%;
+                        height: auto;
+                        display: inline-block;
+                        ">
+                        <div id="piechart2" class="piechart"></div>
+                    </div>
+                    <div style="color: #1ebae5;top: -300px; position: relative; z-index: 9999999;">
+                        <ul style="text-align: left;padding: 1em 5em;font-size: 14px;line-height: 20px;">
+                            <li><?=__(Enum_QualityControlStatus::Existing).' + '.__(Enum_QualityControlStatus::Normal)?>: <?=$report->getStats()['filtered']['percents']['a']?>%</li>
+                            <li><?=__(Enum_QualityControlStatus::Existing).' + '.__(Enum_QualityControlStatus::Normal).' + '.__(Enum_QualityControlStatus::Repaired)?>: <?=$report->getStats()['filtered']['percents']['b']?>%</li>
+                            <li><?=__('Fixed')?>:<?=$report->getStats()['filtered']['percents']['fixed']?>%</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr style="font-family: sans-serif; font-size: 15px;margin: 30px 0; display: block">
+        <td colspan="2" name="big-chart-block" style="
+                    display: inline-block;
+                    box-sizing: border-box;
+                    width: 1210px;
+                    height: 360px;
+                    border: 1px solid rgba(82, 86, 89, 0.31);
+                    overflow: hidden;
+                    ">
+            <div style="width: 100%; height: 100%">
+                <div id="barchart" style="box-shadow: 1px 1px 12px 1px #CDD0D7; border: 1px solid #d4e1ea;"></div>
+            </div>
+        </td>
+    </tr>
+    <?
+    $entity = $debilizator->getFirstEntity();
+    ?>
+    <tr name="big-tables-container" style="
+        display: block;
+        text-align: center;
+        font-size: 15px;
+        font-family: sans-serif;
+        margin-top: 10px;
+        ">
+        <td name="table-block" style="
+            display: inline-block;
+            box-sizing: border-box;
+            width: 600px;
+            padding: 0 10px 10px 0;
+            ">
+            <div  name="main-table-title" style="
+                height: 36px;
+                line-height: 36px;">
+                    <span style="
+                    display: inline-block;
+                    width: 22px;
+                    height: 22px;
+                    background: <?=$debilizator->getColorForEntity($entity)?>;
+                    border-radius: 6px;
+                    vertical-align: middle;"></span>
+                <span style="
+                        display: inline-block;
+                        vertical-align: middle;
+                        color: #003a63;
+                        font-size: 17px;
+                        "><?=$entity['name']?></span>
+            </div>
+            <table style="
+                border-collapse: collapse;
+                width: 100%;
+                border: 1px solid black;
+                margin-top: 8px;
+
+                ">
+                <tr style="height: 48px; background: #f2faff; color: #003a63; font-weight: normal;">
+                    <th rowspan="" style="border: 1px solid rgba(82, 86, 89, 0.31); width: 67%; text-align: left; padding-left: 6px; font-weight: 500;font-size: 15px;"><?=__('Crafts List')?></th>
+                    <th colspan="" style="
+                        border: 1px solid rgba(82, 86, 89, 0.31);
+                        width: 33%;
+                    ">
+                        <div style="border-bottom: 1px solid rgba(82, 86, 89, 0.31); height: 24px;line-height: 24px; font-weight: 500;font-size: 14px;"><?=__('Quantity')?></div>
+                        <div style="height: 24px;line-height: 24px; font-size: 0;">
+                            <div style="display: inline-block; width: 49%; line-height: 24px; height: 24px; vertical-align: top; font-weight: 500;font-size: 14px; border-right: 1px solid rgba(82, 86, 89, 0.31);box-sizing: border-box;"><?=__('Total')?></div>
+                            <!--<div style="border-left: 1px solid rgba(82, 86, 89, 0.31); height: 25px; display: inline-block; vertical-align: top;"></div>-->
+                            <div style="display: inline-block; width: 50%; line-height: 24px; height: 24px; vertical-align: top; font-weight: 500;font-size: 14px;box-sizing: border-box;"><?=__('Filtered')?></div>
+                        </div>
+                    </th>
+                </tr>
+                <?$i=1?>
+                <?foreach ($report->getCompanyCrafts() as $craft):?>
+                    <?
+                if($i++ > 5) break;
+                    $craftStat['total'] = isset($stats[$reportEntity][$entity['id']]['crafts'][$craft['id']]['count']) ? $stats[$reportEntity][$entity['id']]['crafts'][$craft['id']]['count'] : 0;
+                    $craftStat['filtered'] = isset($stats[$reportEntity][$entity['id']]['filteredCrafts'][$craft['id']]['count']) ? $stats[$reportEntity][$entity['id']]['crafts'][$craft['id']]['count'] : 0;
+                    ?>
+                <tr style="height: 34px">
+                    <td style="border: 1px solid rgba(82, 86, 89, 0.31); color: #1ebae5; text-align: left; padding-left: 6px"><?=$craft['name']?></td>
+                    <td style="border: 1px solid rgba(82, 86, 89, 0.31); font-size: 0;">
+                        <div style="display:inline-block; width: 49%; line-height: 34px; height: 34px; vertical-align: top; color: #708492; font-size: 14px; border-right: 1px solid rgba(82, 86, 89, 0.31);"><?=$craftStat['total']?></div>
+                        <div style="display:inline-block; width: 50%; line-height: 34px; height: 34px; vertical-align: top; color: #708492; font-size: 14px;"><?=$craftStat['filtered']?></div>
+                    </td>
+                </tr>
+                <?endforeach;?>
+            </table>
+        </td>
+
+        <td name="main-table" style="
+            display: inline-block;
+            box-sizing: border-box;
+            width: 600px;
+            padding: 0 0 10px 10px;
+            ">
+            <?if($debilizator->hasNextEntity()):?>
+            <?$entity = $debilizator->getNextEntity()?>
+            <div name="main-table-title" style="
+                height: 36px;
+                line-height: 36px;">
+                    <span style="
+                    display: inline-block;
+                    width: 22px;
+                    height: 22px;
+                    background: <?=$debilizator->getColorForEntity($entity)?>;
+                    border-radius: 6px;
+                    line-height: 1;
+                    vertical-align: middle;"></span>
+                <span style="
+                    display: inline-block;
+                    line-height: 1;
+                    vertical-align: middle;
+                    color: #003a63;
+                    font-size: 17px;
+                    "><?=$entity['name']?></span>
+            </div>
+            <table style="
+                border-collapse: collapse;
+                width: 100%;
+                border: 1px solid black;
+                margin-top: 8px;
+
+                ">
+                <tr style="height: 48px; background: #f2faff; color: #003a63; font-weight: normal;">
+                    <th rowspan="" style="border: 1px solid rgba(82, 86, 89, 0.31); width: 67%; text-align: left; padding-left: 6px; font-weight: 500;font-size: 15px;"><?=__('Crafts List')?></th>
+                    <th colspan="" style="
+                        border: 1px solid rgba(82, 86, 89, 0.31);
+                        width: 33%;
+                ">
+                        <div style="border-bottom: 1px solid rgba(82, 86, 89, 0.31); height: 24px;line-height: 24px; font-weight: 500;font-size: 14px;"><?=__('Quantity')?></div>
+                        <div style="height: 24px;line-height: 24px; font-size: 0;">
+                            <div style="display: inline-block; width: 49%; line-height: 24px; height: 24px; vertical-align: top; font-weight: 500;font-size: 14px; border-right: 1px solid rgba(82, 86, 89, 0.31);box-sizing: border-box;"><?=__('Total')?></div>
+                            <!--<div style="border-left: 1px solid rgba(82, 86, 89, 0.31); height: 25px; display: inline-block; vertical-align: top;"></div>-->
+                            <div style="display: inline-block; width: 50%; line-height: 24px; height: 24px; vertical-align: top; font-weight: 500;font-size: 14px;box-sizing: border-box;"><?=__('Filtered')?></div>
+                        </div>
+                    </th>
+                </tr>
+                <?foreach ($report->getCompanyCrafts() as $craft):?>
+                    <?
+                    if($i++ > 11) break;
+                    $craftStat['total'] = isset($stats[$reportEntity][$entity['id']]['crafts'][$craft['id']]['count']) ? $stats[$reportEntity][$entity['id']]['crafts'][$craft['id']]['count'] : 0;
+                    $craftStat['filtered'] = isset($stats[$reportEntity][$entity['id']]['filteredCrafts'][$craft['id']]['count']) ? $stats[$reportEntity][$entity['id']]['crafts'][$craft['id']]['count'] : 0;
+                    ?>
+                    <tr style="height: 34px">
+                        <td style="border: 1px solid rgba(82, 86, 89, 0.31); color: #1ebae5; text-align: left; padding-left: 6px"><?=$craft['name']?></td>
+                        <td style="border: 1px solid rgba(82, 86, 89, 0.31); font-size: 0;">
+                            <div style="display:inline-block; width: 49%; line-height: 34px; height: 34px; vertical-align: top; color: #708492; font-size: 14px; border-right: 1px solid rgba(82, 86, 89, 0.31);"><?=$craftStat['total']?></div>
+                            <div style="display:inline-block; width: 50%; line-height: 34px; height: 34px; vertical-align: top; color: #708492; font-size: 14px;"><?=$craftStat['filtered']?></div>
+                        </td>
+                    </tr>
+                <?endforeach;?>
+            </table>
+            <?endif;?>
+        </td>
+    </tr>
+    <?
+    $entity = $debilizator->getFirstEntity();
+    ?>
+    <tr name="small-tables-container" style="
+        display: block;
+        text-align: center;
+        font-size: 15px;
+        font-family: sans-serif;
+        margin-top: 20px;
+        ">
+        <td name="table-block" style="
+            display: inline-block;
+            box-sizing: border-box;
+            /*width: 50%;*/
+            width: 600px;
+            padding: 0 10px 10px 0;
+            ">
+            <div style="text-align: left; color: #1ebae5;"><?=UTF8::ucfirst(__('general'))?></div>
+            <table style="
+                border-collapse: collapse;
+                width: 100%;
+                border: 1px solid black;
+                margin-top: 8px;
+
+                ">
+                <tr style="height: 48px; background: #9bc5e1; color: #003a63; font-weight: normal;">
+                    <th rowspan="" style="border: 1px solid rgba(82, 86, 89, 0.31); width: 22%; text-align: left; padding-left: 4px; font-weight: 500; font-size: 13px;"></th>
+                    <?foreach (Enum_QualityControlConditionList::toArray() as $item):?>
+                        <th colspan="" style="border: 1px solid rgba(82, 86, 89, 0.31);width: 19%; text-align: left; padding-left: 4px;font-weight: 500;font-size: 13px;"><?=__($item)?></th>
+                    <?endforeach;?>
+                </tr>
+                <?$j=0;?>
+                <?foreach (Enum_QualityControlConditionLevel::toArray() as $conditionLevel):?>
+                    <?$j++;?>
+                    <tr style="height: 35px; font-size: 13px<?=($j % 2) ? '' : ' background: #f2faff;'?>">
+                        <td style="border: 1px solid rgba(82, 86, 89, 0.31); color: #005c87; text-align: left; padding-left: 6px; background: #9bc5e1;"><?=__($conditionLevel)?></td>
+                        <?foreach (Enum_QualityControlConditionList::toArray() as $conditionList):?>
+                            <td style="border: 1px solid rgba(82, 86, 89, 0.31); color: #1ebae5; text-align: left; padding-left: 6px;"><?=$stats[$reportEntity][$entity['id']]['defects'][$conditionLevel][$conditionList]?></td>
+                        <?endforeach;?>
+                    </tr>
+                <?endforeach;?>
+                <tr style="height: 35px; font-size: 13px; background: #3fd0f8">
+                    <td style="border: 1px solid rgba(82, 86, 89, 0.31); color: #005c87; text-align: left; padding-left: 6px;"><?=__('Total')?></td>
+                    <?foreach ($stats[$reportEntity][$entity['id']]['defects']['total'] as $val):?>
+                        <td style="border: 1px solid rgba(82, 86, 89, 0.31); color: #005c87; text-align: left; padding-left: 6px;"><?=$val?></td>
+                    <?endforeach;?>
+                </tr>
+            </table>
+
+        </td>
+        <td name="table-block" style="
+            display: inline-block;
+            box-sizing: border-box;
+            /*width: 50%;*/
+            width: 600px;
+            padding: 0 0 10px 10px;
+            ">
+            <?if($debilizator->hasNextEntity()):?>
+            <?$entity = $debilizator->getNextEntity()?>
+            <div style="text-align: left; color: #1ebae5;"><?=UTF8::ucfirst(__('general'))?></div>
+            <table style="
+                border-collapse: collapse;
+                width: 100%;
+                border: 1px solid black;
+                margin-top: 8px;
+
+                ">
+                <tr style="height: 48px; background: #9bc5e1; color: #003a63; font-weight: normal;">
+                    <th rowspan="" style="border: 1px solid rgba(82, 86, 89, 0.31); width: 22%; text-align: left; padding-left: 4px; font-weight: 500; font-size: 13px;"></th>
+                    <?foreach (Enum_QualityControlConditionList::toArray() as $item):?>
+                        <th colspan="" style="border: 1px solid rgba(82, 86, 89, 0.31);width: 19%; text-align: left; padding-left: 4px;font-weight: 500;font-size: 13px;"><?=__($item)?></th>
+                    <?endforeach;?>
+                </tr>
+                <?$j=0;?>
+                <?foreach (Enum_QualityControlConditionLevel::toArray() as $conditionLevel):?>
+                    <?$j++;?>
+                    <tr style="height: 35px; font-size: 13px<?=($j % 2) ? '' : ' background: #f2faff;'?>">
+                        <td style="border: 1px solid rgba(82, 86, 89, 0.31); color: #005c87; text-align: left; padding-left: 6px; background: #9bc5e1;"><?=__($conditionLevel)?></td>
+                        <?foreach (Enum_QualityControlConditionList::toArray() as $conditionList):?>
+                            <td style="border: 1px solid rgba(82, 86, 89, 0.31); color: #1ebae5; text-align: left; padding-left: 6px;"><?=$stats[$reportEntity][$entity['id']]['defects'][$conditionLevel][$conditionList]?></td>
+                        <?endforeach;?>
+                    </tr>
+                <?endforeach;?>
+                <tr style="height: 35px; font-size: 13px; background: #3fd0f8">
+                    <td style="border: 1px solid rgba(82, 86, 89, 0.31); color: #005c87; text-align: left; padding-left: 6px;"><?=__('Total')?></td>
+                    <?foreach ($stats[$reportEntity][$entity['id']]['defects']['total'] as $val):?>
+                        <td style="border: 1px solid rgba(82, 86, 89, 0.31); color: #005c87; text-align: left; padding-left: 6px;"><?=$val?></td>
+                    <?endforeach;?>
+                </tr>
+            </table>
+            <?endif;?>
+        </td>
+    </tr>
+</table>
+<div style="page-break-after: always;"></div>
+<table style="width: 100%;">
+    <tr name="textarea-container" style="
+        display: block;
+        text-align: center;
+        font-size: 15px;
+        font-family: sans-serif;
+        margin-top: 20px;
+        ">
+        <?$entity = $debilizator->getFirstEntity();?>
+        <td name="textarea-block" style="
+            display: inline-block;
+            box-sizing: border-box;
+            width: 600px;
+            padding: 0 10px 10px 0;
+            ">
+            <div style="text-align: left; margin: 10px 0;">
+                    <span style="
+                    display: inline-block;
+                    background: #005c8a;
+                    border-radius: 50%;
+                    padding: 2px 10px;
+                    font-size: 17px;
+                    font-weight: 700;
+                    color: #fff;
+                    margin-left:5px;
+                    ">i</span>
+                <span style="
+                    color:black;
+                    font-weight: 600;
+                    text-align: left;
+                    display: inline-block;
+                    "><?=__('General opinion')?></span>
+            </div>
+            <textarea data-id="<?=$entity['id']?>" cols="30" rows="10" style="
+                width: 99%;
+                margin-top: 5px;
+                border: 1px solid #005c8a;
+                height: 210px;
+                "><?=$entity['generalOpinion']?></textarea>
+        </td>
+        <?$entity = $debilizator->getNextEntity();?>
+        <td name="textarea-block" style="
+            display: inline-block;
+            box-sizing: border-box;
+            width: 600px;
+            padding: 0 10px 10px 0;
+            ">
+            <?if(!empty($entity)):?>
+            <div style="text-align: left; margin: 10px 0;">
+                    <span style="
+                    display: inline-block;
+                    background: #005c8a;
+                    border-radius: 50%;
+                    padding: 2px 10px;
+                    font-size: 17px;
+                    font-weight: 700;
+                    color: #fff;
+                    margin-left:5px;
+                    ">i</span>
+                <span style="
+                    color:black;
+                    font-weight: 600;
+                    text-align: left;
+                    display: inline-block;
+                    "><?=__('General opinion')?></span>
+            </div>
+
+            <textarea data-id="<?=$entity['id']?>" cols="30" rows="10" style="
+                width: 99%;
+                margin-top: 5px;
+                border: 1px solid #005c8a;
+                height: 210px;
+                "><?=$entity['generalOpinion']?></textarea>
+            <?endif;?>
+        </td>
+    </tr>
+</table>
+<?if($report->hasSpecialityDetails()):?>
+<?
+    $ent1 = $debilizator->getFirstEntity();
+    $ent2 = $debilizator->getNextEntity();
+    $maxDefect = $debilizator->getMaxDefects($ent1,$ent2);
+?>
+<?while ($maxDefect-- > 0):?>
+<table style="width: 100%;">
+    <tr name="small-tables-container" style="
+        display: block;
+        text-align: center;
+        font-size: 15px;
+        font-family: sans-serif;
+        margin-top: 20px;
+        ">
+        <td name="table-block" style="
+            display: inline-block;
+            box-sizing: border-box;
+            /*width: 50%;*/
+            width: 600px;
+            padding: 0 10px 10px 0;
+            ">
+            <?$ent1Defect = $debilizator->getEntityNexDefect($ent1);
+            if(!empty($ent1Defect)):?>
+            <div  name="main-table-title" style="
+                height: 36px;
+                line-height: 36px;
+                text-align: left;
+                margin-left:5px;
+                ">
+                    <span style="
+                    display: inline-block;
+                    width: 22px;
+                    height: 22px;
+                    background: <?=$debilizator->getColorForEntity($ent1)?>;
+                    border-radius: 6px;
+                    /*line-height: 1;*/
+                    vertical-align: middle;"></span>
+                <span style="
+                    display: inline-block;
+                    /*line-height: 1;*/
+                    vertical-align: middle;
+                    color: #1ebae5;
+                    font-size: 15px;
+                    "><?=$ent1Defect['name']?></span>
+            </div>
+            <table style="
+                border-collapse: collapse;
+                width: 100%;
+                border: 1px solid black;
+                margin-top: 8px;
+
+                ">
+                <tr style="height: 48px; background: #9bc5e1; color: #003a63; font-weight: normal;">
+                    <th rowspan="" style="border: 1px solid rgba(82, 86, 89, 0.31); width: 22%; text-align: left; padding-left: 4px; font-weight: 500; font-size: 13px;"></th>
+                    <?foreach (Enum_QualityControlConditionList::toArray() as $item):?>
+                        <th colspan="" style="border: 1px solid rgba(82, 86, 89, 0.31);width: 19%; text-align: left; padding-left: 4px;font-weight: 500;font-size: 13px;"><?=__($item)?></th>
+                    <?endforeach;?>
+                </tr>
+                <?$j=0;?>
+                <?foreach (Enum_QualityControlConditionLevel::toArray() as $conditionLevel):?>
+                    <?$j++;?>
+                    <tr style="height: 35px; font-size: 13px<?=($j % 2) ? '' : ' background: #f2faff;'?>">
+                        <td style="border: 1px solid rgba(82, 86, 89, 0.31); color: #005c87; text-align: left; padding-left: 6px; background: #9bc5e1;"><?=__($conditionLevel)?></td>
+                        <?foreach (Enum_QualityControlConditionList::toArray() as $conditionList):?>
+                            <td style="border: 1px solid rgba(82, 86, 89, 0.31); color: #1ebae5; text-align: left; padding-left: 6px;"><?=$ent1Defect[$conditionLevel][$conditionList]?></td>
+                        <?endforeach;?>
+                    </tr>
+                <?endforeach;?>
+                <tr style="height: 35px; font-size: 13px; background: #3fd0f8">
+                    <td style="border: 1px solid rgba(82, 86, 89, 0.31); color: #005c87; text-align: left; padding-left: 6px;"><?=__('Total')?></td>
+                    <?foreach ($ent1Defect['total'] as $val):?>
+                        <td style="border: 1px solid rgba(82, 86, 89, 0.31); color: #005c87; text-align: left; padding-left: 6px;"><?=$val?></td>
+                    <?endforeach;?>
+                </tr>
+            </table>
+<?endif;?>
+        </td>
+        <td name="table-block" style="
+            display: inline-block;
+            box-sizing: border-box;
+            /*width: 50%;*/
+            width: 600px;
+            padding: 0 0 10px 10px;
+            ">
+            <?$ent2Defect = $debilizator->getEntityNexDefect($ent2);
+            if(!empty($ent2Defect)):?>
+            <div  name="main-table-title" style="
+                height: 36px;
+                line-height: 36px;
+                text-align: left;
+                margin-left: 5px;
+                ">
+                    <span style="
+                    display: inline-block;
+                    width: 22px;
+                    height: 22px;
+                    background: <?=$debilizator->getColorForEntity($ent2)?>;
+                    border-radius: 6px;
+                    /*line-height: 1;*/
+                    vertical-align: middle;"></span>
+                <span style="
+                    display: inline-block;
+                    /*line-height: 1;*/
+                    vertical-align: middle;
+                    color: #1ebae5;
+                    font-size: 16px;
+                    "><?=$ent2Defect['name']?></span>
+            </div>
+            <table style="
+                border-collapse: collapse;
+                width: 100%;
+                border: 1px solid black;
+                margin-top: 8px;
+
+                ">
+                <tr style="height: 48px; background: #9bc5e1; color: #003a63; font-weight: normal;">
+                    <th rowspan="" style="border: 1px solid rgba(82, 86, 89, 0.31); width: 22%; text-align: left; padding-left: 4px; font-weight: 500; font-size: 13px;"></th>
+                    <?foreach (Enum_QualityControlConditionList::toArray() as $item):?>
+                        <th colspan="" style="border: 1px solid rgba(82, 86, 89, 0.31);width: 19%; text-align: left; padding-left: 4px;font-weight: 500;font-size: 13px;"><?=__($item)?></th>
+                    <?endforeach;?>
+                </tr>
+                <?$j=0;?>
+                <?foreach (Enum_QualityControlConditionLevel::toArray() as $conditionLevel):?>
+                    <?$j++;?>
+                    <tr style="height: 35px; font-size: 13px<?=($j % 2) ? '' : ' background: #f2faff;'?>">
+                        <td style="border: 1px solid rgba(82, 86, 89, 0.31); color: #005c87; text-align: left; padding-left: 6px; background: #9bc5e1;"><?=__($conditionLevel)?></td>
+                        <?foreach (Enum_QualityControlConditionList::toArray() as $conditionList):?>
+                            <td style="border: 1px solid rgba(82, 86, 89, 0.31); color: #1ebae5; text-align: left; padding-left: 6px;"><?=$ent2Defect[$conditionLevel][$conditionList]?></td>
+                        <?endforeach;?>
+                    </tr>
+                <?endforeach;?>
+                <tr style="height: 35px; font-size: 13px; background: #3fd0f8">
+                    <td style="border: 1px solid rgba(82, 86, 89, 0.31); color: #005c87; text-align: left; padding-left: 6px;"><?=__('Total')?></td>
+                    <?foreach ($ent2Defect['total'] as $val):?>
+                        <td style="border: 1px solid rgba(82, 86, 89, 0.31); color: #005c87; text-align: left; padding-left: 6px;"><?=$val?></td>
+                    <?endforeach;?>
+                </tr>
+            </table>
+            <?endif;?>
+        </td>
+    </tr>
+</table>
+<?endwhile;?>
+<div style="page-break-after: always;"></div>
+
+<?endif;?>
+<?$iterations = ceil($debilizator->getHalfEntitiesCount()-1);?>
+<?if($iterations):?>
+    <?for($i=0;$i<$iterations;$i++):?>
+        <?
+        $ent1 = $debilizator->getEntityByIndex($i+2);
+        $ent2 = $debilizator->getNextEntity();
+        ?>
+        <table style="width: 100%;">
+            <tr name="big-tables-container" style="
+display: block;
+text-align: center;
+font-size: 15px;
+font-family: sans-serif;
+margin-top: 10px;
+">
+                <td name="table-block" style="
+display: inline-block;
+box-sizing: border-box;
+/*width: 50%;*/
+width: 600px;
+padding: 0 10px 10px 0;
+">
+                    <div  name="main-table-title" style="
+    height: 36px;
+    line-height: 36px;">
+        <span style="
+                display: inline-block;
+                width: 22px;
+                height: 22px;
+                background: <?=$debilizator->getColorForEntity($ent1)?>;
+                border-radius: 6px;
+                vertical-align: middle;"></span>
+                        <span style="
+        display: inline-block;
+        vertical-align: middle;
+        color: #003a63;
+        font-size: 17px;
+        "><?=$ent1['name']?></span>
+                    </div>
+                    <table style="
+                border-collapse: collapse;
+                width: 100%;
+                border: 1px solid black;
+                margin-top: 8px;
+
+                ">
+                        <tr style="height: 48px; background: #f2faff; color: #003a63; font-weight: normal;">
+                            <th rowspan="" style="border: 1px solid rgba(82, 86, 89, 0.31); width: 67%; text-align: left; padding-left: 6px; font-weight: 500;font-size: 15px;"><?=__('Crafts List')?></th>
+                            <th colspan="" style="
+                        border: 1px solid rgba(82, 86, 89, 0.31);
+                        width: 33%;
+                    ">
+                                <div style="border-bottom: 1px solid rgba(82, 86, 89, 0.31); height: 24px;line-height: 24px; font-weight: 500;font-size: 14px;"><?=__('Quantity')?></div>
+                                <div style="height: 24px;line-height: 24px; font-size: 0;">
+                                    <div style="display: inline-block; width: 49%; line-height: 24px; height: 24px; vertical-align: top; font-weight: 500;font-size: 14px; border-right: 1px solid rgba(82, 86, 89, 0.31);box-sizing: border-box;"><?=__('Total')?></div>
+                                    <!--<div style="border-left: 1px solid rgba(82, 86, 89, 0.31); height: 25px; display: inline-block; vertical-align: top;"></div>-->
+                                    <div style="display: inline-block; width: 50%; line-height: 24px; height: 24px; vertical-align: top; font-weight: 500;font-size: 14px;box-sizing: border-box;"><?=__('Filtered')?></div>
+                                </div>
+                            </th>
+                        </tr>
+                        <?$j=1?>
+                        <?foreach ($report->getCompanyCrafts() as $craft):?>
+                            <?
+                            if($j++ > 5) break;
+                            $craftStat['total'] = isset($stats[$reportEntity][$ent1['id']]['crafts'][$craft['id']]['count']) ? $stats[$reportEntity][$ent1['id']]['crafts'][$craft['id']]['count'] : 0;
+                            $craftStat['filtered'] = isset($stats[$reportEntity][$ent1['id']]['filteredCrafts'][$craft['id']]['count']) ? $stats[$reportEntity][$ent1['id']]['crafts'][$craft['id']]['count'] : 0;
+                            ?>
+                            <tr style="height: 34px">
+                                <td style="border: 1px solid rgba(82, 86, 89, 0.31); color: #1ebae5; text-align: left; padding-left: 6px"><?=$craft['name']?></td>
+                                <td style="border: 1px solid rgba(82, 86, 89, 0.31); font-size: 0;">
+                                    <div style="display:inline-block; width: 49%; line-height: 34px; height: 34px; vertical-align: top; color: #708492; font-size: 14px; border-right: 1px solid rgba(82, 86, 89, 0.31);"><?=$craftStat['total']?></div>
+                                    <div style="display:inline-block; width: 50%; line-height: 34px; height: 34px; vertical-align: top; color: #708492; font-size: 14px;"><?=$craftStat['filtered']?></div>
+                                </td>
+                            </tr>
+                        <?endforeach;?>
+                    </table>
+                </td>
+                <td name="main-table" style="
+display: inline-block;
+box-sizing: border-box;
+width: 600px;
+padding: 0 0 10px 10px;
+">
+                    <?if(!empty($ent2)):?>
+                        <div name="main-table-title" style="
+    height: 36px;
+    line-height: 36px;">
+        <span style="
+                display: inline-block;
+                width: 22px;
+                height: 22px;
+                background: <?=$debilizator->getColorForEntity($ent2)?>;
+                border-radius: 6px;
+                line-height: 1;
+                vertical-align: middle;"></span>
+                            <span style="
+        display: inline-block;
+        line-height: 1;
+        vertical-align: middle;
+        color: #003a63;
+        font-size: 17px;
+        "><?=$ent2['name']?></span>
+                        </div>
+                        <table style="
+                border-collapse: collapse;
+                width: 100%;
+                border: 1px solid black;
+                margin-top: 8px;
+
+                ">
+                            <tr style="height: 48px; background: #f2faff; color: #003a63; font-weight: normal;">
+                                <th rowspan="" style="border: 1px solid rgba(82, 86, 89, 0.31); width: 67%; text-align: left; padding-left: 6px; font-weight: 500;font-size: 15px;"><?=__('Crafts List')?></th>
+                                <th colspan="" style="
+                        border: 1px solid rgba(82, 86, 89, 0.31);
+                        width: 33%;
+                    ">
+                                    <div style="border-bottom: 1px solid rgba(82, 86, 89, 0.31); height: 24px;line-height: 24px; font-weight: 500;font-size: 14px;"><?=__('Quantity')?></div>
+                                    <div style="height: 24px;line-height: 24px; font-size: 0;">
+                                        <div style="display: inline-block; width: 49%; line-height: 24px; height: 24px; vertical-align: top; font-weight: 500;font-size: 14px; border-right: 1px solid rgba(82, 86, 89, 0.31);box-sizing: border-box;"><?=__('Total')?></div>
+                                        <!--<div style="border-left: 1px solid rgba(82, 86, 89, 0.31); height: 25px; display: inline-block; vertical-align: top;"></div>-->
+                                        <div style="display: inline-block; width: 50%; line-height: 24px; height: 24px; vertical-align: top; font-weight: 500;font-size: 14px;box-sizing: border-box;"><?=__('Filtered')?></div>
+                                    </div>
+                                </th>
+                            </tr>
+                            <?$j=1?>
+                            <?foreach ($report->getCompanyCrafts() as $craft):?>
+                                <?
+                                if($j++ > 5) break;
+                                $craftStat['total'] = isset($stats[$reportEntity][$ent2['id']]['crafts'][$craft['id']]['count']) ? $stats[$reportEntity][$ent2['id']]['crafts'][$craft['id']]['count'] : 0;
+                                $craftStat['filtered'] = isset($stats[$reportEntity][$ent2['id']]['filteredCrafts'][$craft['id']]['count']) ? $stats[$reportEntity][$ent2['id']]['crafts'][$craft['id']]['count'] : 0;
+                                ?>
+                                <tr style="height: 34px">
+                                    <td style="border: 1px solid rgba(82, 86, 89, 0.31); color: #1ebae5; text-align: left; padding-left: 6px"><?=$craft['name']?></td>
+                                    <td style="border: 1px solid rgba(82, 86, 89, 0.31); font-size: 0;">
+                                        <div style="display:inline-block; width: 49%; line-height: 34px; height: 34px; vertical-align: top; color: #708492; font-size: 14px; border-right: 1px solid rgba(82, 86, 89, 0.31);"><?=$craftStat['total']?></div>
+                                        <div style="display:inline-block; width: 50%; line-height: 34px; height: 34px; vertical-align: top; color: #708492; font-size: 14px;"><?=$craftStat['filtered']?></div>
+                                    </td>
+                                </tr>
+                            <?endforeach;?>
+                        </table>
+                    <?endif;?>
+                </td>
+            </tr>
+        </table>
+        <table style="width: 100%;">
+            <tr name="textarea-container" style="
+        display: block;
+        text-align: center;
+        font-size: 15px;
+        font-family: sans-serif;
+        margin-top: 20px;
+        ">
+                <td name="textarea-block" style="
+            display: inline-block;
+            box-sizing: border-box;
+            width: 600px;
+            padding: 0 10px 10px 0;
+            ">
+                    <div style="text-align: left; margin: 10px 0;">
+                    <span style="
+                    display: inline-block;
+                    background: #005c8a;
+                    border-radius: 50%;
+                    padding: 2px 10px;
+                    font-size: 17px;
+                    font-weight: 700;
+                    color: #fff;
+                    margin-left:5px;
+                    ">i</span>
+                        <span style="
+                    color:black;
+                    font-weight: 600;
+                    text-align: left;
+                    display: inline-block;
+                    "><?=__('General opinion')?></span>
+                    </div>
+                    <textarea data-id="<?=$en1['id']?>" cols="30" rows="10" style="
+                width: 99%;
+                margin-top: 5px;
+                border: 1px solid #005c8a;
+                height: 210px;
+                "><?=$ent1['generalOpinion']?></textarea>
+                </td>
+                <td name="textarea-block" style="
+            display: inline-block;
+            box-sizing: border-box;
+            width: 600px;
+            padding: 0 10px 10px 0;
+            ">
+                    <?if(!empty($ent2)):?>
+                        <div style="text-align: left; margin: 10px 0;">
+                    <span style="
+                    display: inline-block;
+                    background: #005c8a;
+                    border-radius: 50%;
+                    padding: 2px 10px;
+                    font-size: 17px;
+                    font-weight: 700;
+                    color: #fff;
+                    margin-left:5px;
+                    ">i</span>
+                            <span style="
+                    color:black;
+                    font-weight: 600;
+                    text-align: left;
+                    display: inline-block;
+                    "><?=__('General opinion')?></span>
+                        </div>
+                        <textarea data-id="<?=$ent2['id']?>" cols="30" rows="10" style="
+                width: 99%;
+                margin-top: 5px;
+                border: 1px solid #005c8a;
+                height: 210px;
+                "><?=$ent2['generalOpinion']?></textarea>
+                    <?endif;?>
+                </td>
+            </tr>
+        </table>
+        <?if($report->hasSpecialityDetails()):?>
+            <?
+            $maxDefect = $debilizator->getMaxDefects($ent1,$ent2);
+            ?>
+            <?while ($maxDefect-- > 0):?>
+                <table style="width: 100%;">
+                    <tr name="small-tables-container" style="
+        display: block;
+        text-align: center;
+        font-size: 15px;
+        font-family: sans-serif;
+        margin-top: 20px;
+        ">
+                        <td name="table-block" style="
+            display: inline-block;
+            box-sizing: border-box;
+            /*width: 50%;*/
+            width: 600px;
+            padding: 0 10px 10px 0;
+            ">
+                            <?$ent1Defect = $debilizator->getEntityNexDefect($ent1);
+                            if(!empty($ent1Defect)):?>
+                                <div  name="main-table-title" style="
+                height: 36px;
+                line-height: 36px;
+                text-align: left;
+                margin-left:5px;
+                ">
+                    <span style="
+                            display: inline-block;
+                            width: 22px;
+                            height: 22px;
+                            background: <?=$debilizator->getColorForEntity($ent1)?>;
+                            border-radius: 6px;
+                            /*line-height: 1;*/
+                            vertical-align: middle;"></span>
+                                    <span style="
+                    display: inline-block;
+                    /*line-height: 1;*/
+                    vertical-align: middle;
+                    color: #1ebae5;
+                    font-size: 15px;
+                    "><?=$ent1Defect['name']?></span>
+                                </div>
+                                <table style="
+                border-collapse: collapse;
+                width: 100%;
+                border: 1px solid black;
+                margin-top: 8px;
+
+                ">
+                                    <tr style="height: 48px; background: #9bc5e1; color: #003a63; font-weight: normal;">
+                                        <th rowspan="" style="border: 1px solid rgba(82, 86, 89, 0.31); width: 22%; text-align: left; padding-left: 4px; font-weight: 500; font-size: 13px;"></th>
+                                        <?foreach (Enum_QualityControlConditionList::toArray() as $item):?>
+                                            <th colspan="" style="border: 1px solid rgba(82, 86, 89, 0.31);width: 19%; text-align: left; padding-left: 4px;font-weight: 500;font-size: 13px;"><?=__($item)?></th>
+                                        <?endforeach;?>
+                                    </tr>
+                                    <?$j=0;?>
+                                    <?foreach (Enum_QualityControlConditionLevel::toArray() as $conditionLevel):?>
+                                        <?$j++;?>
+                                        <tr style="height: 35px; font-size: 13px<?=($j % 2) ? '' : ' background: #f2faff;'?>">
+                                            <td style="border: 1px solid rgba(82, 86, 89, 0.31); color: #005c87; text-align: left; padding-left: 6px; background: #9bc5e1;"><?=__($conditionLevel)?></td>
+                                            <?foreach (Enum_QualityControlConditionList::toArray() as $conditionList):?>
+                                                <td style="border: 1px solid rgba(82, 86, 89, 0.31); color: #1ebae5; text-align: left; padding-left: 6px;"><?=$ent1Defect[$conditionLevel][$conditionList]?></td>
+                                            <?endforeach;?>
+                                        </tr>
+                                    <?endforeach;?>
+                                    <tr style="height: 35px; font-size: 13px; background: #3fd0f8">
+                                        <td style="border: 1px solid rgba(82, 86, 89, 0.31); color: #005c87; text-align: left; padding-left: 6px;"><?=__('Total')?></td>
+                                        <?foreach ($ent1Defect['total'] as $val):?>
+                                            <td style="border: 1px solid rgba(82, 86, 89, 0.31); color: #005c87; text-align: left; padding-left: 6px;"><?=$val?></td>
+                                        <?endforeach;?>
+                                    </tr>
+                                </table>
+                            <?endif;?>
+                        </td>
+                        <td name="table-block" style="
+            display: inline-block;
+            box-sizing: border-box;
+            /*width: 50%;*/
+            width: 600px;
+            padding: 0 0 10px 10px;
+            ">
+                            <?$ent2Defect = $debilizator->getEntityNexDefect($ent2);
+                            if(!empty($ent2Defect)):?>
+                                <div  name="main-table-title" style="
+                height: 36px;
+                line-height: 36px;
+                text-align: left;
+                margin-left: 5px;
+                ">
+                    <span style="
+                            display: inline-block;
+                            width: 22px;
+                            height: 22px;
+                            background: <?=$debilizator->getColorForEntity($ent2)?>;
+                            border-radius: 6px;
+                            /*line-height: 1;*/
+                            vertical-align: middle;"></span>
+                                    <span style="
+                    display: inline-block;
+                    /*line-height: 1;*/
+                    vertical-align: middle;
+                    color: #1ebae5;
+                    font-size: 16px;
+                    "><?=$ent2Defect['name']?></span>
+                                </div>
+                                <table style="
+                border-collapse: collapse;
+                width: 100%;
+                border: 1px solid black;
+                margin-top: 8px;
+
+                ">
+                                    <tr style="height: 48px; background: #9bc5e1; color: #003a63; font-weight: normal;">
+                                        <th rowspan="" style="border: 1px solid rgba(82, 86, 89, 0.31); width: 22%; text-align: left; padding-left: 4px; font-weight: 500; font-size: 13px;"></th>
+                                        <?foreach (Enum_QualityControlConditionList::toArray() as $item):?>
+                                            <th colspan="" style="border: 1px solid rgba(82, 86, 89, 0.31);width: 19%; text-align: left; padding-left: 4px;font-weight: 500;font-size: 13px;"><?=__($item)?></th>
+                                        <?endforeach;?>
+                                    </tr>
+                                    <?$j=0;?>
+                                    <?foreach (Enum_QualityControlConditionLevel::toArray() as $conditionLevel):?>
+                                        <?$j++;?>
+                                        <tr style="height: 35px; font-size: 13px<?=($j % 2) ? '' : ' background: #f2faff;'?>">
+                                            <td style="border: 1px solid rgba(82, 86, 89, 0.31); color: #005c87; text-align: left; padding-left: 6px; background: #9bc5e1;"><?=__($conditionLevel)?></td>
+                                            <?foreach (Enum_QualityControlConditionList::toArray() as $conditionList):?>
+                                                <td style="border: 1px solid rgba(82, 86, 89, 0.31); color: #1ebae5; text-align: left; padding-left: 6px;"><?=$ent2Defect[$conditionLevel][$conditionList]?></td>
+                                            <?endforeach;?>
+                                        </tr>
+                                    <?endforeach;?>
+                                    <tr style="height: 35px; font-size: 13px; background: #3fd0f8">
+                                        <td style="border: 1px solid rgba(82, 86, 89, 0.31); color: #005c87; text-align: left; padding-left: 6px;"><?=__('Total')?></td>
+                                        <?foreach ($ent2Defect['total'] as $val):?>
+                                            <td style="border: 1px solid rgba(82, 86, 89, 0.31); color: #005c87; text-align: left; padding-left: 6px;"><?=$val?></td>
+                                        <?endforeach;?>
+                                    </tr>
+                                </table>
+                            <?endif;?>
+                        </td>
+                    </tr>
+                </table>
+            <?endwhile;?>
+            <div style="page-break-after: always;"></div>
+
+        <?endif;?>
+
+    <?endfor?>
+<?endif;?>
+</body>
+<?=$report->renderPieChartTotal('piechart')?>
+<?=$report->renderPieChartFiltered('piechart2')?>
+<?=$report->renderBarChart('barchart',$reportEntity)?>
+</body>
+</html>

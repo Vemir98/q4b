@@ -73,7 +73,8 @@ class Controller_Welcome extends HDVP_Controller {
 //        }
 //        echo $i;
 
-
+        $file = ORM::factory('PlanFile',11924);
+        echo  $file->getImageLink();
 
 	}
 
@@ -154,8 +155,9 @@ class Controller_Welcome extends HDVP_Controller {
                 echo "ERR1 - ".$file->id.PHP_EOL;
                 continue;
             }
+            $ext = $file->ext;
             //['jpe','jpeg','jpg','png','tif','tiff','pdf']
-            if(in_array($file->ext,['jpe','jpeg','jpg','png'])){
+            if(in_array($ext,['jpe','jpeg','jpg','png'])){
                 if( $file->ext == 'jpg') continue;
                 $oldName = $file->name;
                 $img = new JBZoo\Image\Image(DOCROOT.$file->path.DS.$file->name);
@@ -168,7 +170,7 @@ class Controller_Welcome extends HDVP_Controller {
                 $file->mime = 'image/jpeg';
                 $file->save();
                 @unlink(DOCROOT.$file->path.DS.$oldName);
-            }elseif($file->ext == 'pdf'){
+            }elseif($ext == 'pdf'){
                 $fname = explode('.',$file->name);
                 unset($fname[count($fname)-1]);
                 $oldName = $file->name.'.png';
@@ -267,16 +269,40 @@ FROM pr_plans_files
 //        }
 //    }
 
+//    public function action_change_project_statuses()
+//    {
+//        ini_set('max_execution_time', 300);
+//
+//        $projectId = 75;
+//
+//        $tasks = ORM::factory('PrTask')
+//            ->where('project_id', '=', $projectId)
+//            ->find_all();
+//
+//        foreach ($tasks as $task) {
+//            $task->set('status', 'disabled')
+//                ->save();
+//        }
+//
+//        echo "<pre>";
+//        print_r($projectId);
+//        echo "</pre>";
+//        die;
+//    }
+
 //    public function action_copy_project_tasks_to_another_project()
 //    {
 //        ini_set('max_execution_time', 300);
 //
 //        $fromProjectId = 60;
-//        $toProjectId = 63;
+//        $toProjectId = 75;
 //
 //        $fromProject = ORM::factory('Project', $fromProjectId);
 //
-//        $fromTasks = $fromProject->tasks->find_all();
+//        $fromTasks = $fromProject->tasks
+//            ->where('status', '=', 'enabled') // enabled Statuses only
+//            ->find_all();
+//
 //        try{
 //            Database::instance()->begin();
 //
@@ -325,5 +351,13 @@ FROM pr_plans_files
 //            echo "</pre>";
 //            die;
 //        }
+//
+//        echo "<pre>";
+//        print_r($fromProjectId);
+//        echo "</pre>";
+//        echo "<pre>";
+//        print_r($toProjectId);
+//        echo "</pre>";
+//        die;
 //    }
 } // End Welcome

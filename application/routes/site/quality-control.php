@@ -3,7 +3,7 @@ Route::set('site.quality.control','quality_control/<action>',['action' => 'creat
     ->defaults([
         'controller' => 'QualityControl'
     ]);
-Route::set('site.quality.control.with.2.params','quality_control/<action>/<param1>/<param2>',['action' => 'get_places_for_floor|get_plans', 'param1' => '[0-9]+', 'param2' => '[0-9-]+'])
+Route::set('site.quality.control.with.2.params','quality_control/<action>/<param1>/<param2>',['action' => 'get_places_for_floor|get_plans', 'param1' => '[0-9]+', 'param2' => '[0-9-1]+'])
     ->defaults([
         'controller' => 'QualityControl'
     ]);

@@ -13,12 +13,17 @@ class Controller_Reports extends HDVP_Controller_Template
         parent::before();
         if ($this->auto_render === TRUE)
         {
-            Breadcrumbs::add(Breadcrumb::factory()->set_title(__('Reports'))->set_url('/reports'));
+            Breadcrumbs::add(Breadcrumb::factory()->set_title(__('Reports'))->set_url('/reports/list'));
         }
     }
     public function action_index(){
+        Breadcrumbs::add(Breadcrumb::factory()->set_title(__('QC Report'))->set_url('/reports'));
         $this->_checkPermOrFail('read');
         $this->template->content = $this->searchForm();
+    }
+
+    public function action_list(){
+        $this->template->content = View::make('reports/list');
     }
 
     public function action_advanced_options(){
@@ -76,11 +81,12 @@ class Controller_Reports extends HDVP_Controller_Template
     }
 
     public function action_generate(){
+        Breadcrumbs::add(Breadcrumb::factory()->set_title(__('QC Report'))->set_url('/reports'));
         if(Request::current()->is_initial()){
             $this->_checkPermOrFail('read');
         }
 
-        $data = Arr::extract(Request::current()->query(),['company','project','crafts','statuses','from','to']);
+        $data = Arr::extract(Request::current()->query(),['company','project','crafts','statuses','from','to','approval_status']);
         $data['company'] = (int)$data['company'];
         $data['project'] = (int)$data['project'];
 
@@ -122,8 +128,13 @@ class Controller_Reports extends HDVP_Controller_Template
         ];
 
         $qcs = null;
+        $approvalStatusQuery = null;
         $qcs = ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id);
-
+        if(in_array($data['approval_status'],Enum_QualityControlApproveStatus::toArray())){
+            $qcs->and_where('qualitycontrol.approval_status', '=', $data['approval_status']);
+            $approvalStatusQuery = ' AND qc.approval_status = "'.$data['approval_status'].'" ';
+            View::set_global('_APPROVAL_STATUS',true);
+        }
 
         $filteredCraftsListQuery = [];
         if(!empty($data['statuses'])){
@@ -238,7 +249,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
             if(!empty($filteredCraftsListQuery['and'])){
                 $filteredCraftsListQuery['and'] = implode(' ',$filteredCraftsListQuery['and']);
             }
-            $filteredCraftsList = DB::query(Database::SELECT,'SELECT cc.id, cc.name, count(craft_id) `count` FROM quality_controls qc JOIN cmp_crafts cc ON qc.craft_id = cc.id WHERE qc.project_id = '.$data['project'].' AND qc.craft_id IN ('.implode(',',$data['crafts']).') AND (qc.due_date BETWEEN '.$data['from'].' AND '.$data['to'].') AND cc.status="'.Enum_Status::Enabled.'" AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: null).' GROUP BY qc.craft_id')->execute()->as_array('id');
+            $filteredCraftsList = DB::query(Database::SELECT,'SELECT cc.id, cc.name, count(craft_id) `count` FROM quality_controls qc JOIN cmp_crafts cc ON qc.craft_id = cc.id WHERE qc.project_id = '.$data['project'].' AND qc.craft_id IN ('.implode(',',$data['crafts']).') AND (qc.due_date BETWEEN '.$data['from'].' AND '.$data['to'].') AND cc.status="'.Enum_Status::Enabled.'" AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: null).$approvalStatusQuery.' GROUP BY qc.craft_id')->execute()->as_array('id');
         }
         if($floorsNeedJoin){
             $qcs->join('pr_floors','INNER');
@@ -278,7 +289,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         $result = (new ORMPaginate($qcs,null,$paginationSettings))->getData();
         $qcs = $result['items'];
         $report = [];
-        $craftsList = DB::query(Database::SELECT,'SELECT cc.id, cc.name, count(craft_id) `count` FROM quality_controls qc JOIN cmp_crafts cc ON qc.craft_id = cc.id WHERE qc.project_id = '.$data['project'].' AND qc.craft_id IN ('.implode(',',$data['crafts']).') AND cc.status="'.Enum_Status::Enabled.'" AND cc.company_id='.$data['company'].' GROUP BY qc.craft_id')->execute()->as_array('id');
+        $craftsList = DB::query(Database::SELECT,'SELECT cc.id, cc.name, count(craft_id) `count` FROM quality_controls qc JOIN cmp_crafts cc ON qc.craft_id = cc.id WHERE qc.project_id = '.$data['project'].' AND qc.craft_id IN ('.implode(',',$data['crafts']).') AND cc.status="'.Enum_Status::Enabled.'" AND cc.company_id='.$data['company'].$approvalStatusQuery.' GROUP BY qc.craft_id')->execute()->as_array('id');
 
         foreach($this->company->crafts->where('status','=',Enum_Status::Enabled)->find_all() as $c){
             if( ! isset($craftsList[$c->id])){
@@ -805,6 +816,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                     Queue::enqueue('mailing','Job_Report_SendReportsEmail',[
                         'emails' => $emailsList,
                         'subject' => 'Q4b report share email for project - '.$project->name,
+                        'project' => $project->name,
                         'message' => trim(strip_tags(Arr::get($this->post(),'message'))),
                         'link' => URL::site('/reports/guest_access/'.$token->token,'https'),
                         'user' => ['name' => $this->_user->name, 'email' => $this->_user->email],
@@ -929,10 +941,10 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         $as->getDefaultStyle()->getFont()->setSize(10);
         $as->getColumnDimension('A')->setWidth(10);
         $as->getColumnDimension('B')->setWidth(40);
-        $as->getColumnDimension('C')->setWidth(13);
+        $as->getColumnDimension('C')->setWidth(200);
         $as->getColumnDimension('D')->setWidth(13);
         $as->getColumnDimension('E')->setWidth(40);
-        $as->getColumnDimension('F')->setWidth(15);
+        $as->getColumnDimension('F')->setWidth(80);
         $as->getColumnDimension('G')->setWidth(14);
         $as->getColumnDimension('H')->setWidth(8);
         $as->getColumnDimension('I')->setWidth(20);
@@ -944,7 +956,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         ];
         $ws->set_data($sh, false);
         foreach ($qcs as $item){
-            $sh [] = [$item->id,null,html_entity_decode($item->description), date('d/m/Y',$item->created_at), __($item->status), $item->craft->name, $item->place->number, __($item->place->type),$item->floor->number, $item->object->name, $item->project->name];
+            $sh [] = [$item->id,null,html_entity_decode($item->description), date('d/m/Y',$item->created_at), __($item->status), $item->craft->name, $item->place->custom_number, __($item->place->type),$item->floor->number, $item->object->name, $item->project->name];
         }
 
         $ws->set_data($sh, false);
@@ -992,8 +1004,8 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                 $output['data'][$c->id] = [
                     'id' => $c->id,
                     'name' => $c->name,
-                    //'total' => $craftTotalTasksCnt[$c->id]['cnt'],
-                    //'used' => $craftUsedTasksCnt[$c->id]['cnt']
+                    'total' => $craftTotalTasksCnt[$c->id]['cnt'],
+                    'used' => $craftUsedTasksCnt[$c->id]['cnt']
                 ];
 
                 if(isset($craftTotalTasksCnt[$c->id]) AND isset($craftUsedTasksCnt[$c->id])){
@@ -1142,27 +1154,18 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                     $output['data']['public'][$c->id] += [
                         'id' => $c->id,
                         'name' => $c->name,
-                        //'total' => $craftTotalTasksCnt[$c->id]['cnt'],
-                        //'used' => $craftUsedTasksCnt[$c->id]['cnt']
+                        'total' => $craftTotalTasksCnt[$c->id]['cnt'] * $placesCount['public'],
+                        'used' => $craftUsedTasksCnt['public'][$c->id]['cnt']
                     ];
-                }else{
-                    if(isset($craftTotalTasksCnt[$c->id]) AND isset($craftUsedTasksCnt['private'][$c->id])){
-                        $output['data']['private'][$c->id]['percent'] = round($craftUsedTasksCnt['private'][$c->id]['cnt'] * 100 / ($craftTotalTasksCnt[$c->id]['cnt'] * $placesCount['private']),2);
-                        $output['data']['private'][$c->id]+= [
-                            'id' => $c->id,
-                            'name' => $c->name,
-                            //'total' => $craftTotalTasksCnt[$c->id]['cnt'],
-                            //'used' => $craftUsedTasksCnt[$c->id]['cnt']
-                        ];
-                    }elseif(isset($craftTotalTasksCnt[$c->id])){
-                        $output['data']['private'][$c->id]['percent'] = 0;
-                        $output['data']['private'][$c->id]+= [
-                            'id' => $c->id,
-                            'name' => $c->name,
-                            //'total' => $craftTotalTasksCnt[$c->id]['cnt'],
-                            //'used' => $craftUsedTasksCnt[$c->id]['cnt']
-                        ];
-                    }
+                }
+                if(isset($craftTotalTasksCnt[$c->id]) AND isset($craftUsedTasksCnt['private'][$c->id])){
+                    $output['data']['private'][$c->id]['percent'] = round($craftUsedTasksCnt['private'][$c->id]['cnt'] * 100 / ($craftTotalTasksCnt[$c->id]['cnt'] * $placesCount['private']),2);
+                    $output['data']['private'][$c->id]+= [
+                        'id' => $c->id,
+                        'name' => $c->name,
+                        'total' => $craftTotalTasksCnt[$c->id]['cnt'] * $placesCount['private'],
+                        'used' => $craftUsedTasksCnt['private'][$c->id]['cnt']
+                    ];
                 }
             }
             usort($output['data']['public'],function($a,$b){

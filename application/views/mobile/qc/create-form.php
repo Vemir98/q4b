@@ -276,7 +276,7 @@
             <i class="mobile_item--link-icon q4b-mobile-plan"></i>
             <span class="mobile_item--link-title"><?= __('Plans') ?></span>
         </a>
-        <a href="<?= URL::site('reports') ?>" class="mobile_item--link">
+        <a href="<?= URL::site('reports/list') ?>" class="mobile_item--link">
             <i class="mobile_item--link-icon q4b-mobile-Reports"></i>
             <span class="mobile_item--link-title"><?= __('Reports') ?></span>
         </a>

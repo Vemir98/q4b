@@ -23,12 +23,15 @@ $detector = new Mobile_Detect;
     <script src="/media/js/jquery-2.2.4.min.js"></script>
     <script src="/media/js/core.js"></script>
     <script src="/media/js/select2.js"></script>
+    <link rel="stylesheet" href="/media/css/jquery.multiselect.css">
 
     <script src="/media/js/bootstrap-select.min.js" type="text/javascript"></script>
     <script src="/media/js/bootstrap.min.js"></script>
     <script src="/media/js/bootstrap-table.min.js"></script>
     <script src="/media/js/utilities.js" type="text/javascript" ></script>
     <script src="/media/js/jquery.autocomplete.js"></script>
+    <script src="/media/js/jquery.multiselect.js"></script>
+    <script src= "/media/js/zingchart.min.js"></script>
     <script src="/media/js/scripts.js"></script>
     <script src="/media/js/<?=Inflector::singular(strtolower(Request::current()->controller()))?>.js"></script>
 

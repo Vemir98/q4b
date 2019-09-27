@@ -13,8 +13,8 @@ class Job_Plan_PdfToImageConverter
         $file = ORM::factory('PlanFile',$this->args['fileId']);
         $plan = $file->getPlan();
         $floors = $plan->floors->find_all();
-        if($file->ext != 'pdf') return;
-        $jpgPath = str_replace('.pdf','.jpg',$file->fullFilePath());
+        if(strtolower($file->ext) != 'pdf') return;
+        $jpgPath = str_ireplace('.pdf','.jpg',$file->fullFilePath());
 
         if(!file_exists($jpgPath)){
             $pdf = new Pdf($file->fullFilePath());

@@ -30,8 +30,8 @@ class Model_PlanFile extends Model_File
         $path = $this->originalFilePath();
         $plan = $this->getPlan();
         $floors = $plan->floors->find_all();
-        if($this->ext == 'pdf'){
-            $jpgPath = str_replace('.pdf','.jpg',$this->fullFilePath());
+        if(strtolower($this->ext) == 'pdf'){
+            $jpgPath = str_ireplace('.pdf','.jpg',$this->fullFilePath());
 
             if(!file_exists($jpgPath)){
                 $pdf = new Pdf($this->fullFilePath());
@@ -71,7 +71,7 @@ class Model_PlanFile extends Model_File
                 }
 
             }
-            $path = str_replace('.pdf','.jpg',$path);
+            $path = str_ireplace('.pdf','.jpg',$path);
         }
         if($w){
             $dim[] = 'w'.$w;

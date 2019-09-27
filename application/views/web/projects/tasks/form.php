@@ -101,7 +101,7 @@ $projectCrafts = $_PROJECT->company->craftsWithProfessionsFlag();
                                 <tr>
                                     <td class="nested-adj-large textarea-cell" data-th="<?=__('Description')?>">
                                         <textarea name="task_<?=$item->id?>_name" class="table_input q4_required fixed-textarea collapsed" title="<?=$item->name?>">
-                                            <?=trim($item->name)?>
+                                            <?=html_entity_decode(trim($item->name))?>
                                         </textarea>
                                     </td>
                                     <td data-th="<?=__('Crafts')?>">

@@ -707,7 +707,7 @@ class Controller_Plans extends HDVP_Controller_Template
         $query->order_by('created_at','DESC');
 
         $paginationSettings = [
-            'items_per_page' => 9999,
+            'items_per_page' => 30,
             'view'              => 'pagination/project',
             'current_page'      => ['source' => 'route', 'key'    => 'page'],
         ];
@@ -863,12 +863,12 @@ class Controller_Plans extends HDVP_Controller_Template
                 $data = Arr::extract($this->post(),['name','edition','description','object_id','date','profession_id','scale','status','sheet_number']);
                 $data['place_id'] = 0;
                 if(Arr::get($this->post(),'place_number')){
-                    $placeData = Arr::extract($this->post(),['place_number','place_type']);
+                    $placeData = Arr::extract($this->post(),['place_number']);
                     $placeData['place_number'] = (int)$placeData['place_number'];
-                    if(!$placeData['place_number'] OR !in_array($placeData['place_type'],Enum_ProjectPlaceType::toArray())){
+                    if(!$placeData['place_number']){
                         throw new HDVP_Exception('Incorrect data set');//todo:: заблокировать пользователя
                     }
-                    $place = ORM::factory('PrPlace',['object_id' => Arr::get($this->post(),'object_id'),'number' => $placeData['place_number'], 'type' => $placeData['place_type']]);
+                    $place = ORM::factory('PrPlace',['object_id' => Arr::get($this->post(),'object_id'),'id' => $placeData['place_number']]);
                     if( ! $place->loaded()){
                         throw new HDVP_Exception('Incorrect place data');
                     }
@@ -961,12 +961,16 @@ class Controller_Plans extends HDVP_Controller_Template
                 $this->_setErrors('Operation Error');
             }
         }else{
-            $this->setResponseData('modal',View::make('plans/plans/update',[
+            $object = $this->project->objects->where('id','=',$plan->object_id)->find();
+            $places = $object->places->find_all();
+            $this->setResponseData('modal',View::make('plans/plans/update_new',[
                 'professions' => $this->company->professions->where('status','=',Enum_Status::Enabled)->with('crafts')->find_all(),
                 'action' => URL::site('plans/update_plan/'.$this->project->id.'/'.$plan->id),
                 'item' => $plan,
+                'places' => $places,
                 'trackingItems' => $plan->trackings->order_by('created_at','DESC')->find_all()
             ]));
+
         }
     }
 

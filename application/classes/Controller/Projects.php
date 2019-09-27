@@ -918,6 +918,7 @@ class Controller_Projects extends HDVP_Controller_Template
     public function action_property_item_quality_control_list(){
         $this->_checkForAjaxOrDie();
         $id = (int) $this->request->param('id');
+        $crafts = $this->request->param('crafts');
         $status = $this->request->param('status');
 
         $place = ORM::factory('PrPlace',$id);
@@ -925,7 +926,7 @@ class Controller_Projects extends HDVP_Controller_Template
             throw new HTTP_Exception_404();
         }
 
-        $query = $place->quality_control;
+        $query = $place->quality_control->where('craft_id','IN',DB::expr('('.$crafts.')'));
         $selectedStatus = 'all';
 
         $qualityControls['statuses'] = ['all' =>'All'] + Enum_QualityControlApproveStatus::toArray();
@@ -953,7 +954,7 @@ class Controller_Projects extends HDVP_Controller_Template
 
 
         if(!empty($status)){
-            $query->where('approval_status','=',$status);
+            $query->and_where('approval_status','=',$status);
             $selectedStatus = $status;
         }
         $query->order_by('id','DESC');

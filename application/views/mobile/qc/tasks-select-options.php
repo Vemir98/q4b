@@ -23,7 +23,7 @@ foreach ($usedTasks as $task) {
                     <div class="task-item-txt">
                         <?$desc = explode("\n",$task->name);
                         foreach ($desc as $line) {?>
-                            <p><?=$line?></p>
+                            <p><?=html_entity_decode($line)?></p>
                         <?}?>
                     </div>
                 </a>

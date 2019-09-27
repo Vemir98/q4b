@@ -309,7 +309,7 @@
     (function($) {
         <?$u = []?>
         <?foreach ($projects as $key => $project): ?>
-        <?$name = str_replace("'"," ",$project->name)?>
+        <?$name = str_replace("'","\'",html_entity_decode($project->name))?>
         <?$u[] = "{value: '{$name}', data: '{$project->id}'}"?>
         <?endforeach;?>
         <? $u = implode(",\n",$u)?>

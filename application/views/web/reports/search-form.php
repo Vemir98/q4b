@@ -6,7 +6,7 @@
  * Date: 04.04.2017
  * Time: 11:48
  */
-$selectedArray = Arr::extract($_GET,["company","project","crafts","statuses","from","to"]);
+$selectedArray = Arr::extract($_GET,["company","project","crafts","statuses","from","to",'approval_status']);
 $selectedAdvancedArray = Arr::extract($_GET,["object_id","floors","place_type","place_number","profession_id","project_stage","space"]);
 // $selectedCrafts = $_GET["crafts"];
 // $selectedStatuses = $_GET["statuses"];
@@ -122,6 +122,20 @@ $statuses = [
                                         ?>
                                                 <option value="<?=$status?>" <?=$selected?>><?=__($status)?></option>
                                         <?endforeach;?>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="report-form-group col-md-6 col-sm-12 rtl-float-right">
+                                <label class="table_label"><?=__('approval_status')?></label>
+                                <div class="select-wrapper">
+                                    <i class="q4bikon-arrow_bottom"></i>
+                                    <select name="approval_status" class="q4-select q4-form-input">
+                                        <option value="all"><?=__("All")?></option>
+                                        <?foreach (Enum_QualityControlApproveStatus::toArray() as $as):?>
+                                            <option value="<?=$as?>" <?=$selectedArray["approval_status"]==$as ? "selected" : ""?>><?=__($as)?></option>
+                                        <?endforeach?>
                                     </select>
                                 </div>
                             </div>

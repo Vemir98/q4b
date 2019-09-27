@@ -242,7 +242,7 @@ $(document).ready(function() {
 
                     if ($(document).find('.qc-list-modal').length && data.getData().modal != undefined){
                         var currentModal = data.getData().modal;
-                        $(document).find('.q4_form').replaceWith($(currentModal).find('.q4_form'));
+                        $(document).find('.modal .q4_form').replaceWith($(currentModal).find('.q4_form'));
                     }
 
                     $(document).find(".filter-settings-button").removeClass('active');
@@ -1684,6 +1684,26 @@ $(document).ready(function() {
         });
 
     });
+    if($('meta[name="current-uri"]').attr('content').includes('projects')){
+        $(document).on('click','a.get-report-details',function(e){
+            e.preventDefault();
+            var url = $(this).attr('href');
+            var div = $(this).closest('.row');
+            var table = div.find('.col-lg-12');
+            $.get( url, function( data ) {
+                var data = JSON.parse(data);
+
+                div.prepend(data.details).ready(function(){
+                    table.hide();
+                });
+            });
+        });
+        $(document).on('click','.report-details-back',function(){
+            $(document).find('.task-details').remove();
+            $(document).find('.modal-body .col-lg-12').fadeIn();
+        })
+    }
+
 
 
 

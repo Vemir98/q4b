@@ -38,15 +38,22 @@
 									<tr>
 										<th></th>
 										<th><?=__('Craft')?></th>
+                                        <th class="td-125"><?=__('Quantity')?></th>
 										<th class="td-100"><?=__('Checked')?></th>
 									</tr>
 								</thead>
 								<tbody>
 									<? $i = 0;
 									foreach ($data['public'] as $one):?>
+                                        <?if(!(int)$one['used']) continue?>
 									<tr>
 										<td><?=++$i?></td>
 										<td><?=$one['name']?></td>
+                                        <?if((int)$one['used']):?>
+                                            <td><a class="get-report-details" href="<?=URL::site('reports/tasks/details/object/'.$object->id.'/'.$one['id']."/public")?>"><?=(int)$one['used']?>/<?=(int)$one['total']?></a></td>
+                                        <?else:?>
+                                            <td><?=(int)$one['used']?>/<?=(int)$one['total']?></td>
+                                        <?endif?>
 										<td><?=$one['percent']?>%</td>
 									</tr>
 									<?endforeach; ?>
@@ -65,15 +72,22 @@
 									<tr>
 										<th><?=__('')?></th>
 										<th><?=__('Craft')?></th>
+                                        <th class="td-125"><?=__('Quantity')?></th>
 										<th class="td-100"><?=__('Checked')?></th>
 									</tr>
 								</thead>
 								<tbody>
 									<? $i = 0;
 									foreach ($data['private'] as $one):?>
+                                        <?if(!(int)$one['used']) continue?>
 									<tr>
 										<td><?=++$i?></td>
 										<td><?=$one['name']?></td>
+                                        <?if((int)$one['used']):?>
+                                            <td><a class="get-report-details" href="<?=URL::site('reports/tasks/details/object/'.$object->id.'/'.$one['id']."/private")?>"><?=(int)$one['used']?>/<?=(int)$one['total']?></a></td>
+                                        <?else:?>
+                                            <td><?=(int)$one['used']?>/<?=(int)$one['total']?></td>
+                                        <?endif?>
 										<td><?=$one['percent']?>%</td>
 									</tr>
 									<?endforeach; ?>

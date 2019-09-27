@@ -83,6 +83,35 @@ var LANG = $(document).find('html').attr('lang') ? $(document).find('html').attr
 var Q4U = window.Q4U || {};
 var MAX_FILE_SIZE = Math.min.apply(null, $(document).find('[name=fps]').attr('content').split('-'))
 var AJAX_LOADS = false;
+
+
+function normalizeTables(){
+    $(document).find('table.scrollable-tbody-content').each(function () {
+        var hasScroll = false;
+        var tbody = $(this).find('tbody');
+
+        if (tbody.scrollTop()) {
+            // Element is already scrolled, so it is scrollable
+            hasScroll = true;
+        } else {
+            // Test by actually scrolling
+            tbody.scrollTop(1);
+
+            if (tbody.scrollTop()) {
+                // Scroll back
+                tbody.scrollTop(0);
+                hasScroll = true;
+            }
+        }
+
+        if(!hasScroll){console.log(hasScroll);
+            $(this).find('thead').css({
+                width: ('100%')
+            })
+        }
+    });
+}
+
 $(document).ready(function() {
     $('.tab-anchor').on('click', function() {
         if ($(this).hasClass('disabled')) return;
@@ -95,6 +124,7 @@ $(document).ready(function() {
     if (typeof SHOW_PROFILE != 'undefined' && SHOW_PROFILE && typeof INTERVAL == 'undefined') {
         $(document).find('.get-user-profile').trigger('click');
     }
+    normalizeTables();
 });
 $(document).ajaxStart(function() {
     if (LOADER != undefined && LOADER) $(document).find('.loader_backdrop').show();

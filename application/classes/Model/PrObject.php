@@ -37,6 +37,10 @@ class Model_PrObject extends MORM
         'plans' => [
             'model' => 'PrPlan',
             'foreign_key' => 'object_id'
+        ],
+        'quality_controls' => [
+            'model' => 'QualityControl',
+            'foreign_key' => 'object_id'
         ]
     ];
 
