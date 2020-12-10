@@ -38,6 +38,9 @@ FROM pr_plans_files
             }else{
                 $filepath = DOCROOT.$filepath;
             }
+            if(file_exists(mb_substr($filepath,0,mb_strlen($filepath)-4).'-mobile'.mb_substr($filepath,-4,4))){
+                continue;
+            }
             Queue::enqueue('imageForMobileMinimize','Job_Plan_ImageForMobileMinimizer',['filepath' => $filepath],\Carbon\Carbon::now()->addSeconds(30)->timestamp);
         }
     }

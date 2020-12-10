@@ -77,6 +77,18 @@ class Model_Project extends MORM
             'model' => 'PrPlace',
             'foreign_key' => 'project_id'
         ],
+        's_texts' => [
+            'model' => 'STexts',
+            'foreign_key' => 'project_id'
+        ],
+        'reserve_materials' => [
+            'model' => 'ReserveMaterial',
+            'foreign_key' => 'project_id'
+        ],
+        'transferable_items' => [
+            'model' => 'TransferableItems',
+            'foreign_key' => 'project_id'
+        ],
     ];
 
     /**

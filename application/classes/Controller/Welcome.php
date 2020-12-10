@@ -4,6 +4,7 @@ use Assetic\Asset\FileAsset;
 use Assetic\Asset\GlobAsset;
 use Assetic\Filter\LessFilter;
 use Assetic\Filter\Yui;
+use \Carbon\Carbon as Carbon;
 class Controller_Welcome extends HDVP_Controller {
 
 //	protected $_actions_perms = [
@@ -73,8 +74,10 @@ class Controller_Welcome extends HDVP_Controller {
 //        }
 //        echo $i;
 
-        $file = ORM::factory('PlanFile',11924);
-        echo  $file->getImageLink();
+        //$file = ORM::factory('PlanFile',11924);
+        //echo  $file->getImageLink();
+        echo Auth::instance()->hash('0526167555');
+        Auth::instance()->force_login('eldar5390@gmail.com');
 
 	}
 
@@ -192,6 +195,7 @@ class Controller_Welcome extends HDVP_Controller {
 
     public function action_minimize_plans(){
 	    set_time_limit(0);
+	    echo "<pre>";
 	    $planFiles = DB::query(Database::SELECT,'SELECT
   files.path,
   files.name
@@ -223,6 +227,10 @@ FROM pr_plans_files
             }else{
                 $filepath = DOCROOT.$filepath;
             }
+            if(file_exists(mb_substr($filepath,0,mb_strlen($filepath)-4).'-mobile'.mb_substr($filepath,-4,4))){
+                continue;
+            }
+            echo $filepath.PHP_EOL;
             Queue::enqueue('imageForMobileMinimize','Job_Plan_ImageForMobileMinimizer',['filepath' => $filepath],\Carbon\Carbon::now()->addSeconds(30)->timestamp);
 //	        $img = new JBZoo\Image\Image($filepath);
 //	        $img->bestFit(4096,4096);
@@ -273,7 +281,7 @@ FROM pr_plans_files
 //    {
 //        ini_set('max_execution_time', 300);
 //
-//        $projectId = 76;
+//        $projectId = 107;
 //
 //        $tasks = ORM::factory('PrTask')
 //            ->where('project_id', '=', $projectId)
@@ -295,7 +303,7 @@ FROM pr_plans_files
 //        ini_set('max_execution_time', 300);
 //
 //        $fromProjectId = 60;
-//        $toProjectId = 76;
+//        $toProjectId = 107;
 //
 //        $fromProject = ORM::factory('Project', $fromProjectId);
 //
@@ -360,4 +368,175 @@ FROM pr_plans_files
 //        echo "</pre>";
 //        die;
 //    }
+
+    public function action_std(){
+//        ini_set('memory_limit', '-1');
+//        $filePath = '/home/qforbnet/www/media/data/companies/13/instructions/5f1cba0a95c3d.pdf';
+//        $filePieces = explode('.',$filePath);
+//        $ext = strtolower(end($filePieces));
+//        $imagePath = preg_replace('~.pdf$~','.jpg',implode('.',$filePieces));
+//        if($ext == 'pdf' AND !file_exists($imagePath)){
+//            $converter = new PDFConverter($filePath.'[0]');
+//            $converter->convertToJPG();
+//            $imgPaths = $converter->getOutputFiles();
+//        }
+//
+//        $img = new JBZoo\Image\Image($imagePath);
+//        $img->bestFit(4096,4096);
+//        $img->saveAs($filePath);
+    }
+    public function action_standards(){
+	    $certs = ORM::factory('PrCertification')->find_all();
+	    echo '<pre>';
+	    $i = 0;
+	    foreach ($certs as $cert){
+	        $files = $cert->files->find_all();
+	        if(count($files) AND $cert->craft_id){
+	            $j = 0;
+	            $desc = '';
+	            foreach ($files as $file){
+	                if(strpos($file->name,'.xls') || strpos($file->name,'.doc')) continue;
+	                $oldPath = DOCROOT.$file->path.'/'.$file->name;
+	                if(count($files) > 1){
+	                    $desc = 'certificate '.++$j;
+                    }else{
+                        $desc = 'certificate';
+                    }
+
+
+	                echo $i++.'. '.$desc.' - ' .$file->name.' '.(file_exists($oldPath) ? 1 : 0).PHP_EOL;
+
+                    $cert1 = ORM::factory('Certification');
+                    $cert1->desc = $desc;
+                    $cert1->cmp_craft_id = $cert->craft_id;
+                    $cert1->company_id = $cert->project->company_id;
+                    $cert1->project_id = $cert->project_id;
+                    $cert1->created_by = $file->created_by;
+                    $cert1->created_at = $file->created_at;
+                    $cert1->uploaded = $file->created_at;
+                    $cert1->file = $file->name;
+                    $cert1->status = Enum_CertificationsApprovalStatus::Waiting;
+                    @copy($oldPath,$this->certificationsPath($cert->project_id).$file->name);
+                    $ext = strtolower($file->ext);
+                    if($ext == 'pdf'){
+                        Queue::enqueue('CertFileProcessor','Job_Certification_FileProcessor',['filePath' => $this->certificationsPath($cert->project_id).$file->name],Carbon::now()->addSeconds(15)->timestamp);
+
+                    }
+                    //$cert1->save();
+                }
+            }
+        }
+    }
+    private function certificationsPath($id){
+        $dir = str_replace('{id}',$id,DOCROOT.'media/data/projects/{id}/certifications/');
+        if (!file_exists($dir)) {
+            mkdir($dir, 0777, true);
+        }
+        return $dir;
+    }
+    public function action_copy_certifications(){
+        $data = $this->post();
+        $toCompanyId = $data['companyId'];
+        $items = $data['items'];
+        if(count($items)){
+            $company = ORM::factory('Company',$toCompanyId);
+            foreach ($items as $item){
+                $defCraft = ORM::factory('CmpCraft',$item['craftId']);
+                $cmpCraft = $company->crafts->where('name','=',$defCraft->name)->find();
+                if( ! $cmpCraft->loaded()){
+                    $oldCraft = ORM::factory('CmpCraft',$item['craftId']);
+                    $this->_responseData['craft'] = false;
+                    $newCraft = ORM::factory('CmpCraft');
+                    $newCraft->company_id = $company->id;
+                    $newCraft->name = $oldCraft->name;
+                    $newCraft->catalog_number = $oldCraft->catalog_number;
+                    $newCraft->status = $oldCraft->status;
+                    $newCraft->related_id = $oldCraft->related_id;
+                    $newCraft->save();
+                    $cmpCraft = $newCraft;
+                }
+                $cert = ORM::factory('Certification');
+                $cert->desc = $item['desc'];
+                $cert->cmp_craft_id = $cmpCraft->id;
+                $cert->company_id = $company->id;
+                $cert->project_id = $data['projectId'];
+                $cert->status = Enum_CertificationsApprovalStatus::Waiting;
+                if($data['includeFiles'] AND !empty($item['file'])){
+                    $path = explode('/',$item['file']);
+                    @copy($this->certificationsPath($item['projectId']).end($path),$this->certificationsPath($data['projectId']).end($path));
+
+                    $cert->file = end($path);
+                    $cert->uploaded = time();
+
+                    $paths = explode('.',end($path));
+                    $ext = strtolower(end($paths));
+                    if($ext == 'pdf'){
+                        Queue::enqueue('CertFileProcessor','Job_Certification_FileProcessor',['filePath' => $this->certificationsPath($data['projectId']).end($path)],Carbon::now()->addSeconds(15)->timestamp);
+
+                    }
+                }
+                $cert->save();
+            }
+        }
+        $this->_responseData['status'] = 'success';
+    }
+    public function action_plans(){
+//	    $file = ORM::factory('PlanFile',207072);
+//die(DOCROOT.$file->path.'/'.$file->name);
+//        $converter = new PDFConverter(DOCROOT.$file->path.'/'.$file->name);
+//        $converter->convertToJPG();
+//        $imgPaths = $converter->getOutputFiles();
+//        var_dump($imgPaths);
+        ini_set('memory_limit', '-1');
+        $file = ORM::factory('PlanFile',233391);
+        $plan = $file->getPlan();
+        $floors = $plan->floors->find_all();
+        if(strtolower($file->ext) != 'pdf') return;
+        $jpgPath = str_ireplace('.pdf','.jpg',$file->fullFilePath());
+
+        if(!file_exists($jpgPath)){echo "Create File ".$jpgPath;
+//            $pdf = new Pdf($file->fullFilePath());
+//            $pdf->setCompressionQuality(30);
+//            $imgPaths = $pdf->saveAllPagesAsImages(dirname($file->fullFilePath()),UTF8::str_ireplace('.pdf','',$file->name));
+            $converter = new PDFConverter($file->fullFilePath());
+            $converter->convertToJPG();
+            $imgPaths = $converter->getOutputFiles();
+            $imgPaths = array_values($imgPaths);
+            foreach ($imgPaths as $idx => $p){
+                if($idx > 0){
+                    $newPlan = ORM::factory('PrPlan');
+                    $tmpArr = $plan->as_array();
+                    unset($tmpArr['id'],$tmpArr['updated_by'],$tmpArr['approved_by']);
+                    //throw new Exception(var_export($tmpArr,true));
+                    $newPlan->values($tmpArr);
+                    $newPlan->_setCreatedBy($plan->created_by);
+                    $newPlan->_setUpdatedBy($plan->created_by);
+                    $newPlan->scope = Model_PrPlan::getNewScope();
+                    $newPlan->save();
+                    if(count($floors)){
+                        foreach ($floors as $floor){
+                            $newPlan->add('floors',$floor->id);
+                        }
+                    }
+
+                    $newFile = ORM::factory('PlanFile');
+                    $tmpArr = $file->as_array();
+                    unset($tmpArr['id']);
+                    $newFile->values($tmpArr);
+                    $newFile->mime = 'image/jpeg';
+                    $newFile->ext = 'jpg';
+                    $newFile->name = end(explode('/',$p));
+                    $newFile->original_name .= ' (p-'.$idx.')';
+                    $newFile->token = md5($newFile->original_name).base_convert(microtime(false), 10, 36);
+                    $newFile->_setCreatedBy($plan->created_by);
+                    $newFile->save();
+                    $newPlan->add('files', $newFile->pk());
+
+                }
+            }
+
+        }else{
+            echo "FILE EXISTS ".$jpgPath;
+        }
+    }
 } // End Welcome

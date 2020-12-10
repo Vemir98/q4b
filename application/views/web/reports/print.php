@@ -5,10 +5,17 @@
             <div class="printable-logo">
                 <img class="q4b-logo" src="/media/img/logo.png" alt="logo">
             </div>
+            <div class="printable-logo">
+                <img class="q4b-logo" src="/media/img/iso-group-365.png" alt="logo">
+            </div>
         </div>
         <div class="report-project-desc">
             <div class="print-main-small-image-wrapper">
-                <img src="/<?=$_COMPANY->logo?>" alt="project images">
+                <?if(!$_PROJECT->image_id):?>
+                    <img src="/media/img/camera.png" alt="project images">
+                <?else:?>
+                    <img src="<?=$_PROJECT->main_image->originalFilePath()?>" alt="project images">
+                <?endif?>
             </div>
             <div class="report-project-desc-list">
                 <div class="f0">
@@ -174,7 +181,7 @@
                         <div>
                             <span class="approve-author"><?=__('Responsible profession')?>: <?=$q->profession->name?></span>
 
-<!--                            <span class="approve-author">--><?//=__('Approvement Status')?><!--: --><?//=__($q->approval_status)?><!--</span>-->
+                            <span class="approve-author"><?=__('Approvement Status')?>: <?=__($q->approval_status)?></span>
                             <!-- <span class="approve-author"> <?=__($q->approval_status)?> </span> -->
                         </div>
                     </div>

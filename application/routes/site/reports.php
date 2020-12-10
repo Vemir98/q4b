@@ -5,6 +5,13 @@
  * Date: 04.04.2017
  * Time: 11:50
  */
+//delivery reports
+Route::set('site.delivery.reports','reports/delivery(/<action>(/<id>))',['action' => '[a-z0-9_]+', 'id' => '[0-9]+'])
+    ->defaults([
+        'controller' => 'DeliveryReports',
+    ]);
+
+
 //quality reports
 Route::set('site.quality.reports','reports/quality(/<action>)',['action' => '[a-z0-9_]+'])
     ->defaults([
@@ -76,7 +83,7 @@ Route::set('site.tasks.reports1','reports/tasks(/<action>/<id>)',['action' => '[
         'action' => 'index'
     ]);
 
-Route::set('site.place.reports2','reports/place/qc_list/<id>/<crafts>',['crafts' => '[0-9,]+', 'id' => '[0-9]+'])
+Route::set('site.place.reports2','reports/place/qc_list(/status/<status>)/<qc_status>/<qcStatus>/<id>/<crafts>',['qcStatus' => 'all|'.implode('|',Enum_QualityControlStatus::toArray()),'status' => implode('|',Enum_QualityControlApproveStatus::toArray()),'crafts' => '[0-9,]+', 'id' => '[0-9]+'])
     ->defaults([
         'controller' => 'PlaceReports',
         'action' => 'qc_list'

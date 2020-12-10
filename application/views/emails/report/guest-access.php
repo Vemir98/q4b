@@ -19,7 +19,11 @@ $lang = Language::getCurrent()->iso2;
         <tr>
             <td>
                 <div class="q4-email-header" style="height: 120px; width: 100%; text-align: left; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;">
+                    <?if(!empty($image)):?>
+                        <img src="<?=$image?>" alt="logo" style="margin: auto; height: 93px; display: block; vertical-align: middle; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;">
+                    <?else:?>
                     <img src="https://qforb.net/media/img/email-logo.png" alt="logo" style="width: 191px; height: 93px; display: inline-block; vertical-align: middle; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;">
+                    <?endif;?>
                 </div>
             </td>
         </tr>
@@ -38,6 +42,7 @@ $lang = Language::getCurrent()->iso2;
                                     <a href="<?=$link?>" style="color: #1ebae5; text-decoration: underline;  font-weight: bold"> <?=__('click on the link')?></a>.
                                 <?endif?>
                             </span>
+                        <div><?=__('valid_link_date')?> <?=$expires?></div>
                     </div>
                      <div class="q4-email-body-mes" style="mrgin:10px 0; color: #494949;font-size: 14px; font-weight: normal; font-style: normal; font-family: 'proxima_nova_rgregular', Arial, Helvetica, sans-serif; line-height: 1; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;">
 

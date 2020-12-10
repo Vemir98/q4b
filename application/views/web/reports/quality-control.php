@@ -414,7 +414,7 @@ if($_USER->is('project_supervisor')){//запрет на изменение ст
                             <label class="table_label"><?=__('Description')?></label>
 
                             <div class="form-group">
-                                <textarea name="description" class='modal-plans-details-textarea q4_required'><?=trim($item->description)?></textarea>
+                                <textarea name="description" class='modal-plans-details-textarea q4_required'><?=trim(html_entity_decode($item->description))?></textarea>
                             </div>
                         </div>
                         <div class="form-group col-md-6 rtl-float-right">
@@ -484,7 +484,7 @@ if($_USER->is('project_supervisor')){//запрет на изменение ст
                 <div class="panel-modal-footer text-align">
                     <div class="row">
                         <div class="col-sm-12">
-                            <a href="#" class="q4-btn-lg light-blue-bg qc-to-print-btn panel-footer-first mb-15"><?=__('Proceed to print')?></a>
+                            <a href="#" data-id="<?=$item->id?>" class="q4-btn-lg light-blue-bg qc-to-print-btn panel-footer-first mb-15"><?=__('Proceed to print')?></a>
                             <a href="#" class="q4-btn-lg light-blue-bg send-reports panel-footer-second ml-15 mb-15" data-url=<?=URL::site('reports/quality_control_mailing/'.$item->id)?>><?=__('Proceed to send')?></a>
                             <?if($isSuperAdmin):?>
                             <a  class="q4-btn-lg btn-confirm red q4-delete-qc ml-15 mb-15" data-url="<?=URL::site('projects/quality_control_delete/'.$item->id)?>" ><?= __('Delete')?></a>
@@ -497,7 +497,7 @@ if($_USER->is('project_supervisor')){//запрет на изменение ст
             </div>
         </form>
     </div>
-    <div class="print-quality-control">
+    <div class="print-quality-control print-quality-control-<?=$item->id?>">
         <!-- ****** PRINTABLE PART ********-->
         <div class="page-break">
             <div class="text-right">
@@ -700,9 +700,10 @@ if($_USER->is('project_supervisor')){//запрет на изменение ст
                         </tr>
                         </thead>
                         <tbody class="qc-v-scroll">
-
+                        <?$i= '';?>
                         <?foreach($plans as $plan):?>
                             <?
+
                                     $crafts = [];
                                     foreach ($plan->crafts->find_all() as $craft) {
                                         $crafts[] = $craft->id;

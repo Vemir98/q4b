@@ -12,13 +12,13 @@ $selectedFloors = $selectedArray["floors"] ? $selectedArray["floors"] : [];
 $selectedProfession = $selectedArray["profession_id"] ? $selectedArray["profession_id"] : '';
 $selectedPlaceType = $selectedArray["place_type"] ? $selectedArray["place_type"] : '';
 $selectedNumber = $selectedArray["place_number"] ? $selectedArray["place_number"] : '';
-$selectedStage = $selectedArray["project_stage"] ? $selectedArray["project_stage"] : '';
+$selectedStages = $selectedArray["project_stage"] ? $selectedArray["project_stage"] : [];
 $selectedSpace = $selectedArray["space"] ? $selectedArray["space"] : '';
 
 ?>
 <div class="advanced-reports-row first">
     <div class="row">
-        <div class="form-group col-md-4 rtl-float-right multi-select-col">
+        <div class="form-group col-md-3 rtl-float-right multi-select-col">
             <label class="table_label">
                 <?=__('Property')?>
                 <span class="check-all-links" data-seltxt="<?=__('select all')?>" data-unseltxt="<?=__('unselect all')?>"><?=__('select all')?></span>
@@ -65,7 +65,7 @@ $selectedSpace = $selectedArray["space"] ? $selectedArray["space"] : '';
                 </select>
             </div>
         </div>
-        <div class="form-group col-md-2 rtl-float-right multi-select-col">
+        <div class="form-group col-md-3 rtl-float-right multi-select-col">
             <label class="table_label">
                 <?=__('Floor')?>
                 <span class="check-all-links" data-seltxt="<?=__('select all')?>" data-unseltxt="<?=__('unselect all')?>"><?=__('select all')?></span>
@@ -180,20 +180,52 @@ $selectedSpace = $selectedArray["space"] ? $selectedArray["space"] : '';
 <div class="advanced-reports-row ">
     <div class="row">
 
-        <div class="form-group col-md-4 rtl-float-right">
+        <div class="form-group col-md-3 rtl-float-right">
             <label class="table_label"><?=__('Space')?></label>
             <div class="select-wrapper"><i class="q4bikon-arrow_bottom"></i>
                 <select class="q4-select q4-form-input disabled-input" name="space" disabled>
                 </select>
             </div>
         </div>
-        <div class="form-group col-md-2 rtl-float-right">
-            <label class="table_label"><?=__('Stage')?></label>
-            <div class="select-wrapper"><i class="q4bikon-arrow_bottom"></i>
-                <select class="q4-select q4-form-input" name="project_stage">
-                    <option selected="selected" value="all"><?=__('All')?></option>
+        <div class="form-group col-md-3 rtl-float-right multi-select-col">
+            <label class="table_label">
+                <?=__('Stage')?>
+                <span class="check-all-links" data-seltxt="<?=__('select all')?>" data-unseltxt="<?=__('unselect all')?>"><?if(!empty($selectedStages)):?><?=__('select all')?><?else:?><?=__('unselect all')?><?endif?></span>
+            </label>
+            <div class="multi-select-box pr-stage">
+                <div class="select-imitation">
+                    <span class="select-imitation-title" style="width: 92%;" data-text="<?=__('Please select')?>">
+                        <span class="select-def-text">
+                                <?foreach($qcStages as $qcs){
+                                    if(in_array($qcs, $selectedStages) OR empty($selectedStages)){
+
+                                        echo __($qcs).',';
+                                    }
+
+                                }?>
+                        </span>
+                    </span>
+                    <div class="over-select" id="reports-adv-stage"></div>
+                    <i class="arrow-down q4bikon-arrow_bottom"></i>
+                </div>
+                <div class="checkbox-list">
                     <?foreach($qcStages as $qcs):?>
-                    <option value="<?=$qcs?>" <?=$selectedStage==$qcs ? "selected":""?>><?=__($qcs)?></option>
+                        <?$checked = (in_array($qcs, $selectedStages) OR empty($selectedStages)) ? "checked":""?>
+                        <div class="checkbox-list-row">
+                        <span class="checkbox-text">
+                            <label class="checkbox-wrapper-multiple inline <?=$checked?>" data-val="<?=$qcs?>">
+                                <span class="checkbox-replace"></span>
+                                 <i class="checkbox-list-tick q4bikon-tick"></i>
+                            </label>
+                            <?=__($qcs)?>
+                        </span>
+                        </div>
+                    <?endforeach?>
+                </div>
+                <select class="hidden-select" name="project_stage[]" multiple>
+                    <?foreach($qcStages as $qcs):?>
+                        <?$selected = (in_array($qcs, $selectedStages) OR empty($selectedStages)) ? "selected":""?>
+                        <option value="<?= $qcs ?>" <?=$selected?> ><?=__($qcs)?></option>
                     <?endforeach?>
                 </select>
             </div>

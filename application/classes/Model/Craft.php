@@ -23,6 +23,10 @@ class Model_Craft extends ORM
             'far_key' => 'profession_id',
             'through' => 'professions_crafts'
         ],
+        'regulations' => [
+            'model' => 'Certification',
+            'foreign_key' => 'craft_id',
+        ]
     ];
 
     public function source(){

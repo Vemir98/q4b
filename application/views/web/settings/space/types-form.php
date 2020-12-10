@@ -65,7 +65,7 @@
                             <th data-field="<?=__('Delete')?>" class="td-max-100"><?=__('Delete')?></th>
                         </tr>
                     </thead>
-                    <tbody class="tbody-vertical-scroll">
+                    <tbody class="tbody-vertical-scroll spaces-tbody">
                         <?foreach ($items as $item):?>
                             <tr>
                                 <td data-th="<?=__('Name')?>">

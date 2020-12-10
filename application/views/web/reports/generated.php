@@ -30,6 +30,7 @@ $range = Arr::extract($_GET,["from","to"]);
             <h2><?=__('No reports found')?></h2>
         </div>
     <?else: ?>
+    <?if(empty($del_rep_id)):?>
         <div class="report-send-out">
             <div class="row">
                 <div class="col-md-12">
@@ -52,7 +53,11 @@ $range = Arr::extract($_GET,["from","to"]);
         <?if ($pagination->current_page == 1): ?>
             <div class="report-project-desc f0">
                 <div class="report-project-desc-image">
-                    <img src="/<?=$_COMPANY->logo?>" alt="project images">
+            <?if(!$_PROJECT->image_id):?>
+                <img src="/media/img/camera.png" alt="project images">
+            <?else:?>
+                    <img src="<?=$_PROJECT->main_image->originalFilePath()?>" alt="project images">
+            <?endif?>
                 </div>
                 <div class="report-project-desc-list">
                     <ul>
@@ -171,7 +176,9 @@ $range = Arr::extract($_GET,["from","to"]);
                 'filteredCraftsList' => $filteredCraftsList,
                 'craftName' => $qcs[0]->craft->name,
             ])?>
-
+        <?endif?>
+        <?else:?>
+            <br/>
         <?endif;?>
         <?foreach ($qcs as $q): ?>
 

@@ -264,6 +264,9 @@ class Controller_Companies extends HDVP_Controller_Template
                 }
             }
 
+            VueJs::instance()->addComponent('certifications/universal-certification');
+            VueJs::instance()->includeMultiselect();
+
             $this->template->content = View::make('companies/update')
                 ->set('countries',Model_Country::getKeyValuePair($countries))
                 ->set('clientCountryId',$this->company->country_id)

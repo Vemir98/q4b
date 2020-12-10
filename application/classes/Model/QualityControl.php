@@ -58,6 +58,10 @@ class Model_QualityControl extends MORM
             'model' => 'PrSpace',
             'foreign_key' => 'space_id'
         ],
+        'delivery_report' => [
+            'model' => 'DeliveryReport',
+            'foreign_key' => 'del_rep_id'
+        ],
     ];
 
     protected $_has_many = [

@@ -8,7 +8,57 @@
 $stats = $report->getStats();
 $reportEntity = count($report->getObjects()) ? 'objects' : 'projects';
 $entityType = count($report->getObjects()) ? 'objects' : 'projects';
+
 ?>
+<script>
+    function chartsData() {
+        this.imagesID = ['piechart','piechart2','barchart'];
+        this.data = {};
+        this.chartImegeCreatedEvent = document.createEvent('Event');
+        this.chartImegeCreatedEvent.initEvent('makeChartImage',true,true);
+    }
+    chartsData.prototype.objectLength = function(object){
+        var length = 0;
+        for( var key in object ) {
+            if( object.hasOwnProperty(key) ) {
+                ++length;
+            }
+        }
+        return length;
+    };
+    chartsData.prototype.addID = function(id){
+        this.imagesID.push(id);
+    };
+
+    chartsData.prototype.chartImagesLoaded = function(){
+        return this.imagesID.length == this.objectLength(this.data)
+    };
+    chartsData.prototype.makeImages = function(){
+        if(this.chartImagesLoaded()){
+            document.dispatchEvent(this.chartImegeCreatedEvent)
+            return;
+        }
+        var that = this;
+        this.imagesID.forEach(function(item){
+            zingchart.exec(item, 'getimagedata', {
+                filetype : 'png',
+                callback : function(imagedata) {
+                    that.data[item] = imagedata;
+                    if(that.chartImagesLoaded()){
+                        document.dispatchEvent(that.chartImegeCreatedEvent)
+                    }
+                }
+            });
+        });
+
+    };
+    var charts = new chartsData();
+
+
+    var ACTION = null;
+    var ACTION_NAME = {export : 'export', print : 'print'};
+    var ACTION_DATA = null;
+</script>
 <div id="generated-content" class="scnd-report" data-save="<?=URL::site('reports/quality/save')?>">
     <div class="generate-reports-bookmark">
         <div class="generate-reports-bookmark-title">
@@ -25,19 +75,8 @@ $entityType = count($report->getObjects()) ? 'objects' : 'projects';
                         <i class="q4bikon-export icon-export"></i>
                         <span class="q4-page-export-text"><?=__('Export')?></span>
                     </a>
-                    <?if(!empty($reportId)):?>
                     <span class="send-out-button send-reports" data-url="<?=URL::site('reports/quality/send_reports/'.$reportId)?>"><i class="q4bikon-email"></i> <?=__('Send by email')?></span>
-                    <?else:?>
-                        <?php
-                        $prId = [];
-                        foreach ($report->getProjects() as $project){
-                            $prId[] = $project['id'];
-                        }
-                        $prId = "p".implode('-',$prId)
-                        ?>
-                        <span class="send-out-button send-reports" data-url="<?=URL::site('reports/quality/send_reports/'.$prId)?>"><i class="q4bikon-email"></i> <?=__('Send by email')?></span>
-                    <?endif?>
-                    <span class="send-out-button print-report"><i class="q4bikon-print"></i> <?=__('Print')?></span>
+                    <span class="send-out-button print-report" data-url="<?=URL::site('reports/quality/save')?>""><i class="q4bikon-print"></i> <?=__('Print')?></span>
 
                 </div>
             </div>
@@ -117,7 +156,7 @@ $entityType = count($report->getObjects()) ? 'objects' : 'projects';
                             <h3><?=__('Status statistics')?></h3>
                         </div>
 
-                        <div class="report-status-pie-bottom">
+                        <div class="report-status-pie-bottom" style="overflow: hidden">
                             <div id="piechart" class="piechart"></div>
                         </div>
                         <div style="padding-bottom: 20px;color: #1ebae5;background-color: white;">
@@ -135,7 +174,7 @@ $entityType = count($report->getObjects()) ? 'objects' : 'projects';
                             <h3><?=__('Status statistics (filtered)')?></h3>
                         </div>
 
-                        <div class="report-status-pie-bottom">
+                        <div class="report-status-pie-bottom" style="overflow: hidden">
                             <div id="piechart2" class="piechart"></div>
                         </div>
                         <div style="padding-bottom: 20px;color: #1ebae5;background-color: white;">
@@ -151,6 +190,11 @@ $entityType = count($report->getObjects()) ? 'objects' : 'projects';
                 <div class="barchart-report" style="margin: 25px; box-sizing: border-box;">
                     <div id="barchart" style="box-shadow: 1px 1px 12px 1px #CDD0D7; border: 1px solid #d4e1ea;"></div>
                 </div>
+                <?if(0 AND $report->canDisplayYearStats()):?>
+                <div class="barchart-report" style="margin: 25px; box-sizing: border-box;overflow: hidden">
+                    <div id="linechart" style="box-shadow: 1px 1px 12px 1px #CDD0D7; border: 1px solid #d4e1ea;height: 360px; direction: ltr!important;"></div>
+                </div>
+                <?endif?>
                 <div class="report-project_status">
                     <?foreach ($report->getProjectsORObjects($reportEntity) as $entity):?>
                     <div class="report-status-result-multiple">
@@ -217,6 +261,16 @@ $entityType = count($report->getObjects()) ? 'objects' : 'projects';
                             </tr>
                             </tbody>
                         </table>
+                        <?if($report->canDisplayYearStats()):?>
+                        <script>
+                            charts.addID('linechart<?=$entity['id']?>');
+                        </script>
+                            <div class="min-max"><span>+</span></div>
+                        <div class="project-linechart" style="box-sizing: border-box;overflow: hidden">
+                            <div id="linechart<?=$entity['id']?>" style="box-shadow: 1px 1px 12px 1px #CDD0D7; border: 1px solid #d4e1ea;height: 360px; direction: ltr!important;"></div>
+                        </div>
+                        <?=$report->renderEntityLineChart('linechart'.$entity['id'],$reportEntity,$entity['id'])?>
+                        <?endif?>
                         <div class="craft-title">
                             <h3><?=UTF8::ucfirst(__('general'))?></h3>
                         </div>
@@ -424,6 +478,7 @@ $entityType = count($report->getObjects()) ? 'objects' : 'projects';
 <?=$report->renderPieChartTotal('piechart')?>
 <?=$report->renderPieChartFiltered('piechart2')?>
 <?=$report->renderBarChart('barchart',$reportEntity)?>
+<?//=$report->canDisplayYearStats() ? $report->renderLineChart('linechart',$reportEntity) : ''?>
 <script>
 $(document).ready(function(){
     var reportName = '';
@@ -477,8 +532,14 @@ $(document).ready(function(){
     });
 
     $('.print-report').off('click').on('click',function(e){
+        $('.loader_backdrop').css('display','block');
+        $('.wrapper').css('filter','blur(8px)');
         e.preventDefault();
-        printDiv('generated-content');
+        ACTION = ACTION_NAME.print;
+        ACTION_DATA = {id: parseInt($(this).data('id')), url: $(this).data('url'), val: $(this).val()};
+        charts.makeImages();
+        console.log(ACTION_DATA);
+
     });
 
     // $(document).on('submit','.q4_form',function(e){
@@ -582,20 +643,62 @@ $(document).ready(function(){
         });
 
     }
+    document.addEventListener('makeChartImage', function (e) {
+        if(ACTION == ACTION_NAME.export){
+            pageExport(ACTION_DATA.id,ACTION_DATA.url)
+        }
+        if(ACTION == ACTION_NAME.print){
+            pagePrint(ACTION_DATA.id,ACTION_DATA.url);
+        }
+    },false);
 
-    $('.q4-page-export').off('click').on('click', function(e){
-        e.preventDefault();
-        var url = $(this).data('url');
-        var data = {generalOpinions:[],json:''};
+    function pagePrint(id,url){
+        var data = {generalOpinions:[],json:'', images: charts.data};
         $(document).find('.general-opinion textarea').each(function(){
-            var myId = parseInt($(this).data('id'));
-            if(myId)
-                data.generalOpinions.push({id : myId, text : $(this).val()});
+            if(id)
+                data.generalOpinions.push({id : id, text : $(this).val()});
         });
         data.json = $('.report-data').text();
+        data.images = JSON.stringify(data.images);
         $.ajax({
             url: url,
-            data: JSON.stringify({'name': 'pdf','is_hidden':'1','generalOpinions' : data.generalOpinions, 'json': data.json, 'csrf' : Q4U.getCsrfToken(), 'x-form-secure-tkn': ""}),
+            data: JSON.stringify({'name': 'print','is_hidden':'1','generalOpinions' : data.generalOpinions, 'json': data.json, 'csrf' : Q4U.getCsrfToken(), 'x-form-secure-tkn': "", 'images': data.images}),
+            method: 'POST',
+            type: 'HTML',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function(data) {
+                data = JSON.parse(data);
+                var win = window.open(data.url, '_blank');
+                if (win) {
+                    //Browser has allowed it to be opened
+                    win.focus();
+                } else {
+                    //Browser has blocked it
+                    alert('Please allow popups for this website');
+                }
+            }
+        }).done(function(data){
+            $('.loader_backdrop').css('display','none');
+            $('.wrapper').css('filter','none');
+            setTimeout(function(){
+                document.querySelector(Q4U.options.csrfTokenSelector).content = window.csrf;
+            },1500)
+
+        });
+    }
+    function pageExport(id,url){
+        var data = {generalOpinions:[],json:'', images: charts.data};
+        $(document).find('.general-opinion textarea').each(function(){
+            if(id)
+                data.generalOpinions.push({id : id, text : $(this).val()});
+        });
+        data.json = $('.report-data').text();
+        data.images = JSON.stringify(data.images);
+        $.ajax({
+            url: url,
+            data: JSON.stringify({'name': 'pdf','is_hidden':'1','generalOpinions' : data.generalOpinions, 'json': data.json, 'csrf' : Q4U.getCsrfToken(), 'x-form-secure-tkn': "", 'images': data.images}),
             method: 'POST',
             type: 'HTML',
             cache: false,
@@ -613,10 +716,94 @@ $(document).ready(function(){
                 }
             }
         });
+    }
+    $('.q4-page-export').off('click').on('click', function(e){
+        e.preventDefault();
+        ACTION = ACTION_NAME.export;
+        ACTION_DATA = {id: parseInt($(this).data('id')), url: $(this).data('url'), val: $(this).val()};
+        charts.makeImages();
     });
+    // $('.q4-page-export').off('click').on('click', function(e){
+    //     e.preventDefault();
+    //     ACTION = ACTION_NAME.export;
+    //     ACTION_DATA = {id: parseInt($(this).data('id')), url: $(this).data('url'), val: $(this).val()};
+    //     var url = $(this).data('url');
+    //     var data = {generalOpinions:[],json:'', images: ''};
+    //     $(document).find('.general-opinion textarea').each(function(){
+    //         var myId = parseInt($(this).data('id'));
+    //         if(myId)
+    //             data.generalOpinions.push({id : myId, text : $(this).val()});
+    //     });
+    //     data.json = $('.report-data').text();
+    //     $.ajax({
+    //         url: url,
+    //         data: JSON.stringify({'name': 'pdf','is_hidden':'1','generalOpinions' : data.generalOpinions, 'json': data.json, 'csrf' : Q4U.getCsrfToken(), 'x-form-secure-tkn': ""}),
+    //         method: 'POST',
+    //         type: 'HTML',
+    //         cache: false,
+    //         contentType: false,
+    //         processData: false,
+    //         success: function(data) {
+    //             data = JSON.parse(data);
+    //             var win = window.open(data.url, '_blank');
+    //             if (win) {
+    //                 //Browser has allowed it to be opened
+    //                 win.focus();
+    //             } else {
+    //                 //Browser has blocked it
+    //                 alert('Please allow popups for this website');
+    //             }
+    //         }
+    //     });
+    // });
 
     $(document).find('.no-print').removeClass('no-print');
     $(document).find('.sidebar, .layout > header, .q4-copyright').addClass('no-print');
 
+    $(document).find('.min-max span').off('click').on('click',function(){
+        if($(this).html() == '-'){
+            $(this).parents('div').next('.project-linechart').addClass('hidden');
+            $(this).html('+');
+        }else{
+            $(this).parents('div').next('.project-linechart').removeClass('hidden');
+            $(this).html('-');
+        }
+
+    });
+
+    // $(document).find('.report-status-result-multiple table').each(function(){
+    //     var width = $(this).find('tbody').find('tr').first().find('td').first().width();
+    //     $(this).find('th').first().css('width',width + 'px');
+    // });
+    setTimeout(function () {
+        $('.project-linechart').addClass('hidden');
+    },1000)
 });
 </script>
+<style>
+    .min-max{
+        height: 25px;
+        width: 100%;
+        border: 1px solid #ddd;
+        box-shadow: 1px 1px 12px 1px #CDD0D7;
+        background-color: #eeeff5;
+        position: relative;
+    }
+    .min-max span{
+        display: block;
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 25px;
+        height: 25px;
+        color: red;
+        line-height: 25px;
+        cursor: pointer;
+        font-size: 25px;
+        border-left: 1px solid #ddd;
+        user-select: none;
+    }
+    /*.report-status-list .report-status-results{*/
+        /*width: 100%!important;*/
+    /*}*/
+</style>

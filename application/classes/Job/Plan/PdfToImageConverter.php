@@ -17,11 +17,16 @@ class Job_Plan_PdfToImageConverter
         $jpgPath = str_ireplace('.pdf','.jpg',$file->fullFilePath());
 
         if(!file_exists($jpgPath)){
-            $pdf = new Pdf($file->fullFilePath());
-            $pdf->setCompressionQuality(30);
-            $imgPaths = $pdf->saveAllPagesAsImages(dirname($file->fullFilePath()),UTF8::str_ireplace('.pdf','',$file->name));
+//            $pdf = new Pdf($file->fullFilePath());
+//            $pdf->setCompressionQuality(30);
+//            $imgPaths = $pdf->saveAllPagesAsImages(dirname($file->fullFilePath()),UTF8::str_ireplace('.pdf','',$file->name));
+            $converter = new PDFConverter($file->fullFilePath());
+            $converter->convertToJPG();
+            $imgPaths = $converter->getOutputFiles();
+            $i = 0;
+//            file_put_contents(DOCROOT.'tet',var_export($imgPaths,true));
             foreach ($imgPaths as $idx => $p){
-                if($idx > 0){
+                if($i){
                     $newPlan = ORM::factory('PrPlan');
                     $tmpArr = $plan->as_array();
                     unset($tmpArr['id'],$tmpArr['updated_by'],$tmpArr['approved_by']);
@@ -30,6 +35,7 @@ class Job_Plan_PdfToImageConverter
                     $newPlan->_setCreatedBy($plan->created_by);
                     $newPlan->_setUpdatedBy($plan->created_by);
                     $newPlan->scope = Model_PrPlan::getNewScope();
+                    $newPlan->name .= ' (copy '.$i.')';
                     $newPlan->save();
                     if(count($floors)){
                         foreach ($floors as $floor){
@@ -44,13 +50,13 @@ class Job_Plan_PdfToImageConverter
                     $newFile->mime = 'image/jpeg';
                     $newFile->ext = 'jpg';
                     $newFile->name = end(explode('/',$p));
-                    $newFile->original_name .= ' (p-'.$idx.')';
+                    $newFile->original_name .= ' (p-'.$i.')';
                     $newFile->token = md5($newFile->original_name).base_convert(microtime(false), 10, 36);
                     $newFile->_setCreatedBy($plan->created_by);
                     $newFile->save();
                     $newPlan->add('files', $newFile->pk());
-
                 }
+                $i++;
             }
 
         }

@@ -10,7 +10,7 @@ Route::set('site.login','')
         'controller' => 'auth',
         'action' => 'login'
     ]);
-Route::set('site.auth','(<action>(/<param1>))',['action' => 'logout|forgot_password|reset_password|accept_invitation','param1' => '[a-z0-9][a-z0-9_-]+'])
+Route::set('site.auth','(<action>(/<param1>))',['action' => 'logout|forgot_password|reset_password|accept_invitation|demo_login','param1' => '[a-z0-9][a-z0-9_-]+'])
     ->defaults([
         'controller' => 'auth',
     ]);

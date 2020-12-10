@@ -37,6 +37,10 @@ class Model_CmpCraft extends ORM
             'model' => 'QualityControl',
             'foreign_key' => 'craft_id'
         ],
+        'instructions' => [
+            'model' => 'Certification',
+            'foreign_key' => 'cmp_craft_id'
+        ],
     ];
 
     public function filters()

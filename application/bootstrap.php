@@ -145,6 +145,7 @@ Kohana::modules(array(
 	'phpexcel'  => MODPATH.'phpexcel',  // phpexcel
 	'imagefly'  => MODPATH.'imagefly',  // imagefly
 	'reports'  => MODPATH.'reports',  // reports
+	'vuejs'  => MODPATH.'vue',  // vue js
 	));
 
 /**

@@ -23,7 +23,6 @@
             <tr>
                 <th class="td-25"></th>
                 <th><?=__('Craft')?></th>
-                <th class="td-125"><?=__('Places')?></th>
                 <th class="td-125"><?=__('Task Qnty')?></th>
                 <th class="td-100"><?=__('Checked')?></th>
             </tr>
@@ -33,15 +32,14 @@
             foreach ($data['public'] as $one):?>
                 <?if(!(int)$one['used']) continue?>
                 <tr>
-                    <td><?=++$i?></td>
-                    <td><?=$one['name']?></td>
-                    <td><a class="get-report-places" href="<?=URL::site('reports/tasks/places/object/'.$object->id.'/'.$one['id']."/public")?>"><?=$object->places->where('type','=',Enum_ProjectPlaceType::PublicS)->count_all()?></a></td>
+                    <td data-th="#"><?=++$i?></td>
+                    <td data-th="<?=__('Craft')?>"><?=$one['name']?></td>
                     <?if((int)$one['used']):?>
-                        <td><a class="get-report-details" href="<?=URL::site('reports/tasks/details/object/'.$object->id.'/'.$one['id']."/public")?>"><?=(int)$one['used']?>/<?=(int)$one['total']?></a></td>
+                        <td data-th="<?=__('Task Qnty')?>"><a class="get-report-details" href="<?=URL::site('reports/tasks/details/object/'.$object->id.'/'.$one['id']."/public")?>"><?=(int)$one['used']?>/<?=(int)$one['total']?></a></td>
                     <?else:?>
-                        <td><?=(int)$one['used']?>/<?=(int)$one['total']?></td>
+                        <td data-th="<?=__('Task Qnty')?>"><?=(int)$one['used']?>/<?=(int)$one['total']?></td>
                     <?endif?>
-                    <td><?=$one['percent']?>%</td>
+                    <td data-th="<?=__('Checked')?>"><?=$one['percent']?>%</td>
                 </tr>
             <?endforeach; ?>
             </tbody>
@@ -67,15 +65,14 @@
             foreach ($data['private'] as $one):?>
                 <?if(!(int)$one['used']) continue?>
                 <tr>
-                    <td><?=++$i?></td>
-                    <td><?=$one['name']?></td>
-                    <td><a class="get-report-places" href="<?=URL::site('reports/tasks/places/object/'.$object->id.'/'.$one['id']."/public")?>"><?=$object->places->where('type','=',Enum_ProjectPlaceType::PrivateS)->count_all()?></a></td>
+                    <td data-th="#"><?=++$i?></td>
+                    <td data-th="<?=__('Craft')?>"><?=$one['name']?></td>
                     <?if((int)$one['used']):?>
-                        <td><a class="get-report-details" href="<?=URL::site('reports/tasks/details/object/'.$object->id.'/'.$one['id']."/private")?>"><?=(int)$one['used']?>/<?=(int)$one['total']?></a></td>
+                        <td data-th="<?=__('Quantity')?>"><a class="get-report-details" href="<?=URL::site('reports/tasks/details/object/'.$object->id.'/'.$one['id']."/private")?>"><?=(int)$one['used']?>/<?=(int)$one['total']?></a></td>
                     <?else:?>
-                        <td><?=(int)$one['used']?>/<?=(int)$one['total']?></td>
+                        <td data-th="<?=__('Quantity')?>"><?=(int)$one['used']?>/<?=(int)$one['total']?></td>
                     <?endif?>
-                    <td><?=$one['percent']?>%</td>
+                    <td data-th="<?=__('Checked')?>"><?=$one['percent']?>%</td>
                 </tr>
             <?endforeach; ?>
             </tbody>

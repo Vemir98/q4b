@@ -39,7 +39,8 @@
             <div class="form-group form_row">
                 <input type="submit" class="q4-form-input text-center light_blue_btn q4_form_submit" value="<?=__('Login')?>">
             </div>
-            <a class="login_hint" href="<?=URL::site('/forgot_password')?>"><?=__('forgot your password?')?></a>
+            <a class="login_hint" href="<?=URL::site('/forgot_password')?>"><?=__('forgot your password?')?></a><br>
+            <a class="login_hint" href="<?=URL::site('/demo_login')?>"><?=__('demo user')?></a>
         </form>
     </div>
 

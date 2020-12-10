@@ -12,21 +12,37 @@ foreach ($stats[$type]['statuses'] as $key => $val){
     $summ+=$val;
 }
 foreach ($stats[$type]['statuses'] as $key => $val){
-    if( !in_array($key,Enum_QualityControlStatus::toArray())) continue;
+    if( !in_array($key,Enum_QualityControlStatus::toArray()) AND $key !== QualityReport::STATUS_EXISTING_AND_FOR_REPAIR) continue;
+    if($key == QualityReport::STATUS_EXISTING_AND_FOR_REPAIR AND $val > 0){
+        $offset =  '"offset-r": "6%","background-image": "PATTERN_BACKWARD_DIAGONAL",';
+        $squareBg = '"background-image": "PATTERN_BACKWARD_DIAGONAL",';
+    }
+    else{
+        if($key == QualityReport::STATUS_EXISTING_AND_FOR_REPAIR){
+            $offset =  '"background-image": "PATTERN_BACKWARD_DIAGONAL",';
+            $squareBg = '"background-image": "PATTERN_BACKWARD_DIAGONAL",';
+        }else{
+            $offset = $squareBg = '';
+        }
+
+    }
     $data[] = '{
                                 "values" : ['.$val.'],
                                 "target":"graph",
                                 "text":"'.__($key).'",
+                                 '.$offset.'
                                 "backgroundColor": "'.$stats['colors'][$key].'",
                                 "legendText": "'.($summ ? '%t %node-percent-value%' : '%t 0%').'",
                                 "legendMarker":{
                                     "type": "square",
                                     "size": 10,
+                                    '.$squareBg.'
                                     "backgroundColor":"'.$stats['colors'][$key].'",
-                                    '.(Language::getCurrent()->direction == 'rtl'&& !$isPhantom ? '"offsetX": 35' : '').'
+                                    '.(Language::getCurrent()->direction == 'rtl' ? '"offsetX": 35' : '').'
                                 },
                                 "tooltip":{
                                     "backgroundColor": "'.$stats['colors'][$key].'",
+                                    "text": "'.(Language::getCurrent()->direction == 'rtl' ? strrev($val) : $val).'",
                                 "rtl": '.(Language::getCurrent()->direction == 'rtl' ? 1 : 0).'
                                 }
                             }';
@@ -34,6 +50,7 @@ foreach ($stats[$type]['statuses'] as $key => $val){
 ?>
 <script>
     $(document).ready(function(){
+        zingchart.loadModules('patterns');
         zingchart.render({
             id : '<?=$id?>',
             data : {
@@ -77,6 +94,7 @@ foreach ($stats[$type]['statuses'] as $key => $val){
                     {
                         "type": "pie3d",
                         "height": "200px",
+                        //"width": "575px",
                         "legend":{
                             "text":"%t<br>",
                             "verticalAlign": "middle",
@@ -118,14 +136,14 @@ foreach ($stats[$type]['statuses'] as $key => $val){
                             }
                         },
                         "scale":{
-                            "sizeFactor": 1
+                            "sizeFactor": 0.8
                         },
                         "series" : [
                             <?=implode(",\n",$data)?>
                         ]
                     }
                 ]
-            },
+            }
         });
     });
 

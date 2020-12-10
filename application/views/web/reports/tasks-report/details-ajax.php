@@ -22,10 +22,10 @@
             <tbody>
             <?foreach ($items as $item):?>
                 <tr>
-                    <td><?=$item['number']?></td>
-                    <td><?=$item['taskId']?></td>
-                    <td><?=nl2br($item['desc'])?></td>
-                    <td><?=implode(', ',$item['users'])?></td>
+                    <td  data-th="<?=__('Place')?>"><?=$item['number']?></td>
+                    <td  data-th="<?=__('Task ID')?>"><?=$item['taskId']?></td>
+                    <td  data-th="<?=__('Task description')?>"><?=nl2br($item['desc'])?></td>
+                    <td  data-th="<?=__('Users')?>"><?=implode(', ',$item['users'])?></td>
                 </tr>
             <?endforeach; ?>
             </tbody>

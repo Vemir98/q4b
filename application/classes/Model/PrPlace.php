@@ -43,7 +43,7 @@ class Model_PrPlace extends ORM
 
     public function cloneIntoFloor(Model_PrFloor $floor){
         $place = ORM::factory('PrPlace');
-        $place->values($this->as_array(),['name','icon','type','number','ordering']);
+        $place->values($this->as_array(),['name','icon','type','number','ordering','custom_number']);
         $place->project_id = $floor->project_id;
         $place->object_id = $floor->object_id;
         $place->floor_id = $floor->id;

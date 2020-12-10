@@ -11,3 +11,10 @@ Route::set('apiJsonV1.login','api/json/v1/login')
         'action' => 'login',
         'directory' => 'Api'
     ]);
+
+Route::set('apiJsonV1.demo.login','api/json/v1/demo_login')
+    ->defaults([
+        'controller' => 'auth',
+        'action' => 'demo_login',
+        'directory' => 'Api'
+    ]);

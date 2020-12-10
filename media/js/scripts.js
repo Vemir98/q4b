@@ -1,5 +1,6 @@
 /*! bootstrap-progressbar v0.9.0 | Copyright (c) 2012-2015 Stephan Groß | MIT license | http://www.minddust.com */ ! function(t) {
     "use strict";
+    
     var e = function(n, s) {
         this.$element = t(n), this.options = t.extend({}, e.defaults, s)
     };
@@ -1391,15 +1392,20 @@ $(document).ready(function() {
                 }
             });
             var result = texts.join(', ');
-            self.closest('.advanced-reports').find('.obj-floors .over-select').removeClass('disabled-input');
-            var submit = $(document).find('.q4_form_submit');
-            submit.removeClass('disabled-input')
-            submit.removeClass('disabled-gray-button')
-            if (result.length <= 0) {
-                result = "<span class='select-def-text'>" + __('Please select') + "</span>";
-                self.closest('.advanced-reports').find('.obj-floors .over-select').addClass('disabled-input');
-                $(document).find('.generate-reports .q4_form_submit').addClass('disabled-input')
+            //меняю идиотический код
+            var fuckIt = self.closest('.multi-select-box.pr-stage');
+            if(fuckIt.length-1){
+                self.closest('.advanced-reports').find('.obj-floors .over-select').removeClass('disabled-input');
+                var submit = $(document).find('.q4_form_submit');
+                submit.removeClass('disabled-input')
+                submit.removeClass('disabled-gray-button')
+                if (result.length <= 0) {
+                    result = "<span class='select-def-text'>" + __('Please select') + "</span>";
+                    self.closest('.advanced-reports').find('.obj-floors .over-select').addClass('disabled-input');
+                    $(document).find('.generate-reports .q4_form_submit').addClass('disabled-input')
+                }
             }
+
             if (self.parents().hasClass('bottom-hidden-select')) {
                 $('#' + tableID).find('[data-row-id="' + tableRowId + '"]').find('.select-imitation-title').html(result);
             } else {
@@ -1691,13 +1697,18 @@ $(document).ready(function() {
             },
         });
     });
-    $(document).on('click', '.qc-to-print-btn', function() {
+    $(document).on('click', '.qc-to-print-btn', function(e) {
+        e.preventDefault();
+        if($('body > #for-print').length < 1){
+            $('body').append('<div id="for-print"></div>');
+        }else{
+            $('#for-print').html('');
+        }
         var printable = $(document).find('.print-quality-control');
+        $('#for-print').html(printable);
         $('.modal').modal('hide');
         setTimeout(function() {
-            $('body').append(printable);
             window.print();
-            $('body>div.print-quality-control').remove();
         }, 400);
     });
     $(document).on('change', '.qc-status', function() {

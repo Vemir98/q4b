@@ -86,11 +86,17 @@ class Controller_Reports extends HDVP_Controller_Template
             $this->_checkPermOrFail('read');
         }
 
-        $data = Arr::extract(Request::current()->query(),['company','project','crafts','statuses','from','to','approval_status']);
+        $data = Arr::extract(Request::current()->query(),['company','project','crafts','statuses','from','to','approval_status','sort_by_crafts','del_rep_id','condition_level','condition_list']);
         $data['company'] = (int)$data['company'];
         $data['project'] = (int)$data['project'];
 
         $advancedData = Arr::extract(Request::current()->query(),['object_id','floors','place_type','place_number','custom_number','space','project_stage','profession_id','advanced']);
+
+        if(!empty($advancedData['project_stage'])){
+            foreach ($advancedData['project_stage'] as $key => $ps){
+                $advancedData['project_stage'][$key] = '"'.$ps.'"';
+            }
+        }
 
         $this->company = ORM::factory('Company',$data['company']);
         if(empty($data['company']) OR !$this->company->loaded()){
@@ -168,6 +174,14 @@ class Controller_Reports extends HDVP_Controller_Template
         });
         $qcs->and_where('qualitycontrol.craft_id', 'IN', DB::expr('('.implode(',',$data['crafts']).')'));
 
+        if(!empty($data['condition_level']) AND $data['condition_level'] != 'all'){
+            $qcs->and_where('qualitycontrol.severity_level', '=', $data['condition_level']);
+        }
+
+        if(!empty($data['condition_list']) AND $data['condition_list'] != 'all'){
+            $qcs->and_where('qualitycontrol.condition_list', '=', $data['condition_list']);
+        }
+
         $floorsNeedJoin = true;
         try{
             $data['from'] = DateTime::createFromFormat('d/m/Y H:i',$data['from'].' 00:00')->getTimestamp();
@@ -175,7 +189,7 @@ class Controller_Reports extends HDVP_Controller_Template
         }catch(Exception $e){
             throw new HTTP_Exception_404();
         }
-
+//craft
         if(!empty($advancedData['advanced'])) {
 
             if (!empty($advancedData['object_id'])) {
@@ -218,9 +232,9 @@ class Controller_Reports extends HDVP_Controller_Template
 
 
             if(!empty($advancedData['project_stage'])){
-                if($advancedData['project_stage'] != 'all'){
-                    $qcs->and_where('project_stage', '=', $advancedData['project_stage']);
-                    $filteredCraftsListQuery['and'][] = 'AND qc.project_stage ="'.$advancedData['project_stage'].'"';
+                if(count($advancedData['project_stage']) != count(Enum_ProjectStage::toArray()) AND count($advancedData['project_stage'])){
+                    $qcs->and_where('project_stage', 'IN', DB::expr('('.implode(',',$advancedData['project_stage']).')'));
+                    $filteredCraftsListQuery['and'][] = 'AND qc.project_stage IN ('.implode(',',$advancedData['project_stage']).')';
                 }
             }
 
@@ -246,6 +260,19 @@ AND (qc.due_date BETWEEN '.$data['from'].' AND '.$data['to'].') AND cc.status="'
 AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: null).' GROUP BY qc.craft_id
 ')->execute()->as_array('id');
         }else{
+            if(!empty($data['del_rep_id'])){
+                $qcs->and_where('qualitycontrol.del_rep_id','=',(int)$data['del_rep_id']);
+                $filteredCraftsListQuery['and'][] = 'AND qc.del_rep_id ="'.(int)$data['del_rep_id'].'"';
+            }
+
+            if(!empty($data['condition_level']) AND $data['condition_level'] != 'all'){
+                $filteredCraftsListQuery['and'][] = 'AND qc.severity_level ="'.$data['condition_level'].'"';
+            }
+
+            if(!empty($data['condition_list']) AND $data['condition_list'] != 'all'){
+                $filteredCraftsListQuery['and'][] = 'AND qc.condition_list ="'.$data['condition_list'].'"';
+            }
+
             if(!empty($filteredCraftsListQuery['and'])){
                 $filteredCraftsListQuery['and'] = implode(' ',$filteredCraftsListQuery['and']);
             }
@@ -260,8 +287,10 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         $qcs->on('qualitycontrol.place_id','=','pr_places.id');
         //$filteredCraftsListQuery['join'][] = 'INNER JOIN pr_places pp ON qc.place_id = pp.id';
 
-
-
+        if($data['sort_by_crafts']){
+            $qcs->join('cmp_crafts','INNER');//---
+            $qcs->on('qualitycontrol.craft_id','=','cmp_crafts.id');//---
+        }
 
         $qcs->and_where('qualitycontrol.due_date','>=',$data['from']);
         $qcs->and_where('qualitycontrol.due_date','<=',$data['to']);
@@ -271,6 +300,9 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
             'current_page'      => ['source' => 'query_string', 'key'    => 'page'],
         ];
 
+        if($data['sort_by_crafts']) {
+            $qcs->order_by('cmp_crafts.name', 'ASC');//--1
+        }
         $qcs->order_by('qualitycontrol.project_id','ASC');
         $qcs->order_by('qualitycontrol.object_id','ASC');
         $qcs->order_by('pr_floors.number','ASC');
@@ -374,14 +406,22 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                             $filteredCraftsParams[$k][$k1]->and_where('qualitycontrol.space_id','=',$advancedData['space']);
                         }
                         if(!empty($advancedData['project_stage'])){
-                            if($advancedData['project_stage'] != 'all'){
-                                $filteredCraftsParams[$k][$k1]->and_where('project_stage', '=', $advancedData['project_stage']);
+                            if(count($advancedData['project_stage']) != count(Enum_ProjectStage::toArray()) AND count($advancedData['project_stage'])){
+                                $filteredCraftsParams[$k][$k1]->and_where('project_stage', 'IN', DB::expr('('.implode(',',$advancedData['project_stage']).')'));
                             }
                         }
                         if($advancedData['profession_id'] != 'all'){
                             $filteredCraftsParams[$k][$k1]->and_where('profession_id', '=', (int)$advancedData['profession_id']);
                         }
                     }
+                    if(!empty($data['condition_level']) AND $data['condition_level'] != 'all'){
+                        $filteredCraftsParams[$k][$k1]->and_where('qualitycontrol.severity_level', '=', $data['condition_level']);
+                    }
+
+                    if(!empty($data['condition_list']) AND $data['condition_list'] != 'all'){
+                        $filteredCraftsParams[$k][$k1]->and_where('qualitycontrol.condition_list', '=', $data['condition_list']);
+                    }
+
                     if($floorsNeedJoin){
                         $filteredCraftsParams[$k][$k1]->join('pr_floors','INNER');
                         $filteredCraftsParams[$k][$k1]->on('qualitycontrol.floor_id','=','pr_floors.id');
@@ -444,7 +484,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                     $sendReportsEmailUrl = URL::site('reports/send_reports/'.$this->project->id.'/'.Session::instance()->get('token')->token);
                 else
                     $sendReportsEmailUrl = null;
-                $this->template->content = View::make('reports/generated',['qcs' => $qcs, 'pagination' => $result['pagination'],'crafts' => $data['crafts'],'craftsParams' => $craftsParams,'filteredCraftsParams' => $filteredCraftsParams, 'searchForm' => $this->searchForm(true),'sendReportsEmailUrl'=> $sendReportsEmailUrl,'craftsList' => $craftsList,'filteredCraftsList' => $filteredCraftsList]);
+                $this->template->content = View::make('reports/generated',['qcs' => $qcs, 'pagination' => $result['pagination'],'crafts' => $data['crafts'],'craftsParams' => $craftsParams,'filteredCraftsParams' => $filteredCraftsParams, 'searchForm' => $this->searchForm(true),'sendReportsEmailUrl'=> $sendReportsEmailUrl,'craftsList' => $craftsList,'filteredCraftsList' => $filteredCraftsList, 'del_rep_id' => (int)$data['del_rep_id']]);
             }
             else{
                 $this->template = View::make('reports/guest-content',['qcs' => $qcs, 'pagination' => $result['pagination'],'crafts' => $data['crafts'],'craftsParams' => $craftsParams,'filteredCraftsParams' => $filteredCraftsParams,'craftsList' => $craftsList,'filteredCraftsList' => $filteredCraftsList, 'data' => json_decode($tparams,true)]);
@@ -554,8 +594,8 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                 if(!in_array($data['approval_status'],Enum_QualityControlApproveStatus::toArray())){
                     throw new HDVP_Exception('Incorrect approval status');
                 }
-                if($data['status'] != Enum_QualityControlStatus::Invalid){
-                    $data['severity_level']= $data['condition_list'] = null;
+                if(($data['status'] != Enum_QualityControlStatus::Invalid) and ($data['status'] != Enum_QualityControlStatus::Repaired)){
+                    $data['severity_level'] = $data['condition_list'] = null;
                 }
 
                 $data['due_date'] = DateTime::createFromFormat('d/m/Y',$data['due_date'])->getTimestamp();
@@ -637,6 +677,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                 $scopes[] = $item->scope;
                 $plans[$item->id] = $item;
             }
+
             $this->setResponseData('modal',View::make('reports/quality-control',
                 [
                     'item' => $qc,
@@ -820,8 +861,10 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                         'message' => trim(strip_tags(Arr::get($this->post(),'message'))),
                         'link' => URL::site('/reports/guest_access/'.$token->token,'https'),
                         'user' => ['name' => $this->_user->name, 'email' => $this->_user->email],
+                        'image' => ($project->image_id) ? ("https://qforb.net/" .$project->main_image->originalFilePath()) : null,
                         'view' => 'emails/report/guest-access',
                         'lang' => Language::getCurrent()->iso2,
+                        'expires' => \Carbon\Carbon::createFromTimestamp($token->expires)->format('d/m/Y H:i')
                     ],\Carbon\Carbon::now()->addSeconds(30)->timestamp);
                 }else{
                     $this->_setErrors('Empty Mail list');
@@ -852,8 +895,12 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
 //                $users = $users->find_all();
 //            }
             $autocompleteMailiList = [];
+            $companyAdmins = [];
             foreach ($this->project->company->users->find_all() as $usr){
                 $autocompleteMailiList[$usr->email] = $usr->email;
+                if($usr->getRelevantRole('name') == 'company_admin'){
+                    $companyAdmins[] = $usr;
+                }
             }
 
             $role = ORM::factory('Role',['outspread' => Enum_RoleOutspread::Super]);
@@ -861,7 +908,12 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                     $autocompleteMailiList[$usr->email] = $usr->email;
                 }
 
-            $this->setResponseData('modal',View::make('reports/send-reports',['items' => $this->project->users->find_all(),'autocompleteMailList' => $autocompleteMailiList,'secure_tkn' => AesCtr::encrypt($tok,$tok,192)]));
+
+            $items = $this->project->users->find_all()->as_array() + $companyAdmins;
+
+
+
+            $this->setResponseData('modal',View::make('reports/send-reports',['items' => $items,'autocompleteMailList' => $autocompleteMailiList,'secure_tkn' => AesCtr::encrypt($tok,$tok,192)]));
         }
     }
 
@@ -940,23 +992,23 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
 
         $as->getDefaultStyle()->getFont()->setSize(10);
         $as->getColumnDimension('A')->setWidth(10);
-        $as->getColumnDimension('B')->setWidth(40);
+        $as->getColumnDimension('B')->setWidth(80);
         $as->getColumnDimension('C')->setWidth(200);
         $as->getColumnDimension('D')->setWidth(13);
         $as->getColumnDimension('E')->setWidth(40);
-        $as->getColumnDimension('F')->setWidth(80);
-        $as->getColumnDimension('G')->setWidth(14);
-        $as->getColumnDimension('H')->setWidth(8);
-        $as->getColumnDimension('I')->setWidth(20);
+        $as->getColumnDimension('F')->setWidth(14);
+        $as->getColumnDimension('G')->setWidth(8);
+        $as->getColumnDimension('H')->setWidth(20);
+        $as->getColumnDimension('I')->setWidth(40);
         $as->getColumnDimension('J')->setWidth(40);
 
 
         $sh = [
-            1 => [__('Id'),__('Price'),__('Description'),__('Created Date'),__('Status'), __('Crafts'), __('Element number'), __('Element type'), __('Floor'), __('Structure'), __('Project')],
+            1 => [__('Id'), __('Crafts'),__('Description'),__('Created Date'),__('Status'), __('Element number'), __('Element type'), __('Floor'), __('Structure'), __('Project'),__('Price')],
         ];
         $ws->set_data($sh, false);
         foreach ($qcs as $item){
-            $sh [] = [$item->id,null,html_entity_decode($item->description), date('d/m/Y',$item->created_at), __($item->status), $item->craft->name, $item->place->custom_number, __($item->place->type),$item->floor->number, $item->object->name, $item->project->name];
+            $sh [] = [$item->id,$item->craft->name,html_entity_decode($item->description), date('d/m/Y',$item->created_at), __($item->status), $item->place->custom_number, __($item->place->type),$item->floor->number, $item->object->name, $item->project->name, null];
         }
 
         $ws->set_data($sh, false);
@@ -964,6 +1016,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         $last_letter = PHPExcel_Cell::stringFromColumnIndex(count($sh[1])-1);
         $header_range = "{$first_letter}1:{$last_letter}1";
         $ws->get_active_sheet()->getStyle($header_range)->getFont()->setSize(12)->setBold(true);
+        $ws->rtl(Language::getCurrent()->direction == 'rtl');
         $ws->send(['name'=>'report', 'format'=>'Excel5']);
     }
 
@@ -1199,5 +1252,6 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
             echo View::make($viewInfo['path'],$output);
         }
     }
+
 
 }

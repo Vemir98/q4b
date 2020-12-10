@@ -175,19 +175,19 @@
             </div>
 
         </li>
-        <li class="tab_panel">
-            <div class="panel_header">
-                <span class="sign"><i class="panel_header_icon q4bikon-plus"></i></span><h2><?=__('Standards')?></h2>
-            </div>
-            <div class="panel_content">
-                <?=View::make($_VIEWPATH.'standards/form',
-                    ['action' => URL::site('companies/update_standards/'.$company->id),
-                        'items' => $standards,
-                        'users' => $users,
-                        'secure_tkn' => AesCtr::encrypt($company->id.Text::random('alpha'),$company->id,192)
-                    ])?>
-            </div>
-        </li>
+<!--        <li class="tab_panel">-->
+<!--            <div class="panel_header">-->
+<!--                <span class="sign"><i class="panel_header_icon q4bikon-plus"></i></span><h2>--><?//=__('Standards')?><!--</h2>-->
+<!--            </div>-->
+<!--            <div class="panel_content">-->
+<!--                --><?//=View::make($_VIEWPATH.'standards/form',
+//                    ['action' => URL::site('companies/update_standards/'.$company->id),
+//                        'items' => $standards,
+//                        'users' => $users,
+//                        'secure_tkn' => AesCtr::encrypt($company->id.Text::random('alpha'),$company->id,192)
+//                    ])?>
+<!--            </div>-->
+<!--        </li>-->
         <li class="tab_panel">
             <div class="panel_header">
                 <span class="sign"><i class="panel_header_icon q4bikon-plus"></i></span><h2><?=__('Links to other systems')?></h2>
@@ -202,3 +202,44 @@
         </li>
     </ul>
 </section>
+<section id="instructions" class="new-styles">
+    <ul>
+        <li class="tab_panel">
+            <div class="panel_header">
+                <span class="sign"><i class="panel_header_icon q4bikon-plus"></i></span><h2><?=__('Instructions')?></h2>
+            </div>
+            <div class="panel_content">
+                <div class="panel_body container-fluid">
+                    <universal-certification
+                            items-url="<?=URL::site('/entities/instructions/'. $company->id)?>"
+                            delete-url="<?=URL::site('/certifications/delete_regulation')?>"
+                            save-url="<?=URL::site('/certifications/save_instructions/'.$company->id)?>"
+                            company-id="<?=$company->id?>"
+                            companies-url="<?=URL::site('/entities/companies?fields=id,name')?>"
+                            copy-url="<?=URL::site('/certifications/copy_instructions')?>"
+                            select-all-txt="<?=__('select all')?>"
+                            desc-txt="<?=__('Description1')?>"
+                            save-txt="<?=__('Save')?>"
+                            file-txt="<?=__('File')?>"
+                            upload-date-txt="<?=__('Upload date')?>"
+                            status-txt="<?=__('Status')?>"
+                            more-txt="<?=__('More')?>"
+                            delete-txt="<?=__('Delete')?>"
+                            copy-txt="<?=__('Copy to')?>"
+                            copy-btn-txt="<?=__('Copy')?>"
+                            select-company-txt="<?=__('Select Company')?>"
+                            select-project-txt="<?=__('Select project')?>"
+                            v-bind:status-options="[{val: '<?=Enum_CertificationsApprovalStatus::Waiting?>',label: '<?=__(Enum_CertificationsApprovalStatus::Waiting)?>'},{val: '<?=Enum_CertificationsApprovalStatus::Approved?>',label: '<?=__(Enum_CertificationsApprovalStatus::Approved)?>'}]"
+
+                    />
+                </div>
+
+            </div>
+        </li>
+    </ul>
+</section>
+<script>
+    var regulations = new Vue({
+        el: '#instructions',
+    })
+</script>

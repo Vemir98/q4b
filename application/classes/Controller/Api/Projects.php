@@ -253,7 +253,8 @@ class Controller_Api_Projects extends HDVP_Controller_API
                         $floorsPlaces[$s['place_id']]['spaces'][] = [
                             'id' => $s['id'],
                             'description' => $s['desc'],
-                            'type' => $s['type']
+                            'type' => $s['type'],
+                            'typeId' => $s['typeId']
                         ];
                     }
                 }
@@ -452,9 +453,14 @@ class Controller_Api_Projects extends HDVP_Controller_API
                 'condition_list',
                 'plan_id',
                 'message',
-                'unique_token'
+                'unique_token',
+                'del_rep_id'
             ]);
-
+        if(empty($clientData['del_rep_id']) OR !(int)$clientData['del_rep_id']){
+            unset($clientData['del_rep_id']);
+        }else{
+            $clientData['del_rep_id'] = (int) $clientData['del_rep_id'];
+        }
         $clientData['unique_token'] = (int) $clientData['unique_token'];
         if($clientData['unique_token']){
             $tmpQc = ORM::factory('QualityControl',['unique_token' => $clientData['unique_token']]);
@@ -693,75 +699,6 @@ class Controller_Api_Projects extends HDVP_Controller_API
         return $output;
     }
 
-    private function _pFArr(){
-        $output = [];
-        foreach ($_FILES as $key => $data){
-            if(is_array($data['name'])){
-                foreach ($data['name'] as $key1 => $val1){
-                    if(is_array($val1)){
-                        foreach ($val1 as $key2 => $val2){
-                            if(is_array($val2)) throw new HTTP_Exception_404;
-                            $output[$this->_fkp($key)][$this->_fkp($key1)][$this->_fkp($key2)] = [
-                                'name' => $data['name'][$key1][$key2],
-                                'type' => $data['type'][$key1][$key2],
-                                'tmp_name' => $data['tmp_name'][$key1][$key2],
-                                'error' => $data['error'][$key1][$key2],
-                                'size' => $data['size'][$key1][$key2]
-                            ];
-                        }
-                    }else{
-                        $output[$this->_fkp($key)][$this->_fkp($key1)] = [
-                            'name' => $data['name'][$key1],
-                            'type' => $data['type'][$key1],
-                            'tmp_name' => $data['tmp_name'][$key1],
-                            'error' => $data['error'][$key1],
-                            'size' => $data['size'][$key1]
-                        ];
-                    }
-                }
-            }
-            else{
-                $output[$this->_fkp($key)][0] = [
-                    'name' => $data['name'],
-                    'type' => $data['type'],
-                    'tmp_name' => $data['tmp_name'],
-                    'error' => $data['error'],
-                    'size' => $data['size']
-                ];
-            }
-
-        }
-        return $output;
-    }
-
-    private function _fkp($key){
-        $key = trim($key);
-        if(preg_match('~^\+~',$key)){
-            $key = str_replace('+','new_',$key);
-        }
-        return $key;
-    }
-    public function saveBase64Image($base64String, $name, $path,$quality = 50){
-        $data = explode( ',', $base64String);
-        if(count($data) != 2 OR empty($name)){
-            throw new HDVP_Exception('Operation Error');
-        }
-
-        $img = new JBZoo\Image\Image($base64String);
-        $name = uniqid().'.jpg';
-        $img->saveAs(rtrim($path,DS).DS.$name,$quality);
-
-        $f = ORM::factory('Image');
-        $f->name = $name;
-        $f->original_name = $name;
-        $f->mime = 'image/jpeg';
-        $f->ext = 'jpg';
-        $f->path = str_replace(DOCROOT,'',rtrim($path,DS));
-        $f->token = md5($name).base_convert(microtime(false), 10, 36);
-        $f->status = Enum_FileStatus::Active;
-        $f->save();
-        return $f;
-    }
 
     public function action_invalid_qc(){
         $id = (int)$this->request->param('id');
@@ -890,5 +827,37 @@ class Controller_Api_Projects extends HDVP_Controller_API
         }
         return $output;
 
+    }
+
+    public function action_create_space(){
+        $projectId = (int)$this->request->param('id');
+        $project = ORM::factory('Project',$projectId);
+        if( ! $project->loaded() OR !$this->_user->canUseProject($project)){
+            throw new HTTP_Exception_404;
+        }
+        $data = Arr::extract($_POST,['place_id','desc','type_id']);
+        $place = $project->places->where('id','=',$data['place_id'])->find();
+        if( ! $place->loaded()){
+            throw new HTTP_Exception_404;
+        }
+        try{
+            $space = ORM::factory('PrSpace');
+            $space->values($data);
+            $space->save();
+            $this->_responseData['id'] = $space->pk();
+            Database::instance()->commit();
+        }catch (ORM_Validation_Exception $e){
+            Database::instance()->rollback();
+            //throw API_Exception::factory(500,'Incorrect data');
+            throw API_Exception::factory(500,$e->errors('validation'));
+        }catch (HDVP_Exception $e){
+            Database::instance()->rollback();
+            //throw API_Exception::factory(500,'Incorrect data');
+            throw API_Exception::factory(500,$e->getMessage());
+        }catch (Exception $e){
+            Database::instance()->rollback();
+            //throw API_Exception::factory(500,'Operation Error');
+            throw API_Exception::factory(500,$e->getMessage());
+        }
     }
 }

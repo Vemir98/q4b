@@ -16,7 +16,7 @@ class Job_Plan_SendPlansEmail
             $mail->to($email);
         }
 
-        $mail->from('info@qforb.net');
+        $mail->from('info@qforb.net',$this->args['user']['name']);
         $mail->subject('Project #'.$this->args['item'].' Plans');
         $mail->reply($this->args['user']['email'],$this->args['user']['name']);
         View::set_global('_SITE_URL','https://qforb.net');

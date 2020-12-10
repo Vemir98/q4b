@@ -178,13 +178,13 @@ class Kohana_Event extends Event_Core
 
         $event->set_signal($queue->get_signal());
         $event->set_state(Event_Instance::STATE_ACTIVE);
-
-        if (count($vars) === 0)
+        if (($vars instanceof Countable) && count($vars) === 0)
         {
             $vars = [ & $event ];
         }
         else
         {
+            $vars = $vars ? $vars :[];
             $vars = array_merge([ & $event ], $vars);
         }
 

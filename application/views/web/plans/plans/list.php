@@ -112,25 +112,46 @@ $icons = [
                     <div class="col-md-3 rtl-float-right">
                         <label class="table_label"><?=__('Profession')?></label>
                         <div class="relative form-group">
-                            <div class="select-wrapper">
-                                <i class="q4bikon-arrow_bottom"></i>
-                                <select data-name="profession" class="q4-select q4-form-input select-icon-pd select-profession">
-    <!--                                <option value="0" selected="selected">--><?//=__('All')?><!-- </option>-->
-    <!--                                <option value="0">--><?//=__('All')?><!-- </option>-->
-
+                            <input type="text" class="table_input" value="" id="prof" style="text-indent: 25px;"/>
+                            <input type="hidden" data-name="profession" name="profession" class="select-profession">
+                                <i class="input_icon q4bikon-position"></i>
+                                <script>
+                                    var profs = [
+                                        {data:0, value:'<?=__('all')?>'},
                                     <?if(isset($professions)):?>
-                                        <?foreach ($professions as $profession): ?>
-                                            <? if (current($professions) == 1): ?>
-                                                <option value="<?=$profession->id?>" selected><?=$profession->name?></option>
-                                            <? else: ?>
-                                                <option value="<?=$profession->id?>"><?=$profession->name?></option>
-                                            <? endif ?>
-                                        <?endforeach ?>
+                                    <?foreach ($professions as $profession): ?>
+                                        {data:'<?=$profession->id?>',value:'<?=trim($profession->name)?>'},
+                                    <?endforeach ?>
                                     <?endif?>
+                                    ];
+                                    $(document).ready(function(){
+                                        $('#prof').autocomplete({
+                                            lookup: profs,
+                                            minChars: 0,
+                                            onSelect: function (suggestion) {
+                                                if(suggestion.data) {
+                                                    $('input[name="profession"]').val(suggestion.data);
+                                                    $('#prof').blur();
+                                                    $('input[name="profession"]').change();
+                                                }else{
+                                                    $('input[name="profession"]').val(suggestion.data);
+                                                    $('input[name="profession"]').change();
+                                                }
+                                            }
+                                        });
 
-                                </select>
-                            </div>
-                            <i class="input_icon q4bikon-position"></i>
+                                        $('#prof').on('focus',function(){
+                                            if($(this).val().length){
+                                                $(this).val('').blur();
+                                                $('input[name="profession"]').val('0');
+                                                var that = $(this);
+                                                setTimeout(function () {
+                                                    that.focus();
+                                                },200);
+                                            }
+                                        });
+                                    });
+                                </script>
                         </div>
                     </div>
                     <div class="col-md-3 rtl-float-right multi-select-col">

@@ -27,6 +27,12 @@ class Controller_Settings extends HDVP_Controller_Template
 
     public function action_index(){
         //(new Job_Settings_ProcessNewData())->perform();
+        VueJs::instance()->addComponent('tabs');
+        VueJs::instance()->addComponent('reserve-materials');
+        VueJs::instance()->addComponent('transferable-items');
+        VueJs::instance()->addComponent('texts');
+        VueJs::instance()->addComponent('certifications/universal-certification');
+        VueJs::instance()->includeMultiselect();
         $this->template->content = View::make('settings/update',
             [
                 'crafts' => ORM::factory('Craft')->order_by('id','DESC')->find_all(),

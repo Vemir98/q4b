@@ -16,4 +16,10 @@ class Enum_ProjectStage extends Enum
     const Stage6 = 'pr_stage_6';
     const Stage7 = 'pr_stage_7';
     const Stage8 = 'pr_stage_8';
+    const Stage9 = 'pr_stage_9';
+    const Stage10 = 'pr_stage_10';
+    const Stage11 = 'pr_stage_11';
+    const Stage12 = 'pr_stage_12';
+    const Stage13 = 'pr_stage_13';
+    const Stage14 = 'pr_stage_14';
 }

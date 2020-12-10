@@ -71,8 +71,8 @@ $(document).ready(function() {
 
         }
     });
-
     var currentPage = Q4U.pages.updatePage;
+
 
 
     $(document).on('click', currentPage.struct.addEditSpace.addSpaceSelector, function(e) {

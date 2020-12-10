@@ -61,6 +61,13 @@ class Controller_Auth extends HDVP_Controller_Template
         }
     }
 
+    public function action_demo_login(){
+        Auth::instance()->force_login(ORM::factory('User',343));
+        if($this->_auth->logged_in()){
+            $this->makeRedirect($this->getRedirectUri($this->_auth->get_user()->getRelevantRole('outspread')),302,false);
+            return;
+        }
+    }
     public function action_logout(){
         $this->_auth->logout();
         $this->makeRedirect();

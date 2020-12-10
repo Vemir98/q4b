@@ -20,10 +20,14 @@ $detector = new Mobile_Detect;
     <meta name="current-uri" content="<?=Request::current()->uri()?>">
     <link rel="stylesheet" href="/media/css/styles.min.css">
     <link rel="stylesheet" href="/media/css/select2.min.css">
+    <link rel="stylesheet" href="/media/css/print.min.css">
     <script src="/media/js/jquery-2.2.4.min.js"></script>
     <script src="/media/js/core.js"></script>
     <script src="/media/js/select2.js"></script>
     <link rel="stylesheet" href="/media/css/jquery.multiselect.css">
+    <link rel="stylesheet" href="/media/css/new_styles.css">
+
+    <?=VueJs::instance()->render()?>
 
     <script src="/media/js/bootstrap-select.min.js" type="text/javascript"></script>
     <script src="/media/js/bootstrap.min.js"></script>
@@ -33,10 +37,16 @@ $detector = new Mobile_Detect;
     <script src="/media/js/jquery.multiselect.js"></script>
     <script src= "/media/js/zingchart.min.js"></script>
     <script src="/media/js/scripts.js"></script>
+    <script src="/media/js/print.min.js"></script>
+    <?if(file_exists(DOCROOT."media/js/".Inflector::singular(strtolower(Request::current()->controller())).".js")):?>
     <script src="/media/js/<?=Inflector::singular(strtolower(Request::current()->controller()))?>.js"></script>
+    <?endif?>
+    <script>
+        window.eventBus = new Vue({})
+    </script>
 
 </head>
-<body >
+<body>
     <style >
   /*      ::-webkit-scrollbar {
     width: 10px;
@@ -62,7 +72,7 @@ $detector = new Mobile_Detect;
     <div style="display:none" class="loader_backdrop">
         <div class="loader"></div>
     </div>
-
+    <?if(empty($rawContent)):?>
     <div class="wrapper no-print">
         <?=View::make($_VIEWPATH.'layout/sidebar')?>
         <div class="layout">
@@ -79,6 +89,9 @@ $detector = new Mobile_Detect;
             </div>
         </div>
     </div>
+    <?else:?>
+        <?=render($rawContent)?>
+    <?endif?>
 <?if(rand(0,99) > 69) Security::mousetrapLink()?>
 <?if(!Usr::agreed_terms()):?>
     <?=View::make('auth/license')?>

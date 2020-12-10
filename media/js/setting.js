@@ -268,9 +268,10 @@ $(document).ready(function() {
     $(document).on('click', currentPage.addSpaceTypeSelector, function(e) {
         e.preventDefault();
         var Id = Q4U.timestamp();
-
+        console.log(123);
         var html = currentPage.spaceTypeMarkup.replace(/%s/g, '+' + Id); //space-type-data
-        $(document).find(currentPage.spaceTypeFormClass + ' tbody .mCSB_container').prepend(html);
+        console.log(html);
+        $(document).find(currentPage.spaceTypeFormClass + ' tbody.spaces-tbody').prepend(html);
 
     });
 

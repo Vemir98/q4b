@@ -963,14 +963,17 @@ class Controller_Plans extends HDVP_Controller_Template
         }else{
             $object = $this->project->objects->where('id','=',$plan->object_id)->find();
             $places = $object->places->find_all();
+
+            $trackingItems = $plan->getScopeEditionsTrackings();
+
             $this->setResponseData('modal',View::make('plans/plans/update_new',[
                 'professions' => $this->company->professions->where('status','=',Enum_Status::Enabled)->with('crafts')->find_all(),
                 'action' => URL::site('plans/update_plan/'.$this->project->id.'/'.$plan->id),
                 'item' => $plan,
                 'places' => $places,
-                'trackingItems' => $plan->trackings->order_by('created_at','DESC')->find_all()
+                'trackingItems' => $trackingItems,
+//                'trackingItems' => $plan->trackings->order_by('created_at','DESC')->find_all(),
             ]));
-
         }
     }
 

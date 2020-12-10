@@ -197,7 +197,8 @@ class Controller_Projects extends HDVP_Controller_Template
             $ws->get_active_sheet()->getStyle($header_range)->getFont()->setSize(12)->setBold(true);
             $ws->send(['name'=>'report', 'format'=>'Excel5']);
         }else {
-            $this->template->content = View::make('projects/list', $result + ['projectsEmptyPlans' => Model_Project::getProjectsWithoutPlansSpecialities()]);
+//            $this->template->content = View::make('projects/list', $result + ['projectsEmptyPlans' => Model_Project::getProjectsWithoutPlansSpecialities()]);
+            $this->template->content = View::make('projects/list', $result);
         }
         Breadcrumbs::clear();
         Breadcrumbs::add(Breadcrumb::factory()->set_title(__('Home'))->set_url('/'));
@@ -470,11 +471,19 @@ class Controller_Projects extends HDVP_Controller_Template
                 $companies = ORM::factory('Company')->find_all();
             }
             Breadcrumbs::add(Breadcrumb::factory()->set_title($this->project->name));
+            VueJs::instance()->addComponent('certifications/universal-certification');
+            VueJs::instance()->includeMultiselect();
             $this->template->content = View::make('projects/update')
                 ->set('companies',$companies)
                 ->set('objectsCount',$projectObjectsCount)
                 ->set('users',$this->project->users->find_all())
                 ->set('tasks',$this->project->tasks->order_by('id','DESC')->find_all());
+
+            VueJs::instance()->addComponent('tabs');
+            VueJs::instance()->addComponent('reserve-materials');
+            VueJs::instance()->addComponent('transferable-items');
+            VueJs::instance()->addComponent('texts');
+            VueJs::instance()->includeMultiselect();
         }
     }
 

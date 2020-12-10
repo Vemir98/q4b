@@ -129,7 +129,7 @@ FROM pr_objects po
 
     public static function getPlacesSpaces(array $placeIds)
     {
-        return DB::query(Database::SELECT,'SELECT ps.id, ps.place_id, ps.desc, pst.name type FROM pr_spaces ps INNER JOIN pr_space_types pst ON ps.type_id=pst.id WHERE ps.place_id IN ('.implode(',',$placeIds).')')->execute()->as_array();
+        return DB::query(Database::SELECT,'SELECT ps.id, ps.place_id, ps.desc, pst.name type, pst.id typeId FROM pr_spaces ps INNER JOIN pr_space_types pst ON ps.type_id=pst.id WHERE ps.place_id IN ('.implode(',',$placeIds).')')->execute()->as_array();
     }
 
     public static function getFloorsPlanIds( array $floorIds){

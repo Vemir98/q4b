@@ -60,6 +60,19 @@
             <span class="reports-prop-title-divider">|</span>
             <span class="reports-prop-title-status light-blue"> <?=__('Due Date')?>: </span>
             <span class="dark-blue"><?=($q->due_date) ? date('d/m/Y', $q->due_date) : ''?></span>
+
+            <?if(strlen($q->severity_level)):?>
+                <span class="reports-prop-title-divider">|</span>
+                <span class="reports-prop-title-status light-blue"> <?=__('Severity Level')?>: </span>
+                <span class="dark-blue"><?=__($q->severity_level)?></span>
+            <?endif?>
+
+            <?if(strlen($q->condition_list)):?>
+                <span class="reports-prop-title-divider">|</span>
+                <span class="reports-prop-title-status light-blue"> <?=__('Conditions List')?>: </span>
+                <span class="dark-blue"><?=__($q->condition_list)?></span>
+            <?endif?>
+
         </h3>
     </div>
     <!-- <?$comments = $q->comments->find_all()?>

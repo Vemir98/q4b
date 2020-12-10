@@ -387,7 +387,7 @@ if(Auth::instance()->get_user()->is('project_supervisor')){//запрет на �
 
                 <div class="modal-footer text-align">
                     <div class="form-group">
-                        <a href="#" class="q4-btn-lg light-blue-bg  qc-to-print-btn"><?=__('Proceed to print')?></a>
+                        <a href="#" data-id="<?=$item->id?>" class="q4-btn-lg light-blue-bg  qc-to-print-btn"><?=__('Proceed to print')?></a>
                     </div>
                     <div class="form-group">
                         <a href="#" class="q4-btn-lg light-blue-bg send-reports" data-url=<?=URL::site('reports/quality_control_mailing/'.$item->id)?>><?=__('Proceed to send')?></a>
@@ -405,7 +405,7 @@ if(Auth::instance()->get_user()->is('project_supervisor')){//запрет на �
             </div>
         </form>
     </div>
-    <div class="print-quality-control">
+    <div class="print-quality-control print-quality-control-<?=$item->id?>">
 
     <!-- ****** PRINTABLE PART ********-->
     <div class="page-break">

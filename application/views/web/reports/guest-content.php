@@ -5,11 +5,20 @@
         <h2><?=__('No reports found')?></h2>
     </div>
     <?else: ?>
-
+    <div class="report-result">
+        <div class="text-center">
+            <img class="q4b-logo" src="/media/img/iso-group-365.png" alt="logo">
+            <img class="q4b-logo" src="/media/img/logo_variation2-3.png" alt="logo">
+        </div>
+    </div>
     <?if ($pagination->current_page == 1): ?>
     <div class="report-project-desc f0">
         <div class="report-project-desc-image">
-            <img src="/<?=$_COMPANY->logo?>" alt="project images">
+            <?if(!$_PROJECT->image_id):?>
+                <img src="/media/img/camera.png" alt="project images">
+            <?else:?>
+                <img src="<?=$_PROJECT->main_image->originalFilePath()?>" alt="project images">
+            <?endif?>
         </div>
         <div class="report-project-desc-list">
             <ul>

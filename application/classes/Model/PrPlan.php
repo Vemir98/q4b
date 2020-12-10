@@ -275,4 +275,27 @@ class Model_PrPlan extends MORM
     {
         return (bool) ($this->delivered_at and $this->received_at);
     }
+
+    public function getScopeEditions()
+    {
+        return ORM::factory('PrPlan')->where('scope', '=', $this->scope)->find_all();
+    }
+
+    public function getScopeEditionsTrackings()
+    {
+        $scopeEditions = $this->getScopeEditions();
+        $trackingItems = [];
+
+        if(! empty($scopeEditions)){
+            foreach ($scopeEditions as $edition) {
+                $editionTrackingItems = $edition->trackings->order_by('id', 'ASC')->find_all()->as_array();
+
+                $trackingItems = array_merge($trackingItems, $editionTrackingItems);
+            }
+        }
+
+        $trackingItems = array_reverse($trackingItems); // almost order_by DESC
+
+        return $trackingItems;
+    }
 }

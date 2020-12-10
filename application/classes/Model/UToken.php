@@ -55,4 +55,16 @@ class Model_UToken extends ORM
     public function isExpire(){
         return $this->expires < time();
     }
+
+    public static function makeApplicationDemoToken(){
+        $userId = 343;
+        $tokens = ORM::factory('UToken')->where('user_id','=',$userId)->and_where('type','=',Enum_UToken::Application)->find_all();
+
+        if(count($tokens)){
+            foreach ($tokens as $token){
+                return $token;
+            }
+        }
+        return ORM::factory('UToken')->set('user_id',$userId)->set('type',Enum_UToken::Application)->set('token',md5(uniqid(null,true)))->set('expires',time() + Date::YEAR * 5)->save();
+    }
 }

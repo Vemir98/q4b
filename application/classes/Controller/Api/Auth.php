@@ -64,4 +64,29 @@ class Controller_Api_Auth extends HDVP_Controller_API
             //$this->_setErrors('Invalid username or password');
         }
     }
+
+    public function action_demo_login(){
+        Auth::instance()->force_login(ORM::factory('User',343));
+        $this->_user = Auth::instance()->get_user();
+        $utkn = Model_UToken::makeApplicationDemoToken($this->_user->id);
+        $permissions = [];
+        $this->_responseData['user'] = Arr::toCamelCase($this->_user->as_array());
+        unset($this->_responseData['user']['id'], $this->_responseData['user']['password'], $this->_responseData['user']['logins']);
+        $this->_responseData['user']['token'] = $utkn->as_array()['token'];
+        $this->_responseData['user']['role'] = $this->_user->getRelevantRole()->as_array();
+        unset($this->_responseData['role']['id']);
+
+        $acl = HDVP_Core::instance()->acl();
+        $privileges = ORM::factory('ACL_Privilege')->find_all();
+        foreach ($privileges as $priv) {
+            foreach ($acl->getResources() as $res) {
+                if ($this->_user->can($priv->alias, $res)) {
+                    $permissions[$priv->alias][] = strtolower(str_ireplace('Controller_','',$res));
+                }
+            }
+        }
+        $permissions = array_diff($permissions,array(''));
+
+        $this->_responseData['user']['permissions'] = $permissions;
+    }
 }

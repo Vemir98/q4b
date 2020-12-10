@@ -703,6 +703,37 @@ $(document).ready(function() {
 
     });
 
+    $('label.pretty-checkbox input[type=checkbox]').on('change',function(){
+        if ( ! $(this).is(':checked')){
+            $(this).parent().removeClass('checked');
+        }else{
+            $(this).parent().addClass('checked');
+        }
+    });
 
+    $('label.pretty-checkbox input[type=checkbox]').each(function(){
+        if ( ! $(this).is(':checked')){
+            $(this).parent().removeClass('checked');
+        }else{
+            $(this).parent().addClass('checked');
+        }
+    });
+
+    function toggleCondLevel() {
+        var statuses = $('[name="statuses[]"]').val();
+        if(statuses && (statuses.indexOf('invalid') > -1 || statuses.indexOf('repaired') > -1)){
+            $('.cond-level').show();
+        }else{
+            $('.cond-level').hide();
+        }
+    }
+
+    toggleCondLevel();
+
+    $('.statuses-chbx .checkbox-list-row').on('click',function(){
+        setTimeout(function(){
+            toggleCondLevel();
+        },250)
+    });
 
 });

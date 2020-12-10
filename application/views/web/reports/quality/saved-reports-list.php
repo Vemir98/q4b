@@ -17,6 +17,15 @@
             <?else:?>
 
                     <?foreach ($reports as $report):?>
+                <?
+                    $rp = explode(',',$report->projects);
+                    if(!is_array($rp)){
+                        $rp[0] = $rp;
+                    }
+                    foreach ($rp as $r){
+                        if(!in_array($r,$projectIds)) continue 2;
+                    }
+                ?>
                         <tr>
                             <td><a href="<?=URL::site('reports/quality/saved/'.$report->id)?>"><?=$report->name.' '.date('d/m/Y',$report->created_at)?></a></td>
                             <td><a href="<?=URL::site('reports/quality/remove/'.$report->id)?>" class="remove-report"><i class="q4bikon-delete"></i></a></td>

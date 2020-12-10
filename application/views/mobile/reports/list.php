@@ -28,13 +28,50 @@
                 </div>
 <!--                отключаю на мобильном-->
                 <?if(false and Usr::can(Usr::READ_PERM,'Controller_QualityReports',Enum_UserPriorityLevel::General)):?>
+                    <div class="item">
+                        <figure class="mobile-figure">
+                            <a href="<?=URL::site('reports/quality')?>">
+                                <img src="/media/img/qreport.svg" alt="<?=__('Quality Report')?>" style="height: 71%;margin-left: 14px;">
+                            </a>
+                            <figcaption class="mobile-fig-caption">
+                                <a href="<?=URL::site('reports/quality')?>"><?=__('Quality Report')?></a>
+                            </figcaption>
+                        </figure>
+                    </div>
+                <?endif;?>
+<!--                --><?//if(Usr::can(Usr::READ_PERM,'Controller_TasksReports',Enum_UserPriorityLevel::General)):?>
+                    <div class="item">
+                        <figure class="mobile-figure">
+                            <a href="<?=URL::site('reports/tasks')?>">
+                                <img src="/media/img/treport.svg" alt="<?=__('Tasks report')?>" style="height: 71%;margin-left: 14px;">
+                            </a>
+                            <figcaption class="mobile-fig-caption">
+                                <a href="<?=URL::site('reports/tasks')?>"><?=__('Tasks report')?></a>
+                            </figcaption>
+                        </figure>
+                    </div>
+<!--                --><?//endif;?>
+
+<!--                --><?//if(Usr::can(Usr::READ_PERM,'Controller_TasksReports',Enum_UserPriorityLevel::General)):?>
+                    <div class="item">
+                        <figure class="mobile-figure">
+                            <a href="<?=URL::site('reports/place')?>">
+                                <img src="/media/img/preport.svg" alt="<?=__('Place report')?>" style="height: 71%;margin-left: 14px;">
+                            </a>
+                            <figcaption class="mobile-fig-caption">
+                                <a href="<?=URL::site('reports/place')?>"><?=__('Place report')?></a>
+                            </figcaption>
+                        </figure>
+                    </div>
+<!--                --><?//endif;?>
+                <?if(Usr::can(Usr::READ_PERM,'Controller_DeliveryReports',Enum_UserPriorityLevel::General) OR Auth::instance()->get_user()->email == 'eldar5390@gmail.com'):?>
                 <div class="item">
                     <figure class="mobile-figure">
-                        <a href="<?=URL::site('reports/quality')?>">
-                            <img src="/media/img/qreport.svg" alt="<?=__('Quality Report')?>" style="height: 71%;margin-left: 14px;">
+                        <a href="<?=URL::site('reports/delivery')?>">
+                            <img src="/media/img/dlreport.svg" alt="<?=__('Delivery report')?>" style="height: 71%;margin-left: 14px;">
                         </a>
                         <figcaption class="mobile-fig-caption">
-                            <a href="<?=URL::site('reports/quality')?>"><?=__('Quality Report')?></a>
+                            <a href="<?=URL::site('reports/delivery')?>"><?=__('Delivery report')?></a>
                         </figcaption>
                     </figure>
                 </div>

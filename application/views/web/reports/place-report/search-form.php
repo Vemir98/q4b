@@ -54,6 +54,20 @@
 
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="report-form-group col-md-3 col-sm-12 rtl-float-right">
+                                <label class="table_label"><?=__('Status')?></label>
+                                <div class="select-wrapper">
+                                    <i class="q4bikon-arrow_bottom"></i>
+                                    <select name="status" class="q4-select q4-form-input">
+                                        <option value="all"><?=__("All")?></option>
+                                        <?foreach (Enum_QualityControlStatus::toArray() as $status):?>
+                                            <option value="<?=$status?>"><?=__($status)?></option>
+                                        <?endforeach?>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -195,6 +209,7 @@
                 'project': projectsSelect.val(),
                 'object': object,
                 'crafts': crafts,
+                'status': $('select[name=status]').val(),
                 'csrf' : Q4U.getCsrfToken(),
                 'x-form-secure-tkn': ""
             };
@@ -246,6 +261,17 @@
             $('.report-status-results > .f0').slideDown("slow",function(){
                 $(document).find('.task-details').remove();
             });
-        })
+        });
+
+        $(document).on('click','.stats-craft-ex',function(e){
+            if($(e.target).hasClass('disable-craft')) return;
+            var myClass = $(this).data('expandable');
+            var el = $('.' + myClass);
+            if(el.hasClass('hidden'))
+                $('.' + myClass).removeClass('hidden');
+            else
+                $('.' + myClass).addClass('hidden')
+
+        });
     });
 </script>

@@ -29,14 +29,24 @@ class Model_PlanFile extends Model_File
         }
         $path = $this->originalFilePath();
         $plan = $this->getPlan();
+
+        //if($plan->id == 42066) return null;
+        file_put_contents(DOCROOT.'t.txt',$this->id);
+//        if($this->id == 207391) return null;
+//        if($this->id == 207386)  return null;
+//        if($this->id == 207394)  return null;
         $floors = $plan->floors->find_all();
         if(strtolower($this->ext) == 'pdf'){
             $jpgPath = str_ireplace('.pdf','.jpg',$this->fullFilePath());
 
             if(!file_exists($jpgPath)){
-                $pdf = new Pdf($this->fullFilePath());
-                $pdf->setCompressionQuality(30);
-                $imgPaths = $pdf->saveAllPagesAsImages(dirname($this->fullFilePath()),UTF8::str_ireplace('.pdf','',$this->name));
+                //file_put_contents(DOCROOT.'t.txt',$plan->id);
+//                $pdf = new Pdf($this->fullFilePath());
+//                $pdf->setCompressionQuality(30);
+//                $imgPaths = $pdf->saveAllPagesAsImages(dirname($this->fullFilePath()),UTF8::str_ireplace('.pdf','',$this->name));
+                $converter = new PDFConverter($this->fullFilePath());
+                $converter->convertToJPG();
+                $imgPaths = $converter->getOutputFiles();
                 foreach ($imgPaths as $idx => $p){
                     if($idx > 0){
                         $newPlan = ORM::factory('PrPlan');
