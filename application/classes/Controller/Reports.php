@@ -977,6 +977,26 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
 
         return View::make('reports/search-form',['data' => json_encode($items), 'items' => $items, 'hidden' => $hidden]);
     }
+    private function getDialog($str, $pattern)
+    {
+        if (strlen($str) > 0) {
+
+            $substr = explode($pattern,$str);
+            unset($substr[0]);
+
+            return implode("\n",$substr);
+        }
+        return "";
+    }
+
+    private function getDesc($str, $pattern)
+    {
+        if (strlen($str) > 0) {
+            $pos = strpos($str, $pattern);
+            return $pos ? substr($str,0, $pos) : $str;
+        }
+        return $str;
+    }
 
     protected function _export_report($qcs){
         $ws = new Spreadsheet(array(
@@ -991,32 +1011,63 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         $as->setTitle('Report');
 
         $as->getDefaultStyle()->getFont()->setSize(10);
-        $as->getColumnDimension('A')->setWidth(10);
-        $as->getColumnDimension('B')->setWidth(80);
-        $as->getColumnDimension('C')->setWidth(200);
-        $as->getColumnDimension('D')->setWidth(13);
-        $as->getColumnDimension('E')->setWidth(40);
-        $as->getColumnDimension('F')->setWidth(14);
-        $as->getColumnDimension('G')->setWidth(8);
-        $as->getColumnDimension('H')->setWidth(20);
-        $as->getColumnDimension('I')->setWidth(40);
-        $as->getColumnDimension('J')->setWidth(40);
 
+        $as->getColumnDimension('A')->setWidth(13);
+        $as->getColumnDimension('B')->setWidth(13);
+        $as->getColumnDimension('C')->setWidth(17);
+        $as->getColumnDimension('D')->setWidth(17);
+        $as->getColumnDimension('E')->setWidth(100);
+        $as->getColumnDimension('F')->setWidth(100);
+        $as->getColumnDimension('G')->setWidth(12);
+        $as->getColumnDimension('H')->setWidth(80);
+        $as->getColumnDimension('I')->setWidth(25);
+        $as->getColumnDimension('J')->setWidth(17);
+        $as->getColumnDimension('K')->setWidth(10);
+        $as->getColumnDimension('L')->setWidth(10);
+        $as->getColumnDimension('M')->setWidth(40);
+        $as->getColumnDimension('N')->setWidth(40);
+        $as->getColumnDimension('O')->setWidth(16);
+        $as->getRowDimension('1')->setRowHeight(23);
 
+        $objDrawing = new PHPExcel_Worksheet_Drawing();
+        $objDrawing->setName('Logo');
+        $objDrawing->setDescription('Logo');
+        $objDrawing->setPath(DOCROOT. 'media/img/q4b_logo.png');
+        $objDrawing->setWidth(30);
+        $objDrawing->setHeight(30);
+        $objDrawing->setOffsetX(40);
+        $objDrawing->setCoordinates('O1');
+        $objDrawing->setWorksheet($as);
+        $objDrawingSec = new PHPExcel_Worksheet_Drawing();
+        $objDrawingSec->setPath(DOCROOT. 'media/img/q4b_quality.png')
+            ->setName('quality logo')
+            ->setCoordinates('N1')
+            ->setWorksheet($as)
+            ->setOffsetX(125);
         $sh = [
-            1 => [__('Id'), __('Crafts'),__('Description'),__('Created Date'),__('Status'), __('Element number'), __('Element type'), __('Floor'), __('Structure'), __('Project'),__('Price')],
+            1 => [],
+            2 => [__('Due Date'),__('Created Date'),__('Conditions List'),__('Severity Level'),__('Dialog'),__('Description'),__('Status'),__('Crafts'),__('Stage'), __('Element number'), __('Element type'), __('Floor'), __('Structure'), __('Project'),__('QC Id')],
         ];
         $ws->set_data($sh, false);
         foreach ($qcs as $item){
-            $sh [] = [$item->id,$item->craft->name,html_entity_decode($item->description), date('d/m/Y',$item->created_at), __($item->status), $item->place->custom_number, __($item->place->type),$item->floor->number, $item->object->name, $item->project->name, null];
+            $sh [] = [date('d/m/Y',$item->due_date), date('d/m/Y',$item->created_at), __($item->condition_list), __($item->severity_level), $this->getDialog(html_entity_decode($item->description), "@##"), $this->getDesc(html_entity_decode($item->description), "@##"), __($item->status),$item->craft->name, __($item->project_stage), $item->place->custom_number, __($item->place->type),$item->floor->number, $item->object->name, $item->project->name, $item->id];
         }
 
         $ws->set_data($sh, false);
         $first_letter = PHPExcel_Cell::stringFromColumnIndex(0);
-        $last_letter = PHPExcel_Cell::stringFromColumnIndex(count($sh[1])-1);
-        $header_range = "{$first_letter}1:{$last_letter}1";
+        $last_letter = PHPExcel_Cell::stringFromColumnIndex(count($sh[2])-1);
+        $header_range = "{$first_letter}2:{$last_letter}2";
         $ws->get_active_sheet()->getStyle($header_range)->getFont()->setSize(12)->setBold(true);
-        $ws->rtl(Language::getCurrent()->direction == 'rtl');
+        $count = count($sh);
+        for ($i = 3; $i < $count ; $i++) {
+            $az[] = "E" . $i;
+        }
+        $az = array_slice($az, 0, $count);
+        foreach ($az as $col) {
+            $ws->get_active_sheet()->getStyle($col)
+                ->getAlignment()->setWrapText(true);
+        }
+//        $ws->rtl(Language::getCurrent()->direction == 'rtl');
         $ws->send(['name'=>'report', 'format'=>'Excel5']);
     }
 

@@ -502,6 +502,8 @@ return [
     'Element id' => 'מספר סידורי',
     "Show QC" => "הצג בקרה",
     "QC" => "את הבקרה",
+    "QC Id" => "מזהה של בקרה",
+    "Dialog" => "דו שיח",
     "Filter by name" => "הצג לפי שם",
     "Not associated plans" => "תוכנות לא משויכות",
     'Incorrect' => ' לא תקין',
@@ -539,132 +541,132 @@ return [
     "Choose language" => "בחר שפה",
     "Company List" => "רשימת החברות",
 
-"Project List" => "רשימת הפרויקטים",
+    "Project List" => "רשימת הפרויקטים",
 
-"Welcome to Q4B" => "ברוכים הבאים ל - Q4B",
+    "Welcome to Q4B" => "ברוכים הבאים ל - Q4B",
 
-"Updating the data" => "מעדכן את הנתונים",
+    "Updating the data" => "מעדכן את הנתונים",
 
-"Please Wait" => "אנא המתן",
+    "Please Wait" => "אנא המתן",
 
-"Language" => "שפה",
+    "Language" => "שפה",
 
-"English" => "אנגלית",
+    "English" => "אנגלית",
 
-"Data Sync Period" => "תקופת סינכרון נתונים",
+    "Data Sync Period" => "תקופת סינכרון נתונים",
 
-"QC Form Creation data will download every" => "נתוני יצירת בקרה יתעדכנו כל",
+    "QC Form Creation data will download every" => "נתוני יצירת בקרה יתעדכנו כל",
 
-"Days" => "ימים",
+    "Days" => "ימים",
 
-"sync data now" => "לסנכרן נתונים כעת",
+    "sync data now" => "לסנכרן נתונים כעת",
 
-"Synchronize only over WI-FI" => "לסנכרן רק דרך Wi- Fi" ,
+    "Synchronize only over WI-FI" => "לסנכרן רק דרך Wi- Fi" ,
 
-"Data synchronization will pause when WI-FI connection isn't available" => "סנכרון נתונים יפסק כאשר חיבור Wi- Fi אינו זמין",
+    "Data synchronization will pause when WI-FI connection isn't available" => "סנכרון נתונים יפסק כאשר חיבור Wi- Fi אינו זמין",
 
-"Are you sure you want to leave Quality Control?" => "האם אתה בטוח שברצונך לצאת מיצירת הבקרה?",
+    "Are you sure you want to leave Quality Control?" => "האם אתה בטוח שברצונך לצאת מיצירת הבקרה?",
 
-"Password" => "סיסמה",
+    "Password" => "סיסמה",
 
-"Search by project, structure, floor" => "חפש לפי פרויקט, מבנה, קומה",
+    "Search by project, structure, floor" => "חפש לפי פרויקט, מבנה, קומה",
 
-"Load Images" => "טען תמונות",
+    "Load Images" => "טען תמונות",
 
-"Synchronize Plans" => "לסנכרן את התוכניות",
+    "Synchronize Plans" => "לסנכרן את התוכניות",
 
-"Select Language" => "בחר שפה",
+    "Select Language" => "בחר שפה",
 
-"No internet connection" => "אין חיבור לאינטרנט",
+    "No internet connection" => "אין חיבור לאינטרנט",
 
-"Plan Synchronization" => "סנכרון תוכניות",
+    "Plan Synchronization" => "סנכרון תוכניות",
 
-"Delete text" => "מחק טקסט",
+    "Delete text" => "מחק טקסט",
 
-"Structures" => "מבנים",
+    "Structures" => "מבנים",
 
-"Log Out" => "להתנתק",
+    "Log Out" => "להתנתק",
 
 
-"Field Project Is Required" => "נא לבחור את הפרויקט",
+    "Field Project Is Required" => "נא לבחור את הפרויקט",
 
-"Field Structure Is Required" => "נא לבחור את המבנה",
+    "Field Structure Is Required" => "נא לבחור את המבנה",
 
-"Field Floor Is Required" => "נא לבחור את הקומה",
+    "Field Floor Is Required" => "נא לבחור את הקומה",
 
-"Field Place Is Required" => "נא לבחור את המרחב",
+    "Field Place Is Required" => "נא לבחור את המרחב",
 
-"At Least One Task Is Required" => "נא לבחור לפחות משימה אחת",
+    "At Least One Task Is Required" => "נא לבחור לפחות משימה אחת",
 
-"Field Specialty Is Required" => "נא לבחור את המלאכה",
+    "Field Specialty Is Required" => "נא לבחור את המלאכה",
 
-"Field Description Is Required" => "נא למלא את התיאור",
+    "Field Description Is Required" => "נא למלא את התיאור",
 
-"Field Stage Is Required" => "נא לבחור את השלב",
+    "Field Stage Is Required" => "נא לבחור את השלב",
 
-"Field Status Is Required" => "נא לבחור את הסטטוס",
+    "Field Status Is Required" => "נא לבחור את הסטטוס",
 
-"Field Due Date Is Required" => "נא לבחור את מועד סיום",
+    "Field Due Date Is Required" => "נא לבחור את מועד סיום",
 
-"Field Responsible Profession Is Required" => "נא לבחור את האחראי",
+    "Field Responsible Profession Is Required" => "נא לבחור את האחראי",
 
 
-"Create Quality Control" => "יצירת בקרה חדשה",
+    "Create Quality Control" => "יצירת בקרה חדשה",
 
 
-"Circle" => "עיגול",
+    "Circle" => "עיגול",
 
-"Arrow" => "חץ",
+    "Arrow" => "חץ",
 
-"Rectangle" => "מלבן",
+    "Rectangle" => "מלבן",
 
-"Text" => "טקסט",
+    "Text" => "טקסט",
 
-"Pencil" => "עיפרון",
+    "Pencil" => "עיפרון",
 
-"Eraser" => "מחק",
+    "Eraser" => "מחק",
 
-"Rotate" => "סובב",
+    "Rotate" => "סובב",
 
-"Crop" => "חיתוך",
+    "Crop" => "חיתוך",
 
-"Field Invalid Condition Is Required" => "נדרש למלא שדה רשימת התניות",
+    "Field Invalid Condition Is Required" => "נדרש למלא שדה רשימת התניות",
 
-"Field Invalid Severity Is Required" => "נדרש למלא שדה דרגות חומרה",
+    "Field Invalid Severity Is Required" => "נדרש למלא שדה דרגות חומרה",
 
-"Leave" => "להפסיק",
+    "Leave" => "להפסיק",
 
-"Plan Sync Finished" => "סנכרון תוכנית הסתיים",
+    "Plan Sync Finished" => "סנכרון תוכנית הסתיים",
 
-"Download Finished" => "ההורדה הסתיימה",
+    "Download Finished" => "ההורדה הסתיימה",
 
-"Synchronising Plan" => "סנכרון תוכנית",
+    "Synchronising Plan" => "סנכרון תוכנית",
 
-"Removing Plans" => "הסרת תוכניות",
+    "Removing Plans" => "הסרת תוכניות",
 
-"Downloading Invalid Image" => "מוריד תמונה של ליקויים",
+    "Downloading Invalid Image" => "מוריד תמונה של ליקויים",
 
-"Removing Invalid Images" => "הסרת תמונות של ליקויים",
+    "Removing Invalid Images" => "הסרת תמונות של ליקויים",
 
-"Translations" => "תרגומים",
+    "Translations" => "תרגומים",
 
-"Invalid Forms" => "בקרות בסטטוס לא תקין",
+    "Invalid Forms" => "בקרות בסטטוס לא תקין",
 
-"Professions and Specialties" => "מלאכות ומקצועות",
+    "Professions and Specialties" => "מלאכות ומקצועות",
 
-"Without a file" => "ללא קובץ",
-"With a file" => "עם קובץ",
-"All" => "הכל",
-"Tracking" => "מעקב",
-"Delivery" => "מסירה",
-"Copy" => "להעתיק",
-"Sheet Number" => "מספר גיליון",
-"File" => "קובץ",
-"Updates note" => "מהות העדכון",
-"Delivered date" => "נמסר לשטח",
+    "Without a file" => "ללא קובץ",
+    "With a file" => "עם קובץ",
+    "All" => "הכל",
+    "Tracking" => "מעקב",
+    "Delivery" => "מסירה",
+    "Copy" => "להעתיק",
+    "Sheet Number" => "מספר גיליון",
+    "File" => "קובץ",
+    "Updates note" => "מהות העדכון",
+    "Delivered date" => "נמסר לשטח",
 
-"Add plans" =>  "הוספת תוכניות",
-"Please  fill all fields" => "בבקשה תמלא את כל השדות",
+    "Add plans" =>  "הוספת תוכניות",
+    "Please  fill all fields" => "בבקשה תמלא את כל השדות",
 
 
 
@@ -673,7 +675,7 @@ return [
 
 
 
-        //translation of license agreement
+    //translation of license agreement
     'Q4B – QUALITY MADE SIMPLE' => 'Q4B – QUALITY MADE SIMPLE',
     'END USER LICENSE AGREEMENT' => 'רישיון שימוש למשתמשי קצה',
     'PLEASE READ THE' => 'הינך מתבקש לקרוא את',

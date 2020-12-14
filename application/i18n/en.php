@@ -521,6 +521,8 @@ return [
     'Element id' => 'Place ID',
     "Show QC" => "Show QC",
     "QC" => "QC",
+    "QC Id" => "QC ID",
+    "Dialog" => "Dialog",
     "Filter by name" => "Filter by name",
     "Not associated plans" => "Not associated plans",
     'Incorrect' => 'Incorrect',
@@ -558,128 +560,128 @@ return [
     "Choose language" => "Choose language",
     "Company List" => "Company List",
 
-"Project List" => "Project List",
+    "Project List" => "Project List",
 
-"Welcome to Q4B" => "Welcome to Q4B",
+    "Welcome to Q4B" => "Welcome to Q4B",
 
-"Updating the data" => "Updating the data",
+    "Updating the data" => "Updating the data",
 
-"Please Wait" => "Please Wait",
+    "Please Wait" => "Please Wait",
 
-"Language" => "Language",
+    "Language" => "Language",
 
-"English" => "English",
+    "English" => "English",
 
-"Data Sync Period" => "Data Sync Period",
+    "Data Sync Period" => "Data Sync Period",
 
-"QC Form Creation data will download every" => "QC Form Creation data will download every",
+    "QC Form Creation data will download every" => "QC Form Creation data will download every",
 
-"Days" => "Days",
+    "Days" => "Days",
 
-"sync data now" => "sync. data now",
+    "sync data now" => "sync. data now",
 
-"Synchronize only over WI-FI" => "Synchronize only over WI-FI",
+    "Synchronize only over WI-FI" => "Synchronize only over WI-FI",
 
-"Data synchronization will pause when WI-FI connection isn't available" => "Data synchronization will pause when WI-FI connection isn't available",
+    "Data synchronization will pause when WI-FI connection isn't available" => "Data synchronization will pause when WI-FI connection isn't available",
 
-"Are you sure you want to leave Quality Control?" => "Are you sure you want to leave Quality Control?",
+    "Are you sure you want to leave Quality Control?" => "Are you sure you want to leave Quality Control?",
 
-"Password" => "Password",
+    "Password" => "Password",
 
-"Search by project, structure, floor" => "Search by project, structure, floor",
+    "Search by project, structure, floor" => "Search by project, structure, floor",
 
-"Load Images" => "Load Images",
+    "Load Images" => "Load Images",
 
-"Synchronize Plans" => "Synchronize Plans",
+    "Synchronize Plans" => "Synchronize Plans",
 
-"Select Language" => "Select Language",
+    "Select Language" => "Select Language",
 
-"No internet connection" => "No internet connection",
+    "No internet connection" => "No internet connection",
 
-"Plan Synchronization" => "Plan Synchronization",
+    "Plan Synchronization" => "Plan Synchronization",
 
-"Delete text" => "Delete text",
+    "Delete text" => "Delete text",
 
-"Structures" => "Structures",
+    "Structures" => "Structures",
 
-"Log Out" => "Log Out",
-
-
-"Field Project Is Required" => "Field Project Is Required",
-
-"Field Structure Is Required" => "Field Structure Is Required",
-
-"Field Floor Is Required" => "Field Floor Is Required",
-
-"Field Place Is Required" => "Field Place Is Required",
-
-"At Least One Task Is Required" => "At Least One Task Is Required",
-
-"Field Specialty Is Required" => "Field Specialty Is Required",
-
-"Field Description Is Required" => "Field Description Is Required",
-
-"Field Stage Is Required" => "Field Description Is Required",
-
-"Field Status Is Required" => "Field Status Is Required",
-
-"Field Due Date Is Required" => "Field Due Date Is Required",
-
-"Field Responsible Profession Is Required" => "Field Responsible Profession Is Required",
+    "Log Out" => "Log Out",
 
 
-"Create Quality Control" => "Create Quality Control",
+    "Field Project Is Required" => "Field Project Is Required",
+
+    "Field Structure Is Required" => "Field Structure Is Required",
+
+    "Field Floor Is Required" => "Field Floor Is Required",
+
+    "Field Place Is Required" => "Field Place Is Required",
+
+    "At Least One Task Is Required" => "At Least One Task Is Required",
+
+    "Field Specialty Is Required" => "Field Specialty Is Required",
+
+    "Field Description Is Required" => "Field Description Is Required",
+
+    "Field Stage Is Required" => "Field Description Is Required",
+
+    "Field Status Is Required" => "Field Status Is Required",
+
+    "Field Due Date Is Required" => "Field Due Date Is Required",
+
+    "Field Responsible Profession Is Required" => "Field Responsible Profession Is Required",
 
 
-"Circle" => "Circle",
-
-"Arrow" => "Arrow",
-
-"Rectangle" => "Rectangle",
-
-"Text" => "Text",
-
-"Pencil" => "Pencil",
-
-"Eraser" => "Eraser",
-
-"Rotate" => "Rotate",
-
-"Crop" => "Crop",
-"Field Invalid Condition Is Required" => "Field Conditions list Is Required",
-"Field Invalid Severity Is Required" => "Field Severity level Is Required",
+    "Create Quality Control" => "Create Quality Control",
 
 
-"Leave" => "Leave",
-"Plan Sync Finished" => "Plan Sync Finished",
-"Download Finished" => "Download Finished",
-"Synchronising Plan" => "Synchronising Plan",
-"Removing Plans" => "Removing Plans",
-"Downloading Invalid Image" => "Downloading Invalid Image",
-"Removing Invalid Images" => "Removing Invalid Images",
-"Translations" => "Translations",
-"Invalid Forms" => "Invalid Forms",
-"Professions and Specialties" => "Professions and Specialties",
+    "Circle" => "Circle",
 
-"Without a file" => "Without a file",
-"With a file" => "With a file",
-"All" => "All",
-"Tracking" => "Tracking",
-"Delivery" => "Delivery",
-"Copy" => "Copy",
-"Sheet Number" => "Sheet Number",
-"File" => "File",
-"Updates note" => "Updates note",
-"Delivered date" => "Delivered date",
-"Add plans" =>  "Add plans",
-"Please  fill all fields" => "Please  fill all fields",
+    "Arrow" => "Arrow",
+
+    "Rectangle" => "Rectangle",
+
+    "Text" => "Text",
+
+    "Pencil" => "Pencil",
+
+    "Eraser" => "Eraser",
+
+    "Rotate" => "Rotate",
+
+    "Crop" => "Crop",
+    "Field Invalid Condition Is Required" => "Field Conditions list Is Required",
+    "Field Invalid Severity Is Required" => "Field Severity level Is Required",
+
+
+    "Leave" => "Leave",
+    "Plan Sync Finished" => "Plan Sync Finished",
+    "Download Finished" => "Download Finished",
+    "Synchronising Plan" => "Synchronising Plan",
+    "Removing Plans" => "Removing Plans",
+    "Downloading Invalid Image" => "Downloading Invalid Image",
+    "Removing Invalid Images" => "Removing Invalid Images",
+    "Translations" => "Translations",
+    "Invalid Forms" => "Invalid Forms",
+    "Professions and Specialties" => "Professions and Specialties",
+
+    "Without a file" => "Without a file",
+    "With a file" => "With a file",
+    "All" => "All",
+    "Tracking" => "Tracking",
+    "Delivery" => "Delivery",
+    "Copy" => "Copy",
+    "Sheet Number" => "Sheet Number",
+    "File" => "File",
+    "Updates note" => "Updates note",
+    "Delivered date" => "Delivered date",
+    "Add plans" =>  "Add plans",
+    "Please  fill all fields" => "Please  fill all fields",
 
 
 
 
 
     //translation of license agreement
-   'END USER LICENSE AGREEMENT' => 'END USER LICENSE AGREEMENT',
+    'END USER LICENSE AGREEMENT' => 'END USER LICENSE AGREEMENT',
     'Q4B – QUALITY MADE SIMPLE' => 'Q4B – QUALITY MADE SIMPLE',
     'THIS EULA IS A LEGALLY' =>'THIS EULA IS A LEGALLY BINDING AGREEMENT BETWEEN YOU, EITHER AN INDIVIDUAL OR A SINGLE ENTITY (HEREINAFTER, “YOU” OR “LICENSEE”) AND YAM HOLDINGS LTD, INCLUDING ANY OF ITS AFFILIATES, PARENT COMPANY AND SUBSIDIARIES (WHICH SHALL ALL BE REFERRED TO COLLECTIVELY HEREIN AS THE “LICENSOR”).',
     'BY PERFORMING ANY OF THE' => 'BY PERFORMING ANY OF THE FOREGOING: ACCESSING, INSTALLING, RUNNING OR USING THE SOFTWARE, OR BY EXECUTING THIS EULA THROUGH ANY AGREEMENT, ACCEPTANCE OF AN OFFER, PURCHASE ORDER, OR ANY OTHER DESIGNATED INSTRUMENT OR FORM IN ANY MEDIUM BEARING YOUR DETAILS AND SIGNATURE (EACH AN “ADDITIONAL AGREEMENT”) YOU AGREE: (I) THAT THIS EULA IS A LEGALLY BINDING AND VALID AGREEMENT, (II) TO ABIDE BY THE TERMS AND CONDITIONS OF THIS EULA, AND (III) TO TAKE ALL NECESSARY STEPS TO ENSURE THAT THE TERMS AND CONDITIONS OF THIS EULA ARE ADHERED TO BY ANY PERSON OR ENTITY UNDER YOUR CONTROL OR IN YOUR SERVICE.',
