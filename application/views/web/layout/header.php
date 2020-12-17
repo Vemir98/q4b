@@ -57,7 +57,7 @@
 
                 <li class="header_lang">
                     <div class="keep-langs">
-                        <span class="header-current-lang">
+                        <span class="header-current-lang" data-lang="<?=Language::getCurrent()->slug?>">
                             <img src="<?=URL::withLang(Language::getCurrent()->image,Language::getDefault()->slug)?>" class="q4_flag" alt="<?=Language::getCurrent()->name?>">
                             <i class="q4bikon-arrow_bottom"></i>
                         </span>

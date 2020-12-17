@@ -16,6 +16,7 @@ class Controller_Reports extends HDVP_Controller_Template
             Breadcrumbs::add(Breadcrumb::factory()->set_title(__('Reports'))->set_url('/reports/list'));
         }
     }
+
     public function action_index(){
         Breadcrumbs::add(Breadcrumb::factory()->set_title(__('QC Report'))->set_url('/reports'));
         $this->_checkPermOrFail('read');
@@ -329,9 +330,6 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
             }
         }
 
-
-
-
 //        $this->setResponseData('reportHtml',View::make('reports/generated',['qcs' => $qcs, 'crafts' => $data['crafts']])->render());
 //        $this->setResponseData('triggerEvent','reportGenerated');
 
@@ -432,16 +430,6 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                 }
             }
 
-
-
-
-
-
-
-
-
-
-
             $totalStatuses = array_sum($craftsParams['statuses']);
             $craftsParams['percents'] = [
                 Enum_QualityControlStatus::Existing => round($craftsParams['statuses'][Enum_QualityControlStatus::Existing] * 100 / $totalStatuses),
@@ -476,9 +464,6 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
 
         }
 
-
-
-
             if(Request::current()->is_initial()){
                 if( ! empty(Session::instance()->get('token')))
                     $sendReportsEmailUrl = URL::site('reports/send_reports/'.$this->project->id.'/'.Session::instance()->get('token')->token);
@@ -494,9 +479,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
             $this->setResponseData('html',View::make('reports/print',['qcs' => $qcs]));
         }
 
-
     }
-
 
     public function action_guest_access(){
         $token = $this->request->param('token');
@@ -534,7 +517,6 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         $this->template->content = $content;
     }
 
-
     public function action_get_spaces(){//num_type = pn|pcn
         $this->_checkPermOrFail('read');
         $this->auto_render = false;
@@ -567,7 +549,6 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         }
         $this->setResponseData('options',$output);
     }
-
 
     public function action_quality_control(){
         $this->_checkPermOrFail('update');
@@ -917,7 +898,6 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         }
     }
 
-
     public function searchForm($hidden = false){
 //        if($this->_user->getRelevantRole('outspread') == Enum_UserOutspread::General){
 //            $companies = ORM::factory('Company')->find_all();
@@ -977,26 +957,6 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
 
         return View::make('reports/search-form',['data' => json_encode($items), 'items' => $items, 'hidden' => $hidden]);
     }
-    private function getDialog($str, $pattern)
-    {
-        if (strlen($str) > 0) {
-
-            $substr = explode($pattern,$str);
-            unset($substr[0]);
-
-            return implode("\n",$substr);
-        }
-        return "";
-    }
-
-    private function getDesc($str, $pattern)
-    {
-        if (strlen($str) > 0) {
-            $pos = strpos($str, $pattern);
-            return $pos ? substr($str,0, $pos) : $str;
-        }
-        return $str;
-    }
 
     protected function _export_report($qcs){
         $ws = new Spreadsheet(array(
@@ -1014,43 +974,47 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
 
         $as->getColumnDimension('A')->setWidth(13);
         $as->getColumnDimension('B')->setWidth(13);
-        $as->getColumnDimension('C')->setWidth(17);
-        $as->getColumnDimension('D')->setWidth(17);
-        $as->getColumnDimension('E')->setWidth(100);
-        $as->getColumnDimension('F')->setWidth(100);
-        $as->getColumnDimension('G')->setWidth(12);
-        $as->getColumnDimension('H')->setWidth(80);
-        $as->getColumnDimension('I')->setWidth(25);
-        $as->getColumnDimension('J')->setWidth(17);
-        $as->getColumnDimension('K')->setWidth(10);
+        $as->getColumnDimension('C')->setWidth(13);
+        $as->getColumnDimension('D')->setWidth(15);
+        $as->getColumnDimension('E')->setWidth(13);
+        $as->getColumnDimension('F')->setWidth(60);
+        $as->getColumnDimension('G')->setWidth(80);
+        $as->getColumnDimension('H')->setWidth(12);
+        $as->getColumnDimension('I')->setWidth(45);
+        $as->getColumnDimension('J')->setWidth(20);
+        $as->getColumnDimension('K')->setWidth(16);
         $as->getColumnDimension('L')->setWidth(10);
-        $as->getColumnDimension('M')->setWidth(40);
-        $as->getColumnDimension('N')->setWidth(40);
-        $as->getColumnDimension('O')->setWidth(16);
-        $as->getRowDimension('1')->setRowHeight(23);
+        $as->getColumnDimension('M')->setWidth(7);
+        $as->getColumnDimension('N')->setWidth(15);
+        $as->getColumnDimension('O')->setWidth(25);
+        $as->getColumnDimension('P')->setWidth(17);
+        $as->getRowDimension('1')->setRowHeight(80);
 
         $objDrawing = new PHPExcel_Worksheet_Drawing();
         $objDrawing->setName('Logo');
         $objDrawing->setDescription('Logo');
         $objDrawing->setPath(DOCROOT. 'media/img/q4b_logo.png');
-        $objDrawing->setWidth(30);
-        $objDrawing->setHeight(30);
-        $objDrawing->setOffsetX(40);
-        $objDrawing->setCoordinates('O1');
+        $objDrawing->setResizeProportional(true);
+        $objDrawing->setHeight(100);
+        $objDrawing->setCoordinates('P1');
+        $objDrawing->setOffsetX(5);
         $objDrawing->setWorksheet($as);
         $objDrawingSec = new PHPExcel_Worksheet_Drawing();
-        $objDrawingSec->setPath(DOCROOT. 'media/img/q4b_quality.png')
-            ->setName('quality logo')
-            ->setCoordinates('N1')
-            ->setWorksheet($as)
-            ->setOffsetX(125);
+        $objDrawingSec->setPath(DOCROOT. 'media/img/q4b_quality.png');
+        $objDrawingSec->setName('quality logo');
+        $objDrawingSec->setCoordinates('O1');
+        $objDrawingSec->setWorksheet($as);
+        $objDrawingSec->setResizeProportional(true);
+        $objDrawingSec->setHeight(100);
+        $objDrawingSec->setOffsetX(35);
+
         $sh = [
             1 => [],
-            2 => [__('Due Date'),__('Created Date'),__('Conditions List'),__('Severity Level'),__('Dialog'),__('Description'),__('Status'),__('Crafts'),__('Stage'), __('Element number'), __('Element type'), __('Floor'), __('Structure'), __('Project'),__('QC Id')],
+            2 => [__('Due Date'),__('Update Date'),__('Create Date'),__('Conditions List'),__('Severity Level'),__('Corrective action/Performed work'),__('Description'),__('Status'),__('Crafts'),__('Stage'), __('Element number'), __('Element type'), __('Floor'), __('Structure'), __('Project'),__('QC Id')],
         ];
         $ws->set_data($sh, false);
         foreach ($qcs as $item){
-            $sh [] = [date('d/m/Y',$item->due_date), date('d/m/Y',$item->created_at), __($item->condition_list), __($item->severity_level), $this->getDialog(html_entity_decode($item->description), "@##"), $this->getDesc(html_entity_decode($item->description), "@##"), __($item->status),$item->craft->name, __($item->project_stage), $item->place->custom_number, __($item->place->type),$item->floor->number, $item->object->name, $item->project->name, $item->id];
+            $sh [] = [date('d/m/Y',$item->due_date), date('d/m/Y',$item->updated_at), date('d/m/Y',$item->created_at), __($item->condition_list), __($item->severity_level), $this->getDialog(html_entity_decode($item->description), "@##"), $this->getDesc(html_entity_decode($item->description), "@##"), __($item->status),$item->craft->name, __($item->project_stage), $item->place->custom_number, __($item->place->type),$item->floor->number, $item->object->name, $item->project->name, $item->id];
         }
 
         $ws->set_data($sh, false);
@@ -1070,7 +1034,6 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
 //        $ws->rtl(Language::getCurrent()->direction == 'rtl');
         $ws->send(['name'=>'report', 'format'=>'Excel5']);
     }
-
 
     public function action_tasks(){
         if(Route::name(Request::current()->route()) != 'site.reports.tasks') throw new HTTP_Exception_404;
@@ -1304,5 +1267,24 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         }
     }
 
+    private function getDialog($str, $pattern)
+    {
+        if (strlen($str) > 0) {
 
+            $substr = explode($pattern,$str);
+            unset($substr[0]);
+
+            return implode("\n",$substr);
+        }
+        return "";
+    }
+
+    private function getDesc($str, $pattern)
+    {
+        if (strlen($str) > 0) {
+            $pos = strpos($str, $pattern);
+            return $pos ? substr($str,0, $pos) : $str;
+        }
+        return $str;
+    }
 }

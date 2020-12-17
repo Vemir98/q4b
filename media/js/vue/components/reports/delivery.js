@@ -2,6 +2,7 @@ Vue.component('report-delivery', {
     template: `
     <div>
         <div class="form" >
+           
             <div class="row-flex">
                 <div class="multiselect-col">
                     <label class="multiselect-label">{{companyTxt}}</label>
@@ -26,7 +27,7 @@ Vue.component('report-delivery', {
                 </div>
                 <div class="multiselect-col">
                     <label class="multiselect-label">{{dateRangeTxt}}</label>
-                    <date-picker v-model="time" :disabled="objects.length < 1" @change="timeChanged" type="date" :range="true" format="DD/MM/YYYY"></date-picker>
+                    <date-picker v-model="time" :lang="langs[currentLang]" :disabled="objects.length < 1" @change="timeChanged" type="date" :range="true" format="DD/MM/YYYY"></date-picker>
                 </div>
             </div>
             <div class="row-flex">
@@ -200,7 +201,37 @@ Vue.component('report-delivery', {
             txtPublicResult : "",
             txtTotalResult : "",
             showDropDown: false,
-        };
+            langs: {
+                ru: {
+                    formatLocale: {
+                        months: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+                        monthsShort: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
+                        weekdays: ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
+                        weekdaysShort: ['Вoс', 'Пон', 'Вто', 'Сре', 'Чет', 'Пят', 'Суб'],
+                        weekdaysMin: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+                        firstDayOfWeek: 0,
+                        firstWeekContainsDate: 1,
+                    }
+                },
+                he: {
+                    formatLocale: {
+                        months: ['ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני', 'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'],
+                        monthsShort: ['ינו', 'פבר', 'מרץ', 'אפר', 'מאי', 'יוני', 'יולי', 'אוג', 'ספט', 'אוק', 'נוב', 'דצמ'],
+                        weekdays: ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'],
+                        weekdaysShort: ['א\'', 'ב\'', 'ג\'', 'ד\'', 'ה\'', 'ו\'', 'שבת'],
+                        weekdaysMin: ['א\'', 'ב\'', 'ג\'', 'ד\'', 'ה\'', 'ו\'', 'שבת'],
+                        firstDayOfWeek: 0,
+                        firstWeekContainsDate: 1,
+                    }
+                }
+            }
+
+        }
+    },
+    computed: {
+        currentLang() {
+            return $(".header-current-lang").data("lang")
+        }
     },
     created() {
         axios.defaults.headers.post['X-Requested-With'] = 'XMLHttpRequest';
