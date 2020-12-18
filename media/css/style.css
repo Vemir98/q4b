@@ -9280,8 +9280,8 @@ ul.q4-unordered-list > li {
   .printable-logo {
     display: inline-block;
     vertical-align: middle;
-    width: 69px;
-    height: 63px; }
+    width: 62px;
+    height: 62px; }
     .printable-logo img {
       width: 100%; }
 
@@ -9518,7 +9518,6 @@ ul.q4-unordered-list > li {
   .print-landscape-mode {
     padding: 15px 0 30px 0; }
     .print-landscape-mode .printable-logo {
-      width: 69px;
       height: 63px; }
       .print-landscape-mode .printable-logo img {
         width: 100%; }
@@ -11469,7 +11468,7 @@ header {
 
 .report-result {
   background: #ffffff;
-  padding: 22px 30px 5px 30px;
+  padding: 5px 30px 5px 30px;
   box-shadow: 1px 1px 12px 1px #dcdfe6;
   margin-bottom: 15px;
   -webkit-border-radius: 10px;

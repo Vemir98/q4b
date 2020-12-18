@@ -1,12 +1,21 @@
 <?defined('SYSPATH') OR die('No direct script access.');?>
 <?$range = Arr::extract($_GET,["from","to"]);?>
+<style>
+    .q4b-logo {
+        object-fit: contain;
+    }
+    .rtl .print-reports-list .text-right{
+        text-align: left;
+    }
+</style>
 <div id="qc-list-printable" class="print-reports-list">
         <div class="text-right">
             <div class="printable-logo">
-                <img class="q4b-logo" src="/media/img/logo.png" alt="logo">
+                <img class="q4b-logo" style="height: 64px" src="/media/img/logo_50X50.png" alt="logo">
             </div>
+
             <div class="printable-logo">
-                <img class="q4b-logo" src="/media/img/iso-group-365.png" alt="logo">
+                <img class="q4b-logo" style="height: 60px" src="/media/img/iso_50X50.png" alt="logo">
             </div>
         </div>
         <div class="report-project-desc">
@@ -118,7 +127,11 @@
             <div class="page-break">
                 <div class="text-right">
                     <div class="printable-logo">
-                        <img class="q4b-logo" src="/media/img/logo.png" alt="logo">
+                        <img class="q4b-logo" style="height: 64px" src="/media/img/logo_50X50.png" alt="logo">
+                    </div>
+
+                    <div class="printable-logo">
+                        <img class="q4b-logo" style="height: 60px" src="/media/img/iso_50X50.png" alt="logo">
                     </div>
                 </div>
                 <h4><?=__('Quality control')?> #<?=$q->id?></h4>

@@ -7,8 +7,8 @@
     <?else: ?>
     <div class="report-result">
         <div class="text-center">
-            <img class="q4b-logo" src="/media/img/iso-group-365.png" alt="logo">
-            <img class="q4b-logo" src="/media/img/logo_variation2-3.png" alt="logo">
+            <img class="q4b-logo" src="/media/img/q4b_quality.png" alt="logo">
+            <img class="q4b-logo" src="/media/img/q4b_logo.png" alt="logo">
         </div>
     </div>
     <?if ($pagination->current_page == 1): ?>
