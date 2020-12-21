@@ -968,6 +968,16 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
 
         $ws->set_active_sheet(0);
         $as = $ws->get_active_sheet();
+        if (Language::getCurrent()->direction == 'rtl') {
+            $colsArr = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'];
+            foreach ($colsArr as $col) {
+                $as->getStyle($col)
+                    ->getAlignment()
+                    ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+                $as->getStyle($col)->getFont()->setSize(10);
+            }
+        }
+
         $as->setTitle('Report');
 
         $as->getDefaultStyle()->getFont()->setSize(10);
@@ -985,10 +995,11 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         $as->getColumnDimension('K')->setWidth(16);
         $as->getColumnDimension('L')->setWidth(10);
         $as->getColumnDimension('M')->setWidth(7);
-        $as->getColumnDimension('N')->setWidth(15);
+        $as->getColumnDimension('N')->setWidth(17);
         $as->getColumnDimension('O')->setWidth(25);
         $as->getColumnDimension('P')->setWidth(17);
         $as->getRowDimension('1')->setRowHeight(80);
+        $as->getRowDimension('2')->setRowHeight(15);
 
         $objDrawing = new PHPExcel_Worksheet_Drawing();
         $objDrawing->setName('Logo');
@@ -1024,14 +1035,14 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         $ws->get_active_sheet()->getStyle($header_range)->getFont()->setSize(12)->setBold(true);
         $count = count($sh);
         for ($i = 3; $i < $count ; $i++) {
-            $az[] = "E" . $i;
+            $az[] = "F" . $i;
         }
         $az = array_slice($az, 0, $count);
         foreach ($az as $col) {
             $ws->get_active_sheet()->getStyle($col)
                 ->getAlignment()->setWrapText(true);
         }
-//        $ws->rtl(Language::getCurrent()->direction == 'rtl');
+        $ws->rtl(Language::getCurrent()->direction !== 'rtl');
         $ws->send(['name'=>'report', 'format'=>'Excel5']);
     }
 
@@ -1283,7 +1294,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
     {
         if (strlen($str) > 0) {
             $pos = strpos($str, $pattern);
-            return $pos ? substr($str,0, $pos) : $str;
+            return $pos ? rtrim(substr($str,0, $pos), " \n\r\t\v\0") : rtrim($str, " \n\r\t\v\0");
         }
         return $str;
     }

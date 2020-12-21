@@ -11985,6 +11985,12 @@ header {
   width: 100px;
   max-width: 100px; }
 
+.mx-datepicker-popup .mx-btn-icon-double-left .mx-icon-double-left:before,
+.mx-datepicker-popup .mx-btn-icon-double-left .mx-icon-double-left:after,
+.mx-datepicker-popup .mx-btn-icon-double-right .mx-icon-double-right:after,
+.mx-datepicker-popup .mx-btn-icon-double-right .mx-icon-double-right:before {
+  display: none; }
+
 @media (max-width: 1620px) {
   .report-status-list .report-status-results {
     width: 100%; }
