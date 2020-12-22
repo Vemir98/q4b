@@ -968,14 +968,20 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
 
         $ws->set_active_sheet(0);
         $as = $ws->get_active_sheet();
+        $colsTopAlign = ['F', 'G'];
         if (Language::getCurrent()->direction == 'rtl') {
-            $colsArr = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'];
-            foreach ($colsArr as $col) {
+            $colsRightAlign = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'];
+            foreach ($colsRightAlign as $col) {
                 $as->getStyle($col)
                     ->getAlignment()
                     ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
                 $as->getStyle($col)->getFont()->setSize(10);
             }
+        }
+        foreach ($colsTopAlign as $col) {
+            $as->getStyle($col)
+                ->getAlignment()
+                ->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
         }
 
         $as->setTitle('Report');
@@ -988,7 +994,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         $as->getColumnDimension('D')->setWidth(15);
         $as->getColumnDimension('E')->setWidth(13);
         $as->getColumnDimension('F')->setWidth(60);
-        $as->getColumnDimension('G')->setWidth(80);
+        $as->getColumnDimension('G')->setWidth(60);
         $as->getColumnDimension('H')->setWidth(12);
         $as->getColumnDimension('I')->setWidth(45);
         $as->getColumnDimension('J')->setWidth(20);
@@ -997,7 +1003,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         $as->getColumnDimension('M')->setWidth(7);
         $as->getColumnDimension('N')->setWidth(17);
         $as->getColumnDimension('O')->setWidth(25);
-        $as->getColumnDimension('P')->setWidth(17);
+        $as->getColumnDimension('P')->setWidth(18);
         $as->getRowDimension('1')->setRowHeight(80);
         $as->getRowDimension('2')->setRowHeight(15);
 
@@ -1036,6 +1042,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         $count = count($sh);
         for ($i = 3; $i < $count ; $i++) {
             $az[] = "F" . $i;
+            $az[] = "G" . $i;
         }
         $az = array_slice($az, 0, $count);
         foreach ($az as $col) {

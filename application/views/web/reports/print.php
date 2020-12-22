@@ -157,6 +157,17 @@
                             <span><?=__('Due Date')?>: <strong><?=$q->due_date ? date('d/m/Y',$q->due_date): ''?></strong></span>
                         </h4>
                     </div>
+                    <div class="reports-prop-print-title">
+                        <h4>
+                            <?if(strlen($q->severity_level)):?>
+                                <span><?=__('Severity Level')?>: <strong><?=__($q->severity_level)?></strong> | </span>
+                            <?endif?>
+
+                            <?if(strlen($q->condition_list)):?>
+                                <span><?=__('Conditions List')?>: <strong><?=__($q->condition_list)?></strong></span>
+                            <?endif?>
+                        </h4>
+                    </div>
 
                 </div>
 
