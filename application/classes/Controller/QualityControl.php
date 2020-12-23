@@ -11,7 +11,7 @@ class Controller_QualityControl extends HDVP_Controller_Template
     protected $_actions_perms = [
         'create' => [
             'GET' => 'read',
-            'POST' => 'update'
+            'POST' => 'create'
         ],
         'get_objects,get_places,get_place_data,get_places_for_floor,get_plans' => [
             'GET' => 'read'

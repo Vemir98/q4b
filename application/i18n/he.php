@@ -807,5 +807,6 @@ return [
     'Description1' => 'תיאור',
     'Include attached files'=>'כולל קבצים מצורפים',
     'Old'=>'ישן',
+    'project_subcontractor'=>'קבלן משנה',
     ''=>'',
 ];

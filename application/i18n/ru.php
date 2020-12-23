@@ -780,5 +780,6 @@ return [
     'Description1' => 'Описание',
     'Include attached files'=>'Включая прикрепленные файлы',
     'Old'=>'Старый',
+    'project_subcontractor'=>'Субподрядчик',
     ''=>'',
 ];

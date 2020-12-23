@@ -809,5 +809,6 @@ return [
     'Description1' => 'Description',
     'Include attached files'=>'Include attached files',
     'Old'=>'Old',
+    'project_subcontractor'=>'Subcontractor',
     ''=>'',
 ];
