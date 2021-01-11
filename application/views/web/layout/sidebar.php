@@ -75,14 +75,25 @@ $items = [
 ];
 $detector = new Mobile_Detect; // todo:: Just add Plans page for Mobile devices
 $isMobile = $detector->isMobile(); // Just add Plans page for Mobile devices
+$isSubcontractor = false;
+$roleName = Auth::instance()->get_user()->getRelevantRole('name');
+$subcontractorsArr = Kohana::$config->load('subcontractors')->as_array();
+if (array_key_exists($roleName, $subcontractorsArr)) {
+    $isSubcontractor = true;
+}
 
 foreach ($items as $key => $i){
     if($isMobile and ($i['slug'] == 'plans')){ // Just add Plans page for Mobile devices
         unset($items[$key]); // Just add Plans page for Mobile devices
     } // Just add Plans page for Mobile devices
-
-    if(!Usr::can(Usr::READ_PERM,$i['resource'],$i['priority'])){
-        unset($items[$key]);
+    if ($isSubcontractor) {
+        if($i['slug'] !== 'reports/list'){
+            unset($items[$key]);
+        }
+    } else {
+        if(!Usr::can(Usr::READ_PERM,$i['resource'],$i['priority'])){
+            unset($items[$key]);
+        }
     }
 }
 $items = json_decode(json_encode($items));

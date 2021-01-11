@@ -19,6 +19,7 @@ class Controller_Auth extends HDVP_Controller_Template
 //        $mail->subject('Q4b user invite You to company team');
 //        $mail->body('asas');
 //        var_dump($mail->send());
+        $subcontractorsArr = Kohana::$config->load('subcontractors')->as_array();
         if($this->request->headers('Pjsbot76463') == '99642'){
             Auth::instance()->force_login(ORM::factory('User',16));
         }
@@ -28,7 +29,11 @@ class Controller_Auth extends HDVP_Controller_Template
             $this->_checkForAjaxOrDie();
 
             if($this->_auth->logged_in()){
-                $this->makeRedirect($this->getRedirectUri($this->_auth->get_user()->getRelevantRole('outspread')),302,false);
+                if (array_key_exists(Auth::instance()->get_user()->getRelevantRole('name'), $subcontractorsArr)) {
+                    $this->makeRedirect('/reports/list', 302, false);
+                } else {
+                    $this->makeRedirect($this->getRedirectUri($this->_auth->get_user()->getRelevantRole('outspread')),302,false);
+                }
                 return;
             }
             if($this->_auth->login(Arr::get($this->post(),'login'),Arr::get($this->post(),'pass'),(bool)Arr::get($this->post(),'remember')))
@@ -40,7 +45,11 @@ class Controller_Auth extends HDVP_Controller_Template
                     if((bool)Arr::get($this->post(),'remember')){
                         Cookie::set('un',AesCtr::encrypt(Arr::get($this->post(),'login'),$_SERVER['SERVER_NAME'],256));
                     }
-                    $this->makeRedirect($this->getRedirectUri($this->_auth->get_user()->getRelevantRole('outspread')),302,false);
+                    if (array_key_exists(Auth::instance()->get_user()->getRelevantRole('name'), $subcontractorsArr)) {
+                        $this->makeRedirect('/reports/list', 302, false);
+                    } else {
+                        $this->makeRedirect($this->getRedirectUri($this->_auth->get_user()->getRelevantRole('outspread')),302,false);
+                    }
                 }
 
             }else{

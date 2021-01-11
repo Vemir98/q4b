@@ -68,4 +68,16 @@ class Model_CmpCraft extends ORM
     public function source(){
         return 'custom';
     }
+
+    public function getFilteredCrafts()
+    {
+        $roleName = Auth::instance()->get_user()->getRelevantRole('name');
+        $subcontractorsArr = Kohana::$config->load('subcontractors')->as_array();
+        if (array_key_exists($roleName, $subcontractorsArr)) {
+            $craftsNames = $subcontractorsArr[$roleName]['specialties'];
+            return $this->where(DB::expr("TRIM(name)"), 'IN', $craftsNames);
+        } else {
+            return $this;
+        }
+    }
 }

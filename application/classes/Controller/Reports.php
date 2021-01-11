@@ -658,16 +658,22 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                 $scopes[] = $item->scope;
                 $plans[$item->id] = $item;
             }
+            $isSubcontractor = false;
+            $roleName = Auth::instance()->get_user()->getRelevantRole('name');
+            $subcontractorsArr = Kohana::$config->load('subcontractors')->as_array();
+            if (array_key_exists($roleName, $subcontractorsArr)) {
+                $isSubcontractor = true;
+            }
 
             $this->setResponseData('modal',View::make('reports/quality-control',
                 [
                     'item' => $qc,
-                    'itemStatuses' => Enum_QualityControlStatus::toArray(),
+                    'itemStatuses' => !$isSubcontractor ? Enum_QualityControlStatus::toArray() : Enum_QualityControlStatusSubcontractor::toArray(),
                     'itemPlace' => $qc->place,
                     'itemPlaceSpaces' => $qc->place->spaces->find_all(),
                     'itemConditionLevels' => Enum_QualityControlConditionLevel::toArray(),
                     'itemConditionList' => Enum_QualityControlConditionList::toArray(),
-                    'approveStatusList' => Enum_QualityControlApproveStatus::toArray(),
+                    'approveStatusList' => !$isSubcontractor ? Enum_QualityControlApproveStatus::toArray() : Enum_QualityControlApproveStatusSubcontractor::toArray(),
                     'itemTasks' => $qc->tasks->find_all(),
                     'createUsr' => $qc->createUser,
                     'updateUsr' => $qc->updateUser,
@@ -697,16 +703,22 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         if( ! $qc->loaded()){
             throw new HTTP_Exception_404;
         }
+        $isSubcontractor = false;
+        $roleName = Auth::instance()->get_user()->getRelevantRole('name');
+        $subcontractorsArr = Kohana::$config->load('subcontractors')->as_array();
+        if (array_key_exists($roleName, $subcontractorsArr)) {
+            $isSubcontractor = true;
+        }
 
         $this->setResponseData('html',View::make('reports/quality-control-print',
             [
                 'item' => $qc,
-                'itemStatuses' => Enum_QualityControlStatus::toArray(),
+                'itemStatuses' => !$isSubcontractor ? Enum_QualityControlStatus::toArray() : Enum_QualityControlStatusSubcontractor::toArray(),
                 'itemPlace' => $qc->place,
                 'itemPlaceSpaces' => $qc->place->spaces->find_all(),
                 'itemConditionLevels' => Enum_QualityControlConditionLevel::toArray(),
                 'itemConditionList' => Enum_QualityControlConditionList::toArray(),
-                'approveStatusList' => Enum_QualityControlApproveStatus::toArray(),
+                'approveStatusList' => !$isSubcontractor ? Enum_QualityControlApproveStatus::toArray() : Enum_QualityControlApproveStatusSubcontractor::toArray(),
                 'itemTasks' => $qc->tasks->find_all(),
                 'createUsr' => $qc->createUser,
                 'updateUsr' => $qc->updateUser,
@@ -942,8 +954,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                 }
             }
 
-
-            foreach($comp->crafts->where('status','=',Enum_Status::Enabled)->find_all() as $craft){
+            foreach($comp->crafts->where('status','=',Enum_Status::Enabled)->getFilteredCrafts()->find_all() as $craft){
                 $items[$comp->id]['crafts'][$craft->id] = [
                     'id' => $craft->id,
                     'name' => $craft->name
@@ -968,17 +979,18 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
 
         $ws->set_active_sheet(0);
         $as = $ws->get_active_sheet();
-        $colsTopAlign = ['F', 'G'];
+        $colsToRightAlign = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'];
+        $colsToAlignTop = ['F', 'G'];
+        $colsToWrapText = ['F', 'G'];
         if (Language::getCurrent()->direction == 'rtl') {
-            $colsRightAlign = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'];
-            foreach ($colsRightAlign as $col) {
+            foreach ($colsToRightAlign as $col) {
                 $as->getStyle($col)
                     ->getAlignment()
                     ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
                 $as->getStyle($col)->getFont()->setSize(10);
             }
         }
-        foreach ($colsTopAlign as $col) {
+        foreach ($colsToAlignTop as $col) {
             $as->getStyle($col)
                 ->getAlignment()
                 ->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
@@ -1006,7 +1018,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         $as->getColumnDimension('P')->setWidth(18);
         $as->getRowDimension('1')->setRowHeight(80);
         $as->getRowDimension('2')->setRowHeight(15);
-
+        $as->setAutoFilter('A2:P2');
         $objDrawing = new PHPExcel_Worksheet_Drawing();
         $objDrawing->setName('Logo');
         $objDrawing->setDescription('Logo');
@@ -1040,14 +1052,15 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         $header_range = "{$first_letter}2:{$last_letter}2";
         $ws->get_active_sheet()->getStyle($header_range)->getFont()->setSize(12)->setBold(true);
         $count = count($sh);
-        for ($i = 3; $i < $count ; $i++) {
-            $az[] = "F" . $i;
-            $az[] = "G" . $i;
+        for ($i = 3; $i <= $count ; $i++) {
+            $az[] = $i;
         }
         $az = array_slice($az, 0, $count);
-        foreach ($az as $col) {
-            $ws->get_active_sheet()->getStyle($col)
-                ->getAlignment()->setWrapText(true);
+        for ($i = 0; $i < count($az); $i++) {
+            foreach ($colsToWrapText as $col) {
+                $ws->get_active_sheet()->getStyle($col.$az[$i])
+                    ->getAlignment()->setWrapText(true);
+            }
         }
         $ws->rtl(Language::getCurrent()->direction !== 'rtl');
         $ws->send(['name'=>'report', 'format'=>'Excel5']);
@@ -1059,7 +1072,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         $projectId = (int)$this->request->param('projectId');
         $objectId = (int)$this->request->param('objectId');
         $floorId = (int)$this->request->param('floorId');
-        $placeId = (int)$this->request->param('placeId');;
+        $placeId = (int)$this->request->param('placeId');
         $output = [];
         $viewInfo = [];
         if($placeId){

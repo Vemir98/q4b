@@ -16,8 +16,13 @@ $statuses = [
     'invalid',
     'repaired',
 ];
+$isSubcontractor = false;
+$roleName = Auth::instance()->get_user()->getRelevantRole('name');
+$subcontractorsArr = Kohana::$config->load('subcontractors')->as_array();
+if (array_key_exists($roleName, $subcontractorsArr)) {
+    $isSubcontractor = true;
+}
 
- // echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$_GET,$selectedArray]); echo "</pre>"; exit;
 ?>
 <!--reports list-->
     <div class="generate-reports"
@@ -78,50 +83,93 @@ $statuses = [
                                 <div class="multi-select-box">
                                     <div class="select-imitation">
                                         <span class="select-imitation-title">
-                                            <?foreach ($statuses as  $status):?>
-                                                <?if($selectedArray["statuses"]):?>
-                                                    <?if(in_array($status, $selectedArray["statuses"])):?>
-                                                        <?=__($status)?>,
-                                                    <?endif; ?>
+                                            <?if (!$isSubcontractor):?>
+                                                <?foreach ($statuses as  $status):?>
+                                                    <?if($selectedArray["statuses"]):?>
+                                                        <?if(in_array($status, $selectedArray["statuses"])):?>
+                                                            <?=__($status)?>,
+                                                        <?endif; ?>
+                                                        <?else:?>
+                                                            <?=__($status)?>,
+                                                    <?endif;?>
+                                                <?endforeach;?>
+                                            <?else:?>
+                                                <?foreach (Enum_QualityControlStatusSubcontractor::toArray() as  $status):?>
+                                                    <?if($selectedArray["statuses"]):?>
+                                                        <?if(in_array($status, $selectedArray["statuses"])):?>
+                                                            <?=__($status)?>,
+                                                        <?endif; ?>
                                                     <?else:?>
                                                         <?=__($status)?>,
-                                                <?endif;?>
-                                            <?endforeach;?>
-
+                                                    <?endif;?>
+                                                <?endforeach;?>
+                                            <?endif;?>
                                         </span>
                                         <div class="over-select"></div>
                                         <i class="arrow-down q4bikon-arrow_bottom"></i>
                                     </div>
                                     <div class="checkbox-list statuses-chbx">
-                                        <?foreach ($statuses as  $status):?>
-                                        <?if($selectedArray["statuses"]){
-                                            $checked = in_array($status, $selectedArray["statuses"]) ? "checked" : '';
-                                        }else{
-                                           $checked =  "checked";
-                                        }
-                                        ?>
+                                        <?if (!$isSubcontractor):?>
+                                            <?foreach ($statuses as  $status):?>
+                                            <?if($selectedArray["statuses"]){
+                                                $checked = in_array($status, $selectedArray["statuses"]) ? "checked" : '';
+                                            }else{
+                                               $checked =  "checked";
+                                            }
+                                            ?>
+                                                    <div class="checkbox-list-row">
+                                                        <span class="checkbox-text">
+                                                            <label class="checkbox-wrapper-multiple <?=$checked?>" data-val="<?=$status?>">
+                                                                <span class="checkbox-replace"></span>
+                                                                <i class="checkbox-list-tick q4bikon-tick"></i>
+                                                            </label>
+                                                            <?=__($status)?>
+                                                        </span>
+                                                    </div>
+                                            <?endforeach;?>
+                                        <?else:?>
+                                            <?foreach (Enum_QualityControlStatusSubcontractor::toArray() as  $status):?>
+                                                <?if($selectedArray["statuses"]){
+                                                    $checked = in_array($status, $selectedArray["statuses"]) ? "checked" : '';
+                                                }else{
+                                                    $checked =  "checked";
+                                                }
+                                                ?>
                                                 <div class="checkbox-list-row">
-                                                    <span class="checkbox-text">
-                                                        <label class="checkbox-wrapper-multiple <?=$checked?>" data-val="<?=$status?>">
-                                                            <span class="checkbox-replace"></span>
-                                                            <i class="checkbox-list-tick q4bikon-tick"></i>
-                                                        </label>
-                                                        <?=__($status)?>
-                                                    </span>
+                                                        <span class="checkbox-text">
+                                                            <label class="checkbox-wrapper-multiple <?=$checked?>" data-val="<?=$status?>">
+                                                                <span class="checkbox-replace"></span>
+                                                                <i class="checkbox-list-tick q4bikon-tick"></i>
+                                                            </label>
+                                                            <?=__($status)?>
+                                                        </span>
                                                 </div>
-                                        <?endforeach;?>
+                                            <?endforeach;?>
+                                        <?endif;?>
 
                                     </div><!--.checkbox-list-->
                                     <select class="hidden-select" name="statuses[]" multiple>
-                                        <?foreach ($statuses as  $status):?>
-                                        <?if($selectedArray["statuses"]){
-                                            $selected = in_array($status, $selectedArray["statuses"]) ? "selected" : '';
-                                        }else{
-                                           $selected =  "selected";
-                                        }
-                                        ?>
+                                        <?if (!$isSubcontractor):?>
+                                            <?foreach ($statuses as  $status):?>
+                                            <?if($selectedArray["statuses"]){
+                                                $selected = in_array($status, $selectedArray["statuses"]) ? "selected" : '';
+                                            }else{
+                                               $selected =  "selected";
+                                            }
+                                            ?>
+                                                    <option value="<?=$status?>" <?=$selected?>><?=__($status)?></option>
+                                            <?endforeach;?>
+                                        <?else:?>
+                                            <?foreach (Enum_QualityControlStatusSubcontractor::toArray() as  $status):?>
+                                                <?if($selectedArray["statuses"]){
+                                                    $selected = in_array($status, $selectedArray["statuses"]) ? "selected" : '';
+                                                }else{
+                                                    $selected =  "selected";
+                                                }
+                                                ?>
                                                 <option value="<?=$status?>" <?=$selected?>><?=__($status)?></option>
-                                        <?endforeach;?>
+                                            <?endforeach;?>
+                                        <?endif;?>
                                     </select>
                                 </div>
                             </div>
@@ -133,9 +181,17 @@ $statuses = [
                                     <i class="q4bikon-arrow_bottom"></i>
                                     <select name="approval_status" class="q4-select q4-form-input">
                                         <option value="all"><?=__("All")?></option>
-                                        <?foreach (Enum_QualityControlApproveStatus::toArray() as $as):?>
-                                            <option value="<?=$as?>" <?=$selectedArray["approval_status"]==$as ? "selected" : ""?>><?=__($as)?></option>
-                                        <?endforeach?>
+                                        <?if(! $isSubcontractor):?>
+                                            <?foreach (Enum_QualityControlApproveStatus::toArray() as $as):?>
+                                                <option value="<?=$as?>" <?=$selectedArray["approval_status"]==$as ? "selected" : ""?>><?=__($as)?></option>
+                                            <?endforeach?>
+                                        <?else:?>
+                                            <?foreach (Enum_QualityControlApproveStatusSubcontractor::toArray() as $as):?>
+                                                <option value="<?=$as?>" <?=$selectedArray["approval_status"]==$as ? "selected" : ""?>><?=__($as)?></option>
+                                            <?endforeach?>
+                                        <?endif;?>
+
+
                                     </select>
                                 </div>
                             </div>

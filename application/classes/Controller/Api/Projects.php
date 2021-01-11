@@ -456,6 +456,7 @@ class Controller_Api_Projects extends HDVP_Controller_API
                 'unique_token',
                 'del_rep_id'
             ]);
+        $clientData['plan_id'] *=1;
         if(empty($clientData['del_rep_id']) OR !(int)$clientData['del_rep_id']){
             unset($clientData['del_rep_id']);
         }else{
@@ -582,6 +583,7 @@ class Controller_Api_Projects extends HDVP_Controller_API
                 'craft_id',
                 'message'
             ]);
+        $clientData['plan_id'] *= 1;
 
         $clientData['tasks'] = array_values($clientData['tasks']);
         $project = $qc->project;
@@ -699,6 +701,116 @@ class Controller_Api_Projects extends HDVP_Controller_API
         return $output;
     }
 
+    public function action_qc_by_statuses()
+    {
+        $id = (int)$this->request->param('id');
+        $statuses = $this->request->query('statuses');
+        $approvalStatuses = $this->request->query('approval_statuses');
+        $project = ORM::factory('Project',$id);
+        if( $id AND (!$project->loaded() OR !$this->_user->canUseProject($project))){
+            throw new HTTP_Exception_404;
+        }
+        $this->_responseData = [];
+        $this->_responseData['items'] = [];
+
+        $usrProjects = ORM::factory('UserProjectsRelation')->getProjectIdsForUser($this->_user->id);
+        $qc = ORM::factory('QualityControl')
+            ->with('project')
+            ->where('qualitycontrol.project_id','=', $id);
+        if ($statuses AND count($statuses)) {
+            $qc = $qc->where('qualitycontrol.status','IN',$statuses);
+
+        }
+        if ($approvalStatuses AND count($approvalStatuses)) {
+            $qc = $qc->where('qualitycontrol.approval_status','IN',$approvalStatuses);
+        }
+
+        $qc = $qc->find_all();
+
+        foreach ($qc as $q){
+            $qcIds[] = $q->id;
+            $this->_responseData['items'][] = [
+                'id' => $q->id,
+                'projId' => $q->project_id,
+                'cmpID' => $q->project->company_id,
+                'objId' => $q->object_id,
+                'floorId' => $q->floor_id,
+                'placeId' => $q->place_id,
+                'spaceId' => $q->space_id,
+                'planId' => $q->plan_id,
+                'tasks' => [],
+                'files' => $this->getQualityControlImages($q),
+                'professionId' => $q->profession_id,
+                'craftId' => $q->craft_id,
+                'placeType' => $q->place_type,
+                'projectStage' => $q->project_stage,
+                'severityLevel' => $q->severity_level,
+                'conditionList' => $q->condition_list,
+                'description' => $q->description,
+                'status' => $q->status,
+                'dueDate' => $q->due_date,
+                'createdAt' => $q->created_at,
+                'updatedAt' => $q->updated_at,
+                'approvedAt' => $q->approved_at,
+                'createdBy' => $q->createUser->email,
+                'updatedBy' => $q->updateUser->email,
+                'approvedBy' => $q->approveUser->email,
+                'approvalStatus' => $q->approval_status,
+            ];
+        }
+        if(count($qcIds)){
+            $qcIds = '('.implode(',',$qcIds).')';
+            $res = DB::query(Database::SELECT,'SELECT * FROM qcontrol_pr_tasks WHERE qcontrol_id IN '.$qcIds)->execute()->as_array();
+            $qcIds = [];
+            if(count($res)){
+                foreach ($res as $r){
+                    $qcIds[$r['qcontrol_id']][] = $r['task_id'];
+                }
+
+                for ($i=0; $i < count($this->_responseData['items']); $i++){
+                    if(!empty($qcIds[$this->_responseData['items'][$i]['id']])){
+                        $this->_responseData['items'][$i]['tasks'] = $qcIds[$this->_responseData['items'][$i]['id']];
+                    }
+                }
+
+
+                if($this->_user->getRelevantRole('priority') > Enum_UserPriorityLevel::Corporate){
+                    //если компании
+                    if($this->_user->getRelevantRole('priority') <= Enum_UserPriorityLevel::Company){
+                        foreach($this->_responseData['items'] as $key => $item){
+                            if($id AND $item['projId'] != $project->id){
+                                unset($this->_responseData['items'][$key]);
+                                continue;
+                            }
+                            if($item['cmpId'] != $this->_user->company_id){
+                                if(!in_array($item['projId'],$usrProjects)){
+                                    unset($this->_responseData['items'][$key]);
+                                }
+                            }
+                        }
+                    }else{//если проект
+                        foreach($this->_responseData['items'] as $key => $item){
+                            if($id AND $item['projId'] != $project->id){
+                                unset($this->_responseData['items'][$key]);
+                                continue;
+                            }
+                            if(!in_array($item['projId'],$usrProjects)){
+                                unset($this->_responseData['items'][$key]);
+                            }
+                        }
+                    }
+
+                }elseif ($id){
+                    foreach($this->_responseData['items'] as $key => $item){
+                        if($item['projId'] != $project->id){
+                            unset($this->_responseData['items'][$key]);
+                            continue;
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     public function action_invalid_qc(){
         $id = (int)$this->request->param('id');

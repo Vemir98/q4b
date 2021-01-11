@@ -10,8 +10,14 @@ $printableItem = $item;
 ?>
 <?$disabled = $item->approval_status=="approved" ? ' disabled-input' : '';
 $disabledStatus = $item->approval_status=="approved" ? ' disabled-input' : '';
+$isSubcontractor = false;
+$roleName = Auth::instance()->get_user()->getRelevantRole('name');
+$subcontractorsArr = Kohana::$config->load('subcontractors')->as_array();
+if (array_key_exists($roleName, $subcontractorsArr)) {
+    $isSubcontractor = true;
+}
 $isSuperAdmin = $_USER->is('super_admin');
-if($_USER->is('project_supervisor')){//запрет на изменение статуса для project_supervisor
+if($_USER->is('project_supervisor') || $isSubcontractor){//запрет на изменение статуса для project_supervisor
     $disabledStatus = ' disabled-input';
 }
 ?>

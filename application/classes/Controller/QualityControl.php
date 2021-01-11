@@ -33,6 +33,7 @@ class Controller_QualityControl extends HDVP_Controller_Template
 
             $this->_checkForAjaxOrDie();
             $formData = Arr::extract($this->post(),['space_id','status','project_stage','due_date','description','tasks','profession_id','craft_id','severity_level','condition_list','plan_id','message']);
+            $formData['plan_id'] *=1;
             if(!empty(trim($formData['description'])))
                 $formData['description'] = '['.date('d/m/Y').'] '.$formData['description'].PHP_EOL;
             $formData['due_date'] = DateTime::createFromFormat('d/m/Y',$formData['due_date'])->getTimestamp();
