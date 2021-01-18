@@ -561,6 +561,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
 
         if($this->request->method() == HTTP_Request::POST){
             $data = Arr::extract($this->post(),['approval_status','status','due_date','description','severity_level','condition_list','plan_id','project_stage','craft_id','tasks','profession_id','craft_id','message']);
+            $data['plan_id'] *= 1;
             try{
                 Database::instance()->begin();
                 if(empty($data['tasks'])){
@@ -575,9 +576,9 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                 if(!in_array($data['approval_status'],Enum_QualityControlApproveStatus::toArray())){
                     throw new HDVP_Exception('Incorrect approval status');
                 }
-                if(($data['status'] != Enum_QualityControlStatus::Invalid) and ($data['status'] != Enum_QualityControlStatus::Repaired)){
-                    $data['severity_level'] = $data['condition_list'] = null;
-                }
+//                if(($data['status'] != Enum_QualityControlStatus::Invalid) and ($data['status'] != Enum_QualityControlStatus::Repaired)){
+//                    $data['severity_level'] = $data['condition_list'] = null;
+//                }
 
                 $data['due_date'] = DateTime::createFromFormat('d/m/Y',$data['due_date'])->getTimestamp();
                 $project = $qc->project;
@@ -1043,7 +1044,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         ];
         $ws->set_data($sh, false);
         foreach ($qcs as $item){
-            $sh [] = [date('d/m/Y',$item->due_date), date('d/m/Y',$item->updated_at), date('d/m/Y',$item->created_at), __($item->condition_list), __($item->severity_level), $this->getDialog(html_entity_decode($item->description), "@##"), $this->getDesc(html_entity_decode($item->description), "@##"), __($item->status),$item->craft->name, __($item->project_stage), $item->place->custom_number, __($item->place->type),$item->floor->number, $item->object->name, $item->project->name, $item->id];
+            $sh [] = [date('d/m/Y',$item->due_date), date('d/m/Y',$item->updated_at), date('d/m/Y',$item->created_at), __($item->condition_list), __($item->severity_level), $item->getDialog(html_entity_decode($item->description), "@##"), $item->getDesc(html_entity_decode($item->description), "@##"), __($item->status),$item->craft->name, __($item->project_stage), $item->place->custom_number, __($item->place->type),$item->floor->number, $item->object->name, $item->project->name, $item->id];
         }
 
         $ws->set_data($sh, false);
@@ -1296,26 +1297,5 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         }else{
             echo View::make($viewInfo['path'],$output);
         }
-    }
-
-    private function getDialog($str, $pattern)
-    {
-        if (strlen($str) > 0) {
-
-            $substr = explode($pattern,$str);
-            unset($substr[0]);
-
-            return implode("\n",$substr);
-        }
-        return "";
-    }
-
-    private function getDesc($str, $pattern)
-    {
-        if (strlen($str) > 0) {
-            $pos = strpos($str, $pattern);
-            return $pos ? rtrim(substr($str,0, $pos), " \n\r\t\v\0") : rtrim($str, " \n\r\t\v\0");
-        }
-        return $str;
     }
 }

@@ -146,6 +146,26 @@ class Model_QualityControl extends MORM
         return $this->comments->order_by('created_at','ASC')->find_all();
     }
 
+    public function getDialog($str, $pattern)
+    {
+        if (strlen($str) > 0) {
+
+            $substr = explode($pattern,$str);
+            unset($substr[0]);
+
+            return implode("\n",$substr);
+        }
+        return "";
+    }
+
+    public function getDesc($str, $pattern)
+    {
+        if (strlen($str) > 0) {
+            $pos = strpos($str, $pattern);
+            return $pos ? rtrim(substr($str,0, $pos), " \n\r\t\v\0") : rtrim($str, " \n\r\t\v\0");
+        }
+        return $str;
+    }
 
     public function create(Validation $validation = NULL)
     {

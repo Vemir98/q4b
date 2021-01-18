@@ -595,9 +595,9 @@ class Controller_Api_Projects extends HDVP_Controller_API
         }
         $clientData['due_date'] = $date->getTimestamp();
         $message = $clientData['message'];
-        if($clientData['status'] != Enum_QualityControlStatus::Invalid){
-            $clientData['severity_level']= $clientData['condition_list'] = null;
-        }
+//        if($clientData['status'] != Enum_QualityControlStatus::Invalid && $clientData['status'] != Enum_QualityControlStatus::Repaired){
+//            $clientData['severity_level']= $clientData['condition_list'] = null;
+//        }
         try{
             Database::instance()->begin();
             if(empty($clientData['tasks'])){

@@ -55,6 +55,8 @@
             <span class="reports-prop-title-status light-blue"><?=__('Status')?>: </span>
             <span class="dark-blue"><?=__($q->status)?></span>
             <span class="reports-prop-title-divider">|</span>
+            <span class="dark-blue"><?=__($q->approval_status)?></span>
+            <span class="reports-prop-title-divider">|</span>
             <span class="reports-prop-title-status light-blue"><?=__('Stage')?>: </span>
             <span class="dark-blue"><?=__($q->project_stage)?></span>
             <span class="reports-prop-title-divider">|</span>
@@ -116,6 +118,7 @@
                     <span class="report-plan-prop">
                         <span class="light-blue"><?=__('Status')?>: </span>
                         <span class="dark-blue"><?=__($q->plan->status)?></span><span class="report-plan-divider">&nbsp;| </span>
+                        <span class="report-plan-divider">&nbsp;| <?=__($q->approval_status)?></span>
                     </span>
                     <span class="report-plan-prop">
                         <span class="light-blue"> <?=__('Date')?>: </span>
@@ -156,7 +159,7 @@
                             <div class="col-md-12">
                                 <h4 class="reports-tasks-box-title"><?=__('Description')?></h4>
                                 <div class="report-desc-approve-text">
-                                    <?$desc = explode("\n",$q->description);
+                                    <?$desc = explode("\n",$q->getDesc(html_entity_decode($q->description), "@##"));
                                     foreach ($desc as $line) {?>
                                         <p><?=$line?></p>
                                     <?}?>
@@ -164,6 +167,31 @@
                             </div>
                         </div>
                     </div>
+                <div>
+                    <?if (strlen($q->getDialog(html_entity_decode($q->description), "@##")) > 1) :?>
+                        <ul class="report-desc-approve">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <li class="tab_panel tab_panel_qc">
+                                        <div class="panel_header panel_header_qc">
+                                            <span class="sign"><i class="panel_header_icon q4bikon-plus" style="color: #000"></i></span>
+                                            <h4 class="reports-tasks-box-title"><?=__('Corrective action/Performed work')?></h4>
+                                            <div class="separator"></div>
+                                        </div>
+                                        <div class="panel_content">
+                                            <div class="report-desc-approve-text">
+                                                <?$desc = explode("\n",$q->getDialog(html_entity_decode($q->description), "@##"));
+                                                foreach ($desc as $line) {?>
+                                                    <p><?=$line?></p>
+                                                <?}?>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </div>
+                            </div>
+                        </ul>
+                    <?endif?>
+                </div>
                 <?endif?>
             </div>
 

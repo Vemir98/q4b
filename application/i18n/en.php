@@ -817,5 +817,6 @@ return [
     'project_aluminium'=>'S.C. Aluminum',
     'project_concrete'=>'S.C. Concrete',
     'project_construction'=>'S.C. Construction',
+    'project_general_subcontractor'=>'General subcontractor',
     ''=>'',
 ];

@@ -1,6 +1,12 @@
 <?defined('SYSPATH') OR die('No direct script access.');?>
 <?$range = Arr::extract($_GET,["from","to"]);?>
 <style>
+    @media print{
+        @page {
+            margin-bottom: 1cm;
+            margin-top: 1cm;
+        }
+    }
     .q4b-logo {
         object-fit: contain;
     }
@@ -213,19 +219,29 @@
 
                 <!---Description-->
                 <?if(strlen($q->description)>1):?>
-                    <h4 class="table-modal-label-h4"><?=__('Description')?></h4>
-                    <?$desc = explode("\n",$q->description);
-                    foreach ($desc as $line) {?>
-                        <p><?=$line?></p>
-                    <?}?>
-
-
+                    <div class="mb-20">
+                        <h4 class="table-modal-label-h4"><?=__('Description')?></h4>
+                        <?$desc = explode("\n",$q->getDesc(html_entity_decode($q->description), "@##"));
+                        foreach ($desc as $line) {?>
+                            <p><?=$line?></p>
+                        <?}?>
+                    </div>
+                    <?if(strlen($q->getDialog(html_entity_decode($q->description), "@##"))>1):?>
+                        <div class="mb-20">
+                            <h4 class="table-modal-label-h4"><?=__('Corrective action/Performed work')?></h4>
+                            <?$desc = explode("\n",$q->getDialog(html_entity_decode($q->description), "@##"));
+                            foreach ($desc as $line) {?>
+                                <p><?=$line?></p>
+                            <?}?>
+                        </div>
+                    <?endif?>
                 <?endif?>
 
                 <div class="q4-copyright">
                     <span>
-                        <!-- <?=__('Powered by')?> <img src="/media/img/company-logo-c.png" alt="company logo" class="q4-copyright-img"> -->
-                        <?=__('Copyright © 2017 Q4B').__('All right reserved')?>
+<!--                        --><?//=__('Powered by')?>
+<!--                        <img src="/media/img/company-logo-c.png" alt="company logo" class="q4-copyright-img"> -->
+                        <?=__('Copyright © 2017 Q4B').'   '.__('All right reserved')?>
                     </span>
                 </div>
             </div>

@@ -788,5 +788,6 @@ return [
     'project_aluminium'=>'С.П. Алюминий',
     'project_concrete'=>'С.П. Бетон',
     'project_construction'=>'С.П. Строительство',
+    'project_general_subcontractor'=>'Главный субподрядчик',
     ''=>'',
 ];
