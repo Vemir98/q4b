@@ -417,6 +417,12 @@ $entityType = count($report->getObjects()) ? 'objects' : 'projects';
 </tr>
 </table>
 
+<div class="q4-copyright q4-copyright-quality">
+    <span>
+        <?=__('Copyright © 2017 Q4B').'   '.__('All right reserved')?>
+    </span>
+</div>
+
 <?foreach ($report->getProjectsORObjects($reportEntity) as $entity):?>
 <h3 class="ent-name"><span style="background-color: <?=$stats[$entityType][$entity['id']]['color']?>!important;-webkit-print-color-adjust: exact;"></span><?=$entity['name']?></h3>
     <table class="table crafts-tbl">
@@ -450,20 +456,22 @@ $entityType = count($report->getObjects()) ? 'objects' : 'projects';
             $craftStatTotal += $craftStat['total'];
             $craftStatFiltered += $craftStat['filtered'];
             ?>
-            <tr>
-                <td data-th="<?=__('Specialty list')?>" style="padding: 0 0 0 8px!important;">
-                    <span><?=$craft['name']?></span>
-                </td>
-                <td data-th="<?=__('Quantity')?>" class="enlarged" style="padding: 0!important;">
-                    <table class="ctbl-head-tbl">
-                        <tr>
-                            <td style="line-height: 40px; width: 50%"><span class="report-status-quantity"><?=$craftStat['total']?></span></td>
-                            <td style="line-height: 40px"><span class="report-status-quantity"><?=$craftStat['filtered']?></span></td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-        <?if($i > 4) break?>
+            <?if($craftStat['total'] > 0):?>
+                <tr>
+                    <td data-th="<?=__('Specialty list')?>" style="padding: 0 0 0 8px!important;">
+                        <span><?=$craft['name']?></span>
+                    </td>
+                    <td data-th="<?=__('Quantity')?>" class="enlarged" style="padding: 0!important;">
+                        <table class="ctbl-head-tbl">
+                            <tr>
+                                <td style="line-height: 40px; width: 50%"><span class="report-status-quantity"><?=$craftStat['total']?></span></td>
+                                <td style="line-height: 40px"><span class="report-status-quantity"><?=$craftStat['filtered']?></span></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            <?endif?>
+<!--        --><?//if($i > 4) break?>
         <?endforeach;?>
         </tbody>
     </table>

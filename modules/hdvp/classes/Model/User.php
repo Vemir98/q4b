@@ -8,6 +8,9 @@
  */
 class Model_User extends Model_Auth_User
 {
+    const Ios = 2;
+    const Android = 1;
+
     protected $_has_many = array(
         'user_tokens' => array('model' => 'User_Token'),
         'roles'       => array('model' => 'Role', 'through' => 'roles_users'),

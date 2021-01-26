@@ -8,6 +8,7 @@
 
 class QualityReport
 {
+    const STATUS_EXISTING_AND_FOR_REPAIR = Enum_QualityControlStatus::Existing.' && '.Enum_QualityControlApproveStatus::ForRepair;
     private $_stdColors = [
         '#01fb88',
         '#62358b',
@@ -78,6 +79,9 @@ class QualityReport
      */
     private $_to;
 
+    private $_monthsTimestamps = [];
+    private $_months = [];
+
     private $_company;
     private $_projects;
     private $_objects;
@@ -98,7 +102,14 @@ class QualityReport
             $this->_companyID = (int)$params['company'];
             $this->_from = DateTime::createFromFormat('d/m/Y H:i',$params['from'].' 00:00')->getTimestamp();
             $this->_to = DateTime::createFromFormat('d/m/Y H:i',$params['to'].' 00:00')->getTimestamp();
+            $this->_monthsTimestamps = $this->getMonthsTimestamps($this->_to);
 
+            foreach ($this->_monthsTimestamps as $ts){
+                $this->_months[] = '"'.Date('d/m/y',$ts).'"';
+            }
+
+            $this->_stats['_monthsTimestamps'] = $this->_monthsTimestamps;
+            $this->_stats['_months'] = $this->_months;
 
             if(!empty($params['projects'])){
                 $this->_projectsID = $params['projects'];
@@ -140,6 +151,8 @@ class QualityReport
         $this->_stats = $stats;
         $this->_savedReport = true;
         $this->_specialityDetails = $this->_stats['data']['specialityDetails'];
+        $this->_monthsTimestamps = $this->_stats['_monthsTimestamps'];
+        $this->_months = $this->_stats['_months'];
         return $this;
     }
 
@@ -160,6 +173,7 @@ class QualityReport
 
         $this->_stats['colors'] = [
             Enum_QualityControlStatus::Existing => '#28cf91',
+            self::STATUS_EXISTING_AND_FOR_REPAIR => '#28cf91',
             Enum_QualityControlStatus::Normal => '#005c87',
             Enum_QualityControlStatus::Repaired => '#f99c19',
             Enum_QualityControlStatus::Invalid => '#ff0000',
@@ -208,6 +222,8 @@ class QualityReport
         $this->_stats['data']['to'] = $this->_to;
         $this->_stats['data']['specialityDetails'] = $this->_specialityDetails;
 
+        $this->generateYearStats();
+
     }
 
     protected function craftsQueryPiece($ORMQuery){
@@ -250,6 +266,7 @@ class QualityReport
 
         $this->_stats['total']['statuses'] = [
             Enum_QualityControlStatus::Existing => $this->placesQueryPiece(ORM::factory('QualityControl'))->and_where('status','=',Enum_QualityControlStatus::Existing)->count_all(),
+            self::STATUS_EXISTING_AND_FOR_REPAIR => $this->placesQueryPiece(ORM::factory('QualityControl'))->and_where('status','=',Enum_QualityControlStatus::Existing)->and_where('approval_status','=',Enum_QualityControlApproveStatus::ForRepair)->count_all(),
             Enum_QualityControlStatus::Normal => $this->placesQueryPiece(ORM::factory('QualityControl'))->and_where('status','=',Enum_QualityControlStatus::Normal)->count_all(),
             Enum_QualityControlStatus::Repaired => $this->placesQueryPiece(ORM::factory('QualityControl'))->and_where('status','=',Enum_QualityControlStatus::Repaired)->count_all(),
             Enum_QualityControlStatus::Invalid => $this->placesQueryPiece(ORM::factory('QualityControl'))->and_where('status','=',Enum_QualityControlStatus::Invalid)->count_all(),
@@ -257,6 +274,7 @@ class QualityReport
 
         $this->_stats['filtered']['statuses'] = [
             Enum_QualityControlStatus::Existing => $this->craftsQueryPiece($this->placesQueryPiece(ORM::factory('QualityControl'))->and_where('status','=',Enum_QualityControlStatus::Existing)->and_where('qualitycontrol.updated_at','BETWEEN',DB::expr($this->_from.' AND '.$this->_to))),
+            self::STATUS_EXISTING_AND_FOR_REPAIR => $this->craftsQueryPiece($this->placesQueryPiece(ORM::factory('QualityControl'))->and_where('status','=',Enum_QualityControlStatus::Existing)->and_where('qualitycontrol.updated_at','BETWEEN',DB::expr($this->_from.' AND '.$this->_to))->and_where('qualitycontrol.approval_status','=',Enum_QualityControlApproveStatus::ForRepair)),
             Enum_QualityControlStatus::Normal => $this->craftsQueryPiece($this->placesQueryPiece(ORM::factory('QualityControl'))->and_where('status','=',Enum_QualityControlStatus::Normal)->and_where('qualitycontrol.updated_at','BETWEEN',DB::expr($this->_from.' AND '.$this->_to))),
             Enum_QualityControlStatus::Repaired => $this->craftsQueryPiece($this->placesQueryPiece(ORM::factory('QualityControl'))->and_where('status','=',Enum_QualityControlStatus::Repaired)->and_where('qualitycontrol.updated_at','BETWEEN',DB::expr($this->_from.' AND '.$this->_to))),
             Enum_QualityControlStatus::Invalid => $this->craftsQueryPiece($this->placesQueryPiece(ORM::factory('QualityControl'))->and_where('status','=',Enum_QualityControlStatus::Invalid)->and_where('qualitycontrol.updated_at','BETWEEN',DB::expr($this->_from.' AND '.$this->_to))),
@@ -442,6 +460,7 @@ class QualityReport
 
         $this->_stats['total']['statuses'] = [
             Enum_QualityControlStatus::Existing => $this->placesQueryPiece(ORM::factory('QualityControl'))->and_where('status','=',Enum_QualityControlStatus::Existing)->count_all(),
+            self::STATUS_EXISTING_AND_FOR_REPAIR => $this->placesQueryPiece(ORM::factory('QualityControl'))->and_where('status','=',Enum_QualityControlStatus::Existing)->and_where('approval_status','=',Enum_QualityControlApproveStatus::ForRepair)->count_all(),
             Enum_QualityControlStatus::Normal => $this->placesQueryPiece(ORM::factory('QualityControl'))->and_where('status','=',Enum_QualityControlStatus::Normal)->count_all(),
             Enum_QualityControlStatus::Repaired => $this->placesQueryPiece(ORM::factory('QualityControl'))->and_where('status','=',Enum_QualityControlStatus::Repaired)->count_all(),
             Enum_QualityControlStatus::Invalid => $this->placesQueryPiece(ORM::factory('QualityControl'))->and_where('status','=',Enum_QualityControlStatus::Invalid)->count_all(),
@@ -449,6 +468,7 @@ class QualityReport
 
         $this->_stats['filtered']['statuses'] = [
             Enum_QualityControlStatus::Existing => $this->craftsQueryPiece($this->placesQueryPiece(ORM::factory('QualityControl'))->and_where('status','=',Enum_QualityControlStatus::Existing)->and_where('qualitycontrol.updated_at','BETWEEN',DB::expr($this->_from.' AND '.$this->_to))),
+            self::STATUS_EXISTING_AND_FOR_REPAIR => $this->craftsQueryPiece($this->placesQueryPiece(ORM::factory('QualityControl'))->and_where('status','=',Enum_QualityControlStatus::Existing)->and_where('qualitycontrol.updated_at','BETWEEN',DB::expr($this->_from.' AND '.$this->_to))->and_where('qualitycontrol.approval_status','=',Enum_QualityControlApproveStatus::ForRepair)),
             Enum_QualityControlStatus::Normal => $this->craftsQueryPiece($this->placesQueryPiece(ORM::factory('QualityControl'))->and_where('status','=',Enum_QualityControlStatus::Normal)->and_where('qualitycontrol.updated_at','BETWEEN',DB::expr($this->_from.' AND '.$this->_to))),
             Enum_QualityControlStatus::Repaired => $this->craftsQueryPiece($this->placesQueryPiece(ORM::factory('QualityControl'))->and_where('status','=',Enum_QualityControlStatus::Repaired)->and_where('qualitycontrol.updated_at','BETWEEN',DB::expr($this->_from.' AND '.$this->_to))),
             Enum_QualityControlStatus::Invalid => $this->craftsQueryPiece($this->placesQueryPiece(ORM::factory('QualityControl'))->and_where('status','=',Enum_QualityControlStatus::Invalid)->and_where('qualitycontrol.updated_at','BETWEEN',DB::expr($this->_from.' AND '.$this->_to))),
@@ -697,9 +717,112 @@ class QualityReport
     public function renderBarChart($id,$type){
         return View::make('reports/quality/barchart-js',['report' => $this, 'type' => $type, 'id' => $id])->render();
     }
+    public function renderLineChart($id,$type){
+        return View::make('reports/quality/linechart-js',['report' => $this, 'type' => $type, 'id' => $id, 'months' => implode(',',$this->_months)])->render();
+    }
+
+    public function renderEntityLineChart($id,$type,$entityId){
+        return View::make('reports/quality/entity-linechart-js',['report' => $this, 'type' => $type, 'id' => $id, 'months' => implode(',',$this->_months), 'entityId' => $entityId])->render();
+    }
 
 
     public function getCraftsID(){
         return $this->_craftsID;
+    }
+
+    public function getMonthsTimestamps($timestamp, $direction = '-'){
+        $date = Date('Y-m',$timestamp);
+        $i = -1;
+        $output = [];
+        while($i++ < 10){
+            if($direction == '+'){
+                $output[] = strtotime(Date('Y-m-d H:i:s',strtotime($date. ' +'.$i.' Month')));
+            }else{
+                $output[] = strtotime(Date('Y-m-d H:i:s',strtotime($date. ' -'.$i.' Month')));
+            }
+        }
+
+        return $direction == '-' ? array_reverse($output) : $output;
+    }
+
+    public function generateYearStats(){
+        if(count($this->_projectsID) > 1){
+            //for projects
+            foreach ($this->_projectsID as $projectID){
+                foreach ($this->_monthsTimestamps as $key => $ts){
+                    $prevMonthTs = strtotime(Date('Y-m',$ts).' - 1 Month');
+                    $totalQcs = $this->craftsQueryPiece($this->placesQueryPieceForProject($projectID, ORM::factory('QualityControl'))->and_where('qualitycontrol.updated_at','BETWEEN',DB::expr($prevMonthTs.' AND '.$ts)))->count_all();
+                    $this->_stats['projects'][$projectID]['yearFkk']['a+b'][$key] = $this->craftsQueryPiece($this->placesQueryPieceForProject($projectID, ORM::factory('QualityControl'))
+                        ->and_where_open()
+                        ->where('status','=',Enum_QualityControlStatus::Existing)
+                        ->or_where('status','=',Enum_QualityControlStatus::Normal)
+                        ->and_where_close()
+                        ->and_where('qualitycontrol.updated_at','BETWEEN',DB::expr($prevMonthTs.' AND '.$ts)))
+                        //->and_where('qualitycontrol.updated_at','<=',DB::expr($ts)))
+                        ->count_all();
+                    $this->_stats['projects'][$projectID]['yearFkk']['a+b'][$key] = $this->_stats['projects'][$projectID]['yearFkk']['a+b'][$key] > 0 ? round($this->_stats['projects'][$projectID]['yearFkk']['a+b'][$key] * 100 / $totalQcs) : 0;
+                    $this->_stats['projects'][$projectID]['yearFkk']['a+b+fixed'][$key] = $this->craftsQueryPiece($this->placesQueryPieceForProject($projectID, ORM::factory('QualityControl'))
+                        ->and_where_open()
+                        ->where('status','=',Enum_QualityControlStatus::Existing)
+                        ->or_where('status','=',Enum_QualityControlStatus::Normal)
+                        ->or_where('status','=',Enum_QualityControlStatus::Repaired)
+                        ->and_where_close()
+                        ->and_where('qualitycontrol.updated_at','BETWEEN',DB::expr($prevMonthTs.' AND '.$ts)))
+//                        ->and_where('qualitycontrol.updated_at','<=',DB::expr($ts)))
+                        ->count_all();
+                    $this->_stats['projects'][$projectID]['yearFkk']['a+b+fixed'][$key] = $this->_stats['projects'][$projectID]['yearFkk']['a+b+fixed'][$key] > 0 ? round($this->_stats['projects'][$projectID]['yearFkk']['a+b+fixed'][$key] * 100 / $totalQcs) : 0;
+                }
+
+            }
+        }else{
+            //for objects
+            if(count($this->_objectsID) > 0) {
+                foreach ($this->_objectsID as $objectID) {
+                    foreach ($this->_monthsTimestamps as $key => $ts){
+                        $prevMonthTs = strtotime(Date('Y-m',$ts).' - 1 Month');
+                        $totalQcs = $this->craftsQueryPiece($this->placesQueryPieceForObject($objectID, ORM::factory('QualityControl'))->and_where('qualitycontrol.updated_at','BETWEEN',DB::expr($prevMonthTs.' AND '.$ts)))->count_all();
+                        $this->_stats['objects'][$objectID]['yearFkk']['a+b'][$key] = $this->craftsQueryPiece($this->placesQueryPieceForObject($objectID, ORM::factory('QualityControl'))
+                            ->and_where_open()
+                            ->where('status','=',Enum_QualityControlStatus::Existing)
+                            ->or_where('status','=',Enum_QualityControlStatus::Normal)
+                            ->and_where_close()
+                            ->and_where('qualitycontrol.updated_at','BETWEEN',DB::expr($prevMonthTs.' AND '.$ts)))
+//                            ->and_where('qualitycontrol.updated_at','<=',DB::expr($ts)))
+                            ->count_all();
+                        $this->_stats['objects'][$objectID]['yearFkk']['a+b'][$key] = $this->_stats['objects'][$objectID]['yearFkk']['a+b'][$key] > 0 ? round($this->_stats['objects'][$objectID]['yearFkk']['a+b'][$key] * 100 / $totalQcs) : 0;
+                        $this->_stats['objects'][$objectID]['yearFkk']['a+b+fixed'][$key] = $this->craftsQueryPiece($this->placesQueryPieceForObject($objectID, ORM::factory('QualityControl'))
+                            ->and_where_open()
+                            ->where('status','=',Enum_QualityControlStatus::Existing)
+                            ->or_where('status','=',Enum_QualityControlStatus::Normal)
+                            ->or_where('status','=',Enum_QualityControlStatus::Repaired)
+                            ->and_where_close()
+                            ->and_where('qualitycontrol.updated_at','BETWEEN',DB::expr($prevMonthTs.' AND '.$ts)))
+//                            ->and_where('qualitycontrol.updated_at','<=',DB::expr($ts)))
+                            ->count_all();
+                        $this->_stats['objects'][$objectID]['yearFkk']['a+b+fixed'][$key] = $this->_stats['objects'][$objectID]['yearFkk']['a+b+fixed'][$key] > 0 ? round($this->_stats['objects'][$objectID]['yearFkk']['a+b+fixed'][$key] * 100 / $totalQcs) : 0;
+                    }
+                }
+            }
+        }
+    }
+    public function canDisplayYearStats(){
+
+        if(isset($this->_stats['objects'])){
+            foreach ($this->_stats['objects'] as $key => $obj){
+                if(isset($this->_stats['objects'][$key]['yearFkk'])){
+                    return true;
+                }
+                return false;
+            }
+        }
+        if(isset($this->_stats['projects'])){
+            foreach ($this->_stats['projects'] as $key => $proj){
+                if(isset($this->_stats['projects'][$key]['yearFkk'])){
+                    return true;
+                }
+                return false;
+            }
+        }
+        return false;
     }
 }

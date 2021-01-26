@@ -9,19 +9,18 @@ $data = [];
 $stats = $report->getStats();
 $summ = 0;
 foreach ($stats[$type]['statuses'] as $key => $val){
-    $summ+=$val;
+    $summ += $val;
 }
 foreach ($stats[$type]['statuses'] as $key => $val){
     if( !in_array($key,Enum_QualityControlStatus::toArray()) AND $key !== QualityReport::STATUS_EXISTING_AND_FOR_REPAIR) continue;
     if($key == QualityReport::STATUS_EXISTING_AND_FOR_REPAIR AND $val > 0){
         $offset =  '"offset-r": "6%","background-image": "PATTERN_BACKWARD_DIAGONAL",';
         $squareBg = '"background-image": "PATTERN_BACKWARD_DIAGONAL",';
-    }
-    else{
-        if($key == QualityReport::STATUS_EXISTING_AND_FOR_REPAIR){
+    } else {
+        if( $key == QualityReport::STATUS_EXISTING_AND_FOR_REPAIR){
             $offset =  '"background-image": "PATTERN_BACKWARD_DIAGONAL",';
             $squareBg = '"background-image": "PATTERN_BACKWARD_DIAGONAL",';
-        }else{
+        } else {
             $offset = $squareBg = '';
         }
 

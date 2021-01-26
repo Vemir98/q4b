@@ -1,5 +1,5 @@
 <?php defined('SYSPATH') OR die('No direct script access.');
-
+use Helpers\UrlHelper;
 /**
  * Created by PhpStorm.
  * User: SUR0
@@ -515,6 +515,53 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         $this->template = View::make('reports/guest-template');
 
         $this->template->content = $content;
+    }
+
+    public function action_guest_access_qc(){
+        $qcId = (int)$this->request->param('id');
+        $qc = ORM::factory('QualityControl',$qcId);
+
+            $scopes = [];
+            $plans = [];
+
+
+            foreach ($qc->place->plans->order_by('id','DESC')->find_all() as $item){
+                if(in_array($item->scope,$scopes)) continue;
+                $scopes[] = $item->scope;
+                $plans[$item->id] = $item;
+            }
+
+            foreach($qc->place->floor->plans->where('object_id','=',$qc->place->object_id)->order_by('id','DESC')->find_all() as $item){
+                if(in_array($item->scope,$scopes)) continue;
+                $scopes[] = $item->scope;
+                $plans[$item->id] = $item;
+            }
+            $this->template = View::make('reports/guest-template');
+            $this->template->content = View::make('reports/guest-content-show-qc',  [
+                'item' => $qc,
+                'itemStatuses' => Enum_QualityControlStatus::toArray(),
+                'itemPlace' => $qc->place,
+                'itemPlaceSpaces' => $qc->place->spaces->find_all(),
+                'itemConditionLevels' => Enum_QualityControlConditionLevel::toArray(),
+                'itemConditionList' => Enum_QualityControlConditionList::toArray(),
+                'approveStatusList' =>  Enum_QualityControlApproveStatus::toArray(),
+                'itemTasks' => $qc->tasks->find_all(),
+                'createUsr' => $qc->createUser,
+                'updateUsr' => $qc->updateUser,
+                'approveUsr' => $qc->approveUser,
+                'project' => $qc->project,
+                'projectStages' => Enum_ProjectStage::toArray(),
+                'tasks' => $qc->project->tasks->where('status','=',Enum_Status::Enabled)->find_all(),
+                'professions' => $qc->project->company->professions->where('status','=',Enum_Status::Enabled)->find_all(),
+                'crafts' => $qc->project->company->crafts->where('status','=',Enum_Status::Enabled)->order_by('name')->find_all(),
+                'plan' => $qc->plan,
+                'planFiles' => $qc->plan->files->find_all(),
+                'itemImages' => $qc->images->where('status','=',Enum_FileStatus::Active)->order_by('created_at','DESC')->find_all(),
+                'formAction' => URL::site('/reports/quality_control/'.$qc->id),
+                'plans' => $plans,
+                'usedTasks' => $qc->project->usedTasks($qc->place->id)
+            ]);
+
     }
 
     public function action_get_spaces(){//num_type = pn|pcn
@@ -1045,6 +1092,9 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         $ws->set_data($sh, false);
         foreach ($qcs as $item){
             $sh [] = [date('d/m/Y',$item->due_date), date('d/m/Y',$item->updated_at), date('d/m/Y',$item->created_at), __($item->condition_list), __($item->severity_level), $item->getDialog(html_entity_decode($item->description), "@##"), $item->getDesc(html_entity_decode($item->description), "@##"), __($item->status),$item->craft->name, __($item->project_stage), $item->place->custom_number, __($item->place->type),$item->floor->number, $item->object->name, $item->project->name, $item->id];
+            if ((count($sh) - 1) >= 2) {
+                $as->getCell("P". (count($sh)))->getHyperlink()->setUrl(UrlHelper::getUrlWithUriAndHash(URL::base(true), 'reports/guest_access_qc/' . $item->id));
+            }
         }
 
         $ws->set_data($sh, false);

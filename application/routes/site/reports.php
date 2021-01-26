@@ -40,6 +40,11 @@ Route::set('site.reportsGuestAccess','reports/guest_access/<token>',['token' => 
         'controller' => 'reports',
         'action' => 'guest_access'
     ]);
+Route::set('site.reportsGuestAccessQc','reports/guest_access_qc/<id>', ['id' => '[0-9]+'])
+    ->defaults([
+        'controller' => 'reports',
+        'action' => 'guest_access_qc'
+    ]);
 Route::set('site.sendReportsEmail','reports/send_reports/<id>/<token>',['id' => '[0-9]+','token' => '[a-z0-9]+'])
     ->defaults([
         'controller' => 'reports',

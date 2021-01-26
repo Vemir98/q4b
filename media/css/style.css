@@ -9363,6 +9363,9 @@ ul.q4-unordered-list > li {
     left: 50%;
     transform: translate(-50%, 37%);
   }
+  .q4-copyright.q4-copyright-quality {
+    transform: translate(-50%, 30%);
+  }
     .q4-copyright span {
       display: inline-block;
       vertical-align: middle; }
@@ -11602,7 +11605,11 @@ header {
     font-weight: normal;
     font-style: normal;
     font-family: "proxima_nova_rgregular", Arial, Helvetica, sans-serif;
-    font-weight: bold; }
+    font-weight: bold;
+    /*white-space: nowrap;*/
+    /*overflow: hidden;*/
+    /*text-overflow: ellipsis;*/
+  }
   .report-result .report-conditions {
     margin: 15px 0 30px 0; }
     .report-result .report-conditions .report-cond-units {
@@ -13209,6 +13216,13 @@ header {
       top: 105px;
       left: 20px;
       font-size: 17px;
+  }
+  .report-result .reports-tasks-box-title {
+    font-size: 14px;
+    line-height: 1.2;
+  }
+  .report-result .report-desc-approve .report-desc-approve-text {
+    font-size: 14px;
   }
 }
 @media (max-width: 380px) {
