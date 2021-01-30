@@ -417,11 +417,6 @@ $entityType = count($report->getObjects()) ? 'objects' : 'projects';
 </tr>
 </table>
 
-<div class="q4-copyright q4-copyright-quality">
-    <span>
-        <?=__('Copyright © 2017 Q4B').'   '.__('All right reserved')?>
-    </span>
-</div>
 
 <?foreach ($report->getProjectsORObjects($reportEntity) as $entity):?>
 <h3 class="ent-name"><span style="background-color: <?=$stats[$entityType][$entity['id']]['color']?>!important;-webkit-print-color-adjust: exact;"></span><?=$entity['name']?></h3>
@@ -471,7 +466,7 @@ $entityType = count($report->getObjects()) ? 'objects' : 'projects';
                     </td>
                 </tr>
             <?endif?>
-<!--        --><?//if($i > 4) break?>
+            <!--        --><?//if($i > 4) break?>
         <?endforeach;?>
         </tbody>
     </table>
@@ -507,7 +502,11 @@ $entityType = count($report->getObjects()) ? 'objects' : 'projects';
         <h5><span class="circle">i</span><?=__('General opinion')?></h5>
         <textarea data-id="<?=$entity['id']?>"><?=$entity['generalOpinion']?></textarea>
     </div>
-
+    <div class="q4-copyright q4-copyright-quality">
+        <span>
+            <?=__('Copyright © 2017 Q4B').'   '.__('All right reserved')?>
+        </span>
+    </div>
 <?endforeach?>
 <?if(Language::getCurrent()->direction == 'rtl'):?>
 <?=$report->renderPieChartTotal('p')?>

@@ -816,5 +816,7 @@ return [
     'project_concrete'=>'ק.מ. בטון יצוק באתר',
     'project_construction'=>'ק.מ. בנייה',
     'project_general_subcontractor'=>'קבלן ראשי',
+    'Notes' => 'הערות',
+    'Employer review' => 'דו שיח',
     ''=>'',
 ];

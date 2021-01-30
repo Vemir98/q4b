@@ -356,10 +356,10 @@ if($_USER->is('project_supervisor') || $isSubcontractor){//запрет на и�
                                     <tbody data-qcid="<?=$item->id?>">
                                         <?foreach ($itemImages as $number => $image):?>
                                             <tr>
-                                            <?$imageW = Image::factory(DOCROOT.$image->originalFilePath());?>
+
                                                 <td data-th="Image">
                                                     <span class="modal-tasks-image-action">
-                                                        <a data-url="<?=URL::withLang($image->originalFilePath(),Language::getDefault()->iso2,'https')?>" data-controller="update_quality_control_image" data-ext="<?=$image->mime?>" data-fileid="<?=$image->id?>" title="<?=$image->original_name?>" class="call-lit-plugin" >
+                                                        <a data-url="<?=$image->originalFilePath()?>" data-controller="update_quality_control_image" data-ext="<?=$image->mime?>" data-fileid="<?=$image->id?>" title="<?=$image->original_name?>" class="call-lit-plugin" >
                                                         <span class="modal-tasks-image-number"><?=$number+1?>.</span>
                                                         <span class="modal-tasks-image-name"><?=$image->original_name?></span>
                                                          <span class="modal-img-upload-date">(<?=__('uploaded')?>: <?=date('d.m.Y',$image->created_at)?>)</span></a>
@@ -367,7 +367,7 @@ if($_USER->is('project_supervisor') || $isSubcontractor){//запрет на и�
                                                 </td>
                                                 <td data-th="Download" class="modal-tasks-image-option">
                                                     <span class="modal-tasks-image-action">
-                                                        <a href="<?=URL::withLang($image->originalFilePath(),Language::getDefault()->iso2,'https')?>" class="download_file" download="<?=$image->name?>" data-url="">
+                                                        <a href="<?=$image->originalFilePath()?>" class="download_file" download="<?=$image->name?>" data-url="">
                                                             <i class="q4bikon-download"></i>
                                                         </a>
                                                     </span>
@@ -417,10 +417,10 @@ if($_USER->is('project_supervisor') || $isSubcontractor){//запрет на и�
 
                         <div class="form-group col-md-6 rtl-float-right">
 
-                            <label class="table_label"><?=__('Description')?></label>
+                            <label class="table_label"><?=__('Notes')?></label>
 
                             <div class="form-group">
-                                <textarea name="description" class='modal-plans-details-textarea q4_required'><?=trim(html_entity_decode($item->description))?></textarea>
+                                <textarea name="description" class='modal-plans-details-textarea q4_required'><?=trim(html_entity_decode($item->getDesc(html_entity_decode($item->description), "@##")))?></textarea>
                             </div>
                         </div>
                         <div class="form-group col-md-6 rtl-float-right">
@@ -484,6 +484,17 @@ if($_USER->is('project_supervisor') || $isSubcontractor){//запрет на и�
                                 </div>
                             </div>
                         </div>
+                        <div class="clear"></div>
+                        <?if(strlen(trim(html_entity_decode($item->getDialog(html_entity_decode($item->description), "@##"))))):?>
+                            <div class="form-group col-md-6 rtl-float-right">
+
+                                <label class="table_label"><?=__('Employer review')?></label>
+
+                                <div class="form-group">
+                                    <?=trim(html_entity_decode($item->getDialog(html_entity_decode($item->description), "@##")))?>
+                                </div>
+                            </div>
+                        <?endif?>
                     </div>
                 </div>
                 </div>

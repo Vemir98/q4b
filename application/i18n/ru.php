@@ -789,5 +789,7 @@ return [
     'project_concrete'=>'С.П. Бетон',
     'project_construction'=>'С.П. Строительство',
     'project_general_subcontractor'=>'Главный субподрядчик',
+    'Notes' => 'Комментарии',
+    'Employer review' => 'Диалог',
     ''=>'',
 ];

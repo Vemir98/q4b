@@ -1,5 +1,5 @@
 <?php defined('SYSPATH') OR die('No direct script access.');
-use Helpers\UrlHelper;
+
 /**
  * Created by PhpStorm.
  * User: SUR0
@@ -517,53 +517,6 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         $this->template->content = $content;
     }
 
-    public function action_guest_access_qc(){
-        $qcId = (int)$this->request->param('id');
-        $qc = ORM::factory('QualityControl',$qcId);
-
-            $scopes = [];
-            $plans = [];
-
-
-            foreach ($qc->place->plans->order_by('id','DESC')->find_all() as $item){
-                if(in_array($item->scope,$scopes)) continue;
-                $scopes[] = $item->scope;
-                $plans[$item->id] = $item;
-            }
-
-            foreach($qc->place->floor->plans->where('object_id','=',$qc->place->object_id)->order_by('id','DESC')->find_all() as $item){
-                if(in_array($item->scope,$scopes)) continue;
-                $scopes[] = $item->scope;
-                $plans[$item->id] = $item;
-            }
-            $this->template = View::make('reports/guest-template');
-            $this->template->content = View::make('reports/guest-content-show-qc',  [
-                'item' => $qc,
-                'itemStatuses' => Enum_QualityControlStatus::toArray(),
-                'itemPlace' => $qc->place,
-                'itemPlaceSpaces' => $qc->place->spaces->find_all(),
-                'itemConditionLevels' => Enum_QualityControlConditionLevel::toArray(),
-                'itemConditionList' => Enum_QualityControlConditionList::toArray(),
-                'approveStatusList' =>  Enum_QualityControlApproveStatus::toArray(),
-                'itemTasks' => $qc->tasks->find_all(),
-                'createUsr' => $qc->createUser,
-                'updateUsr' => $qc->updateUser,
-                'approveUsr' => $qc->approveUser,
-                'project' => $qc->project,
-                'projectStages' => Enum_ProjectStage::toArray(),
-                'tasks' => $qc->project->tasks->where('status','=',Enum_Status::Enabled)->find_all(),
-                'professions' => $qc->project->company->professions->where('status','=',Enum_Status::Enabled)->find_all(),
-                'crafts' => $qc->project->company->crafts->where('status','=',Enum_Status::Enabled)->order_by('name')->find_all(),
-                'plan' => $qc->plan,
-                'planFiles' => $qc->plan->files->find_all(),
-                'itemImages' => $qc->images->where('status','=',Enum_FileStatus::Active)->order_by('created_at','DESC')->find_all(),
-                'formAction' => URL::site('/reports/quality_control/'.$qc->id),
-                'plans' => $plans,
-                'usedTasks' => $qc->project->usedTasks($qc->place->id)
-            ]);
-
-    }
-
     public function action_get_spaces(){//num_type = pn|pcn
         $this->_checkPermOrFail('read');
         $this->auto_render = false;
@@ -662,13 +615,15 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                 $qc->approved_by = Auth::instance()->get_user()->id;
                 $qc->approved_at = time();
                 $qc->save();
+                $fs = new FileServer();
                 if(!empty($uploadedFiles)){
                     foreach ($uploadedFiles as $image){
                         $image = ORM::factory('Image')->values($image)->save();
                         $qc->add('images', $image->pk());
 
-                        $img = new JBZoo\Image\Image($qc->project->qualityControlPath().DS.$image->name);
-                        $img->saveAs($qc->project->qualityControlPath().DS.$image->name,50);
+//                        $img = new JBZoo\Image\Image($qc->project->qualityControlPath().DS.$image->name);
+//                        $img->saveAs($qc->project->qualityControlPath().DS.$image->name,50);
+                        $fs->addLazySimpleImageTask('https://qforb.net/' . $image->path . '/' . $image->name,$image->id);
                     }
                 }
                 $qc->remove('tasks');
@@ -679,6 +634,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
 
                 $this->setResponseData('triggerEvent','qualityControlUpdated');
                 Database::instance()->commit();
+                $fs->sendLazyTasks();
             }catch (ORM_Validation_Exception $e){
                 Database::instance()->rollback();
                 $this->_setErrors($e->errors('validation'));
@@ -1028,8 +984,8 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         $ws->set_active_sheet(0);
         $as = $ws->get_active_sheet();
         $colsToRightAlign = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'];
-        $colsToAlignTop = ['F', 'G'];
-        $colsToWrapText = ['F', 'G'];
+        $colsToAlignTop = ['B', 'C'];
+        $colsToWrapText = ['B', 'C'];
         if (Language::getCurrent()->direction == 'rtl') {
             foreach ($colsToRightAlign as $col) {
                 $as->getStyle($col)
@@ -1048,22 +1004,22 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
 
         $as->getDefaultStyle()->getFont()->setSize(10);
 
-        $as->getColumnDimension('A')->setWidth(13);
-        $as->getColumnDimension('B')->setWidth(13);
-        $as->getColumnDimension('C')->setWidth(13);
-        $as->getColumnDimension('D')->setWidth(15);
-        $as->getColumnDimension('E')->setWidth(13);
-        $as->getColumnDimension('F')->setWidth(60);
-        $as->getColumnDimension('G')->setWidth(60);
-        $as->getColumnDimension('H')->setWidth(12);
-        $as->getColumnDimension('I')->setWidth(45);
-        $as->getColumnDimension('J')->setWidth(20);
-        $as->getColumnDimension('K')->setWidth(16);
-        $as->getColumnDimension('L')->setWidth(10);
-        $as->getColumnDimension('M')->setWidth(7);
-        $as->getColumnDimension('N')->setWidth(17);
-        $as->getColumnDimension('O')->setWidth(25);
-        $as->getColumnDimension('P')->setWidth(18);
+        $as->getColumnDimension('P')->setWidth(12);
+        $as->getColumnDimension('O')->setWidth(60);
+        $as->getColumnDimension('N')->setWidth(60);
+        $as->getColumnDimension('M')->setWidth(15);
+        $as->getColumnDimension('L')->setWidth(13);
+        $as->getColumnDimension('K')->setWidth(13);
+        $as->getColumnDimension('J')->setWidth(13);
+        $as->getColumnDimension('I')->setWidth(13);
+        $as->getColumnDimension('H')->setWidth(45);
+        $as->getColumnDimension('G')->setWidth(20);
+        $as->getColumnDimension('F')->setWidth(16);
+        $as->getColumnDimension('E')->setWidth(10);
+        $as->getColumnDimension('D')->setWidth(7);
+        $as->getColumnDimension('C')->setWidth(17);
+        $as->getColumnDimension('B')->setWidth(25);
+        $as->getColumnDimension('A')->setWidth(18);
         $as->getRowDimension('1')->setRowHeight(80);
         $as->getRowDimension('2')->setRowHeight(15);
         $as->setAutoFilter('A2:P2');
@@ -1073,13 +1029,13 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         $objDrawing->setPath(DOCROOT. 'media/img/q4b_logo.png');
         $objDrawing->setResizeProportional(true);
         $objDrawing->setHeight(100);
-        $objDrawing->setCoordinates('P1');
+        $objDrawing->setCoordinates('A1');
         $objDrawing->setOffsetX(5);
         $objDrawing->setWorksheet($as);
         $objDrawingSec = new PHPExcel_Worksheet_Drawing();
         $objDrawingSec->setPath(DOCROOT. 'media/img/q4b_quality.png');
         $objDrawingSec->setName('quality logo');
-        $objDrawingSec->setCoordinates('O1');
+        $objDrawingSec->setCoordinates('B1');
         $objDrawingSec->setWorksheet($as);
         $objDrawingSec->setResizeProportional(true);
         $objDrawingSec->setHeight(100);
@@ -1087,14 +1043,45 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
 
         $sh = [
             1 => [],
-            2 => [__('Due Date'),__('Update Date'),__('Create Date'),__('Conditions List'),__('Severity Level'),__('Corrective action/Performed work'),__('Description'),__('Status'),__('Crafts'),__('Stage'), __('Element number'), __('Element type'), __('Floor'), __('Structure'), __('Project'),__('QC Id')],
+            2 => [
+                __('QC Id'),
+                __('Project'),
+                __('Structure'),
+                __('Floor'),
+                __('Element type'),
+                __('Element number'),
+                __('Stage'),
+                __('Crafts'),
+                __('Create Date'),
+                __('Update Date'),
+                __('Due Date'),
+                __('Severity Level'),
+                __('Conditions List'),
+                __('Description'),
+                __('Corrective action/Performed work'),
+                __('Status')
+            ],
         ];
         $ws->set_data($sh, false);
         foreach ($qcs as $item){
-            $sh [] = [date('d/m/Y',$item->due_date), date('d/m/Y',$item->updated_at), date('d/m/Y',$item->created_at), __($item->condition_list), __($item->severity_level), $item->getDialog(html_entity_decode($item->description), "@##"), $item->getDesc(html_entity_decode($item->description), "@##"), __($item->status),$item->craft->name, __($item->project_stage), $item->place->custom_number, __($item->place->type),$item->floor->number, $item->object->name, $item->project->name, $item->id];
-            if ((count($sh) - 1) >= 2) {
-                $as->getCell("P". (count($sh)))->getHyperlink()->setUrl(UrlHelper::getUrlWithUriAndHash(URL::base(true), 'reports/guest_access_qc/' . $item->id));
-            }
+            $sh [] = [
+                $item->id,
+                $item->project->name,
+                $item->object->name,
+                $item->floor->number,
+                __($item->place->type),
+                $item->place->custom_number,
+                __($item->project_stage),
+                $item->craft->name,
+                date('d/m/Y',$item->created_at),
+                date('d/m/Y',$item->updated_at),
+                date('d/m/Y',$item->due_date),
+                __($item->severity_level),
+                __($item->condition_list),
+                $item->getDesc(html_entity_decode($item->description), "@##"),
+                $item->getDialog(html_entity_decode($item->description), "@##"),
+                __($item->status),
+            ];
         }
 
         $ws->set_data($sh, false);
@@ -1102,6 +1089,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         $last_letter = PHPExcel_Cell::stringFromColumnIndex(count($sh[2])-1);
         $header_range = "{$first_letter}2:{$last_letter}2";
         $ws->get_active_sheet()->getStyle($header_range)->getFont()->setSize(12)->setBold(true);
+
         $count = count($sh);
         for ($i = 3; $i <= $count ; $i++) {
             $az[] = $i;
@@ -1113,7 +1101,30 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                     ->getAlignment()->setWrapText(true);
             }
         }
-        $ws->rtl(Language::getCurrent()->direction !== 'rtl');
+
+        $as->getStyle('A1:P'.count($sh))->getBorders()->applyFromArray(
+            array(
+                'inside' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                    'color' => array(
+                        'rgb' => '3A3B3C'
+                    )
+                )
+            )
+        );
+
+        $as->getStyle('A3:P'.count($sh))->getBorders()->applyFromArray(
+            array(
+                'outline' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THICK,
+                    'color' => array(
+                        'rgb' => '3A3B3C'
+                    )
+                )
+            )
+        );
+
+        $ws->rtl(Language::getCurrent()->direction === 'rtl');
         $ws->send(['name'=>'report', 'format'=>'Excel5']);
     }
 

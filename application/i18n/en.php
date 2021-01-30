@@ -818,5 +818,7 @@ return [
     'project_concrete'=>'S.C. Concrete',
     'project_construction'=>'S.C. Construction',
     'project_general_subcontractor'=>'General subcontractor',
+    'Notes' => 'Notes',
+    'Employer review' => 'Employer review',
     ''=>'',
 ];
