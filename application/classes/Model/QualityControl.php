@@ -146,14 +146,13 @@ class Model_QualityControl extends MORM
         return $this->comments->order_by('created_at','ASC')->find_all();
     }
 
-    public function getDialog($str, $pattern)
+    public function getDialog($str, $expPattern, $impPattern)
     {
         if (strlen($str) > 0) {
 
-            $substr = explode($pattern,$str);
+            $substr = explode($expPattern,$str);
             unset($substr[0]);
-
-            return implode("\n",$substr);
+            return implode($impPattern, $substr);
         }
         return "";
     }

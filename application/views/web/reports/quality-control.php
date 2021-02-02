@@ -423,9 +423,34 @@ if($_USER->is('project_supervisor') || $isSubcontractor){//запрет на и�
                                 <textarea name="description" class='modal-plans-details-textarea q4_required'><?=trim(html_entity_decode($item->getDesc(html_entity_decode($item->description), "@##")))?></textarea>
                             </div>
                         </div>
-                        <div class="form-group col-md-6 rtl-float-right">
+                        <?$hasDialog = strlen(trim(html_entity_decode($item->getDialog(html_entity_decode($item->description), "@##", "\n")))) ?>
+                        <?if($hasDialog):?>
+                            <div class="form-group col-md-6 rtl-float-right">
+
+                                <label class="table_label"><?=__('Employer review')?></label>
+
+                                <div class="form-group modal-plans-details-textarea dialog-details">
+                                    <?$dialogs = explode("\n",$item->getDialog(html_entity_decode($item->description), "@##", "\n"));
+                                    foreach ($dialogs as $line) {?>
+                                        <p><?=$line?></p>
+                                    <?}?>
+                                </div>
+                            </div>
+                            <?else:?>
+                            <div class="form-group col-md-6 rtl-float-right">
+
+                                <label class="table_label"><?=__('Add review')?></label>
+
+                                <div class="form-group">
+                                    <textarea name="dialog" class='modal-plans-details-textarea'></textarea>
+                                </div>
+                            </div>
+                        <?endif?>
+
+
+                        <div class="form-group col-md-6 rtl-float-right <?=$hasDialog ? ' clear' : ''?>">
                             <div class="quality-control-actions-list">
-                                <div class="modal-details-actions">
+                                <div class="modal-details-actions text-align-right">
                                     <div class="modal-details-actions-list">
                                     <?if($item->approved_by):?>
                                         <div>
@@ -484,16 +509,15 @@ if($_USER->is('project_supervisor') || $isSubcontractor){//запрет на и�
                                 </div>
                             </div>
                         </div>
-                        <div class="clear"></div>
-                        <?if(strlen(trim(html_entity_decode($item->getDialog(html_entity_decode($item->description), "@##"))))):?>
-                            <div class="form-group col-md-6 rtl-float-right">
+                        <?if($hasDialog):?>
+                        <div class="form-group col-md-6 rtl-float-right <?=!$hasDialog ? ' clear' : ''?>">
 
-                                <label class="table_label"><?=__('Employer review')?></label>
+                            <label class="table_label"><?=__('Add review')?></label>
 
-                                <div class="form-group">
-                                    <?=trim(html_entity_decode($item->getDialog(html_entity_decode($item->description), "@##")))?>
-                                </div>
+                            <div class="form-group">
+                                <textarea name="dialog" class='modal-plans-details-textarea'></textarea>
                             </div>
+                        </div>
                         <?endif?>
                     </div>
                 </div>

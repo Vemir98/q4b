@@ -20,12 +20,3 @@ if( ! function_exists('render')){
         return $output;
     }
 }
-
-if (!function_exists('dd')) {
-    function dd($array)
-    {
-        header('Content-Type: application/json');
-        echo "<pre>"; print_r($array); echo "</pre>"; exit;
-        die;
-    }
-}

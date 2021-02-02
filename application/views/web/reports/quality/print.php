@@ -157,12 +157,12 @@ $entityType = count($report->getObjects()) ? 'objects' : 'projects';
     .crafts-tbl{
         width: 42em;
         margin: 1em auto auto auto;
-        border: 1px solid #ddd;
+        /*border: 1px solid #ddd !important;*/
     }
-    .crafts-tbl > tbody > tr > td{
-        border-top: 2px solid #ddd!important;
-        padding: 2px;
-    }
+    /*.crafts-tbl > tbody > tr > td{*/
+        /*border-top: 2px solid #ddd!important;*/
+        /*padding: 2px;*/
+    /*}*/
     .crafts-tbl .ctbl-head-tbl{
         width: 100%;
     }
@@ -185,8 +185,21 @@ $entityType = count($report->getObjects()) ? 'objects' : 'projects';
     .ctbl-head-tbl td {
         border-left: 1px solid #ddd;
     }
+    .ctbl-head-tbl1 {
+        border-right: 1px solid #ddd;
+        border-left: 0px solid #ddd;
+
+    }
+    .ctbl-head-tbl2 {
+        border-right: 1px solid #ddd;
+        border-left: 0px solid #ddd;
+
+    }
     .ctbl-h-td{
         border-top: 1px solid #ddd;
+    }
+    .ctbl-head-tbl tr:last-child {
+        border-bottom: 1px solid #ddd;
     }
     .linechart{
         width: 42em;
@@ -425,7 +438,7 @@ $entityType = count($report->getObjects()) ? 'objects' : 'projects';
         <tr>
             <th class="ctbl-head-th1"><?=__('Crafts List')?></th>
             <th class="ctbl-head-th2">
-                <table class="ctbl-head-tbl">
+                <table class="ctbl-head-tbl ctbl-head-tbl1">
                     <tr>
                         <td colspan="2"><?=__('Quantity')?></td>
                     </tr>
@@ -457,7 +470,7 @@ $entityType = count($report->getObjects()) ? 'objects' : 'projects';
                         <span><?=$craft['name']?></span>
                     </td>
                     <td data-th="<?=__('Quantity')?>" class="enlarged" style="padding: 0!important;">
-                        <table class="ctbl-head-tbl">
+                        <table class="ctbl-head-tbl ctbl-head-tbl2">
                             <tr>
                                 <td style="line-height: 40px; width: 50%"><span class="report-status-quantity"><?=$craftStat['total']?></span></td>
                                 <td style="line-height: 40px"><span class="report-status-quantity"><?=$craftStat['filtered']?></span></td>

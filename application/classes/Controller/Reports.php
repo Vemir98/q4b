@@ -555,12 +555,17 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         $this->_checkForAjaxOrDie();
         $qcId = (int)$this->request->param('id');
         $qc = ORM::factory('QualityControl',$qcId);
+        $auth = Auth::instance()->get_user();
         if( ! $qc->loaded() OR !$this->_user->canUseProject($qc->project)){
             throw new HTTP_Exception_404;
         }
 
         if($this->request->method() == HTTP_Request::POST){
-            $data = Arr::extract($this->post(),['approval_status','status','due_date','description','severity_level','condition_list','plan_id','project_stage','craft_id','tasks','profession_id','craft_id','message']);
+            $data = Arr::extract($this->post(),['approval_status','status','due_date','description', 'dialog', 'severity_level','condition_list','plan_id','project_stage','craft_id','tasks','profession_id','craft_id','message']);
+            $dt = \Carbon\Carbon::now()->format('d/m/Y H:i');
+            $qcDesc = $qc->getDialog($qc->description, '@##', '@##');
+            $data['description'] .= strlen($qcDesc) > 0 ?  "@##" . $qcDesc : '';
+            $data['description'] .= isset($data['dialog']) && strlen($data['dialog']) > 0 ? "@##". $dt . " - ". $auth->name. "\n" .$data['dialog'] ."\n\n" : "";
             $data['plan_id'] *= 1;
             try{
                 Database::instance()->begin();
@@ -983,18 +988,16 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
 
         $ws->set_active_sheet(0);
         $as = $ws->get_active_sheet();
-        $colsToRightAlign = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'];
-        $colsToAlignTop = ['B', 'C'];
-        $colsToWrapText = ['B', 'C'];
+        $cols = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'];
         if (Language::getCurrent()->direction == 'rtl') {
-            foreach ($colsToRightAlign as $col) {
+            foreach ($cols as $col) {
                 $as->getStyle($col)
                     ->getAlignment()
                     ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
                 $as->getStyle($col)->getFont()->setSize(10);
             }
         }
-        foreach ($colsToAlignTop as $col) {
+        foreach ($cols as $col) {
             $as->getStyle($col)
                 ->getAlignment()
                 ->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
@@ -1008,29 +1011,30 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         $as->getColumnDimension('O')->setWidth(60);
         $as->getColumnDimension('N')->setWidth(60);
         $as->getColumnDimension('M')->setWidth(15);
-        $as->getColumnDimension('L')->setWidth(13);
-        $as->getColumnDimension('K')->setWidth(13);
-        $as->getColumnDimension('J')->setWidth(13);
-        $as->getColumnDimension('I')->setWidth(13);
+        $as->getColumnDimension('L')->setWidth(16);
+        $as->getColumnDimension('K')->setWidth(19);
+        $as->getColumnDimension('J')->setWidth(19);
+        $as->getColumnDimension('I')->setWidth(19);
         $as->getColumnDimension('H')->setWidth(45);
         $as->getColumnDimension('G')->setWidth(20);
-        $as->getColumnDimension('F')->setWidth(16);
-        $as->getColumnDimension('E')->setWidth(10);
-        $as->getColumnDimension('D')->setWidth(7);
+        $as->getColumnDimension('F')->setWidth(22);
+        $as->getColumnDimension('E')->setWidth(14);
+        $as->getColumnDimension('D')->setWidth(9);
         $as->getColumnDimension('C')->setWidth(17);
         $as->getColumnDimension('B')->setWidth(25);
-        $as->getColumnDimension('A')->setWidth(18);
+        $as->getColumnDimension('A')->setWidth(21);
         $as->getRowDimension('1')->setRowHeight(80);
-        $as->getRowDimension('2')->setRowHeight(15);
+        $as->getRowDimension('2')->setRowHeight(22);
         $as->setAutoFilter('A2:P2');
         $objDrawing = new PHPExcel_Worksheet_Drawing();
         $objDrawing->setName('Logo');
         $objDrawing->setDescription('Logo');
         $objDrawing->setPath(DOCROOT. 'media/img/q4b_logo.png');
         $objDrawing->setResizeProportional(true);
+        $objDrawing->setWidth(60);
         $objDrawing->setHeight(100);
         $objDrawing->setCoordinates('A1');
-        $objDrawing->setOffsetX(5);
+        $objDrawing->setOffsetX(10);
         $objDrawing->setWorksheet($as);
         $objDrawingSec = new PHPExcel_Worksheet_Drawing();
         $objDrawingSec->setPath(DOCROOT. 'media/img/q4b_quality.png');
@@ -1038,8 +1042,9 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         $objDrawingSec->setCoordinates('B1');
         $objDrawingSec->setWorksheet($as);
         $objDrawingSec->setResizeProportional(true);
-        $objDrawingSec->setHeight(100);
-        $objDrawingSec->setOffsetX(35);
+        $objDrawingSec->setHeight(90);
+        $objDrawingSec->setOffsetX(40);
+        $objDrawingSec->setOffsetY(10);
 
         $sh = [
             1 => [],
@@ -1079,7 +1084,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                 __($item->severity_level),
                 __($item->condition_list),
                 $item->getDesc(html_entity_decode($item->description), "@##"),
-                $item->getDialog(html_entity_decode($item->description), "@##"),
+                $item->getDialog(html_entity_decode($item->description), "@##", "\n"),
                 __($item->status),
             ];
         }
@@ -1088,19 +1093,19 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         $first_letter = PHPExcel_Cell::stringFromColumnIndex(0);
         $last_letter = PHPExcel_Cell::stringFromColumnIndex(count($sh[2])-1);
         $header_range = "{$first_letter}2:{$last_letter}2";
-        $ws->get_active_sheet()->getStyle($header_range)->getFont()->setSize(12)->setBold(true);
+        $ws->get_active_sheet()->getStyle($header_range)->getFont()->setSize(14)->setBold(true);
 
-        $count = count($sh);
-        for ($i = 3; $i <= $count ; $i++) {
-            $az[] = $i;
-        }
-        $az = array_slice($az, 0, $count);
-        for ($i = 0; $i < count($az); $i++) {
-            foreach ($colsToWrapText as $col) {
-                $ws->get_active_sheet()->getStyle($col.$az[$i])
-                    ->getAlignment()->setWrapText(true);
-            }
-        }
+//        $count = count($sh);
+//        for ($i = 3; $i <= $count ; $i++) {
+//            $az[] = $i;
+//        }
+//        $az = array_slice($az, 0, $count);
+//        for ($i = 0; $i < count($az); $i++) {
+//            foreach ($colsToWrapText as $col) {
+//                $ws->get_active_sheet()->getStyle($col.$az[$i])
+//                    ->getAlignment()->setWrapText(true);
+//            }
+//        }
 
         $as->getStyle('A1:P'.count($sh))->getBorders()->applyFromArray(
             array(
@@ -1123,7 +1128,8 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                 )
             )
         );
-
+        $ws->get_active_sheet()->getStyle('N1:O999')
+            ->getAlignment()->setWrapText(true);
         $ws->rtl(Language::getCurrent()->direction === 'rtl');
         $ws->send(['name'=>'report', 'format'=>'Excel5']);
     }

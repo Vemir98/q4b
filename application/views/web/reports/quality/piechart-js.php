@@ -12,39 +12,39 @@ foreach ($stats[$type]['statuses'] as $key => $val){
     $summ += $val;
 }
 foreach ($stats[$type]['statuses'] as $key => $val){
-    if( !in_array($key,Enum_QualityControlStatus::toArray()) AND $key !== QualityReport::STATUS_EXISTING_AND_FOR_REPAIR) continue;
-    if($key == QualityReport::STATUS_EXISTING_AND_FOR_REPAIR AND $val > 0){
-        $offset =  '"offset-r": "6%","background-image": "PATTERN_BACKWARD_DIAGONAL",';
-        $squareBg = '"background-image": "PATTERN_BACKWARD_DIAGONAL",';
+    if ( !in_array($key,Enum_QualityControlStatus::toArray()) AND $key !== QualityReport::STATUS_EXISTING_AND_FOR_REPAIR) continue;
+    if ($key == QualityReport::STATUS_EXISTING_AND_FOR_REPAIR AND $val > 0){
+        $offset =  '"offset-r": "6%","backgroundColor": "#d515d3",';
+        $bgColor = "#d515d3";
     } else {
-        if( $key == QualityReport::STATUS_EXISTING_AND_FOR_REPAIR){
-            $offset =  '"background-image": "PATTERN_BACKWARD_DIAGONAL",';
-            $squareBg = '"background-image": "PATTERN_BACKWARD_DIAGONAL",';
+        if ($key == QualityReport::STATUS_EXISTING_AND_FOR_REPAIR){
+            $offset =  '"backgroundColor": "#d515d3",';
+            $bgColor = "#d515d3";
         } else {
-            $offset = $squareBg = '';
+            $offset = '';
+            $bgColor = '';
         }
 
     }
     $data[] = '{
-                                "values" : ['.$val.'],
-                                "target":"graph",
-                                "text":"'.__($key).'",
-                                 '.$offset.'
-                                "backgroundColor": "'.$stats['colors'][$key].'",
-                                "legendText": "'.($summ ? '%t %node-percent-value%' : '%t 0%').'",
-                                "legendMarker":{
-                                    "type": "square",
-                                    "size": 10,
-                                    '.$squareBg.'
-                                    "backgroundColor":"'.$stats['colors'][$key].'",
-                                    '.(Language::getCurrent()->direction == 'rtl' ? '"offsetX": 35' : '').'
-                                },
-                                "tooltip":{
-                                    "backgroundColor": "'.$stats['colors'][$key].'",
-                                    "text": "'.(Language::getCurrent()->direction == 'rtl' ? strrev($val) : $val).'",
-                                "rtl": '.(Language::getCurrent()->direction == 'rtl' ? 1 : 0).'
-                                }
-                            }';
+        "values" : ['.$val.'],
+        "target":"graph",
+        "text":"'.__($key).'",
+         '.$offset.'
+        "backgroundColor": "'.($bgColor ? $bgColor : $stats['colors'][$key]).'",
+        "legendText": "'.($summ ? '%t %node-percent-value%' : '%t 0%').'",
+        "legendMarker":{
+            "type": "square",
+            "size": 10,
+            "backgroundColor":"'.($bgColor ? $bgColor : $stats['colors'][$key]).'",
+            '.(Language::getCurrent()->direction == 'rtl' ? '"offsetX": 35' : '').'
+        },
+        "tooltip":{
+            "backgroundColor": "'.$stats['colors'][$key].'",
+            "text": "'.(Language::getCurrent()->direction == 'rtl' ? strrev($val) : $val).'",
+        "rtl": '.(Language::getCurrent()->direction == 'rtl' ? 1 : 0).'
+        }
+    }';
 }
 ?>
 <script>

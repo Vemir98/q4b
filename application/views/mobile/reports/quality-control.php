@@ -275,9 +275,8 @@ if(Auth::instance()->get_user()->is('project_supervisor')){//запрет на �
 
                         <div data-structurecount="<?=count($itemImages)?>" class="qc-image-list-mobile q4-owl-carousel">
                              <?foreach ($itemImages as $number => $image):?>
-                              <?$imageW = Image::factory(DOCROOT.$image->originalFilePath());?>
                                 <div class="item qc-image-list-mobile-item">
-                                    <a data-url="<?=$image->originalFilePath()?>" data-controller="update_quality_control_image" data-ext="<?=$image->mime?>" data-width="<?=$imageW->width?>" data-height="<?=$imageW->height?>" data-fileid="<?=$image->id?>" title="<?=$image->original_name?>" class="call-lit-plugin">
+                                    <a data-url="<?=$image->originalFilePath()?>" data-controller="update_quality_control_image" data-ext="<?=$image->mime?>" data-fileid="<?=$image->id?>" title="<?=$image->original_name?>" class="call-lit-plugin">
                                         <span class="modal-tasks-image-number"><?=$number+1?>&nbsp;</span>
                                         <span class="modal-tasks-image-name"><?=$image->original_name?></span>
                                         <span class="modal-img-upload-date">

@@ -820,5 +820,6 @@ return [
     'project_general_subcontractor'=>'General subcontractor',
     'Notes' => 'Notes',
     'Employer review' => 'Employer review',
+    'Add review' => 'Add review',
     ''=>'',
 ];

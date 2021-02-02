@@ -818,5 +818,6 @@ return [
     'project_general_subcontractor'=>'קבלן ראשי',
     'Notes' => 'הערות',
     'Employer review' => 'דו שיח',
+    'Add review' => 'הוסף תגובה',
     ''=>'',
 ];

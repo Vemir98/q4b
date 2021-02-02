@@ -287,4 +287,74 @@ class HDVP_Controller_API extends Controller
         $this->_user = $this->_auth->get_user();
 
     }
+
+    public function _pFArr(){
+        $output = [];
+        foreach ($_FILES as $key => $data){
+            if(is_array($data['name'])){
+                foreach ($data['name'] as $key1 => $val1){
+                    if(is_array($val1)){
+                        foreach ($val1 as $key2 => $val2){
+                            if(is_array($val2)) throw new HTTP_Exception_404;
+                            $output[$this->_fkp($key)][$this->_fkp($key1)][$this->_fkp($key2)] = [
+                                'name' => $data['name'][$key1][$key2],
+                                'type' => $data['type'][$key1][$key2],
+                                'tmp_name' => $data['tmp_name'][$key1][$key2],
+                                'error' => $data['error'][$key1][$key2],
+                                'size' => $data['size'][$key1][$key2]
+                            ];
+                        }
+                    }else{
+                        $output[$this->_fkp($key)][$this->_fkp($key1)] = [
+                            'name' => $data['name'][$key1],
+                            'type' => $data['type'][$key1],
+                            'tmp_name' => $data['tmp_name'][$key1],
+                            'error' => $data['error'][$key1],
+                            'size' => $data['size'][$key1]
+                        ];
+                    }
+                }
+            }
+            else{
+                $output[$this->_fkp($key)][0] = [
+                    'name' => $data['name'],
+                    'type' => $data['type'],
+                    'tmp_name' => $data['tmp_name'],
+                    'error' => $data['error'],
+                    'size' => $data['size']
+                ];
+            }
+
+        }
+        return $output;
+    }
+
+    public function _fkp($key){
+        $key = trim($key);
+        if(preg_match('~^\+~',$key)){
+            $key = str_replace('+','new_',$key);
+        }
+        return $key;
+    }
+    public function saveBase64Image($base64String, $name, $path,$quality = 50){
+        $data = explode( ',', $base64String);
+        if(count($data) != 2 OR empty($name)){
+            throw new HDVP_Exception('Operation Error');
+        }
+
+        $img = new JBZoo\Image\Image($base64String);
+        $name = uniqid().'.jpg';
+        $img->saveAs(rtrim($path,DS).DS.$name,$quality);
+
+        $f = ORM::factory('Image');
+        $f->name = $name;
+        $f->original_name = $name;
+        $f->mime = 'image/jpeg';
+        $f->ext = 'jpg';
+        $f->path = str_replace(DOCROOT,'',rtrim($path,DS));
+        $f->token = md5($name).base_convert(microtime(false), 10, 36);
+        $f->status = Enum_FileStatus::Active;
+        $f->save();
+        return $f;
+    }
 }

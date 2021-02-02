@@ -48,6 +48,10 @@ class HDVP_Controller_Template extends HDVP_Controller
      */
     protected $_auth;
 
+    protected $_csrfCheck = true;
+
+    protected $_formSecureTknCheck = true;
+
     public function __construct(Request $request, Response $response)
     {
         parent::__construct($request, $response);
@@ -120,7 +124,7 @@ class HDVP_Controller_Template extends HDVP_Controller
                 
             }
             
-            if((empty($this->_post) OR !Security::check(Arr::get($this->_post,'csrf'))) AND $this->request->method() == HTTP_Request::POST){
+            if($this->_csrfCheck AND (empty($this->_post) OR !Security::check(Arr::get($this->_post,'csrf'))) AND $this->request->method() == HTTP_Request::POST){
                 $this->_setErrors('Your request data is invalid or expires. Please refresh page');
                 $this->_breakActionExecution = true;
 
@@ -129,7 +133,7 @@ class HDVP_Controller_Template extends HDVP_Controller
             $this->_post = $_POST;
         }
 
-        if($this->request->method() === HTTP_Request::POST){
+        if($this->_formSecureTknCheck AND $this->request->method() === HTTP_Request::POST){
             if(!isset($this->post()['x-form-secure-tkn']) OR $this->post()['x-form-secure-tkn'] !== ""){
                 Security::block_client();
                 throw new HTTP_Exception_404('blocked');
@@ -297,7 +301,7 @@ class HDVP_Controller_Template extends HDVP_Controller
     private function _detectClientLocale()
     {
         $clientAcceptLanguages = $this->request->client()->getAcceptLanguages();
-        $detectedLang = null;
+        $detectedLang = 'en';
         if(!empty($clientAcceptLanguages)){
             foreach ($clientAcceptLanguages as $lang => $factor){
                 if($detectedLang = Language::getLangByIso2($lang) OR $detectedLang = Language::getLangByLocale($lang)){

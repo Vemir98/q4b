@@ -69,13 +69,15 @@ class Controller_QualityControl extends HDVP_Controller_Template
                 $qc->floor_id = $place->floor_id;
                 $qc->place_type = $place->type;
                 $qc->save();
+                $fs = new FileServer();
                 if(!empty($uploadedFiles)){
                     foreach ($uploadedFiles as $idx => $image){
                         $image = ORM::factory('Image')->values($image)->save();
                         $qc->add('images', $image->pk());
 
-                        $img = new JBZoo\Image\Image($this->project->qualityControlPath().DS.$image->name);
-                        $img->saveAs($this->project->qualityControlPath().DS.$image->name,50);
+//                        $img = new JBZoo\Image\Image($this->project->qualityControlPath().DS.$image->name);
+//                        $img->saveAs($this->project->qualityControlPath().DS.$image->name,50);
+                        $fs->addLazySimpleImageTask('https://qforb.net/' . $image->path . '/' . $image->name,$image->id);
                     }
                 }
                 $imgData = $this->getNormalizedPostArr('images');
@@ -85,6 +87,7 @@ class Controller_QualityControl extends HDVP_Controller_Template
                             $imgData = Arr::extract($img,['source','name']);
                             $image = $this->saveBase64Image($imgData['source'],$imgData['name'],$qc->project->qualityControlPath());
                             $qc->add('images', $image->pk());
+                            $fs->addLazySimpleImageTask('https://qforb.net/' . $image->path . '/' . $image->name,$image->id);
                         }else{
                             if(!isset($img['id'])) throw  new HTTP_Exception_404;
                             $imgData = Arr::extract($img,['source','id']);
@@ -98,6 +101,7 @@ class Controller_QualityControl extends HDVP_Controller_Template
                             $filename = implode('.',$tmp).'.png';
                             $image = $this->saveBase64Image($imgData['source'],$filename,$qc->project->qualityControlPath());
                             $qc->add('images', $image->pk());
+                            $fs->addLazySimpleImageTask('https://qforb.net/' . $image->path . '/' . $image->name,$image->id);
                         }
 
                     }
@@ -106,6 +110,7 @@ class Controller_QualityControl extends HDVP_Controller_Template
                 if(!empty(trim($message)))
                     ORM::factory('QcComment')->values(['message' => $message, 'qcontrol_id' => $qc->pk()])->save();
                 Database::instance()->commit();
+                $fs->sendLazyTasks();
                 $this->setResponseData('triggerEvent','qualityControlCreated');
             }catch (ORM_Validation_Exception $e){
                 Database::instance()->rollback();

@@ -791,5 +791,6 @@ return [
     'project_general_subcontractor'=>'Главный субподрядчик',
     'Notes' => 'Комментарии',
     'Employer review' => 'Диалог',
+    'Add review' => 'Добавить отзыв',
     ''=>'',
 ];

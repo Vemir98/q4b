@@ -168,7 +168,7 @@
                         </div>
                     </div>
                 <div>
-                    <?if (strlen($q->getDialog(html_entity_decode($q->description), "@##")) > 1) :?>
+                    <?if (strlen($q->getDialog(html_entity_decode($q->description), "@##", "\n")) > 1) :?>
                         <ul class="report-desc-approve">
                             <div class="row">
                                 <div class="col-md-12">
@@ -180,7 +180,7 @@
                                         </div>
                                         <div class="panel_content">
                                             <div class="report-desc-approve-text">
-                                                <?$desc = explode("\n",$q->getDialog(html_entity_decode($q->description), "@##"));
+                                                <?$desc = explode("\n",$q->getDialog(html_entity_decode($q->description), "@##", "\n"));
                                                 foreach ($desc as $line) {?>
                                                     <p><?=$line?></p>
                                                 <?}?>
@@ -204,7 +204,7 @@
                         <h4 class="report-plan-title"><?=$img->original_name?> <span class="report-plan-uploaded">(<?=__('uploaded')?>: <?=date('d.m.y H:i', $img->created_at)?> )</span></h4>
                         <div class="report-plan-item-image">
                             <a href="<?=$img->originalFilePath() . '?' . uniqid()?>" target="_blank">
-                                <img src="<?=$img->getBigThumbPath() . '?'?>" alt="<?=$img->original_name?>">
+                                <img src="<?=$img->getBigThumbPath()?>" alt="<?=$img->original_name?>">
                             </a>
                         </div>
                     </div>

@@ -9361,6 +9361,7 @@ ul.q4-unordered-list > li {
     width: 450px;
     bottom: 0;
     left: 50%;
+    font-size: 12px;
     transform: translate(-50%, 37%);
   }
   .q4-copyright.q4-copyright-quality {
@@ -10728,7 +10729,10 @@ header {
   background: #f2f3f8; }
   .layout textarea {
     color: #99b5c9; }
-
+  .dialog-details {
+    color: #708492;
+    overflow-y: auto;
+  }
 .q4-copyright {
   background: #f2faff;
   color: #708492;
@@ -11605,11 +11609,7 @@ header {
     font-weight: normal;
     font-style: normal;
     font-family: "proxima_nova_rgregular", Arial, Helvetica, sans-serif;
-    font-weight: bold;
-    /*white-space: nowrap;*/
-    /*overflow: hidden;*/
-    /*text-overflow: ellipsis;*/
-  }
+    font-weight: bold;}
   .report-result .report-conditions {
     margin: 15px 0 30px 0; }
     .report-result .report-conditions .report-cond-units {
@@ -12033,6 +12033,9 @@ header {
 .mx-datepicker-popup .mx-btn-icon-double-right .mx-icon-double-right:after,
 .mx-datepicker-popup .mx-btn-icon-double-right .mx-icon-double-right:before {
   display: none; }
+.rtl .quality-control-actions-list .modal-details-actions.text-align-right {
+  text-align: right;
+}
 
 @media (max-width: 1620px) {
   .report-status-list .report-status-results {
