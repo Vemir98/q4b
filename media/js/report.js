@@ -5,11 +5,7 @@
 var _URL = '';
 var CHANGED = false;
 $(document).ready(function() {
-    $(document).find('.quality-control-modal').addClass('no-delete').modal('show');
-    var qcId = window.location.hash ? window.location.hash.slice(1) : '';
-    if (qcId) {
-        showQCMOdal(qcId);
-    }
+
     var reportsTasksListScroll = $(document).find('.reports-tasks-list-scroll').closest('.reports-tasks-box').width();
 
     $(document).find('.reports-tasks-list-group').each(function(i, elem) {
@@ -23,52 +19,6 @@ $(document).ready(function() {
 
 
     });
-    function showQCMOdal(qcId) {
-        var url = $('#show-qc').data('url') + '/' + qcId;
-        var modalId = $('#show-qc').data('modal-id');
-        Q4U.ajaxGetRequest(url, {
-            successCallback: function(data) {
-                if (data.getData().modal) {
-                    $(document).find('.modal').modal('hide');
-                    var modal = data.getData().modal;
-                    $('body').append(modal);
-                    $(document).find('.modal').each(function() {
-                        if ($(this).attr('id') != 'choose-plan-modal' && $(this).attr('id') != 'choose-plan-modal-mobile') {
-                            $(this).modal('show');
-                        }
-                    });
-                    $('.date').datetimepicker({
-                        locale: $(document).find('html').attr('lang')
-                    }).show();
-                    setTimeout(function() {
-                        $(window).trigger('resize');
-                        var self = $(document).find('#' + modalId);
-                        var modalWidth = self.find('.modal-dialog').width();
-                        var tasksItemCount = $('.tasks-full-description li:visible').length;
-                        var tasksItemsWidth = tasksItemCount * (350 + 40);
-                        // Add scroll to tasks
-                        self.find('.tasks-full-description-box').width(modalWidth - 40);
-                        self.find('.tasks-full-description').width(tasksItemsWidth);
-                    }, 300)
-                }
-            },
-            errorCallback: function(data) {
-                console.log(data)
-            },
-            ajaxErrorCallback: function(event, jqxhr, settings, thrownError) {
-                Q4U.alert(__('Not found'), {
-                    type: "danger",
-                    confirmText: __("OK")
-                });
-            },
-        });
-    }
-
-
-
-
-
-
 
     function companySelected(val) {
         var projHtml = '';
@@ -411,7 +361,7 @@ $(document).ready(function() {
      ***************************************/
     $(document).on('click', '.reports-to1-print-btn', function() {
         var printed = false;
-        $(document).find('#qc-list-printable').remove();
+        $(document).find('#qc-list-printable-new').remove();
         $('body>div.print-quality-control').remove();
         var url = window.location.href;
         $.ajax({
