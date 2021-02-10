@@ -436,7 +436,7 @@ if($_USER->is('project_supervisor') || $isSubcontractor){//запрет на и�
                                     <?}?>
                                 </div>
                             </div>
-                            <?else:?>
+                        <?else:?>
                             <div class="form-group col-md-6 rtl-float-right">
 
                                 <label class="table_label"><?=__('Add review')?></label>
@@ -510,14 +510,14 @@ if($_USER->is('project_supervisor') || $isSubcontractor){//запрет на и�
                             </div>
                         </div>
                         <?if($hasDialog):?>
-                        <div class="form-group col-md-6 rtl-float-right <?=!$hasDialog ? ' clear' : ''?>">
+                            <div class="form-group col-md-6 rtl-float-right">
 
-                            <label class="table_label"><?=__('Add review')?></label>
+                                <label class="table_label"><?=__('Add review')?></label>
 
-                            <div class="form-group">
-                                <textarea name="dialog" class='modal-plans-details-textarea'></textarea>
+                                <div class="form-group">
+                                    <textarea name="dialog" class='modal-plans-details-textarea'></textarea>
+                                </div>
                             </div>
-                        </div>
                         <?endif?>
                     </div>
                 </div>

@@ -292,6 +292,34 @@ $entityType = count($report->getObjects()) ? 'objects' : 'projects';
     .pies.he td:last-child .pie{
         margin-left: -1.5em!important;
     }
+    .icon {
+        margin-right: 5px;
+    }
+    .light-blue::before {
+        color: #1ebae5 !important;
+    }
+    .pdf_header_top2{
+        display: flex;
+        justify-content: space-between;
+        align-items:center;
+    }
+    .pdf_header_top2 img {
+        margin-left: 20px;
+        border: 0px solid transparent;
+    }
+    .ml-5 {
+        margin-left: 5px;
+    }
+    .pdf-structure {
+        display: flex;
+        flex-wrap: wrap;
+        max-width: 50%;
+    }
+    .pdf-structure-text {
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+    }
     @media print{
         @page { size: landscape}
     }
@@ -300,64 +328,72 @@ $entityType = count($report->getObjects()) ? 'objects' : 'projects';
 <table class="header <?if(!$isPhantom):?>no-print<?endif?>">
     <tr>
         <td class="logo"><img src="/<?=$report->getCompany()['logo']?>" alt="project images"></td>
-        <td><ul<?if(!count($report->getObjects())):?> style="width: 100%"<?endif?>>
+        <td>
+            <ul<?if(!count($report->getObjects())):?> style="width: 100%"<?endif?>>
                 <li>
-                            <span class="light-blue">
-                                <i class="icon q4bikon-companies"></i>
-                                <?=__('Company name')?>:
-                            </span>
-                    <span class="dark-blue">
-                                <?=$report->getCompany()['name']?>
-                            </span>
+                    <span class="light-blue">
+                        <i class="icon light-blue q4bikon-companies"></i>
+                        <?=__('Company name')?>:
+                    </span>
+                <span class="dark-blue ml-5">
+                            <?=$report->getCompany()['name']?>
+                </span>
                 </li>
                 <li>
-                            <span class="light-blue">
-                                <i class="icon q4bikon-project"></i>
-                                <?=__('Project name')?>:
-                            </span>
-                    <span class="dark-blue">
-                                <?if(!count($report->getObjects())):?>
-                                    <?foreach ($report->getProjects() as $project):?>
-                                        <?$tmpProj[] = $project['name']?>
-                                    <?endforeach;?>
-                                    <?=implode(', ',$tmpProj)?>
-                                <?else:?>
-                                    <?$tmpProj = $report->getProjects()?>
-                                    <?=array_shift($tmpProj)['name']?>
-                                <?endif;?>
-                                <?unset($tmpProj)?>
-                            </span>
+                    <span class="light-blue">
+                        <i class="icon light-blue q4bikon-project"></i>
+                        <?=__('Project name')?>:
+                    </span>
+                    <span class="dark-blue ml-5">
+                        <?if(!count($report->getObjects())):?>
+                            <?foreach ($report->getProjects() as $project):?>
+                                <?$tmpProj[] = $project['name']?>
+                            <?endforeach;?>
+                            <?=implode(', ',$tmpProj)?>
+                        <?else:?>
+                            <?$tmpProj = $report->getProjects()?>
+                            <?=array_shift($tmpProj)['name']?>
+                        <?endif;?>
+                        <?unset($tmpProj)?>
+                    </span>
                 </li>
                 <li>
-                            <span class="light-blue">
-                                <i class="q4bikon-date"></i>
-                                <?=__('Report Range')?>:
-                            </span>
-                    <span class="dark-blue">
-                                <?=$report->getDateFrom(true)?> - <?=$report->getDateTo(true)?>
-                            </span>
+                    <span class="light-blue">
+                        <i class="icon light-blue q4bikon-date"></i>
+                        <?=__('Report Range')?>:
+                    </span>
+                    <span class="dark-blue ml-5">
+                        <?=$report->getDateFrom(true)?> - <?=$report->getDateTo(true)?>
+                    </span>
                 </li>
             </ul>
             <?if(count($report->getObjects())):?>
                 <ul>
                     <li></li>
-                    <li>
-                            <span class="light-blue">
-                                <i class="q4bikon-date"></i>
-                                <?=__('Structures')?>:
-                            </span>
-                        <span class="dark-blue">
-                                <?foreach ($report->getObjects() as $object):?>
-                                    <?$tmpObj[] = $object['name']?>
-                                <?endforeach;?>
-                                <?=implode(', ',$tmpObj)?>
-                                <? unset($tmpObj)?>
-                            </span>
+                    <li class="pdf-structure">
+                        <span class="light-blue">
+                            <i class="icon light-blue q4bikon-date"></i>
+                            <?=__('Structures')?>:
+                        </span>
+                        <span class="dark-blue ml-5 pdf-structure-text">
+                            <?foreach ($report->getObjects() as $object):?>
+                                <?$tmpObj[] = $object['name']?>
+                            <?endforeach;?>
+                            <?=implode(', ',$tmpObj)?>
+                            <? unset($tmpObj)?>
+                        </span>
                     </li>
                     <li></li>
                 </ul>
-            <?endif;?></td>
-        <td></td>
+            <?endif;?>
+        </td>
+        <td>
+
+            <div class="pdf_header_top2">
+                <img class="pdf_logo1" src="/media/img/qforb_logo.png" alt="logo">
+                <img class="pdf_logo2" src="/media/img/qforb_iso.png" alt="logo">
+            </div>
+        </td>
     </tr>
 </table>
 
@@ -511,6 +547,41 @@ $entityType = count($report->getObjects()) ? 'objects' : 'projects';
             </tr>
         </table>
     </div>
+    <?if($report->hasSpecialityDetails()):?>
+        <?foreach ($report->getCompanyCrafts() as $craft):?>
+            <?if(!$report->specHasResult($stats[$reportEntity][$entity['id']]['craftDefects'][$craft['id']]['total'])): continue; endif;?>
+            <div class="craft-stats">
+                <div class="craft-title">
+                    <h3><span style="margin-left: 10px;background-color: <?=$stats[$entityType][$entity['id']]['color']?>!important;-webkit-print-color-adjust: exact;""></span> <?=$craft['name']?></h3>
+                </div>
+                <table class="table">
+                    <tr>
+                        <td></td>
+                        <?foreach (Enum_QualityControlConditionList::toArray() as $item):?>
+                            <td><?=__($item)?></td>
+                        <?endforeach;?>
+                    </tr>
+                    <?foreach (Enum_QualityControlConditionLevel::toArray() as $conditionLevel):?>
+                        <tr>
+                            <td><?=__($conditionLevel)?></td>
+                            <?foreach (Enum_QualityControlConditionList::toArray() as $conditionList):?>
+                                <td><?=$stats[$reportEntity][$entity['id']]['craftDefects'][$craft['id']][$conditionLevel][$conditionList]?></td>
+                            <?endforeach;?>
+                        </tr>
+                    <?endforeach;?>
+                    <tr>
+                        <td><?=__('Total')?></td>
+                        <?foreach ($stats[$reportEntity][$entity['id']]['craftDefects'][$craft['id']]['total'] as $val):?>
+                            <td><?=$val?></td>
+                        <?endforeach;?>
+                    </tr>
+                </table>
+            </div>
+        <?endforeach?>
+    <?endif;?>
+
+
+
     <div class="general-opinion">
         <h5><span class="circle">i</span><?=__('General opinion')?></h5>
         <textarea data-id="<?=$entity['id']?>"><?=$entity['generalOpinion']?></textarea>

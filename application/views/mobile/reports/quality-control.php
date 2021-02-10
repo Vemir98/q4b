@@ -325,8 +325,41 @@ if(Auth::instance()->get_user()->is('project_supervisor')){//запрет на �
 
                     <div class="form-group relative">
                         <label class="table_label"><?=__('Description')?></label>
-                        <textarea name="description" class="modal-details-textarea-mobile q4_required"><?=trim($item->description)?></textarea>
+                        <textarea name="description" class='modal-details-textarea-mobile q4_required'><?=trim(html_entity_decode($item->getDesc(html_entity_decode($item->description), "@##")))?></textarea>
                     </div>
+                    <?$hasDialog = strlen(trim(html_entity_decode($item->getDialog(html_entity_decode($item->description), "@##", "\n")))) ?>
+                    <?if($hasDialog):?>
+                        <div class="form-group relative">
+
+                            <label class="table_label"><?=__('Employer review')?></label>
+
+                            <div class="form-group modal-details-textarea-mobile dialog-details">
+                                <?$dialogs = explode("\n",$item->getDialog(html_entity_decode($item->description), "@##", "\n"));
+                                foreach ($dialogs as $line) {?>
+                                    <p><?=$line?></p>
+                                <?}?>
+                            </div>
+                        </div>
+                    <?else:?>
+                        <div class="form-group relative">
+
+                            <label class="table_label"><?=__('Add review')?></label>
+
+                            <div class="form-group">
+                                <textarea name="dialog" class='modal-details-textarea-mobile'></textarea>
+                            </div>
+                        </div>
+                    <?endif?>
+                    <?if($hasDialog):?>
+                        <div class="form-group relative">
+
+                            <label class="table_label"><?=__('Add review')?></label>
+
+                            <div class="form-group">
+                                <textarea name="dialog" class='modal-details-textarea-mobile'></textarea>
+                            </div>
+                        </div>
+                    <?endif?>
 
                     <div class="form-group qc-border-bottom">
                         <ul class="approve-staff">

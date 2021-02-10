@@ -792,5 +792,6 @@ return [
     'Notes' => 'Комментарии',
     'Employer review' => 'Диалог',
     'Add review' => 'Добавить отзыв',
+    'Attached images' => 'Прикрепленные изображения',
     ''=>'',
 ];

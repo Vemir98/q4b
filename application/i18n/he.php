@@ -819,5 +819,6 @@ return [
     'Notes' => 'הערות',
     'Employer review' => 'דו שיח',
     'Add review' => 'הוסף תגובה',
+    'Attached images' => 'תמונות מצורפות',
     ''=>'',
 ];

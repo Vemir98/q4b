@@ -542,7 +542,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         if(count($places)){
             foreach ($places as $p){
                 foreach ($p->spaces->find_all() as $s){
-                    $output .= '<option value="'.$s->id.'">'.__('Space').'#'.$s->id.' -'.$s->desc.'</option>';
+                    $output .= '<option value="'.$s->id.'">'.$s->type->name.' -'.$s->desc.'</option>';
                 }
 
             }

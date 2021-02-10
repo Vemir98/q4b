@@ -821,5 +821,6 @@ return [
     'Notes' => 'Notes',
     'Employer review' => 'Employer review',
     'Add review' => 'Add review',
+    'Attached images' => 'Attached images',
     ''=>'',
 ];
