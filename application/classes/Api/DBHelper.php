@@ -159,6 +159,8 @@ FROM pr_objects po
   f.path AS filePath,
   f.original_name AS fileOriginalName,
   fcn.name AS fileCustomName,
+  pfa.image AS imagePath,
+  pfa.mobile AS mobilePath,
   pp.place_id AS placeId,
   pp.edition,
   pp.scope,
@@ -181,6 +183,7 @@ LEFT JOIN users u1 ON pp.updated_by = u1.id
 LEFT JOIN pr_plans_files ppf ON pp.id = ppf.plan_id
 LEFT JOIN files f ON ppf.file_id = f.id
 LEFT JOIN files_custom_names fcn ON fcn.file_id = f.id
+LEFT JOIN pr_plans_file_aliases_files pfa ON f.id = pfa.file_id
 
 WHERE pp.id IN (SELECT max(pp1.id) id FROM pr_plans pp1 WHERE pp1.project_id='.$id.' GROUP BY pp1.scope ORDER BY pp1.id DESC) ')->execute()->as_array();
     }

@@ -713,6 +713,7 @@ $(document).ready(function() {
             '</div>' +
         '</div>';
         var backgroundImage = new Image();
+        backgroundImage.crossOrigin = "https://qforb.net";
         backgroundImage.src = imageSrc.indexOf('base64') != -1 ? imageSrc : imageSrc + '?' + Q4U.timestamp();
 
         backgroundImage.addEventListener('load', loadImage, false);

@@ -11,7 +11,7 @@ class Model_PlanFile extends Model_File
     protected $_allowed_ext = ['jpe','jpeg','jpg','png','tif','tiff','pdf'];
 
     protected $_has_many = [
-        '__plans' => [
+        'plans' => [
             'model' => 'PrPlan',
             'through' => 'pr_plans_files',
             'foreign_key' => 'file_id',
@@ -19,11 +19,22 @@ class Model_PlanFile extends Model_File
         ]
     ];
 
+    protected $_has_one = [
+        'alias' => [
+            'model' => 'PlanFileAlias',
+            'foreign_key' => 'file_id',
+        ],
+        'custom_name' => [
+            'model' => 'FileCustomName',
+            'foreign_key' => 'file_id'
+        ]
+    ];
+
     public function getPlan(){
-        return $this->__plans->find();
+        return $this->plans->find();
     }
 
-    public function getImageLink($w = null,$h = null,$crop = false){
+    public function getImageLink11($w = null,$h = null,$crop = false){
         if(!$this->loaded()){
             return null;
         }
@@ -100,6 +111,16 @@ class Model_PlanFile extends Model_File
         }
 
 
+    }
+
+    public function getImageLink(){
+        if($this->ext != 'pdf'){
+            return $this->path . '/'. $this->name;
+        }
+        if( ! $this->alias->id){
+            return 'NO IMAGE';
+        }
+        return $this->alias->image;
     }
 
     public function getName(){

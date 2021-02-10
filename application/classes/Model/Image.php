@@ -29,9 +29,6 @@ class Model_Image extends Model_File
     public function replaceSourceWithBase64String($str,$quality = 50){
         $img = new JBZoo\Image\Image($str);
         $img->saveAs(DOCROOT.$this->originalFilePath(),$quality);
-        $this->_generateThumb();
-
-
     }
 
     public function getPath($w = null,$h = null,$crop = false){
@@ -66,13 +63,19 @@ class Model_Image extends Model_File
     }
 
     public function getBigThumbPath(){
+        $path = str_replace('https://fs.qforb.net/','',$this->path);
+        $path =  str_replace('/','-',$path . '-' . $this->name);
+        return 'https://fs.qforb.net/image/miniature/w756-h500-q50/' . $path;
+    }
+
+    public function __getBigTHumb(){
         $path = [DOCROOT.$this->path];
         for($i = 0; $i < 3; $i++){
             $path[] = substr(strtolower($this->name),$i*2,2);
         }
         $path = implode('/',$path);
         if(!is_dir($path))
-        @mkdir($path,0755,true);
+            @mkdir($path,0755,true);
         $filePath = $path.'/'.$this->name;
         if(!file_exists($filePath)){
             ini_set('memory_limit', '-1');
@@ -81,6 +84,6 @@ class Model_Image extends Model_File
             $img->saveAs($filePath,50);
         }
         $filePath = str_ireplace(DOCROOT,'/',$filePath);
-        return $filePath;
+        return 'https://fs.qforb.net/image/miniature/w756-h500-q50/' . str_replace('/','-',$this->path . '');
     }
 }

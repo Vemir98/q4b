@@ -29,7 +29,7 @@ $lang = Language::getCurrent()->iso2;
                     <div>
                         <?foreach ($plans as $plan): ?>
                             <span style="display: block; color: #494949; font-size: 16px; font-weight: normal; font-style: normal; font-family: 'proxima_nova_rgregular', Arial, Helvetica, sans-serif; line-height: 1; margin-bottom: 7px;">
-                                    <span><?=__('Plan name')?> <a href="<?=$_SITE_URL.$plan->file()->originalFilePath()?>" target="_blank" style="color: #1ebae5; text-decoration: underline;  font-weight: bold"><?=$plan->file()->getName()?> </a> </span>
+                                    <span><?=__('Plan name')?> <a href="<?=$plan->file()->originalFilePath()?>" target="_blank" style="color: #1ebae5; text-decoration: underline;  font-weight: bold"><?=$plan->file()->getName()?> </a> </span>
                             </span>
                         <?endforeach; ?>
                     </div>

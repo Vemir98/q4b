@@ -545,7 +545,19 @@ class Controller_Plans extends HDVP_Controller_Template
                         ];
                         $file = ORM::factory('PlanFile')->values($fileData)->save();
                         $plan->add('files', $file->pk());
-                        Event::instance()->fire('onPlanFileAdded',['sender' => $this,'item' => $file]);
+//                        Event::instance()->fire('onPlanFileAdded',['sender' => $this,'item' => $file]);
+                        $fs = new FileServer();
+                        if(strtolower($file->ext) == 'pdf') {
+                            $fs->addLazyPdfTask(
+                                'https://qforb.net/' . $file->path . '/' . $file->name,
+                                'https://qforb.net/fileserver/planaddcallback?planId=' . $plan->id . '&fileId=' . $file->id,
+                                1,
+                                1
+                            );
+                        }else{
+                            $fs->addLazySimpleImageTask('https://qforb.net/' . $file->path . '/' . $file->name,$file->id);
+                        }
+                        $plan->has_file = 1;
                     }
 
                     $planFile = $plan->file();
@@ -635,6 +647,7 @@ class Controller_Plans extends HDVP_Controller_Template
                 }
                 $this->setResponseData('triggerEvent','planListUpdated');
                 Database::instance()->commit();
+                $fs->sendLazyTasks();
             }catch(ORM_Validation_Exception $e){
                 Database::instance()->rollback();
                 $this->_setErrors($e->errors('validation'));
@@ -1035,7 +1048,20 @@ class Controller_Plans extends HDVP_Controller_Template
                     foreach ($uploadedFiles as $file){
                         $PlanFile = ORM::factory('PlanFile')->values($file)->save();
                         $newPlan->add('files', $PlanFile->pk());
-                        Event::instance()->fire('onPlanFileAdded',['sender' => $this,'item' => $PlanFile]);
+//                        Event::instance()->fire('onPlanFileAdded',['sender' => $this,'item' => $PlanFile]);
+                        $fs = new FileServer();
+                        if(strtolower($file->ext) == 'pdf') {
+                            $fs->addLazyPdfTask(
+                                'https://qforb.net/' . $PlanFile->path . '/' . $PlanFile->name,
+                                'https://qforb.net/fileserver/planaddcallback?planId=' . $plan->id . '&fileId=' . $PlanFile->id,
+                                1,
+                                1
+                            );
+                        }else{
+                            $fs->addLazySimpleImageTask('https://qforb.net/' . $PlanFile->path . '/' . $PlanFile->name,$PlanFile->id);
+                        }
+                        $newPlan->has_file = 1;
+                        $newPlan->save();
                     }
                     $f = $plan->file(); // todo:: WTF ?
                     if($f->hasCustomName()){
@@ -1043,6 +1069,7 @@ class Controller_Plans extends HDVP_Controller_Template
                     }
                 }
                 Database::instance()->commit();
+                $fs->sendLazyTasks();
             }catch (ORM_Validation_Exception $e){
                 Database::instance()->rollback();
                 $this->_setErrors($e->errors('validation'));

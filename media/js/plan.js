@@ -1673,7 +1673,7 @@ $(document).ready(function() {
 
 
             reader.onload = function(e) {
-
+                console.log(file_ext);
                 if(file_ext == 'pdf'){
 
                     result = '/media/img/pdf-icon.png';

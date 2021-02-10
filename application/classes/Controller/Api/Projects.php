@@ -395,23 +395,13 @@ class Controller_Api_Projects extends HDVP_Controller_API
     }
 
     private function planFileLink($plan){
-        if(empty($plan['fileName']) OR empty($plan['filePath'])){
+        if((empty($plan['fileName']) OR empty($plan['filePath'])) AND empty($plan['mobilePath']) AND empty($plan['imagePath'])){
             return null;
         }
-        $filename = explode('.',$plan['fileName']);
-        unset($filename[count($filename)-1]);
-        $filename[0] .= '-mobile';
-        $filename[] = 'jpg';
-        $filename = implode('.',$filename);
-        if(!file_exists(DOCROOT.implode('/',[$plan['filePath'],$filename]))){
-            $filename = preg_replace('~.jpg$~i','.png',$filename);
-            if(!file_exists(DOCROOT.implode('/',[$plan['filePath'],$filename]))){
-                $filename = $plan['fileName'];
-            }
+        if(!empty($plan['mobilePath'])) return $plan['mobilePath'];
+        if(!empty($plan['imagePath'])) return $plan['imagePath'];
 
-        }
-
-        return '/'.implode('/',[$plan['filePath'],$filename]);
+        return implode('/',[$plan['filePath'],$plan['fileName']]);
     }
 
     /**
@@ -512,13 +502,15 @@ class Controller_Api_Projects extends HDVP_Controller_API
             $qc->floor_id = $place->floor_id;
             $qc->place_type = $place->type;
             $qc->save();
+            $fs = new FileServer();
             if(!empty($uploadedFiles)){
                 foreach ($uploadedFiles as $idx => $image){
                     $image = ORM::factory('Image')->values($image)->save();
                     $qc->add('images', $image->pk());
 
-                    $img = new JBZoo\Image\Image($project->qualityControlPath().DS.$image->name);
-                    $img->saveAs($project->qualityControlPath().DS.$image->name,50);
+//                    $img = new JBZoo\Image\Image($project->qualityControlPath().DS.$image->name);
+//                    $img->saveAs($project->qualityControlPath().DS.$image->name,50);
+                    $fs->addLazySimpleImageTask('https://qforb.net/' . $image->path . '/' . $image->name,$image->id);
                 }
             }
             $imgData = $this->_GNormPArr('images');
@@ -528,6 +520,7 @@ class Controller_Api_Projects extends HDVP_Controller_API
                         $imgData = Arr::extract($img,['source','name']);
                         $image = $this->saveBase64Image($imgData['source'],$imgData['name'],$qc->project->qualityControlPath());
                         $qc->add('images', $image->pk());
+                        $fs->addLazySimpleImageTask('https://qforb.net/' . $image->path . '/' . $image->name,$image->id);
                     }else{
                         if(!isset($img['id'])) throw  new HTTP_Exception_404;
                         $imgData = Arr::extract($img,['source','id']);
@@ -541,6 +534,7 @@ class Controller_Api_Projects extends HDVP_Controller_API
                         $filename = implode('.',$tmp).'.png';
                         $image = $this->saveBase64Image($imgData['source'],$filename,$qc->project->qualityControlPath());
                         $qc->add('images', $image->pk());
+                        $fs->addLazySimpleImageTask('https://qforb.net/' . $image->path . '/' . $image->name,$image->id);
                     }
 
                 }
@@ -549,6 +543,7 @@ class Controller_Api_Projects extends HDVP_Controller_API
             if(!empty(trim($message)))
                 ORM::factory('QcComment')->values(['message' => $message, 'qcontrol_id' => $qc->pk()])->save();
             Database::instance()->commit();
+            $fs->sendLazyTasks();
         }catch (ORM_Validation_Exception $e){
             Database::instance()->rollback();
             throw API_Exception::factory(500,'Incorrect data');
@@ -637,13 +632,15 @@ class Controller_Api_Projects extends HDVP_Controller_API
             $qc->approved_by = Auth::instance()->get_user()->id;
             $qc->approved_at = time();
             $qc->save();
+            $fs = new FileServer();
             if(!empty($uploadedFiles)){
                 foreach ($uploadedFiles as $idx => $image){
                     $image = ORM::factory('Image')->values($image)->save();
                     $qc->add('images', $image->pk());
 
-                    $img = new JBZoo\Image\Image($project->qualityControlPath().DS.$image->name);
-                    $img->saveAs($project->qualityControlPath().DS.$image->name,50);
+//                    $img = new JBZoo\Image\Image($project->qualityControlPath().DS.$image->name);
+//                    $img->saveAs($project->qualityControlPath().DS.$image->name,50);
+                    $fs->addLazySimpleImageTask('https://qforb.net/' . $image->path . '/' . $image->name,$image->id);
                 }
             }
             $imgData = $this->_GNormPArr('images');
@@ -653,6 +650,7 @@ class Controller_Api_Projects extends HDVP_Controller_API
                         $imgData = Arr::extract($img,['source','name']);
                         $image = $this->saveBase64Image($imgData['source'],$imgData['name'],$qc->project->qualityControlPath());
                         $qc->add('images', $image->pk());
+                        $fs->addLazySimpleImageTask('https://qforb.net/' . $image->path . '/' . $image->name,$image->id);
                     }else{
                         if(!isset($img['id'])) throw  new HTTP_Exception_404;
                         $imgData = Arr::extract($img,['source','id']);
@@ -666,6 +664,7 @@ class Controller_Api_Projects extends HDVP_Controller_API
                         $filename = implode('.',$tmp).'.png';
                         $image = $this->saveBase64Image($imgData['source'],$filename,$qc->project->qualityControlPath());
                         $qc->add('images', $image->pk());
+                        $fs->addLazySimpleImageTask('https://qforb.net/' . $image->path . '/' . $image->name,$image->id);
                     }
 
                 }
@@ -675,6 +674,7 @@ class Controller_Api_Projects extends HDVP_Controller_API
             if(!empty(trim($message)))
                 ORM::factory('QcComment')->values(['message' => $message, 'qcontrol_id' => $qc->pk()])->save();
             Database::instance()->commit();
+            $fs->sendLazyTasks();
         }catch (ORM_Validation_Exception $e){
             Database::instance()->rollback();
             throw API_Exception::factory(500,'Incorrect data');
@@ -935,7 +935,7 @@ class Controller_Api_Projects extends HDVP_Controller_API
         $output = [];
 
         foreach($qc->images->find_all() as $f){
-            $output []= URL::base('https').implode('/',[$f->path, $f->name]);
+            $output []= $f->path .'/'. $f->name;
         }
         return $output;
 

@@ -479,9 +479,14 @@
 
                 $(element).closest('.hide-upload').siblings(".camera-default-image").hide();
                 $(element).closest('.hide-upload').siblings(".show-uploaded-image").removeClass('hidden');
-
+                var file_ext = input.files[0].type.split('/')[1].toLowerCase();
                 reader.onload = function(e) {
-                    $(element).closest('.hide-upload').siblings(".show-uploaded-image").attr('src', e.target.result);
+                    var iconSrc = '/media/img/choose-format/format-pdf.png';
+                    if(file_ext != 'pdf'){
+                        iconSrc = e.target.result;
+                    }
+
+                    $(element).closest('.hide-upload').siblings(".show-uploaded-image").attr('src', iconSrc);
                 }
 
                 reader.readAsDataURL(input.files[0]);

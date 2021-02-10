@@ -1,8 +1,7 @@
 /cache/
-/classes/
 /config/
 /local-storage/
-/vendor/
+/vendor/*
 /messages/
 /logs/
 /routes/

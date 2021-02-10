@@ -116,11 +116,19 @@ abstract class Model_File extends MORM
     }
 
     public function originalFilePath(){
-        return DS.$this->path.DS.$this->name;
+        if($this->remote){
+            return $this->path.DS.$this->name;
+        }else{
+            return DS.$this->path.DS.$this->name;
+        }
     }
 
     public function fullFilePath(){
-        return DOCROOT.$this->path.DS.$this->name;
+        if($this->remote){
+            return $this->path.DS.$this->name;
+        }else{
+            return DOCROOT.$this->path.DS.$this->name;
+        }
     }
     public function filters()
     {
