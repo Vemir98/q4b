@@ -244,6 +244,7 @@ $icons = [
                                             <table>
                                                 <tr data-id="<?=$item->id?>">
                                                     <td><?=$item->name?></td>
+                                                    <td><?=$item->sheet_number?></td>
                                                     <td><?=$item->edition?></td>
                                                     <td><?=__($item->status)?></td>
                                                     <td><?=date('d/m/Y',$item->date)?></td>
@@ -476,10 +477,11 @@ $icons = [
             <table class="printable-table">
                 <thead>
                 <tr>
-                    <th colspan="6" class="text-center" data-type="property"><?=__('Property')?> :</th>
+                    <th colspan="7" class="text-center" data-type="property"><?=__('Property')?> :</th>
                 </tr>
                 <tr>
                     <th class="pr-cell-name"><?=__('Name/Type')?></th>
+                    <th class="pr-cell-date"><?=__('Sheet Number')?></th>
                     <th><?=__('Edition')?></th>
                     <th><?=__('Status')?></th>
                     <th class="pr-cell-date"><?=__('Plan date')?></th>

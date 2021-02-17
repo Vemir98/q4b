@@ -382,7 +382,6 @@ $(document).ready(function() {
                 var ImgBefLoad = {};
                 var imgCount =0;
                 $(document).find('.print-reports-list img:not(.q4b-logo)').each(function(){
-                    console.log(1, $(this).attr('src'));
                     ImgBefLoad[$(this).attr('src')] = $(this).attr('src');
                     ++imgCount;
 

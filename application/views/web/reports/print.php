@@ -33,7 +33,7 @@
             vertical-align: top;
         }
         .qc-rep-img{
-            width: 49%;
+            width: 48%;
             display: inline-block;
             vertical-align: top;
             margin-bottom: 15px;
@@ -46,12 +46,20 @@
             margin-right: auto;
         }
         .qc-rep-img img{
-            width: 330px;
-            height: 250px;
+            width: 100%;
+            height: 260px;
             border: 1px solid #C4C4C4;
             border-radius: 10px;
-            /*object-fit: contain;*/
+            object-fit: contain;
             border-radius: 10px;
+        }
+        .f0_new .qc-rep-img:nth-child(odd) {
+            margin-right: 20px !important;
+            margin-left: 0 !important;
+        }
+        .rtl .f0_new .qc-rep-img:nth-child(odd) {
+            margin-right: 0 !important;
+            margin-left: 20px !important;
         }
         .qc-rep-img  .img-desc{
             width: 90%;
@@ -78,7 +86,7 @@
     }
     @page
     {
-        margin-bottom: 5mm;
+        margin-bottom: 6mm;
     }
     img{
         max-width: 100%;
@@ -328,22 +336,22 @@
         color: #494A4B;
         margin-top: 10px;
     }
-    .pdf_main_content_images_wraper .f0_new{
-        display: flex;
-        flex-wrap: nowrap;
-        width: 100%;
-        margin-bottom: 40px;
-        margin-top: 10px;
-    }
-    .pdf_main_content_images_wraper .f0_new {
-        page-break-inside: auto !important;
-    }
-    .rtl .pdf_main_content_images_wraper .f0_new{
-        flex-wrap: nowrap;
-        width: 100%;
-        margin-bottom: 40px;
-        margin-top: 10px;
-    }
+    /*.pdf_main_content_images_wraper .f0_new{*/
+        /*display: flex;*/
+        /*flex-wrap: nowrap;*/
+        /*width: 100%;*/
+        /*margin-bottom: 40px;*/
+        /*margin-top: 10px;*/
+    /*}*/
+    /*.pdf_main_content_images_wraper .f0_new {*/
+        /*page-break-inside: auto !important;*/
+    /*}*/
+    /*.rtl .pdf_main_content_images_wraper .f0_new{*/
+        /*flex-wrap: nowrap;*/
+        /*width: 100%;*/
+        /*margin-bottom: 40px;*/
+        /*margin-top: 10px;*/
+    /*}*/
     .pdf_main_content_image_prop{
         justify-content: flex-start;
         display:flex;
@@ -570,14 +578,21 @@
                         <?if(count($images)):?>
                             <div class="pdf_main_content_images_headline fw-700"><?=__('Attached images')?> <span>(<?=count($images)?>)</span> </div>
                             <div class="qc-rep-images">
-                                <?foreach ($images as $img):?>
-                                    <div class="qc-rep-img">
-                                        <div class="pdf_main_content_image_prop report-plan-item-image">
-                                            <span class="pdf_main_content_image_prop1 fw-700"><?=$img->original_name?></span>
-                                            <span class="pdf_main_content_image_prop2 fw-700">(<?=__('uploaded')?>: <?=date('d.m.y H:i',$img->created_at)?> )&#x200E;</span>
+                                <?foreach ($images as $number => $img):?>
+                                    <?if(($number+2)%2==0):?>
+                                        <div class='f0_new'>
+                                    <?endif;?>
+                                        <div class="qc-rep-img">
+                                            <div class="pdf_main_content_image_prop report-plan-item-image">
+                                                <span class="pdf_main_content_image_prop1 fw-700"><?=$img->original_name?></span>
+                                                <span class="pdf_main_content_image_prop2 fw-700">(<?=__('uploaded')?>: <?=date('d.m.y H:i',$img->created_at)?> )&#x200E;</span>
+                                            </div>
+                                            <img src="<?=$img->getBigThumbPath()?>?<?=rand(100000,99999999)?>" alt="<?=$img->original_name?>">
+<!--                                            <img src="--><?//=$img->originalFilePath()?><!--" alt="--><?//=$img->original_name?><!--">-->
                                         </div>
-                                        <img src="<?=$img->getBigThumbPath()?>?<?=rand(100000,99999999)?>" alt="<?=$img->original_name?>">
-                                    </div>
+                                    <?if(($number+2)%2==1 || $number == count($images)):?>
+                                        </div>
+                                    <?endif;?>
                                 <?endforeach;?>
                             </div>
                         <?endif;?>
@@ -595,7 +610,7 @@
             <?=__('Copyright © 2017 Q4B').'   '.__('All right reserved')?>
         </span>
     </div>
-    <div class="pdf_header-info header">
+    <div class="header">
         <div class="pdf_header_top">
             <div class="pdf_header_top1">
                 <span class="report_range_text fw-700">
@@ -604,8 +619,8 @@
                 <span class="report_range_value"><?=$range['from']?>-<?=$range['to']?></span>
             </div>
             <div class="pdf_header_top2">
-                <img class="pdf_logo1" src="/media/img/logo_50X50.png" alt="logo">
-                <img class="pdf_logo2" src="/media/img/iso_50X50.png" alt="logo">
+                <img class="pdf_logo1" src="/media/img/qforb_logo.png" alt="logo">
+                <img class="pdf_logo2" src="/media/img/qforb_iso.png" alt="logo">
             </div>
         </div>
         <div class="pdf_header_body">

@@ -100,15 +100,16 @@ $(document).ready(function() {
             }
 
             var floorsRange = $.fn.utilities('generateMultiSelectFloor', minFloor, maxFloor);
-
-            self.closest('#add-plans-modal').find('.floors-select').empty().append(floorsRange);
+            self.closest('#add-plans-modal').find('.floors-select .table_label').show();
+            self.closest('#add-plans-modal').find('.floors-select .multi-select-box-container').empty().append(floorsRange);
 
         } else {
 
             if($this == 0 || neightborVal == 0){
                 self.closest('#add-plans-modal').find('.add-plan').addClass('disabled-link');
             }
-            self.closest('#add-plans-modal').find('.floors-select').empty().append(floorsRange);
+            self.closest('#add-plans-modal').find('.floors-select .table_label').hide();
+            self.closest('#add-plans-modal').find('.floors-select .multi-select-box-container').empty().append(floorsRange);
         }
 
     });

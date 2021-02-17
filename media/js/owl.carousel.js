@@ -1509,6 +1509,7 @@
 		imgs.each(function(i, el) {
 			$el = $(el);
 			img = new Image();
+			img.crossOrigin = "https://qforb.net";
 
 			img.onload = function() {
 				loaded++;

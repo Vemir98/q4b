@@ -678,7 +678,8 @@ h6 {
 
   .ml-15 {
     margin-left: auto; }
-
+  .mr-10 {
+    margin-right: 10px; }
   .m-30 {
     margin-top: 15px;
     margin-bottom: 15px; } }
@@ -7090,7 +7091,7 @@ td[data-col="structure"] .select-wrapper .q4-select {
         background: #ffffff; }
 
 .printable-table {
-  width: 98%;
+  width: 100%;
   display: table;
   margin: 0 auto 15px;
   border: 2px solid #000000; }
@@ -13450,6 +13451,17 @@ table.table.report-status-result-second-table.spec-tbl {
 }
 .saved-reports td a{
   font-size: 16px;
+}
+.create-plan-modal td {
+  padding: 20px 8px !important;
+}
+.floors-multi-select-col {
+  padding-top: 1px
+}
+.floors-multi-select-col .table_label {
+  position: absolute;
+  right: 5px;
+  top: 2px;
 }
 
 @media only screen and (max-width: 1650px) {

@@ -82,7 +82,7 @@
                                             <th data-field="<?=__('Action')?>" class="td-50"><?=__('Action')?></th><!-- 12 -->
                                         </tr>
                                         </thead>
-                                        <tbody class="modal-table-body">
+                                        <tbody class="modal-table-body create-plan-modal">
                                         <tr id="general-plan-row" class="general-plan-row">
                                             <td class="rwd-td1" data-th="">
                                                 <input type="text" class="table_input sheet-number">
@@ -91,37 +91,39 @@
                                                 <input type="text" class="table_input plan-name">
                                             </td>
                                             <td class="floors-select">
-                                                <div class="multi-select-box comma">
-                                                    <div class="select-imitation q4-form-input floor-numbers">
-                                                        <span class="select-imitation-title"></span>
-
-                                                        <div class="over-select"></div><i class="arrow-down q4bikon-arrow_bottom"></i>
-                                                    </div>
-
-                                                    <div class="checkbox-list-no-scroll hidden">
-
-                                                        <?for($i = $object->smaller_floor; $i <= $object->bigger_floor; $i++):?>
-                                                            <div class="checkbox-list-row">
-                                                                <span class="checkbox-text">
-                                                                    <label class="checkbox-wrapper-multiple inline" data-val="<?=$i?>">
-                                                                        <span class="checkbox-replace"></span>
-                                                                        <i class="checkbox-list-tick q4bikon-tick"></i>
-                                                                    </label>
-                                                                    <span class="checkbox-text-content bidi-override">
-                                                                        <?=$i?>
-                                                                    </span>
-                                                                </span>
+                                                <div class="rtl-float-right multi-select-col floors-multi-select-col">
+                                                    <label class="table_label">
+                                                        <span class="check-all-links" data-seltxt="<?=__('select all')?>" data-unseltxt="<?=__('unselect all')?>"><?=__('select all')?></span>
+                                                    </label>
+                                                    <div class="multi-select-box-container">
+                                                        <div class="multi-select-box comma">
+                                                            <div class="select-imitation table_input floor-numbers<?=$disabled?>">
+                                                                <span class="select-imitation-title"></span>
+                                                                <div class="over-select"></div><i class="arrow-down q4bikon-arrow_bottom"></i>
                                                             </div>
-                                                        <?endfor?>
+                                                            <div class="checkbox-list">
+                                                                <?for($i = $object->smaller_floor; $i <= $object->bigger_floor; $i++):?>
+                                                                    <div class="checkbox-list-row">
+                                                                    <span class="checkbox-text">
+                                                                        <label class="checkbox-wrapper-multiple inline" data-val="<?=$i?>">
+                                                                            <span class="checkbox-replace"></span>
+                                                                            <i class="checkbox-list-tick q4bikon-tick"></i>
+                                                                        </label>
+                                                                        <span class="checkbox-text-content bidi-override">
+                                                                            <?=$i?>
+                                                                        </span>
 
+                                                                    </span>
+                                                                    </div>
+                                                                <?endfor?>
+                                                            </div>
+                                                            <select class="hidden-select" name="floors" multiple>
+                                                                <?for($i = $object->smaller_floor; $i <= $object->bigger_floor; $i++):?>
+                                                                    <option value="<?=$i?>"><?=$i?></option>
+                                                                <?endfor?>
+                                                            </select>
+                                                        </div>
                                                     </div>
-                                                    <select class="hidden-select" multiple>
-
-                                                        <?for($i = $object->smaller_floor; $i <= $object->bigger_floor; $i++):?>
-                                                            <option value="<?=$i?>"><?=$i?></option>
-                                                        <?endfor?>
-
-                                                    </select>
                                                 </div>
 
                                             </td>
