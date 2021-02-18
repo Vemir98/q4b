@@ -42,6 +42,7 @@ class Queue
             'priority' => (int)$priority,
             'time' => (double)$startTime,
             'attempts' => (int)$attemptsLimit,
+            'attempts_limit' => (int)$attemptsLimit,
             $attemptsInterval => (int)$attemptsInterval
         ];
         //todo: Оповестить работника о новой задаче

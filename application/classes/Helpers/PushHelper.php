@@ -18,13 +18,11 @@ class PushHelper {
         $notification->body = 'test message';
         $request_body = [
             'to' => $YOUR_TOKEN_ID,
-            'notification' => $notification,// ['title'=>$data['title'],"body"=>$data['message']],
             'data'=>$data,
+//            'notification' => $notification,// ['title'=>$data['title'],"body"=>$data['message']],
         ];
 
         $fields = json_encode($request_body);
-        // echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($fields); echo "</pre>"; exit;
-
         $request_headers = [
             'Content-Type: application/json',
             'Authorization: key=' . $YOUR_API_KEY,
@@ -40,8 +38,11 @@ class PushHelper {
         $response = curl_exec($ch);
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
-
-        echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$request_headers, $request_body, $response]); echo "</pre>"; exit;
+        \Kohana::$log->add(\Log::WARNING, json_encode([
+            'name' => 'PushNotification_response',
+            'token' => $token,
+            'response' => $response,
+        ]));
 
         if($httpcode == 200){
             return true;
@@ -81,5 +82,38 @@ class PushHelper {
 //
 //        var_dump($response);
 //        var_dump($httpcode);
+    }
+
+    public function send($user)
+    {
+        switch ($user->os_type) {
+            case \Model_User::Ios:
+//                    self::sendPush($user->device_token, ['status' => 'successs']);
+                break;
+            case \Model_User::Android:
+                self::sendFcm($user->device_token, ['status' => 'successs']);
+                break;
+        }
+    }
+
+    public static function checkIfQueueExists($className, $timestamp, $status)
+    {
+        return \DB::select()->from('queues')
+            ->where('class', '=', $className)
+            ->where('status', '=', $status)
+            ->where('time','=', $timestamp)
+            ->limit(1)
+            ->execute()
+            ->as_array();
+    }
+
+    public static function queueIfNotExists($time, $lang, $className, $timestamp, $status)
+    {
+        if (!self::checkIfQueueExists($className, $timestamp, $status))  {
+            \Queue::enqueue('notification','Job_Notification_SendPushNotification',[
+                'lang' => $lang,
+                'time' => $time
+            ],$timestamp, 0, 1);
+        }
     }
 }

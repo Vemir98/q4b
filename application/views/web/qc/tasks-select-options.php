@@ -7,6 +7,7 @@
  */
 $usedTasksArray = [];
 $usedCraftsArray = [];
+$usedTasks = $usedTasks ? $usedTasks : [];
 foreach ($usedTasks as $task) {
     $usedTasksArray[] = $task->id;
 }

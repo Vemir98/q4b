@@ -20,7 +20,7 @@ class Controller_Api_Devices extends HDVP_Controller_API {
             $user->values(['device_token' => $data['device_token'], 'os_type' => $data['os_type']])->save();
             $this->_responseData = [];
             $this->_responseData['status'] = 'success';
-        }catch (ORM_Validation_Exception $e){
+        }catch (Exception $e){
             throw API_Exception::factory(500,$e->errors('validation'));
         }
 

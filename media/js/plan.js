@@ -1264,7 +1264,7 @@ $(document).ready(function() {
                     self.closest('.panel_body').find('.wrap_delete_users').removeClass('hide');
                 }
             }
-        })
+        });
 
 
         //**********************
@@ -1281,7 +1281,7 @@ $(document).ready(function() {
         var selectedProfessionId = $('.plans-layout .select-profession').val();
 
         var fPage = firstPage.clone();
-        var profession =  $(document).find('.plans-list-layout [data-professionid='+selectedProfessionId+']:first').data('profession')
+        var profession =  $(document).find('.plans-list-layout [data-professionid="'+selectedProfessionId+'"]:first').data('profession')
         $(document).find('.print-landscape-mode').removeClass('page-break').find('.first-page').replaceWith(fPage.removeClass('hidden'))
         var firstTable = $('.print-landscape-mode table')[1];
         $(firstTable).closest('.page-break').find('.printable-logo').remove();
@@ -1863,8 +1863,8 @@ $(document).ready(function() {
 
     function eventAfterUpdate(){
         var checked = $('table .enable-plan-action input[type=checkbox]:checked').length;
-
-        if(checked > 0){
+        var selectedProfessionId = $('.plans-layout .select-profession').val();
+        if(checked > 0 && parseInt(selectedProfessionId)){
             $(document).find('.plans-to-print-link, .plans-to-send').removeClass('disabled-link');
         } else {
             $(document).find('.plans-to-print-link, .plans-to-send').addClass('disabled-link');

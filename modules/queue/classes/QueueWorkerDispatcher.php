@@ -58,7 +58,9 @@ class QueueWorkerDispatcher
                     }
                 }
                 //$proc = new Process('C:\OpenServer\domains\constructmngr\index.php Queue_Worker --queue='.$job['queue']);
-                $proc = new Process('/home/qforbnet/public_html/index.php Queue_Worker --queue='.$job['queue']);
+                //$proc = new Process('/home/qforbnet/public_html/index.php Queue_Worker --queue='.$job['queue']);
+                $proc = new Process('/var/www/vhosts/sunrisedvp.systems/qforb.sunrisedvp.systems/index.php Queue_Worker --queue='.$job['queue']);
+
                 $pid = $proc->getPid();
 
                 if(!isset($this->_workers[$job['queue']])){

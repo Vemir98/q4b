@@ -280,6 +280,7 @@ class Controller_QualityReports extends HDVP_Controller_Template
                 $this->setResponseData('url',URL::site('reports/quality/print/'.$reportModel->pk(),'https'));
             }else{
                 $this->setResponseData('url','https://qforb.sunrisedvp.systems/media/data/reports/pdf/'.$reportModel->pk().'.pdf');
+//                $this->setResponseData('url','https://qforb.net/media/data/reports/pdf/'.$reportModel->pk().'.pdf');
             }
         }
 
@@ -370,8 +371,8 @@ class Controller_QualityReports extends HDVP_Controller_Template
 
             $client = Client::getInstance();
             $client->getEngine()->setPath(DOCROOT.'phantomjs-2.1.1-linux-x86_64/bin/phantomjs');
-
 //            $client->getEngine()->setPath('/home/qforbnet/www/phantomjs-2.1.1-linux-x86_64/bin/phantomjs');
+
 //        $client->getEngine()->addOption('--ignore-ssl-errors=true');
             $client->getEngine()->addOption('--cookies-file=cook.txt');
             $width  = 1690;
@@ -381,6 +382,8 @@ class Controller_QualityReports extends HDVP_Controller_Template
 
 
             $request = $client->getMessageFactory()->createCaptureRequest('https://qforb.sunrisedvp.systems', 'GET');
+//            $request = $client->getMessageFactory()->createCaptureRequest('https://qforb.net', 'GET');
+
             $request->addHeader('Pjsbot76463', '99642');
             $request->setViewportSize(1920, $height);
             $request->setCaptureDimensions($width, $height, $top, $left);
@@ -556,7 +559,10 @@ class Controller_QualityReports extends HDVP_Controller_Template
 
 
         $request = $client->getMessageFactory()->createCaptureRequest('https://qforb.sunrisedvp.systems', 'GET');
+//        $request = $client->getMessageFactory()->createCaptureRequest('https://qforb.net', 'GET');
+
         $request->addHeader('Pjsbot76463', '99642');
+
         $response = $client->getMessageFactory()->createResponse();
         $client->send($request, $response);
 
@@ -564,6 +570,7 @@ class Controller_QualityReports extends HDVP_Controller_Template
          * @see JonnyW\PhantomJs\Http\CaptureRequest
          **/
         $request = $client->getMessageFactory()->createPdfRequest(URL::site('/reports/quality/saved/'.$report->pk(),'https'), 'GET',15000);
+        $request->setRepeatingFooter('<footer>Footer <span style="float:right">%pageNum% / %pageTotal%</span></footer>');
         $request->addHeader('Pjsbot76463', '99642');
 
         $request->setOutputFile((DOCROOT.'media/data/reports/pdf/'.$report->pk().'.pdf'));

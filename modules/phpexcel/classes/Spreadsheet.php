@@ -66,7 +66,7 @@ class Spreadsheet
 	 */
 	public function get_active_sheet()
 	{
-		return $this->_spreadsheet->getActiveSheet();
+	    return $this->_spreadsheet->getActiveSheet();
 	}
 
 	/**
@@ -167,5 +167,14 @@ class Spreadsheet
 		
 		exit;
 	}
+
+    /**
+     * Направление документа с права на лево и наоборот
+     * @param bool $flag
+     * @throws PHPExcel_Exception
+     */
+	public function rtl($flag = false){
+        $this->_spreadsheet->getActiveSheet()->setRightToLeft($flag);
+    }
 	
 }

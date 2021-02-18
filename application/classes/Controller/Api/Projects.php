@@ -732,7 +732,7 @@ class Controller_Api_Projects extends HDVP_Controller_API
             $this->_responseData['items'][] = [
                 'id' => $q->id,
                 'projId' => $q->project_id,
-                'cmpID' => $q->project->company_id,
+                'cmpId' => $q->project->company_id,
                 'objId' => $q->object_id,
                 'floorId' => $q->floor_id,
                 'placeId' => $q->place_id,
@@ -850,7 +850,7 @@ class Controller_Api_Projects extends HDVP_Controller_API
             $this->_responseData['items'][] = [
                 'id' => $q->id,
                 'projId' => $q->project_id,
-                'cmpID' => $q->project->company_id,
+                'cmpId' => $q->project->company_id,
                 'objId' => $q->object_id,
                 'floorId' => $q->floor_id,
                 'placeId' => $q->place_id,
@@ -934,7 +934,7 @@ class Controller_Api_Projects extends HDVP_Controller_API
     {
         $output = [];
 
-        foreach($qc->images->find_all() as $f){
+        foreach($qc->images->where('status','=',Enum_FileStatus::Active)->find_all() as $f){
             $output []= $f->path .'/'. $f->name;
         }
         return $output;

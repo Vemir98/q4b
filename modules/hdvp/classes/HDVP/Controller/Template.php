@@ -301,7 +301,7 @@ class HDVP_Controller_Template extends HDVP_Controller
     private function _detectClientLocale()
     {
         $clientAcceptLanguages = $this->request->client()->getAcceptLanguages();
-        $detectedLang = 'en';
+        $detectedLang = null;
         if(!empty($clientAcceptLanguages)){
             foreach ($clientAcceptLanguages as $lang => $factor){
                 if($detectedLang = Language::getLangByIso2($lang) OR $detectedLang = Language::getLangByLocale($lang)){

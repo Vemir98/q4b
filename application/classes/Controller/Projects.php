@@ -2616,7 +2616,7 @@ class Controller_Projects extends HDVP_Controller_Template
         }
 
         $mime = $file->mime != 'application/pdf' ? $file->mime : 'image/jpeg';
-        $filepath = DOCROOT.ltrim($file->getImageLink(),'/');
+        $filepath = $file->getImageLink();
         if($this->request->method() === Request::POST){
             $this->_checkForAjaxOrDie();
             try{
@@ -2627,7 +2627,7 @@ class Controller_Projects extends HDVP_Controller_Template
                 $source = base64_decode($data[1]);
                 $fifo = finfo_open();
                 $mime1 = finfo_buffer($fifo, $source, FILEINFO_MIME_TYPE);
-                if($mime1 != $mime){var_dump($mime);
+                if($mime1 != $mime){
                     throw new HDVP_Exception(__('invalid_mime_type'));
                 }
                 $tmpName = tempnam(sys_get_temp_dir(), Text::random());
@@ -2667,6 +2667,8 @@ class Controller_Projects extends HDVP_Controller_Template
                     $f->save();
                     $qc->add('images', $f->pk());
                     Database::instance()->commit();
+                    $fs = new FileServer();
+                    $fs->addSimpleImageTask('https://qforb.net/' . $f->path . '/' . $f->name,$f->id);
                     $this->setResponseData('images',
                         View::make('projects/quality-controls/images-list',
                             [
@@ -3114,9 +3116,9 @@ class Controller_Projects extends HDVP_Controller_Template
         if( !$qc->loaded()){
             throw new HTTP_Exception_404;
         }
-        $file =$qc->images->where('token','=',$token)->find();
+        $file = $qc->images->where('token','=',$token)->find();
 
-        if( ! $file->loaded() OR !file_exists($file->path.'/'.$file->name) OR !is_file($file->path.'/'.$file->name)){
+        if( ! $file->loaded()){
             throw new HTTP_Exception_404;
         }
         $file->status = Enum_FileStatus::Deleted;
