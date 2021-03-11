@@ -218,8 +218,6 @@ class Controller_DeliveryReports extends HDVP_Controller_Template
     }
 
     public function action_test(){
-        echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([88]); echo "</pre>"; exit;
-
         set_time_limit(0);
         $this->auto_render = false;
         //$converter = new PDFConverter(DOCROOT.'qpdf/1.pdf');

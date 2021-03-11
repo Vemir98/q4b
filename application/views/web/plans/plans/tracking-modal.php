@@ -100,12 +100,12 @@
                                             </div>
                                             <img class="hidden preview-user-image show-uploaded-image" alt="preview image">
                                         <?else:?>
-                                            <a class="print-dt-link" target="_blank" href="/<?=$item->file?>">
+                                            <a class="print-dt-link" target="_blank" href="<?=$item->filePath()?>">
                                                 <?if(strtolower(end(explode('.',$item->file)))=='pdf'):?>
                                                     <img src="/media/img/pdf-icon.png" class="preview-user-image show-uploaded-image pdf-icon" alt="pdf">
 
                                                 <?else:?>
-                                                    <img src="/<?=$item->file?>" class="preview-user-image show-uploaded-image" alt="preview user image">
+                                                    <img src="<?=$item->filePath()?>" class="preview-user-image show-uploaded-image" alt="preview user image">
                                                 <?endif;?>
                                             </a>
 
@@ -125,7 +125,7 @@
                                                 <i class="q4bikon-print"></i>
                                         </span>
                                             <?else:?>
-                                                <a href="/<?=$item->file?>" target="_blank" class="circle-sm inliner blue<?=$item->file ? '' : ' disabled-gray-button'?>"  title="Print Element">
+                                                <a href="<?=$item->filePath()?>" target="_blank" class="circle-sm inliner blue<?=$item->file ? '' : ' disabled-gray-button'?>"  title="Print Element">
                                                     <i class="q4bikon-print"></i></a>
 
                                             <?endif?>

@@ -112,7 +112,7 @@ $icons = [
                     <div class="rooms-add-new-modal-bottom">
                         <div class="row">
                             <div class="col-md-12">
-                                <div class=" panel-options">
+                                <div class=" panel-options" style="display: none">
                                     <span class="inline-options">
                                         <a class="orange_plus_small add-space"><i class="plus q4bikon-plus"></i></a>
                                         <span class="inline-options"><?=__('Add new item')?>  </span>

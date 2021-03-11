@@ -172,7 +172,7 @@ $selectedSpace = $selectedArray["space"] ? $selectedArray["space"] : '';
         </div>
         <div class="form-group col-md-2 rtl-float-right">
             <label class="table_label"><?=__('Element id')?></label>
-            <input type="text" class="table_input  <?=($selectedObjects && $selectedPlaceType!="all" )? '':'disabled-input'?> " name="place_id" data-url="<?=URL::site('reports/get_spaces/')?>">
+            <input type="text" class="table_input  <?=($selectedObjects && $selectedPlaceType!="all" )? '':'disabled-input'?> " name="custom_number" data-url="<?=URL::site('reports/get_spaces/')?>">
         </div>
 
     </div>

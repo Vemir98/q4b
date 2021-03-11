@@ -157,15 +157,15 @@
                                     </td>
                                     <td class="rwd-td10 align-center-left" data-th="Action">
                                         <div class="div-cell-inline">
-                                            <?$ext = explode('.',$item->file)?>
+                                            <?$ext = explode('.',$item->filePath())?>
                                             <?
-                                            // echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r( [explode('.',$item->file),$item->file]); echo "</pre>"; ?>
+                                            // echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r( [explode('.',$item->filePath()),$item->filePath()]); echo "</pre>"; ?>
                                             <?if($ext[count($ext)-1]!=='pdf'):?>
-                                                <span class="print-element circle-sm inliner blue<?=$item->file ? '' : ' disabled-gray-button'?>" data-imagesource="/<?=$item->file?>" title="Print Element">
+                                                <span class="print-element circle-sm inliner blue<?=$item->filePath() ? '' : ' disabled-gray-button'?>" data-imagesource="<?=$item->filePath()?>" title="Print Element">
                                                    <i class="q4bikon-print"></i>
                                                 </span>
                                             <?else:?>
-                                                <a href="/<?=$item->file?>" target="_blank" class="circle-sm inliner blue<?=$item->file ? '' : ' disabled-gray-button'?>"  title="Print Element">
+                                                <a href="<?=$item->filePath()?>" target="_blank" class="circle-sm inliner blue<?=$item->filePath() ? '' : ' disabled-gray-button'?>"  title="Print Element">
                                                     <i class="q4bikon-print"></i></a>
 
                                             <?endif?>

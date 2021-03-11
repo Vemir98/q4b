@@ -3,6 +3,8 @@
 return array(
 
 	'trusted_hosts' => array(
+        'http://qforb.sunrisedvp.systems',
+        'https://qforb.sunrisedvp.systems'
 		// Set up your hostnames here
 		//
 		// Example:

@@ -570,8 +570,6 @@ class Controller_Settings extends HDVP_Controller_Template
     }
 
     public function action_test(){
-        echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([88]); echo "</pre>"; exit;
-
         $this->auto_render = false;
         $filePath = APPPATH.'local-storage/settings.txt';
         try{

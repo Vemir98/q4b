@@ -28,7 +28,17 @@ class Model_Image extends Model_File
 
     public function replaceSourceWithBase64String($str,$quality = 50){
         $img = new JBZoo\Image\Image($str);
-        $img->saveAs(DOCROOT.$this->originalFilePath(),$quality);
+        $name = Text::random(null,16) . '.jpg';
+        $path = 'media/data';
+        $img->saveAs(DOCROOT.$path.DS.$name,$quality);
+        $fs = new FileServer();
+        $fs->addReplaceImageTask('https://qforb.net/'.$path.DS.$name,$this->originalFilePath(),'https://qforb.net/fileserver/callbackimage?fileId=' . $this->id);
+        $this->name = $name;
+        $this->path = $path;
+        $this->mime = 'image/jpeg';
+        $this->ext = 'jpg';
+        $this->remote = 0;
+        $this->save();
     }
 
     public function getPath($w = null,$h = null,$crop = false){
@@ -63,9 +73,12 @@ class Model_Image extends Model_File
     }
 
     public function getBigThumbPath(){
-        $path = str_replace('https://fs.qforb.net/','',$this->path);
-        $path =  str_replace('/','-',$path . '-' . $this->name);
-        return 'https://fs.qforb.net/image/miniature/w756-h500-q50/' . $path;
+
+        $path = $this->path . '/' .$this->name;
+        if(!$this->remote){
+            $path = '/'.$path;
+        }
+        return $path;
     }
 
     public function __getBigTHumb(){

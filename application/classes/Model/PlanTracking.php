@@ -69,4 +69,11 @@ class Model_PlanTracking extends MORM
   FROM plan_tracking pt ".$join." pt.project_id = ".$projectId."
   ) AS pt")->execute()->as_array();
     }
+
+    public function filePath(){
+        if(strpos($this->file,'fs.qforb.net') === false){
+            return '/'. $this->file;
+        }
+        return $this->file;
+    }
 }
