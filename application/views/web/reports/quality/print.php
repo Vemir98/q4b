@@ -17,6 +17,20 @@ $entityType = count($report->getObjects()) ? 'objects' : 'projects';
         {
             display: none !important;
         }
+        .header-logo-container {
+            margin: 0 35px;
+            display: block !important;
+            position: fixed;
+            width: 100px;
+            top: 0;
+            left: 0;
+            right: 0;
+        }
+        .header-logo-container > div {
+            display: flex;
+            justify-items: flex-start;
+            align-items: center;
+        }
         .barchart,.pies{
             margin: 0!important;
         }
@@ -24,9 +38,18 @@ $entityType = count($report->getObjects()) ? 'objects' : 'projects';
             margin: 0!important;
             border: none!important;
         }
-        .barchart{
-            width: 72em;
-            page-break-after: always;
+        .craft-stats,
+        .crafts-container-box,
+        .general-opinion {
+            page-break-inside: avoid !important;
+        }
+        .general-opinion-container{
+            page-break-before: always !important;
+        }
+        .q4-copyright {
+            <?if(!$isPhantom):?>
+                    display: block !important;
+            <?endif?>
         }
     }
     *{
@@ -81,7 +104,7 @@ $entityType = count($report->getObjects()) ? 'objects' : 'projects';
         position: absolute;
     }
     .pies{
-        width: 72em;
+        width: 70em;
     <?if($isPhantom):?>
         margin: 5em auto auto auto!important;
         zoom: 1.2; /* IE */
@@ -111,7 +134,7 @@ $entityType = count($report->getObjects()) ? 'objects' : 'projects';
         border-bottom: 1px solid #d4e1ea!important
     }
     .barchart{
-        width: 72.2em;
+        width: 70em;
     <?if($isPhantom):?>
         margin: 10em auto auto auto!important;
         zoom: 1.2; /* IE */
@@ -132,14 +155,13 @@ $entityType = count($report->getObjects()) ? 'objects' : 'projects';
     .barchart img{
         position: unset;
         margin: 1px;
-        width: 72em;
+        width: 68em;
     <?if(!$isPhantom):?>
         border: 1px solid #d4e1ea!important;
     <?endif?>
     }
     .ent-name{
         text-align: center;
-        margin-top: 2em;
     }
     .ent-name span{
         display: inline-block;
@@ -157,12 +179,8 @@ $entityType = count($report->getObjects()) ? 'objects' : 'projects';
     .crafts-tbl{
         width: 42em;
         margin: 1em auto auto auto;
-        /*border: 1px solid #ddd !important;*/
+        page-break-inside: avoid !important;
     }
-    /*.crafts-tbl > tbody > tr > td{*/
-    /*border-top: 2px solid #ddd!important;*/
-    /*padding: 2px;*/
-    /*}*/
     .crafts-tbl .ctbl-head-tbl{
         width: 100%;
     }
@@ -210,7 +228,6 @@ $entityType = count($report->getObjects()) ? 'objects' : 'projects';
     .craft-stats{
         width: 42em;
         margin: 1em auto 0 auto;
-        page-break-inside: avoid;
     }
     .craft-stats h3{
         margin: 0.5em auto;
@@ -245,14 +262,7 @@ $entityType = count($report->getObjects()) ? 'objects' : 'projects';
     }
     .general-opinion{
         width: 42em;
-
-    <?if($isPhantom):?>
-        margin: 1em auto 10em auto;
-    <?else:?>
         margin: 1em auto 0 auto;
-    <?endif?>
-        page-break-inside: avoid;
-        page-break-after: always;
     }
     .general-opinion > h5 > span.circle {
         width: 20px;
@@ -283,15 +293,6 @@ $entityType = count($report->getObjects()) ? 'objects' : 'projects';
         height: 25em;
         overflow: hidden;
     }
-    .pies td:last-child .pie{
-        margin-left: 1.5em
-    }
-    .pies td:last-child .pie{
-        margin-left: 1.5em
-    }
-    .pies.he td:last-child .pie{
-        margin-left: -1.5em!important;
-    }
     .icon {
         margin-right: 5px;
     }
@@ -321,71 +322,65 @@ $entityType = count($report->getObjects()) ? 'objects' : 'projects';
         width: 100%;
     }
     .header-logo-container {
-        /*padding: 10px 30px;*/
         display: none;
-        position: fixed;
-        width: 100px;
-        top: 0;
-        left: 0;
-        right: 0;
-    }
-    .header-logo-container > div {
-        display: flex;
-        justify-items: flex-start;
-        align-items: center;
-    }
-    .mt-50 {
-        margin-top: 50px !important;
-    }
-    .mt-100 {
-        margin-top: 100px !important;
     }
     .quality-report-container-table {
         margin: 0 auto;
     }
     .quality-report-container-table > tbody > tr > td {
-        padding-top: 50px;
-    }
-    @media print{
-        @page { size: landscape}
-        .header-logo-container {
-            display: block !important;
-        }
-        /*table, .ent-name {*/
-        /*margin-top: 80px;*/
-        /*}*/
-
+        padding-top: 60px;
     }
     @page  {
-        size: 11.27in 9.69in;
-        margin: .5in .2in .5in .2in;
+        size: 9in 9.69in;
+        margin: .5in .2in .2in .2in;
         mso-header-margin: .5in;
-        mso-footer-margin: .5in;
+        mso-footer-margin: .2in;
         mso-paper-source: 0;
         padding-top: 100px;
     }
+    .pies tbody tr td:last-child .pie{
+        margin-left: 1.5em
+    }
+    .pies tbody tr td:last-child .pie{
+        margin-left: 1.5em
+    }
+    .pies.he tbody tr td:last-child .pie{
+        margin-left: -1.5em!important;
+    }
+    .general-opinion-container{
+        page-break-before: always !important;
+    }
+    .craft-stats,
+    .crafts-container-box,
+    .general-opinion {
+        page-break-inside: avoid !important;
+    }
+    .q4-copyright {
+        display: none;
+    }
+
 </style>
 
-<table class="header <?if(!$isPhantom):?>no-print<?endif?>">
-    <tr>
-        <td class="logo"><img src="/<?=$report->getCompany()['logo']?>" alt="project images"></td>
-        <td>
-            <ul<?if(!count($report->getObjects())):?> style="width: 100%"<?endif?>>
-                <li>
+    <table class="header <?if(!$isPhantom):?>no-print<?endif?>">
+        <tr>
+            <td class="logo"><img src="/<?=$report->getCompany()['logo']?>" alt="project images"></td>
+            <td>
+                <ul<?if(!count($report->getObjects())):?> style="width: 100%"<?endif?>>
+                    <li>
                     <span class="light-blue">
                         <i class="icon light-blue q4bikon-companies"></i>
                         <?=__('Company name')?>:
                     </span>
-                    <span class="dark-blue ml-5">
+                        <span class="dark-blue ml-5">
                             <?=$report->getCompany()['name']?>
                 </span>
-                </li>
-                <li>
+                    </li>
+                    <li>
                     <span class="light-blue">
                         <i class="icon light-blue q4bikon-project"></i>
                         <?=__('Project name')?>:
                     </span>
-                    <span class="dark-blue ml-5">
+                        <span class="dark-blue ml-5">
                         <?if(!count($report->getObjects())):?>
                             <?foreach ($report->getProjects() as $project):?>
                                 <?$tmpProj[] = $project['name']?>
@@ -397,290 +392,300 @@ $entityType = count($report->getObjects()) ? 'objects' : 'projects';
                         <?endif;?>
                         <?unset($tmpProj)?>
                     </span>
-                </li>
-                <li>
+                    </li>
+                    <li>
                     <span class="light-blue">
                         <i class="icon light-blue q4bikon-date"></i>
                         <?=__('Report Range')?>:
                     </span>
-                    <span class="dark-blue ml-5">
+                        <span class="dark-blue ml-5">
                         <?=$report->getDateFrom(true)?> - <?=$report->getDateTo(true)?>
                     </span>
-                </li>
-            </ul>
-            <?if(count($report->getObjects())):?>
-                <ul>
-                    <li></li>
-                    <li class="pdf-structure">
+                    </li>
+                </ul>
+                <?if(count($report->getObjects())):?>
+                    <ul>
+                        <li></li>
+                        <li class="pdf-structure">
                         <span class="light-blue">
                             <i class="icon light-blue q4bikon-date"></i>
                             <?=__('Structures')?>:
                         </span>
-                        <span class="dark-blue ml-5 pdf-structure-text">
+                            <span class="dark-blue ml-5 pdf-structure-text">
                             <?foreach ($report->getObjects() as $object):?>
                                 <?$tmpObj[] = $object['name']?>
                             <?endforeach;?>
                             <?=implode(', ',$tmpObj)?>
                             <? unset($tmpObj)?>
                         </span>
-                    </li>
-                    <li></li>
-                </ul>
-            <?endif;?>
-        </td>
-        <td>
-
-            <div class="pdf_header_top2">
-                <img class="pdf_logo1" src="/media/img/qforb_logo.png" alt="logo">
-                <img class="pdf_logo2" src="/media/img/qforb_iso.png" alt="logo">
-            </div>
-        </td>
-    </tr>
-</table>
-
-<?if(!$isPhantom):?>
-    <div class="header-logo-container">
-        <div>
-            <img class="pdf_logo1 mr-10" src="/media/img/qforb_logo.png" alt="logo">
-            <img class="pdf_logo2 mr-10" src="/media/img/qforb_iso.png" alt="logo">
-        </div>
-    </div>
-<?endif?>
-
-<table class="quality-report-container-table">
-    <tr>
-        <td>
-            <table class="pies <?=Language::getCurrent()->iso2?> mt-50">
-                <tr>
-                    <td>
-                        <table class="pie">
-                            <tr><td class="header-text"><?=__('Status statistics')?></td></tr>
-                            <tr>
-                                <td>
-                                    <table class="chart">
-                                        <tr>
-                                            <td class="image">
-                                                <div class="img-wrapp" id="p">
-                                                    <img class="piechart" src="<?=$images['piechart']?>" />
-                                                </div>
-
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <ul class="stats">
-                                                    <li><?=__(Enum_QualityControlStatus::Existing).' + '.__(Enum_QualityControlStatus::Normal)?>: <?=$report->getStats()['total']['percents']['a']?>%</li>
-                                                    <li><?=__(Enum_QualityControlStatus::Existing).' + '.__(Enum_QualityControlStatus::Normal).' + '.__(Enum_QualityControlStatus::Repaired)?>: <?=$report->getStats()['total']['percents']['b']?>%</li>
-                                                </ul>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                    <td>
-                        <table class="pie">
-                            <tr><td class="header-text"><?=__('Status statistics (filtered)')?></td></tr>
-                            <tr>
-                                <td>
-                                    <table class="chart">
-                                        <tr>
-                                            <td class="image">
-                                                <div class="img-wrapp" id="p1">
-                                                    <img class="piechart" src="<?=$images['piechart2']?>" />
-                                                </div>
-
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <ul class="stats">
-                                                    <li><?=__(Enum_QualityControlStatus::Existing).' + '.__(Enum_QualityControlStatus::Normal)?>: <?=$report->getStats()['filtered']['percents']['a']?>%</li>
-                                                    <li><?=__(Enum_QualityControlStatus::Existing).' + '.__(Enum_QualityControlStatus::Normal).' + '.__(Enum_QualityControlStatus::Repaired)?>: <?=$report->getStats()['filtered']['percents']['b']?>%</li>
-                                                </ul>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <table class="barchart mt-50">
-                <tr>
-                    <td>
-                        <div id="barchart">
-                            <img src="<?=$images['barchart']?>">
-                        </div>
-                    </td>
-                </tr>
-            </table>
-        </td>
-
-    </tr>
-    <?foreach ($report->getProjectsORObjects($reportEntity) as $entity):?>
-        <tr>
+                        </li>
+                        <li></li>
+                    </ul>
+                <?endif;?>
+            </td>
             <td>
-                <h3 class="ent-name mt-50"><span style="background-color: <?=$stats[$entityType][$entity['id']]['color']?>!important;-webkit-print-color-adjust: exact;"></span><?=$entity['name']?></h3>
-                <table class="table crafts-tbl mt-50">
-                    <thead>
-                    <tr>
-                        <th class="ctbl-head-th1"><?=__('Crafts List')?></th>
-                        <th class="ctbl-head-th2">
-                            <table class="ctbl-head-tbl ctbl-head-tbl1">
-                                <tr>
-                                    <td colspan="2"><?=__('Quantity')?></td>
-                                </tr>
-                                <tr>
-                                    <td class="ctbl-h-td" style="width: 50%"><?=__('Total')?></td>
-                                    <td class="ctbl-h-td"><?=__('Filtered')?></td>
-                                </tr>
-                            </table>
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?
-                    $craftStatTotal = 0;
-                    $craftStatFiltered = 0;
-                    $i = 0;
-                    ?>
-                    <?foreach ($report->getCompanyCrafts() as $craft):?>
-                        <?
-                        $i++;
-                        $craftStat['total'] = isset($stats[$reportEntity][$entity['id']]['crafts'][$craft['id']]['count']) ? $stats[$reportEntity][$entity['id']]['crafts'][$craft['id']]['count'] : 0;
-                        $craftStat['filtered'] = isset($stats[$reportEntity][$entity['id']]['filteredCrafts'][$craft['id']]['count']) ? $stats[$reportEntity][$entity['id']]['crafts'][$craft['id']]['count'] : 0;
-                        $craftStatTotal += $craftStat['total'];
-                        $craftStatFiltered += $craftStat['filtered'];
-                        ?>
-                        <?if($craftStat['total'] > 0):?>
-                            <tr>
-                                <td data-th="<?=__('Specialty list')?>" style="padding: 0 0 0 8px!important;">
-                                    <span><?=$craft['name']?></span>
-                                </td>
-                                <td data-th="<?=__('Quantity')?>" class="enlarged" style="padding: 0!important;">
-                                    <table class="ctbl-head-tbl ctbl-head-tbl2">
-                                        <tr>
-                                            <td style="line-height: 40px; width: 50%"><span class="report-status-quantity"><?=$craftStat['total']?></span></td>
-                                            <td style="line-height: 40px"><span class="report-status-quantity"><?=$craftStat['filtered']?></span></td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        <?endif?>
-                        <!--        --><?//if($i > 4) break?>
-                    <?endforeach;?>
-                    </tbody>
-                </table>
+
+                <div class="pdf_header_top2">
+                    <img class="pdf_logo1" src="/media/img/q4b_logo_122x100.png" alt="logo">
+                    <img class="pdf_logo2" src="/media/img/q4b_iso_100x100.png" alt="logo">
+                </div>
             </td>
         </tr>
+    </table>
 
-    <tr>
-        <td>
-            <?if($report->canDisplayYearStats()):?>
-                <img class="linechart mt-100" src="<?=$images['linechart'.$entity['id']]?>" >
-            <?endif?>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <div class="craft-stats mt-50">
-                <h3><?=UTF8::ucfirst(__('general'))?></h3>
-                <table class="table">
+    <?if(!$isPhantom):?>
+        <div class="header-logo-container">
+            <div>
+                <img class="pdf_logo1 mr-10" src="/media/img/qforb_logo.png" alt="logo">
+                <img class="pdf_logo2 mr-10" src="/media/img/qforb_iso.png" alt="logo">
+            </div>
+        </div>
+    <?endif?>
+    <table class="quality-report-container-table">
+        <tr>
+            <td>
+                <table>
                     <tr>
-                        <td></td>
-                        <?foreach (Enum_QualityControlConditionList::toArray() as $item):?>
-                            <td><?=__($item)?></td>
-                        <?endforeach;?>
+                        <td>
+                            <table class="pies <?=Language::getCurrent()->iso2?>">
+                                <tr>
+                                    <td>
+                                        <table class="pie">
+                                            <tr><td class="header-text"><?=__('Status statistics')?></td></tr>
+                                            <tr>
+                                                <td>
+                                                    <table class="chart">
+                                                        <tr>
+                                                            <td class="image">
+                                                                <div class="img-wrapp" id="p">
+                                                                    <img class="piechart" src="<?=$images['piechart']?>" />
+                                                                </div>
+
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <ul class="stats">
+                                                                    <li><?=__(Enum_QualityControlStatus::Existing).' + '.__(Enum_QualityControlStatus::Normal)?>: <?=$report->getStats()['total']['percents']['a']?>%</li>
+                                                                    <li><?=__(Enum_QualityControlStatus::Existing).' + '.__(Enum_QualityControlStatus::Normal).' + '.__(Enum_QualityControlStatus::Repaired)?>: <?=$report->getStats()['total']['percents']['b']?>%</li>
+                                                                </ul>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table class="pie">
+                                            <tr><td class="header-text"><?=__('Status statistics (filtered)')?></td></tr>
+                                            <tr>
+                                                <td>
+                                                    <table class="chart">
+                                                        <tr>
+                                                            <td class="image">
+                                                                <div class="img-wrapp" id="p1">
+                                                                    <img class="piechart" src="<?=$images['piechart2']?>" />
+                                                                </div>
+
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <ul class="stats">
+                                                                    <li><?=__(Enum_QualityControlStatus::Existing).' + '.__(Enum_QualityControlStatus::Normal)?>: <?=$report->getStats()['filtered']['percents']['a']?>%</li>
+                                                                    <li><?=__(Enum_QualityControlStatus::Existing).' + '.__(Enum_QualityControlStatus::Normal).' + '.__(Enum_QualityControlStatus::Repaired)?>: <?=$report->getStats()['filtered']['percents']['b']?>%</li>
+                                                                </ul>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+
                     </tr>
-                    <?foreach (Enum_QualityControlConditionLevel::toArray() as $conditionLevel):?>
-                        <tr>
-                            <td><?=__($conditionLevel)?></td>
-                            <?foreach (Enum_QualityControlConditionList::toArray() as $conditionList):?>
-                                <td><?=$stats[$reportEntity][$entity['id']]['defects'][$conditionLevel][$conditionList]?></td>
-                            <?endforeach;?>
-                        </tr>
-                    <?endforeach;?>
                     <tr>
-                        <td><?=__('Total')?></td>
-                        <?foreach ($stats[$reportEntity][$entity['id']]['defects']['total'] as $val):?>
-                            <td><?=$val?></td>
-                        <?endforeach;?>
+                        <td>
+                            <table class="barchart">
+                                <tr>
+                                    <td>
+                                        <div id="barchart">
+                                            <img src="<?=$images['barchart']?>">
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
                     </tr>
                 </table>
-            </div>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <?if($report->hasSpecialityDetails()):?>
-                <?foreach ($report->getCompanyCrafts() as $craft):?>
-                    <?if(!$report->specHasResult($stats[$reportEntity][$entity['id']]['craftDefects'][$craft['id']]['total'])): continue; endif;?>
-                    <div class="craft-stats mt-50">
-                        <div class="craft-title">
-                            <h3><span style="margin-left: 10px;background-color: <?=$stats[$entityType][$entity['id']]['color']?>!important;-webkit-print-color-adjust: exact;""></span> <?=$craft['name']?></h3>
-                        </div>
-                        <table class="table">
+                <div class="general-opinion-container"></div>
+
+            </td>
+
+        </tr>
+        <?foreach ($report->getProjectsORObjects($reportEntity) as $entity):?>
+            <tr>
+                <td>
+                    <div class="crafts-container-box">
+                        <h3 class="ent-name"><span style="background-color: <?=$stats[$entityType][$entity['id']]['color']?>!important;-webkit-print-color-adjust: exact;"></span><?=$entity['name']?></h3>
+                        <table class="table crafts-tbl">
+                            <thead>
                             <tr>
-                                <td></td>
-                                <?foreach (Enum_QualityControlConditionList::toArray() as $item):?>
-                                    <td><?=__($item)?></td>
-                                <?endforeach;?>
+                                <th class="ctbl-head-th1"><?=__('Crafts List')?></th>
+                                <th class="ctbl-head-th2">
+                                    <table class="ctbl-head-tbl ctbl-head-tbl1">
+                                        <tr>
+                                            <td colspan="2"><?=__('Quantity')?></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="ctbl-h-td" style="width: 50%"><?=__('Total')?></td>
+                                            <td class="ctbl-h-td"><?=__('Filtered')?></td>
+                                        </tr>
+                                    </table>
+                                </th>
                             </tr>
+                            </thead>
+                            <tbody>
+                            <?
+                            $craftStatTotal = 0;
+                            $craftStatFiltered = 0;
+                            $i = 0;
+                            ?>
+                            <?foreach ($report->getCompanyCrafts() as $craft):?>
+                                <?
+                                $i++;
+                                $craftStat['total'] = isset($stats[$reportEntity][$entity['id']]['crafts'][$craft['id']]['count']) ? $stats[$reportEntity][$entity['id']]['crafts'][$craft['id']]['count'] : 0;
+                                $craftStat['filtered'] = isset($stats[$reportEntity][$entity['id']]['filteredCrafts'][$craft['id']]['count']) ? $stats[$reportEntity][$entity['id']]['crafts'][$craft['id']]['count'] : 0;
+                                $craftStatTotal += $craftStat['total'];
+                                $craftStatFiltered += $craftStat['filtered'];
+                                ?>
+                                <?if($craftStat['total'] > 0):?>
+                                    <tr>
+                                        <td data-th="<?=__('Specialty list')?>" style="padding: 0 0 0 8px!important;">
+                                            <span><?=$craft['name']?></span>
+                                        </td>
+                                        <td data-th="<?=__('Quantity')?>" class="enlarged" style="padding: 0!important;">
+                                            <table class="ctbl-head-tbl ctbl-head-tbl2">
+                                                <tr>
+                                                    <td style="line-height: 40px; width: 50%"><span class="report-status-quantity"><?=$craftStat['total']?></span></td>
+                                                    <td style="line-height: 40px"><span class="report-status-quantity"><?=$craftStat['filtered']?></span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                <?endif?>
+                                <!--        --><?//if($i > 4) break?>
+                            <?endforeach;?>
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <?if($report->canDisplayYearStats()):?>
+                        <img class="linechart" src="<?=$images['linechart'.$entity['id']]?>" >
+                    <?endif?>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="craft-stats">
+                        <h3><?=UTF8::ucfirst(__('general'))?></h3>
+                        <table class="table">
+                            <?if(count(Enum_QualityControlConditionList::toArray())):?>
+                                <tr>
+                                    <td></td>
+                                    <?foreach (Enum_QualityControlConditionList::toArray() as $item):?>
+                                        <td><?=__($item)?></td>
+                                    <?endforeach;?>
+                                </tr>
+                            <?endif;?>
+
                             <?foreach (Enum_QualityControlConditionLevel::toArray() as $conditionLevel):?>
                                 <tr>
                                     <td><?=__($conditionLevel)?></td>
                                     <?foreach (Enum_QualityControlConditionList::toArray() as $conditionList):?>
-                                        <td><?=$stats[$reportEntity][$entity['id']]['craftDefects'][$craft['id']][$conditionLevel][$conditionList]?></td>
+                                        <td><?=$stats[$reportEntity][$entity['id']]['defects'][$conditionLevel][$conditionList]?></td>
                                     <?endforeach;?>
                                 </tr>
                             <?endforeach;?>
                             <tr>
                                 <td><?=__('Total')?></td>
-                                <?foreach ($stats[$reportEntity][$entity['id']]['craftDefects'][$craft['id']]['total'] as $val):?>
+                                <?foreach ($stats[$reportEntity][$entity['id']]['defects']['total'] as $val):?>
                                     <td><?=$val?></td>
                                 <?endforeach;?>
                             </tr>
                         </table>
                     </div>
-                <?endforeach?>
-            <?endif;?>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <div class="general-opinion mt-50">
-                <h5><span class="circle">i</span><?=__('General opinion')?></h5>
-                <textarea data-id="<?=$entity['id']?>"><?=$entity['generalOpinion']?></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <?if($report->hasSpecialityDetails()):?>
+                        <?foreach ($report->getCompanyCrafts() as $craft):?>
+                            <?if(!$report->specHasResult($stats[$reportEntity][$entity['id']]['craftDefects'][$craft['id']]['total'])): continue; endif;?>
+                            <div class="craft-stats">
+                                <div class="craft-title">
+                                    <h3><span style="margin-left: 10px;background-color: <?=$stats[$entityType][$entity['id']]['color']?>!important;-webkit-print-color-adjust: exact;""></span> <?=$craft['name']?></h3>
+                                </div>
+                                <table class="table">
+                                    <tr>
+                                        <td></td>
+                                        <?foreach (Enum_QualityControlConditionList::toArray() as $item):?>
+                                            <td><?=__($item)?></td>
+                                        <?endforeach;?>
+                                    </tr>
+                                    <?foreach (Enum_QualityControlConditionLevel::toArray() as $conditionLevel):?>
+                                        <tr>
+                                            <td><?=__($conditionLevel)?></td>
+                                            <?foreach (Enum_QualityControlConditionList::toArray() as $conditionList):?>
+                                                <td><?=$stats[$reportEntity][$entity['id']]['craftDefects'][$craft['id']][$conditionLevel][$conditionList]?></td>
+                                            <?endforeach;?>
+                                        </tr>
+                                    <?endforeach;?>
+                                    <tr>
+                                        <td><?=__('Total')?></td>
+                                        <?foreach ($stats[$reportEntity][$entity['id']]['craftDefects'][$craft['id']]['total'] as $val):?>
+                                            <td><?=$val?></td>
+                                        <?endforeach;?>
+                                    </tr>
+                                </table>
+                            </div>
+                        <?endforeach?>
+                    <?endif;?>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table class="width100">
+                        <tr>
+                            <td>
+                                <div class="general-opinion">
+                                    <h5><span class="circle">i</span><?=__('General opinion')?></h5>
+                                    <textarea data-id="<?=$entity['id']?>"><?=$entity['generalOpinion']?></textarea>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="general-opinion-container"></div>
+                </td>
+            </tr>
+            <div class="q4-copyright q4-copyright-quality">
+                <span>
+                    <?=__('Copyright © 2017 Q4B').'   '.__('All right reserved')?>
+                </span>
             </div>
-        </td>
-    </tr>
-    <div class="q4-copyright q4-copyright-quality">
-        <span>
-            <?=__('Copyright © 2017 Q4B').'   '.__('All right reserved')?>
-        </span>
-    </div>
-    <?endforeach?>
-
-    <tr>
-        <td>
-            <?if(Language::getCurrent()->direction == 'rtl'):?>
-                <?=$report->renderPieChartTotal('p')?>
-                <?=$report->renderPieChartFiltered('p1')?>
-            <?endif?>
-        </td>
-    </tr>
-</table>
-
-
-
-
+        <?endforeach?>
+    </table>
+    <?if(Language::getCurrent()->direction == 'rtl'):?>
+        <?=$report->renderPieChartTotal('p')?>
+        <?=$report->renderPieChartFiltered('p1')?>
+    <?endif?>
 
 
 <script>

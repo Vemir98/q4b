@@ -10,6 +10,33 @@ var CURRENT_PROFFESION_ID = $(document).find('.current-profession-id').val() ? $
 var CHECKED_PLANS = $(document).find('.selected-plans').val() ? JSON.PARSE($(document).find('.selected-plans').val()): {};
 Q4U.pages = window.Q4U.pages || {};
 $(document).ready(function() {
+
+    var _current_lang = $(document).find('html').attr('lang') ? $(document).find('html').attr('lang') : "en";
+
+    var empty_select ={
+        en : 'Please select',
+        he : 'בבקשה תבחר'
+    }
+    var empty_input ={
+        en : 'Empty field',
+        he : 'שדה ריק'
+    }
+    var incorrect_email ={
+        en : 'Incorrect Email',
+        he : 'דוא"ל שגוי'
+    }
+    var incorrect_url ={
+        en : 'URL is not valid',
+        he : 'כתובת האתר אינה חוקית'
+    }
+    var password_match ={
+        en : 'Passwords do not match',
+        he : 'סיסמאות לא תואמות'
+    }
+    var short_password ={
+        en : 'Password should be minimum 8 characters',
+        he : 'סיסמה צריכה לכלול תווים לפחות 8'
+    }
     $.extend(Q4U.pages, {
         updatePage: {
 
@@ -85,7 +112,7 @@ $(document).ready(function() {
 
     var currentPage = Q4U.pages.updatePage;
 
-    $(document).on('change','#plans-select-prof', function(){
+    $(document).on('change','.plans-select-prof', function(){
 
         var self = $(this);
         var $this = $(this).val();
@@ -118,16 +145,17 @@ $(document).ready(function() {
 
         var self = $(this);
         var $this = $(this).val();
-        var neightborVal = $(document).find('#plans-select-prof').val();
+        // var neightborVal = $(document).find('#plans-select-prof').val();
 
         if($this > 0){
 
-            if(neightborVal > 0){
+            // if(neightborVal > 0){
                 self.closest('#add-plans-modal').find('.add-plan').removeClass('disabled-link');
-            }
+            // }
 
         } else {
-            if($this == 0 || neightborVal == 0){
+            // if($this == 0 || neightborVal == 0){
+            if($this == 0) {
                 self.closest('#add-plans-modal').find('.add-plan').addClass('disabled-link');
             }
 
@@ -240,7 +268,6 @@ $(document).ready(function() {
 
     $(document).on('change','.select-structure, .select-profession',function(e){
 
-        console.log('change');
         var current = $(this);
 
         var objectId = current.closest('form').find('[data-name="object"]').val();
@@ -887,8 +914,11 @@ $(document).ready(function() {
         var rowTemplate = $(document).find('.general-plan-row');
         var sheetNumber = rowTemplate.find('.sheet-number').val();
         var planName = rowTemplate.find('.plan-name').val();
-        var floors = rowTemplate.find('.hidden-select').val();
+        var floors = rowTemplate.find('.floors-select .hidden-select').val();
+        var structure = rowTemplate.find('.structure-select .plans-select-prof').val();
+
         var multiSelectBox = rowTemplate.find('.multi-select-box').html();
+        var selectBox = rowTemplate.find('.structure-select').html();
 
 
         if (! sheetNumber) {
@@ -899,6 +929,13 @@ $(document).ready(function() {
         }
 
         if (! planName) {
+            rowTemplate.addClass('warning');
+            Q4U.alert(__('Please  fill all fields'));
+
+            return false;
+        }
+
+        if (! structure) {
             rowTemplate.addClass('warning');
             Q4U.alert(__('Please  fill all fields'));
 
@@ -924,6 +961,10 @@ $(document).ready(function() {
             '                       <input type="text" class="table_input plan-name disabled-input" value="'+ planName +'" name="plans_'+ Id +'_plan_name" required>' +
             '                   </td>' +
             '                   <td class="rwd-td3" data-th="">' +
+            '                   <div class="select-wrapper structure-select disabled-input" data-name="plans_'+ Id +'_structure">' +
+                                    selectBox +
+            '                   </div></td>' +
+            '                   <td class="rwd-td4" data-th="">' +
             '                       <div class="multi-select-box disabled-input comma" data-name="plans_'+ Id +'_floors">' +
                                        multiSelectBox +
             '                       </div>' +
@@ -942,6 +983,7 @@ $(document).ready(function() {
         var input1 = document.createElement("input");
         var input2 = document.createElement("input");
         var input3 = document.createElement("input");
+        var input4 = document.createElement("input");
 
         input1.type = "hidden";
         input1.name = 'plan_'+ Id +'_sheet';
@@ -952,8 +994,12 @@ $(document).ready(function() {
         input2.value = planName;
 
         input3.type = "hidden";
-        input3.name = 'plan_'+ Id +'_floors';
-        input3.value = JSON.stringify(floors);
+        input3.name = 'plan_'+ Id +'_structure';
+        input3.value = structure;
+
+        input4.type = "hidden";
+        input4.name = 'plan_'+ Id +'_floors';
+        input4.value = JSON.stringify(floors);
 
         $(document).find('.upload-plans').removeClass('disabled-gray-button');
 
@@ -962,8 +1008,11 @@ $(document).ready(function() {
         container.appendChild(input1);
         container.appendChild(input2);
         container.appendChild(input3);
+        container.appendChild(input4);
 
         $(document).find('#add-plans-modal').find('table tbody:first').append(newRowMarkup);
+        $(document).find('#add-plans-modal').find('table tbody:first')
+            .find('tr:last-child').find('.structure-select .q4-select').val(structure);
         $(document).find('#add-plans-modal').find('table tbody:first')
             .find('tr:last-child').find('.multi-select-box .hidden-select').val(floors);
 
@@ -978,10 +1027,13 @@ $(document).ready(function() {
                 multiSelect.find('select').attr('name', nameAttr);
             }
         });
+        var objectId = $('#plans-list-layout').find('[data-name="object"]').val();
+        var defaultVal = objectId ? objectId : '';
 
         rowTemplate.find('.sheet-number').val('');
         rowTemplate.find('.plan-name').val('');
-        rowTemplate.find('.hidden-select').val('');
+        rowTemplate.find('.floors-select .hidden-select').val('');
+        rowTemplate.find('.structure-select .q4-select').val(defaultVal);
         rowTemplate.find('.checkbox-wrapper-multiple').removeClass('checked');
         rowTemplate.find('.select-imitation-title').html('');
 
@@ -1063,7 +1115,18 @@ $(document).ready(function() {
                 if (data.getData().modal) {
                     var modal = data.getData().modal;
                     $('body').append(modal);
+                    var plans = [];
+                    $(document).find('.enable-plan-action label.checkbox-wrapper input[type=checkbox]:checked').each(function(i,el){
+                        var planId = $(el).closest('tr').find('.table-print-td').data('planid');
+                        plans.push(planId);
+                    });
+                    $(document).find('#copy-plans-modal .q4_form').find('input[name="selected_plans"]').val('');
+                    $(document).find('#copy-plans-modal .q4_form').find('input[name="selected_plans"]').val(plans.join())
                     $(document).find('.copy-plans-modal').modal('show');
+                    if($(document).find('.enable-plan-action label.checkbox-wrapper input[type=checkbox]:checked').length){
+                        console.log(555, $(document).find('.enable-plan-action label.checkbox-wrapper input[type=checkbox]:checked'));
+                        $(document).find('.copy-plans-to-another').removeClass('disabled-link');
+                    }
                 }
             }
         });
@@ -1091,6 +1154,192 @@ $(document).ready(function() {
         });
 
     });
+
+    /**
+     * Add error messages to form fields
+     **/
+
+    function add_error_messages(element, message){
+
+        if(element.closest('.form-group').length == 1){
+            element.closest('.form-group').append('<div class="q4_error_message">' +
+                message +
+                '</div>');
+        }
+        if(element.closest('td').length == 1){
+            element.closest('td').append('<div class="q4_error_message">' +
+                message +
+                '</div>');
+        }
+        if(element.siblings('ul').length==1){
+            element.closest('.error-handler').prepend('<div class="q4_error_message">' +
+                message +
+                '</div>');
+        }
+    }
+
+    /**
+     * Remove error messages from form fields
+     **/
+    function remove_error_messages(element){
+
+        if(element.closest('.form-group').length == 1){
+            element.closest('.form-group').find('.q4_error_message').remove('.q4_error_message');
+        }
+        if(element.closest('td').length == 1){
+            element.closest('td').find('.q4_error_message').remove('.q4_error_message');
+        }
+        if(element.siblings('ul').length==1){
+            element.closest('.error-handler').find('.q4_error_message').remove('.q4_error_message');;
+        }
+    }
+
+
+    function validateRequired(element) {
+        if (element.val().length == 0) {
+            element.addClass('error');
+            add_error_messages(element, empty_input[_current_lang]);
+            return false;
+        } else {
+            element.removeClass('error');
+            remove_error_messages(element);
+            return true;
+        }
+    }
+    function validateEmail(email_fo) {
+        if (email_fo.val() == '') {
+            email_fo.addClass('error');
+            add_error_messages(email_fo, empty_input[_current_lang]);
+            return false;
+        } else if(!email_rgx.test(email_fo.val())){
+            email_fo.addClass('error');
+            add_error_messages(email_fo, incorrect_email[_current_lang]);
+            return false;
+        }else {
+            email_fo.removeClass('error');
+            remove_error_messages(email_fo);
+            return true;
+        }
+    }
+
+    function validateSelect(element) {
+        if (!element.val()) {
+            element.addClass('error');
+            add_error_messages(element, empty_select[_current_lang])
+            return false;
+        } else {
+            element.removeClass('error');
+            remove_error_messages(element);
+            return true;
+        }
+    }
+    function validateUrl(form_url) {
+        if (form_url.val() != '' && !url_rgx.test(form_url.val())) {
+            form_url.addClass('error');
+            add_error_messages(form_url, incorrect_url[_current_lang]);
+            return false;
+        } else {
+            form_url.removeClass('error');
+            remove_error_messages(form_url);
+            return true;
+        }
+    }
+
+    function validatePassword(set_password) {
+        if (set_password.val() != '' && set_password.val().length < 8) {
+            set_password.addClass('error');
+            set_password.closest('.q4_form').find(".check_password_match").html(short_password[_current_lang]);
+            return false;
+        } else {
+            set_password.removeClass('error');
+            set_password.closest('.q4_form').find(".check_password_match").html(" ");
+            return true;
+        }
+    }
+
+    $(document).on('click', '.update-plan', function(e) {
+        e.preventDefault();
+        var planTr = $(this).closest('tr');
+        var planId = $(this).closest('tr').data('planid');
+        var needToValidate = planTr.find($("[name*='"+planId +"']"));
+        var is_valid = true;
+        needToValidate.each(function(i, el) {
+            var self = $(el);
+            if (self.hasClass("q4_required")) {
+                is_valid = !validateRequired(self) ? false : is_valid;
+                self.on('keyup', function () {
+                    validateRequired(self);
+                });
+            }
+            if (self.hasClass("q4_email")) {
+                is_valid = !validateEmail(self) ? false : is_valid;
+                self.on('keyup', function () {
+                    validateEmail(self);
+                });
+            }
+            if (self.hasClass("q4_select")) {
+                is_valid = !validateSelect(self) ? false : is_valid;
+                self.on('keyup', function () {
+                    validateSelect(self);
+                });
+            }
+            if (self.hasClass("q4_url")) {
+                is_valid = !validateUrl(self) ? false : is_valid;
+                self.on('keyup', function () {
+                    validateUrl(self);
+                });
+            }
+            if (self.hasClass("q4_password")) {
+                is_valid = !validatePassword(self) ? false : is_valid;
+                self.on('keyup', function () {
+                    validatePassword(self);
+                });
+            }
+        });
+
+        if (is_valid){
+           var form = $(this).closest('.q4_form');
+           updatePlan(planTr, form);
+        }
+    });
+
+    function updatePlan(tr, form) {
+        var planId = tr.data('planid');
+        var data = tr.find($("[name*='"+planId +"']"));
+        var jsonData = data.serializeObject();
+        jsonData['x-form-secure-tkn'] = '';
+        jsonData['secure_tkn'] = form.find($("[name='secure_tkn']")).val()
+        jsonData['csrf'] = Q4U.getCsrfToken();
+        jsonData = JSON.stringify(jsonData);
+        if (tr.find('input[type="file"]').length) {
+            var formData = new FormData();
+            var hasFiles = false;
+            tr.find('input[type="file"]').each(function() {
+                var inputName = $(this).attr('name');
+                $.each($(this)[0].files, function(i, file) {
+                    console.log(file);
+                    formData.append(inputName, file);
+                    hasFiles = true;
+                });
+            });
+            if (hasFiles)
+                formData.append('Data', jsonData);
+            else
+                formData = undefined;
+        }
+        $.ajax({
+            url: Q4U.getFormSubmitUri(form),
+            data: formData != undefined ? formData : jsonData,
+            method: 'POST',
+            type: 'HTML',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                // var fmResp = Q4U.getAjaxResponse(response);
+            }
+        });
+    }
 
     $(document).on('click', '.delete-tracking', function(e) {
         e.preventDefault();
@@ -1875,7 +2124,7 @@ $(document).ready(function() {
         var checked = $(document).find('.professions-list-checkbox input[type=checkbox]:checked').length;
         var selectedProject = $(document).find('.select-project-get-objects option:selected').val();
 
-        if(checked > 0 && selectedProject != 0){
+        if((checked > 0 && selectedProject != 0) || $(document).find('.enable-plan-action label.checkbox-wrapper input[type=checkbox]:checked')){
             $(document).find('.copy-plans-to-another').removeClass('disabled-link');
         } else {
             $(document).find('.copy-plans-to-another').addClass('disabled-link');

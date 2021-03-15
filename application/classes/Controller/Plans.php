@@ -547,7 +547,7 @@ class Controller_Plans extends HDVP_Controller_Template
                         $plan->add('files', $file->pk());
 //                        Event::instance()->fire('onPlanFileAdded',['sender' => $this,'item' => $file]);
                         $fs = new FileServer();
-                        if(strtolower($file->ext) == 'pdf') {
+                        if(strtolower($file->ext) == 'pdf' OR strpos('.pdf',$file->name)) {
                             $fs->addLazyPdfTask(
                                 'https://qforb.net/' . $file->path . '/' . $file->name,
                                 'https://qforb.net/fileserver/planaddcallback?planId=' . $plan->id . '&fileId=' . $file->id,
@@ -647,7 +647,9 @@ class Controller_Plans extends HDVP_Controller_Template
                 }
                 $this->setResponseData('triggerEvent','planListUpdated');
                 Database::instance()->commit();
-                $fs->sendLazyTasks();
+                if($fs instanceof FileServer){
+                    $fs->sendLazyTasks();
+                }
             }catch(ORM_Validation_Exception $e){
                 Database::instance()->rollback();
                 $this->_setErrors($e->errors('validation'));
@@ -764,7 +766,7 @@ class Controller_Plans extends HDVP_Controller_Template
         View::set_global('_PROJECT', $this->project);
         View::set_global('_COMPANY', $this->company);
         if($this->request->method() == Request::POST){
-            $data = Arr::extract($this->post(),['object_id','profession_id','project_id','company_id']);
+            $data = Arr::extract($this->post(),['profession_id','project_id','company_id']);
 
             $plansData = [];
             foreach ($this->post() as $key => $value){
@@ -793,6 +795,7 @@ class Controller_Plans extends HDVP_Controller_Template
                 Database::instance()->begin();
 
                 foreach($plansData as $pid => $c) {
+                    $data['object_id'] = Arr::get($c, 'structure');
                     $data['date'] = time();//DateTime::createFromFormat('d/m/Y',$data['date'])->getTimestamp();
                     $plan = ORM::factory('PrPlan')->values($data);
                     $plan->scope = Model_PrPlan::getNewScope();
@@ -1050,7 +1053,7 @@ class Controller_Plans extends HDVP_Controller_Template
                         $newPlan->add('files', $PlanFile->pk());
 //                        Event::instance()->fire('onPlanFileAdded',['sender' => $this,'item' => $PlanFile]);
                         $fs = new FileServer();
-                        if(strtolower($file->ext) == 'pdf') {
+                        if(strtolower($file->ext) == 'pdf' OR strpos('.pdf',$file->name)) {
                             $fs->addLazyPdfTask(
                                 'https://qforb.net/' . $PlanFile->path . '/' . $PlanFile->name,
                                 'https://qforb.net/fileserver/planaddcallback?planId=' . $plan->id . '&fileId=' . $PlanFile->id,
@@ -1134,11 +1137,14 @@ class Controller_Plans extends HDVP_Controller_Template
         View::set_global('_COMPANY', $this->company);
 
         if($this->request->method() == Request::POST){
-            $copyToProjectId = (int)Arr::get($this->post(),'project_id');
-            $copyToObjectId = (int)Arr::get($this->post(),'object_id');
+            $copyToProjectId = (int)Arr::get($this->post(),'project_id') ? (int)Arr::get($this->post(),'project_id') : (int)$projectId;
+            $copyToObjectId = (int)Arr::get($this->post(),'object_id') ? (int)Arr::get($this->post(),'object_id') : (int)$objectId;
+
             $copyToProfessions = Arr::get($this->post(),'professions');
+            $copyToSelectedPlans = Arr::get($this->post(),'selected_plans');
 
             $copyToProject = ORM::factory('Project', $copyToProjectId);
+
             $copyToObject = $copyToProject->objects->where('id', '=', $copyToObjectId)->find();
 
             if(! $copyToObject->loaded()){
@@ -1153,15 +1159,35 @@ class Controller_Plans extends HDVP_Controller_Template
                 }
 
                 $professionsIds = '('.implode(',',$copyToProfessions).')';
+                $q = $this->project->plans;
+                if (Arr::get($this->post(),'professions')) {
+                    $q = $q->where('profession_id', 'IN', DB::expr($professionsIds));
+                }
+                if ($objectId) {
+                    $q = $q->where('object_id', '=', $objectId);
+                }
+                if ($this->project->id) {
+                    if (!$copyToSelectedPlans) {
+                        $q = $q->where('prplan.id','IN',DB::expr(' (SELECT max(pp.id) id FROM pr_plans pp WHERE pp.project_id='.$this->project->id.' GROUP BY pp.scope ORDER BY pp.id DESC)'));
+                    } else {
+                        $q = $q->where('prplan.id','IN',DB::expr(' (SELECT max(pp.id) id FROM pr_plans pp WHERE pp.project_id='.$this->project->id.' AND pp.id IN ('.$copyToSelectedPlans.') GROUP BY pp.scope ORDER BY pp.id DESC)'));
+                    }
+                }
 
-                $copyToPlans = $this->project
-                    ->plans
-                    ->where('profession_id', 'IN', DB::expr($professionsIds))
-                    ->where('object_id', '=', $objectId)
-                    ->where('prplan.id','IN',DB::expr(' (SELECT max(pp.id) id FROM pr_plans pp WHERE pp.project_id='.$this->project->id.' GROUP BY pp.scope ORDER BY pp.id DESC)'))
-                    ->find_all();
+                $copyToPlans = $q->find_all();
+//                $copyToPlans = $this->project
+//                    ->plans
+//                    ->where('profession_id', 'IN', DB::expr($professionsIds))
+//                    ->where('object_id', '=', $objectId)
+//                    ->where('prplan.id','IN',DB::expr(' (SELECT max(pp.id) id FROM pr_plans pp WHERE pp.project_id='.$this->project->id.' GROUP BY pp.scope ORDER BY pp.id DESC)'))
+//                    ->where('prplan.id', 'IN', $copyToSelectedPlans)
+//                    ->find_all();
+
 
                 foreach ($copyToPlans as $copyToPlan) {
+                    if ($copyToSelectedPlans && !(int)Arr::get($this->post(),'project_id') && !(int)Arr::get($this->post(),'object_id')) {
+                        $copyToPlan->name .= ' (copy)';
+                    }
                     $copyToPlan->cloneIntoObject(clone $copyToObject);
                 }
 
@@ -1452,7 +1478,7 @@ class Controller_Plans extends HDVP_Controller_Template
             $data = Arr::extract($this->post(),['departure_date','received_date','recipient','comments']);
             $data['departure_date'] = !empty($data['departure_date']) ? DateTime::createFromFormat('d/m/Y',$data['departure_date'])->getTimestamp() : null;
             $data['received_date'] = !empty($data['received_date']) ? DateTime::createFromFormat('d/m/Y',$data['received_date'])->getTimestamp() : null;
-
+            $fs = new FileServer();
             try{//todo::добавить загрузку файла
                 Database::instance()->begin();
                 $tracking->values($data);
@@ -1473,6 +1499,9 @@ class Controller_Plans extends HDVP_Controller_Template
                 }
                 $tracking->save();
                 Database::instance()->commit();
+                if(!empty($tracking->file)){
+                    $fs->addFileTask('https://qforb.net/' . $tracking->file,'https://qforb.net/fileserver/callbackplantrackingfile?fileId=' . $tracking->pk());
+                }
             }catch (ORM_Validation_Exception $e){
                 Database::instance()->rollback();
                 $this->_setErrors($e->errors('validation'));
@@ -1498,8 +1527,12 @@ class Controller_Plans extends HDVP_Controller_Template
         if( ! $tracking->loaded()){
             throw new HTTP_Exception_404();
         }
+        if( ! strpos($tracking->file,'fs.qforb.net') === false){
+            (new FileServer())->deleteFile($tracking->file);
+        }else{
 
-        @unlink($tracking->file);
+            @unlink(DOCROOT . $tracking->file);
+        }
         $tracking->file = null;
         $tracking->save();
     }

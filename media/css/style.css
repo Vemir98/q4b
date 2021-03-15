@@ -464,7 +464,8 @@ h6 {
 
 .mt-15 {
   margin-top: 15px; }
-
+.mt-20 {
+  margin-top: 20px; }
 .mr_30 {
   margin-right: 30px; }
 
@@ -677,7 +678,8 @@ h6 {
 
   .ml-15 {
     margin-left: auto; }
-
+  .mr-10 {
+    margin-right: 10px; }
   .m-30 {
     margin-top: 15px;
     margin-bottom: 15px; } }
@@ -3069,18 +3071,47 @@ label.q4-circle-checkbox input[type=checkbox]:checked ~ .circle-checkbox-tick {
 .show-structure:active {
   text-decoration: none;
   color: red; }
-.show-structure:visited {
+.show-structure:visited,
+.update-plan:visited{
   text-decoration: none;
   color: yellow; }
-.show-structure:link {
+.show-structure:link,
+.update-plan:link{
   text-decoration: none;
   color: orchid; }
-.show-structure i {
+.show-structure i,
+.update-plan i {
   color: #ffffff;
   font-size: 20px; }
-.show-structure i {
+.show-structure i,
+.update-plan i {
   font-size: 16px; }
 
+.update-plan {
+  display: inline-block;
+  vertical-align: middle;
+  background: #1ebae5;
+  text-align: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 16px;
+  line-height: 32px;
+  color: #ffffff;
+  cursor: pointer;
+  line-height: 37px;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: normal;
+  font-style: normal;
+  font-family: "proxima_nova_rgregular", Arial, Helvetica, sans-serif; }
+.update-plan:hover {
+  background: #003a63;
+  color: #ffffff;
+  text-decoration: none; }
+.update-plan:active {
+  background: #003a63;
+  text-decoration: none;
+  color: red; }
 .show-structure-mobile {
   display: inline-block;
   vertical-align: middle;
@@ -4416,6 +4447,8 @@ ul.pagination li.prev_arrow a:hover, ul.pagination li.next_arrow a:hover {
   background-color: #d5d5d5; }
 .report-chart-color.red {
   background-color: #ff0000; }
+.report-chart-color.purple {
+  background-color: #d515d3; }
 
 .sketchpad-modal-body {
   padding: 2px; }
@@ -10805,6 +10838,8 @@ header .header_bottom .header_create_company .header_add_company {
   vertical-align: middle; }
 .content .plans-list-layout span.show-structure {
   line-height: 37px; }
+.content .plans-list-layout span.update-plan {
+  line-height: 37px; }
 .content .plans-tracking-layout {
   display: none; }
 .content .back-plans-list-layout {
@@ -13450,7 +13485,17 @@ table.table.report-status-result-second-table.spec-tbl {
 .saved-reports td a{
   font-size: 16px;
 }
-
+.create-plan-modal td {
+  padding: 18px 8px !important;
+}
+.floors-multi-select-col {
+  padding-top: 1px
+}
+.floors-multi-select-col .table_label {
+  position: absolute;
+  right: 5px;
+  top: 2px;
+}
 @media only screen and (max-width: 1650px) {
   .saved-reports {
     margin-top: 20px;
@@ -13467,6 +13512,11 @@ table.table.report-status-result-second-table.spec-tbl {
 @media only screen and (max-width: 480px) {
   .saved-reports {
     width: 100%;
+  }
+}
+@media only screen and (max-width: 480px) {
+  [class^="q4bikon-"], [class*=" q4bikon-"] {
+    line-height: 2;
   }
 }
 .rtl .report-project_status .report-status-result-multiple > h3 span{

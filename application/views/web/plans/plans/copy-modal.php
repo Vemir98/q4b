@@ -12,6 +12,7 @@
     <div class="modal-dialog modal-dialog-1070">
         <form class="q4_form" action="<?=$action?>" data-ajax="true" method="post">
             <input type="hidden" value="" name="x-form-secure-tkn"/>
+            <input type="hidden" name="selected_plans" value="" />
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header q4_modal_header">

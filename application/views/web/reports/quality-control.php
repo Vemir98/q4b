@@ -84,7 +84,7 @@ if($_USER->is('project_supervisor') || $isSubcontractor){//запрет на и�
                                                     <?foreach($itemPlaceSpaces as $placeSpace):
                                                     $selected = $item->space_id == $placeSpace->id ? "selected='selected'" : '';
                                                     ?>
-                                                        <option <?=$selected?>> <?='Space 1'.':'.$placeSpace->desc?></option>
+                                                        <option <?=$selected?>> <?=__($placeSpace->type->name)?></option>
                                                     <?endforeach;?>
                                                 </select>
                                             </div>
@@ -518,7 +518,7 @@ if($_USER->is('project_supervisor') || $isSubcontractor){//запрет на и�
                                     <textarea name="dialog" class='modal-plans-details-textarea'></textarea>
                                 </div>
                             </div>
-                        <?endif?>
+                        <?endif?>   
                     </div>
                 </div>
                 </div>

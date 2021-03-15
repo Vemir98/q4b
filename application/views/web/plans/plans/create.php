@@ -27,41 +27,24 @@
                     <div class="plans-modal-dialog-top">
                         <div class="row">
                             <div class="form-group col-md-6">
-                                <label class="table_label"><?=__('Property')?></label>
-                                <div class="select-wrapper">
-                                    <i class="q4bikon-arrow_bottom"></i>
-                                    <select name="object_id" id="plans-select-prof" class="q4-select q4_select q4-form-input object-general-select" required>
-                                        <option value=""><?=__('Please select')?></option>
-
-                                        <?foreach ($objects as $obj): ?>
-                                            <option data-minfloor="<?=$obj->smaller_floor?>" data-maxfloor="<?=$obj->bigger_floor?>" value="<?=$obj->id?>" <?=($obj->id == $object->id) ? 'selected' : ''?>><?=$obj->name?></option>
-                                        <?endforeach ?>
-
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group col-md-6">
                                 <label class="table_label"><?=__('Profession')?></label>
                                 <div class="select-wrapper">
                                     <i class="q4bikon-arrow_bottom"></i>
-
                                     <select name="profession_id" id="profession_id" class="q4-select q4_select q4-form-input profession-general-select" required>
                                         <option value=""><?=__('Please select')?></option>
-
                                         <?foreach ($professions as $profession): ?>
                                             <option value="<?=$profession->id?>" <?=($profession->id == $professionId) ? 'selected' : ''?>><?=$profession->name?></option>
                                         <?endforeach ?>
-
                                     </select>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
                             <div class="form-group col-md-6">
                                 <label class="table_label"><?=__('Project')?></label>
                                 <input type="text" class="q4-form-input disabled-input" value="<?=$_PROJECT->name?>">
                                 <input name="project_id" type="hidden" class="q4-form-input disabled-input" value="<?=$_PROJECT->id?>" required>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="form-group col-md-6">
                                 <label class="table_label"><?=__('Company')?></label>
                                 <input type="text" class="q4-form-input disabled-input" value="<?=$_COMPANY->name?>">
@@ -78,6 +61,7 @@
                                         <tr>
                                             <th data-field="<?=__('Sheet Number')?>" class="td-100"><?=__('Sheet Number')?></th><!-- 3 -->
                                             <th data-field="<?=__('Name')?>" class="td-200"><?=__('Name')?></th><!-- 4 -->
+                                            <th data-field="<?=__('Property')?>" class="td-100"><?=__('Property')?></th><!-- 3 -->
                                             <th data-field="<?=__('Floor')?>" class="td-100"><?=__('Floor')?></th>
                                             <th data-field="<?=__('Action')?>" class="td-50"><?=__('Action')?></th><!-- 12 -->
                                         </tr>
@@ -90,8 +74,21 @@
                                             <td class="rwd-td2" data-th="">
                                                 <input type="text" class="table_input plan-name">
                                             </td>
-                                            <td class="floors-select">
-                                                <div class="rtl-float-right multi-select-col floors-multi-select-col">
+                                            <td class="rwd-td3" data-th="">
+                                                <div class="select-wrapper structure-select">
+                                                    <i class="q4bikon-arrow_bottom"></i>
+                                                    <select class="plans-select-prof q4-select q4-form-input object-general-select">
+                                                        <option value=""><?=__('Please select')?></option>
+
+                                                        <?foreach ($objects as $obj): ?>
+                                                            <option data-minfloor="<?=$obj->smaller_floor?>" data-maxfloor="<?=$obj->bigger_floor?>" value="<?=$obj->id?>" <?=($obj->id == $object->id) ? 'selected' : ''?>><?=$obj->name?></option>
+                                                        <?endforeach ?>
+
+                                                    </select>
+                                                </div>
+                                            </td>
+                                            <td class="rwd-td4 floors-select">
+                                                <div class="multi-select-col floors-multi-select-col">
                                                     <label class="table_label">
                                                         <span class="check-all-links" data-seltxt="<?=__('select all')?>" data-unseltxt="<?=__('unselect all')?>"><?=__('select all')?></span>
                                                     </label>

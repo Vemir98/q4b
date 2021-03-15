@@ -2312,7 +2312,7 @@ class Controller_Projects extends HDVP_Controller_Template
             $data = Arr::extract($this->post(),['departure_date','received_date','recipient','comments']);
             $data['departure_date'] = !empty($data['departure_date']) ? DateTime::createFromFormat('d/m/Y',$data['departure_date'])->getTimestamp() : null;
             $data['received_date'] = !empty($data['received_date']) ? DateTime::createFromFormat('d/m/Y',$data['received_date'])->getTimestamp() : null;
-
+            $fs = new FileServer();
             try{//todo::добавить загрузку файла
                 Database::instance()->begin();
                 $tracking->values($data);
@@ -2333,6 +2333,9 @@ class Controller_Projects extends HDVP_Controller_Template
                 }
                 $tracking->save();
                 Database::instance()->commit();
+                if(!empty($tracking->file)){
+                    $fs->addFileTask('https://qforb.net/' . $tracking->file,'https://qforb.net/fileserver/callbackplantrackingfile?fileId=' . $tracking->pk());
+                }
             }catch (ORM_Validation_Exception $e){
                 Database::instance()->rollback();
                 $this->_setErrors($e->errors('validation'));
@@ -2358,8 +2361,12 @@ class Controller_Projects extends HDVP_Controller_Template
         if( ! $tracking->loaded()){
             throw new HTTP_Exception_404();
         }
+        if( ! strpos($tracking->file,'fs.qforb.net')){
+            (new FileServer())->deleteFile($tracking->file);
+        }else{
 
-        @unlink($tracking->file);
+            @unlink(DOCROOT . $tracking->file);
+        }
         $tracking->file = null;
         $tracking->save();
     }
@@ -2711,11 +2718,13 @@ class Controller_Projects extends HDVP_Controller_Template
         if(!$qc->loaded()){
             throw new HTTP_Exception_404();
         }
+        $fs = new FileServer();
         try{
             Database::instance()->begin();
             $f = $this->saveBase64Image($this->post()['source'],$this->post()['name'],$qc->project->qualityControlPath());
             $qc->add('images', $f->pk());
             Database::instance()->commit();
+            $fs->addSimpleImageTask('https://qforb.net/' . $f->path . '/' . $f->name,$f->pk());
             $this->setResponseData('filePath',$f->originalFilePath());
             $this->setResponseData('id',$f->id);
         }catch (ORM_Validation_Exception $e){

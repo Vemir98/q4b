@@ -206,7 +206,7 @@ $icons = [
                                 <tr>
                                     <th class="hidden w-25"></th><!--  -->
                                     <th class="w-25 check-all-column"><!-- 0 -->
-                                        <label class="checkbox-wrapper" title="<?=__('select all on page')?>">
+                                        <label class="checkbox-wrapper plan-checkbox" title="<?=__('select all on page')?>">
                                             <input type="checkbox">
                                             <span class="checkbox-replace"></span><i class="checkbox-tick q4bikon-tick"></i>
                                         </label>
@@ -235,7 +235,7 @@ $icons = [
                                         $track = $item->trackings->order_by('id','DESC')->find();
                                     ?>
 
-                                    <tr data-planid="<?=$item->id?>" class="<?= $item->hasFile() ? (($track->loaded() AND ($track->departure_date AND $track->received_date)) ? 'success-plan' : '') : 'has-no-file'?>">
+                                    <tr data-planid="<?=$item->id?>" class="plan-row <?= $item->hasFile() ? (($track->loaded() AND ($track->departure_date AND $track->received_date)) ? 'success-plan' : '') : 'has-no-file'?>">
                                         <td class="hidden table-print-td"
                                             data-planid="<?=$item->id?>"
                                             data-property="<?=$item->object->type->name.' - '.$item->object->name?>"
@@ -254,18 +254,21 @@ $icons = [
                                             </table>
                                         </td>
                                         <td class="rwd-td0 enable-plan-action selectable-column text-center-left-right" data-th="<?=__('select')?>">
-                                            <label  class="checkbox-wrapper">
+                                            <label  class="checkbox-wrapper plan-checkbox">
                                                 <input type="checkbox">
                                                 <span class="checkbox-replace"></span><i class="checkbox-tick q4bikon-tick"></i>
                                             </label>
                                         </td>
                                         <td class="rwd-td1 align-center-left" data-th="<?=__('Details')?>">
-                                            <div class="div-cell td-cell-80">
+                                            <div class="div-cell td-cell-120">
                                                 <span class="show-structure plan-details" title="<?=__('Details')?>" data-url="<?=URL::site('plans/update_plan/'.$item->project_id.'/'.$item->id)?>">
                                                     <i class="plus q4bikon-preview"></i>
                                                 </span>
                                                 <span class="delete_row delete-plan<?=$disabledButton?>" data-url="<?=URL::site('plans/plan_delete/'.$item->project_id.'/'.$item->id)?>" title="<?=__('Delete plan')?>">
                                                     <i class="q4bikon-delete"></i>
+                                                </span>
+                                                <span class="update-plan" data-url="<?=URL::site('plans/plan_update/'.$item->project_id.'/'.$item->id)?>" title="<?=__('Update plan')?>">
+                                                    <i class="q4bikon-update"></i>
                                                 </span>
                                             </div>
                                         </td>

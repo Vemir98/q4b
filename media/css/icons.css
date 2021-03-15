@@ -1,13 +1,13 @@
-
 @font-face {
   font-family: 'q4b';
-  src:  url('../fonts/q4b.eot?auz15n');
-  src:  url('../fonts/q4b.eot?auz15n#iefix') format('embedded-opentype'),
-  url('../fonts/q4b.ttf?auz15n') format('truetype'),
-  url('../fonts/q4b.woff?auz15n') format('woff'),
-  url('../fonts/q4b.svg?auz15n#q4b') format('svg');
+  src:  url('../fonts/q4b.eot?q3n7g7');
+  src:  url('../fonts/q4b.eot?q3n7g7#iefix') format('embedded-opentype'),
+  url('../fonts/q4b.ttf?q3n7g7') format('truetype'),
+  url('../fonts/q4b.woff?q3n7g7') format('woff'),
+  url('../fonts/q4b.svg?q3n7g7#q4b') format('svg');
   font-weight: normal;
   font-style: normal;
+  font-display: block;
 }
 
 [class^="q4bikon-"], [class*=" q4bikon-"] {
@@ -25,11 +25,20 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.q4bikon-edition:before {
+.q4bikon-update:before {
   content: "\e900";
 }
-.q4bikon-floor:before {
+.q4bikon-edition:before {
   content: "\e901";
+}
+.q4bikon-floor:before {
+  content: "\e902";
+}
+.q4bikon-upload:before {
+  content: "\e903";
+}
+.q4bikon-settings2:before {
+  content: "\e904";
 }
 .q4bikon-appartment:before {
   content: "\e943";
@@ -139,7 +148,7 @@
 .q4bikon-delete:before {
   content: "\e966";
 }
-.q4bikon-double_arrow_bottom:before {
+.q4bikon-double_arrow_bottom2:before {
   content: "\e967";
 }
 .q4bikon-double_arrow_top:before {
