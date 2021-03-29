@@ -6,7 +6,7 @@
  * Date: 08.05.2017
  * Time: 6:51
  */
-
+use Helpers\ReportsHelper;
 if($_APPROVAL_STATUS) return;
 ?>
 <?
@@ -174,10 +174,14 @@ if($_APPROVAL_STATUS) return;
                                 <td data-th="<?=__('Quantity')?>" class="enlarged">
                                     <div class="double-cell-cpt">
                                         <div class="double-cell-cpt1">
-                                            <span class="report-status-quantity"><?=array_sum($craftsParams['statuses'])?></span>
+                                            <span class="report-status-quantity">
+                                                <?= ReportsHelper::getTotalExcept($craftsParams['statuses'], $craftsParams['statuses'][Enum_QualityControlStatus::Existing.' && '.Enum_QualityControlApproveStatus::ForRepair]) ?>
+                                            </span>
                                         </div>
                                         <div class="double-cell-cpt2">
-                                            <span class="report-status-quantity"><?=array_sum($filteredCraftsParams['statuses']) ? :0?></span>
+                                            <span class="report-status-quantity">
+                                                <?= ReportsHelper::getTotalExcept($filteredCraftsParams['statuses'], $filteredCraftsParams['statuses'][Enum_QualityControlStatus::Existing.' && '.Enum_QualityControlApproveStatus::ForRepair]) ?>
+                                            </span>
                                         </div>
                                     </div>
                                 </td>
@@ -204,6 +208,7 @@ if($_APPROVAL_STATUS) return;
                                 <div class="report-status-pie-statistics">
                                     <ul id="report-chart-list">
                                         <li data-percent="<?=$craftsParams['percents'][Enum_QualityControlStatus::Existing]?>" data-name="Existing"><span class="report-chart-color green"></span><span class="report-chart-text"> <?=__('existing')?> (<?=$craftsParams['percents'][Enum_QualityControlStatus::Existing]?>%) &#x200E;</span></li>
+                                        <li data-percent="<?=$craftsParams['percents'][Enum_QualityControlStatus::Existing.' && '.Enum_QualityControlApproveStatus::ForRepair]?>" data-name="Existing & Repairing"><span class="report-chart-color purple"></span><span class="report-chart-text"> <?=__('existing && for_repair')?> (<?=$craftsParams['percents'][Enum_QualityControlStatus::Existing.' && '.Enum_QualityControlApproveStatus::ForRepair]?>%) &#x200E;</span></li>
                                         <li data-percent="<?=$craftsParams['percents'][Enum_QualityControlStatus::Normal]?>" data-name="Normal"><span class="report-chart-color blue"></span><span class="report-chart-text"> <?=__('normal')?> (<?=$craftsParams['percents'][Enum_QualityControlStatus::Normal]?>%) &#x200E;</span></li>
                                         <li data-percent="<?=$craftsParams['percents'][Enum_QualityControlStatus::Repaired]?>" data-name="Repaired"><span class="report-chart-color orange"></span><span class="report-chart-text"> <?=__('repaired')?> (<?=$craftsParams['percents'][Enum_QualityControlStatus::Repaired]?>%) &#x200E;</span></li>
                                         <li data-percent="<?=$craftsParams['percents'][Enum_QualityControlStatus::Invalid]?>" data-name="Invalid"><span class="report-chart-color red"></span><span class="report-chart-text"> <?=__('invalid')?> (<?=$craftsParams['percents'][Enum_QualityControlStatus::Invalid]?>%) &#x200E;</span></li>
@@ -241,6 +246,7 @@ if($_APPROVAL_STATUS) return;
                                 <div class="report-status-pie-statistics">
                                     <ul id="report-chart-list2">
                                         <li data-percent="<?=$filteredCraftsParams['percents'][Enum_QualityControlStatus::Existing]?>" data-name="Existing"><span class="report-chart-color green"></span><span class="report-chart-text"> <?=__('existing')?> (<?=$filteredCraftsParams['percents'][Enum_QualityControlStatus::Existing]?>%) &#x200E;</span></li>
+                                        <li data-percent="<?=$filteredCraftsParams['percents'][Enum_QualityControlStatus::Existing.' && '.Enum_QualityControlApproveStatus::ForRepair]?>" data-name="Existing & Repairing"><span class="report-chart-color purple"></span><span class="report-chart-text"> <?=__('existing && for_repair')?> (<?=$filteredCraftsParams['percents'][Enum_QualityControlStatus::Existing.' && '.Enum_QualityControlApproveStatus::ForRepair]?>%) &#x200E;</span></li>
                                         <li data-percent="<?=$filteredCraftsParams['percents'][Enum_QualityControlStatus::Normal]?>" data-name="Normal"><span class="report-chart-color blue"></span><span class="report-chart-text"> <?=__('normal')?> (<?=$filteredCraftsParams['percents'][Enum_QualityControlStatus::Normal]?>%) &#x200E;</span></li>
                                         <li data-percent="<?=$filteredCraftsParams['percents'][Enum_QualityControlStatus::Repaired]?>" data-name="Repaired"><span class="report-chart-color orange"></span><span class="report-chart-text"> <?=__('repaired')?> (<?=$filteredCraftsParams['percents'][Enum_QualityControlStatus::Repaired]?>%) &#x200E;</span></li>
                                         <li data-percent="<?=$filteredCraftsParams['percents'][Enum_QualityControlStatus::Invalid]?>" data-name="Invalid"><span class="report-chart-color red"></span><span class="report-chart-text"> <?=__('invalid')?> (<?=$filteredCraftsParams['percents'][Enum_QualityControlStatus::Invalid]?>%) &#x200E;</span></li>
@@ -252,7 +258,7 @@ if($_APPROVAL_STATUS) return;
                                     $sum = 100;
                                     $inv = $sum - $filteredCraftsParams['percents'][Enum_QualityControlStatus::Repaired]-$filteredCraftsParams['percents'][Enum_QualityControlStatus::Invalid];
                                     $other = $sum - $filteredCraftsParams['percents'][Enum_QualityControlStatus::Invalid];
-                                 $fixed = round($filteredCraftsParams['statuses'][Enum_QualityControlStatus::Repaired] * 100 / ($filteredCraftsParams['statuses'][Enum_QualityControlStatus::Invalid] + $filteredCraftsParams['statuses'][Enum_QualityControlStatus::Repaired]));
+                                 $fixed = ($filteredCraftsParams['statuses'][Enum_QualityControlStatus::Invalid] + $filteredCraftsParams['statuses'][Enum_QualityControlStatus::Repaired]) ? round($filteredCraftsParams['statuses'][Enum_QualityControlStatus::Repaired] * 100 / ($filteredCraftsParams['statuses'][Enum_QualityControlStatus::Invalid] + $filteredCraftsParams['statuses'][Enum_QualityControlStatus::Repaired])) : 0;
                                 ?>
                                <?='A:'. $inv?>%&nbsp;&nbsp;
                                 <?='B:'.$other?>%&nbsp;&nbsp;

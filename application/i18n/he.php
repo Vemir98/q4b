@@ -820,5 +820,6 @@ return [
     'Employer review' => 'דו שיח',
     'Add review' => 'הוסף תגובה',
     'Attached images' => 'תמונות מצורפות',
+    'Are you sure, you want to delete selected plans?' =>'האם אתה בטוח שברצונך למחוק את התוכניות?',
     ''=>'',
 ];

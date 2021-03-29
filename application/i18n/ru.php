@@ -793,5 +793,6 @@ return [
     'Employer review' => 'Диалог',
     'Add review' => 'Добавить отзыв',
     'Attached images' => 'Прикрепленные изображения',
+    'Are you sure, you want to delete selected plans?' =>'Вы уверены, что хотите удалить выбранные планы?',
     ''=>'',
 ];

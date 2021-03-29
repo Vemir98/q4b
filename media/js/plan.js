@@ -1124,10 +1124,11 @@ $(document).ready(function() {
                     $(document).find('#copy-plans-modal .q4_form').find('input[name="selected_plans"]').val(plans.join())
                     $(document).find('.copy-plans-modal').modal('show');
                     if($(document).find('.enable-plan-action label.checkbox-wrapper input[type=checkbox]:checked').length){
-                        console.log(555, $(document).find('.enable-plan-action label.checkbox-wrapper input[type=checkbox]:checked'));
                         $(document).find('.copy-plans-to-another').removeClass('disabled-link');
                     }
-                }
+                    var projectId = $("#plans-list-layout form").data('project');
+                    $('#copy-plans-modal select[name=project_id]').val(projectId);
+                    }
             }
         });
     });
@@ -1154,6 +1155,61 @@ $(document).ready(function() {
         });
 
     });
+
+    $(document).on('click', '.plans-bulk-delete', function(e) {
+        e.preventDefault();
+        var self = $(this);
+        var form = $(this).closest('.q4_form');
+        var plans = [];
+        var professionId = self.closest('form').find('[data-name="profession"]').val();
+        var objectId = self.closest('form').find('[data-name="object"]').val();
+        $(document).find('.enable-plan-action label.checkbox-wrapper input[type=checkbox]:checked').each(function(i,el){
+            var planId = $(el).closest('tr').find('.table-print-td').data('planid');
+            plans.push(planId);
+        });
+        if (!plans.length) return
+
+        var jsonData = {
+            "x-form-secure-tkn": "",
+            "secure_tkn": form.find($("[name='secure_tkn']")).val(),
+            "csrf": Q4U.getCsrfToken(),
+            "plans": plans,
+            "professionId": professionId ? professionId : 0,
+            "objectId": objectId
+        };
+
+        Q4U.confirm(__('Are you sure, you want to delete selected plans?'), {
+            confirmCallback: function(el, params) {
+                $.ajax({
+                    url: $(params.custom.el).data('url'),
+                    data: JSON.stringify(jsonData),
+                    method: 'POST',
+                    type: 'HTML',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function(data) {
+                        var html = JSON.parse(data).html;
+                        replaceHtmlContent($(document).find('.scrollable-table'), $(html).find('.scrollable-table'));
+                        replaceHtmlContent($(document).find('.ev-has-file-menu'), $(html).find('.ev-has-file-menu'));
+                        replaceHtmlContent($(document).find('.plans-aux'), $(html).find('.plans-aux'));
+                        $('[data-toggle="table"]').bootstrapTable();
+                        eventAfterUpdate();
+                    }
+                });
+            },
+            type: "danger",
+            confirmText:  __('Delete'),
+            custom: {
+                el: self
+            }
+        });
+
+    });
+
+    function replaceHtmlContent(el, content) {
+        el.replaceWith(content);
+    }
 
     /**
      * Add error messages to form fields
@@ -1336,7 +1392,10 @@ $(document).ready(function() {
             contentType: false,
             processData: false,
             success: function(response) {
-                // var fmResp = Q4U.getAjaxResponse(response);
+                var fmResp = Q4U.getAjaxResponse(response);
+                if (fmResp.needRedirect()) {
+                    fmResp.doRedirect();
+                }
             }
         });
     }
@@ -2110,9 +2169,20 @@ $(document).ready(function() {
         });
     });
 
+    function showSelectedItemsCount(el, count) {
+        el.html(count);
+    }
+
     function eventAfterUpdate(){
         var checked = $('table .enable-plan-action input[type=checkbox]:checked').length;
+        showSelectedItemsCount($(document).find('.total-res-selected'), checked);
+
         var selectedProfessionId = $('.plans-layout .select-profession').val();
+        if (checked > 0) {
+            $(document).find('.plans-to-print-link, .plans-bulk-delete').removeClass('disabled-link');
+        } else {
+            $(document).find('.plans-to-print-link, .plans-bulk-delete').addClass('disabled-link');
+        }
         if(checked > 0 && parseInt(selectedProfessionId)){
             $(document).find('.plans-to-print-link, .plans-to-send').removeClass('disabled-link');
         } else {
@@ -2141,8 +2211,21 @@ $(document).ready(function() {
         $(document).find('.select-profession').trigger('change');
     });
 
-    // $(document).find('.no-format-found').closest('tr').css('background', '#e49999');
-    // $(document).find('.select-profession').trigger('change');
-
+    $(window).scroll(function() {
+        var el = $('.plans-options-panel');
+        var eTop = $(document).find('.content').offset().top + parseInt($(document).find('.content').css('padding-top'));
+        var scrollTop = eTop - $(window).scrollTop();
+        var width = $('.content').width();
+        if (scrollTop <= 0) {
+            el.removeClass('plans-options-panel-absolute');
+            el.addClass('plans-options-panel-fixed');
+            el.css({width: width});
+            el.parent().css({paddingTop: "unset"});
+        } else {
+            el.removeClass('plans-options-panel-fixed');
+            el.addClass('plans-options-panel-absolute');
+            el.parent().css({paddingTop: "100px"});
+        }
+    })
 
 });

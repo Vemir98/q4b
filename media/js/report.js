@@ -469,7 +469,8 @@ $(document).ready(function() {
         var options = {
             enableInteractivity: false,
             legend: { position: 'none', textStyle : {color: 'black'} },
-            colors: ['#28cf91', '#005C87', '#f99c19', '#ff0000'],
+            // colors: ['#28cf91', '#005C87', '#f99c19', '#ff0000'],
+            colors: ['#28cf91', '#d515d3', '#005C87', '#f99c19', '#ff0000'],
             chartArea: {'top': 10, 'left' : 10, width: 165, height: 165},
             width: 200,
             height: 200,
@@ -548,7 +549,8 @@ $(document).ready(function() {
         var options = {
             enableInteractivity: false,
             legend: { position: 'none', textStyle : {color: 'black'} },
-            colors: ['#28cf91', '#005C87', '#f99c19', '#ff0000'],
+            // colors: ['#28cf91', '#005C87', '#f99c19', '#ff0000'],
+            colors: ['#28cf91', '#d515d3', '#005C87', '#f99c19', '#ff0000'],
             chartArea: {'top': 10, 'left' : 10, width: 165, height: 165},
             width: 200,
             height: 200,

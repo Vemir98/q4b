@@ -421,10 +421,10 @@ class QualityReport
     private function calculateStats(&$data){
         $totalStatuses = array_sum($data['statuses']);
         $data['percents'] = [
-            Enum_QualityControlStatus::Existing => round($data['statuses'][Enum_QualityControlStatus::Existing] * 100 / $totalStatuses),
-            Enum_QualityControlStatus::Normal => round($data['statuses'][Enum_QualityControlStatus::Normal] * 100 / $totalStatuses),
-            Enum_QualityControlStatus::Repaired => round($data['statuses'][Enum_QualityControlStatus::Repaired] * 100 / $totalStatuses),
-            Enum_QualityControlStatus::Invalid => round($data['statuses'][Enum_QualityControlStatus::Invalid] * 100 / $totalStatuses),
+            Enum_QualityControlStatus::Existing => $totalStatuses ? round($data['statuses'][Enum_QualityControlStatus::Existing] * 100 / $totalStatuses) : 0,
+            Enum_QualityControlStatus::Normal => $totalStatuses ? round($data['statuses'][Enum_QualityControlStatus::Normal] * 100 / $totalStatuses) : 0,
+            Enum_QualityControlStatus::Repaired => $totalStatuses ? round($data['statuses'][Enum_QualityControlStatus::Repaired] * 100 / $totalStatuses) : 0,
+            Enum_QualityControlStatus::Invalid => $totalStatuses ? round($data['statuses'][Enum_QualityControlStatus::Invalid] * 100 / $totalStatuses) : 0,
         ];
 
         $data['statuses']['a'] = $data['statuses'][Enum_QualityControlStatus::Existing] + $data['statuses'][Enum_QualityControlStatus::Normal];

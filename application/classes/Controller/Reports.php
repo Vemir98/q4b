@@ -8,6 +8,8 @@
  */
 class Controller_Reports extends HDVP_Controller_Template
 {
+    const STATUS_EXISTING_AND_FOR_REPAIR = Enum_QualityControlStatus::Existing.' && '.Enum_QualityControlApproveStatus::ForRepair;
+
     public function before()
     {
         parent::before();
@@ -122,12 +124,14 @@ class Controller_Reports extends HDVP_Controller_Template
             ],
             'statuses' => [
                 Enum_QualityControlStatus::Existing => null,
+                self::STATUS_EXISTING_AND_FOR_REPAIR => null,
                 Enum_QualityControlStatus::Normal => null,
                 Enum_QualityControlStatus::Repaired => null,
                 Enum_QualityControlStatus::Invalid => null,
             ],
             'percents' => [
                 Enum_QualityControlStatus::Existing => null,
+                self::STATUS_EXISTING_AND_FOR_REPAIR => null,
                 Enum_QualityControlStatus::Normal => null,
                 Enum_QualityControlStatus::Repaired => null,
                 Enum_QualityControlStatus::Invalid => null,
@@ -342,6 +346,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                 ];
                 $craftsParams['statuses'] = [
                     Enum_QualityControlStatus::Existing => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('status','=',Enum_QualityControlStatus::Existing)->count_all(),
+                    self::STATUS_EXISTING_AND_FOR_REPAIR => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('status','=',Enum_QualityControlStatus::Existing)->and_where('approval_status','=',Enum_QualityControlApproveStatus::ForRepair)->count_all(),
                     Enum_QualityControlStatus::Normal => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('status','=',Enum_QualityControlStatus::Normal)->count_all(),
                     Enum_QualityControlStatus::Repaired => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('status','=',Enum_QualityControlStatus::Repaired)->count_all(),
                     Enum_QualityControlStatus::Invalid => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('status','=',Enum_QualityControlStatus::Invalid)->count_all(),
@@ -354,6 +359,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                 ];
                 $filteredCraftsParams['statuses'] = [
                     Enum_QualityControlStatus::Existing => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('status','=',Enum_QualityControlStatus::Existing)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->and_where('qualitycontrol.craft_id', 'IN', DB::expr('('.implode(',',$data['crafts']).')')),
+                    self::STATUS_EXISTING_AND_FOR_REPAIR => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('status','=',Enum_QualityControlStatus::Existing)->and_where('approval_status','=',Enum_QualityControlApproveStatus::ForRepair)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->and_where('qualitycontrol.craft_id', 'IN', DB::expr('('.implode(',',$data['crafts']).')')),
                     Enum_QualityControlStatus::Normal => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('status','=',Enum_QualityControlStatus::Normal)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->and_where('qualitycontrol.craft_id', 'IN', DB::expr('('.implode(',',$data['crafts']).')')),
                     Enum_QualityControlStatus::Repaired => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('status','=',Enum_QualityControlStatus::Repaired)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->and_where('qualitycontrol.craft_id', 'IN', DB::expr('('.implode(',',$data['crafts']).')')),
                     Enum_QualityControlStatus::Invalid => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('status','=',Enum_QualityControlStatus::Invalid)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->and_where('qualitycontrol.craft_id', 'IN', DB::expr('('.implode(',',$data['crafts']).')')),
@@ -367,6 +373,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                 ];
                 $craftsParams['statuses'] = [
                     Enum_QualityControlStatus::Existing => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('craft_id','=',(int)$data['crafts'][0])->and_where('status','=',Enum_QualityControlStatus::Existing)->count_all(),
+                    self::STATUS_EXISTING_AND_FOR_REPAIR => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('craft_id','=',(int)$data['crafts'][0])->and_where('status','=',Enum_QualityControlStatus::Existing)->and_where('approval_status','=',Enum_QualityControlApproveStatus::ForRepair)->count_all(),
                     Enum_QualityControlStatus::Normal => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('craft_id','=',(int)$data['crafts'][0])->and_where('status','=',Enum_QualityControlStatus::Normal)->count_all(),
                     Enum_QualityControlStatus::Repaired => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('craft_id','=',(int)$data['crafts'][0])->and_where('status','=',Enum_QualityControlStatus::Repaired)->count_all(),
                     Enum_QualityControlStatus::Invalid => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('craft_id','=',(int)$data['crafts'][0])->and_where('status','=',Enum_QualityControlStatus::Invalid)->count_all(),
@@ -379,6 +386,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                 ];
                 $filteredCraftsParams['statuses'] = [
                     Enum_QualityControlStatus::Existing => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('craft_id','=',(int)$data['crafts'][0])->and_where('status','=',Enum_QualityControlStatus::Existing)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to'])),
+                    self::STATUS_EXISTING_AND_FOR_REPAIR => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('craft_id','=',(int)$data['crafts'][0])->and_where('status','=',Enum_QualityControlStatus::Existing)->and_where('approval_status','=',Enum_QualityControlApproveStatus::ForRepair)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to'])),
                     Enum_QualityControlStatus::Normal =>  ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('craft_id','=',(int)$data['crafts'][0])->and_where('status','=',Enum_QualityControlStatus::Normal)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to'])),
                     Enum_QualityControlStatus::Repaired => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('craft_id','=',(int)$data['crafts'][0])->and_where('status','=',Enum_QualityControlStatus::Repaired)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to'])),
                     Enum_QualityControlStatus::Invalid => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('craft_id','=',(int)$data['crafts'][0])->and_where('status','=',Enum_QualityControlStatus::Invalid)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to'])),
@@ -433,18 +441,21 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
             $totalStatuses = array_sum($craftsParams['statuses']);
             $craftsParams['percents'] = [
                 Enum_QualityControlStatus::Existing => round($craftsParams['statuses'][Enum_QualityControlStatus::Existing] * 100 / $totalStatuses),
+                self::STATUS_EXISTING_AND_FOR_REPAIR => round($craftsParams['statuses'][self::STATUS_EXISTING_AND_FOR_REPAIR] * 100 / $totalStatuses),
                 Enum_QualityControlStatus::Normal => round($craftsParams['statuses'][Enum_QualityControlStatus::Normal] * 100 / $totalStatuses),
                 Enum_QualityControlStatus::Repaired => round($craftsParams['statuses'][Enum_QualityControlStatus::Repaired] * 100 / $totalStatuses),
                 Enum_QualityControlStatus::Invalid => round($craftsParams['statuses'][Enum_QualityControlStatus::Invalid] * 100 / $totalStatuses),
             ];
+
             foreach ($filteredCraftsParams['statuses'] as $key => &$val){
-                if(!in_array($key,$data['statuses'])){
+                if($key !== self::STATUS_EXISTING_AND_FOR_REPAIR && !in_array($key,$data['statuses']) || ($key === self::STATUS_EXISTING_AND_FOR_REPAIR && !in_array(Enum_QualityControlStatus::Existing, $data['statuses']))){
                     $val = 0;
                 }
             }
             $filteredTotalStatuses = array_sum($filteredCraftsParams['statuses']);
             $filteredCraftsParams['percents'] = [
                 Enum_QualityControlStatus::Existing => round($filteredCraftsParams['statuses'][Enum_QualityControlStatus::Existing] * 100 / $filteredTotalStatuses),
+                self::STATUS_EXISTING_AND_FOR_REPAIR => round($filteredCraftsParams['statuses'][self::STATUS_EXISTING_AND_FOR_REPAIR] * 100 / $filteredTotalStatuses),
                 Enum_QualityControlStatus::Normal => round($filteredCraftsParams['statuses'][Enum_QualityControlStatus::Normal] * 100 / $filteredTotalStatuses),
                 Enum_QualityControlStatus::Repaired => round($filteredCraftsParams['statuses'][Enum_QualityControlStatus::Repaired] * 100 / $filteredTotalStatuses),
                 Enum_QualityControlStatus::Invalid => round($filteredCraftsParams['statuses'][Enum_QualityControlStatus::Invalid] * 100 / $filteredTotalStatuses),
@@ -1314,6 +1325,9 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         }
 
         if(!$placeId){
+            $output['data'] = [];
+            $output['data']['private'] = [];
+            $output['data']['public'] = [];
             foreach ($crafts as $c){
                 if(isset($craftTotalTasksCnt[$c->id]) AND isset($craftUsedTasksCnt['public'][$c->id])){
                     $output['data']['public'][$c->id]['percent'] = round($craftUsedTasksCnt['public'][$c->id]['cnt'] * 100 / ($craftTotalTasksCnt[$c->id]['cnt'] * $placesCount['public']),2);

@@ -822,5 +822,6 @@ return [
     'Employer review' => 'Employer review',
     'Add review' => 'Add review',
     'Attached images' => 'Attached images',
+    'Are you sure, you want to delete selected plans?' =>'Are you sure, you want to delete selected plans?',
     ''=>'',
 ];

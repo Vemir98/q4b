@@ -336,22 +336,6 @@
         color: #494A4B;
         margin-top: 10px;
     }
-    /*.pdf_main_content_images_wraper .f0_new{*/
-        /*display: flex;*/
-        /*flex-wrap: nowrap;*/
-        /*width: 100%;*/
-        /*margin-bottom: 40px;*/
-        /*margin-top: 10px;*/
-    /*}*/
-    /*.pdf_main_content_images_wraper .f0_new {*/
-        /*page-break-inside: auto !important;*/
-    /*}*/
-    /*.rtl .pdf_main_content_images_wraper .f0_new{*/
-        /*flex-wrap: nowrap;*/
-        /*width: 100%;*/
-        /*margin-bottom: 40px;*/
-        /*margin-top: 10px;*/
-    /*}*/
     .pdf_main_content_image_prop{
         justify-content: flex-start;
         display:flex;
@@ -479,15 +463,14 @@
                                         <span class="pdf_main_content_top_list_item_value"><?=$q->due_date ? date('d/m/Y',$q->due_date): ''?></span>
                                     </li>
                                     <li class="pdf_main_content_top_list_item">
-                                        <span class="pdf_main_content_top_list_item_name "><?=__('Responsible profession')?>:</span>
-                                        <span class="pdf_main_content_top_list_item_value "><?=$q->profession->name?></span>
+                                        <span class="pdf_main_content_top_list_item_name"><?=__('Responsible profession')?>:</span>
+                                        <span class="pdf_main_content_top_list_item_value"><?=$q->profession->name?></span>
                                     </li>
                                 </ul>
                             </div>
                         </div>
                         <div class="pdf_main_content_top_new mt-20">
                             <div class="column">
-
                                 <ul>
                                     <li class="pdf_main_content_properties_list_item">
                                         <span class="pdf_main_content_properties_list_item_name"><?=__('Property')?> :</span>
@@ -587,8 +570,11 @@
                                                 <span class="pdf_main_content_image_prop1 fw-700"><?=$img->original_name?></span>
                                                 <span class="pdf_main_content_image_prop2 fw-700">(<?=__('uploaded')?>: <?=date('d.m.y H:i',$img->created_at)?> )&#x200E;</span>
                                             </div>
-                                            <img src="<?=$img->getBigThumbPath()?>?<?=rand(100000,99999999)?>" alt="<?=$img->original_name?>">
-<!--                                            <img src="--><?//=$img->originalFilePath()?><!--" alt="--><?//=$img->original_name?><!--">-->
+                                            <?if ($_SERVER['SERVER_NAME'] === 'qforb.net') :?>
+                                                <img src="<?=$img->getBigThumbPath()?>?<?=rand(100000,99999999)?>" alt="<?=$img->original_name?>">
+                                            <?else:?>
+                                                <img src="<?=$img->originalFilePath() . '?' . uniqid()?>" alt="<?=$img->original_name?>">
+                                            <?endif?>
                                         </div>
                                     <?if(($number+2)%2==1 || $number == count($images)):?>
                                         </div>
@@ -610,7 +596,7 @@
             <?=__('Copyright © 2017 Q4B').'   '.__('All right reserved')?>
         </span>
     </div>
-    <div class="header">
+    <div class="pdf_header-info header">
         <div class="pdf_header_top">
             <div class="pdf_header_top1">
                 <span class="report_range_text fw-700">

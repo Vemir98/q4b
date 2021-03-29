@@ -204,7 +204,11 @@
                         <h4 class="report-plan-title"><?=$img->original_name?> <span class="report-plan-uploaded">(<?=__('uploaded')?>: <?=date('d.m.y H:i', $img->created_at)?> )</span></h4>
                         <div class="report-plan-item-image">
                             <a href="<?=$img->originalFilePath() . '?' . uniqid()?>" target="_blank">
-                                <img src="<?=$img->getBigThumbPath()?>" alt="<?=$img->original_name?>">
+                                <?if ($_SERVER['SERVER_NAME'] === 'qforb.net') :?>
+                                    <img src="<?=$img->getBigThumbPath()?>?<?=rand(100000,99999999)?>" alt="<?=$img->original_name?>">
+                                <?else:?>
+                                    <img src="<?=$img->originalFilePath() . '?' . uniqid()?>" alt="<?=$img->original_name?>">
+                                <?endif?>
                             </a>
                         </div>
                     </div>
