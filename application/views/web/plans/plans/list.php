@@ -18,7 +18,8 @@ $icons = [
     <form action="<?=URL::site('/plans/update_plan_list/'.$_PROJECT->id)?>"
           data-url="<?=URL::site('/plans/'.$_PROJECT->id.'/plans_list/')?>"
           data-ajax=true method="post"
-          class="q4_form" autocomplete="off">
+          class="q4_form" autocomplete="off"
+          data-project="<?=$_PROJECT->id?>">
 
         <input type="hidden" value="" name="x-form-secure-tkn"/>
         <input type="hidden" value="<?=$secure_tkn?>" name="secure_tkn"/>
@@ -27,11 +28,11 @@ $icons = [
 
         <div class="tab_panel">
 
-            <div class="panel_body container-fluid plans-layout">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="panel-options relative">
-                            <div class="plans-border-bottom">
+            <div class="panel_body container-fluid plans-layout pt-100">
+                <div class="plans-options-panel plans-options-panel-absolute">
+                    <div>
+                        <div class="panel-options relative mb-0">
+                            <div class="plans-border-bottom mb-0 pb-10">
 
                                 <span class="inline-options text-center">
                                     <a class="plans-date-tracking" data-url="<?=URL::site('plans/tracking_list/'.$_PROJECT->id)?>">
@@ -56,7 +57,7 @@ $icons = [
                                 </span>
 
                                 <span class="inline-options">
-                                     <a class="circle-sm red plans-to-send disabled-link" data-id=<?=$_PROJECT->id?> data-url="<?=URL::site('plans/plans_mailing/'.$_PROJECT->id)?>">
+                                     <a class="circle-sm blue plans-to-send disabled-link" data-id=<?=$_PROJECT->id?> data-url="<?=URL::site('plans/plans_mailing/'.$_PROJECT->id)?>">
                                          <img src="/media/img/send.png" title="send" alt="send">
                                      </a>
                                      <span class="inline-options-text"><?=__('Send')?></span>
@@ -69,6 +70,15 @@ $icons = [
                                     </span>
                                     <span class="inline-options-text">
                                         <?=__('Copy')?>
+                                    </span>
+                                </span>
+                                <span class="inline-options">
+                                    <span class="circle-sm circle-sm red plans-bulk-delete disabled-link" title="<?=__('Delete')?>"
+                                        data-url="<?=URL::site('plans/plans_delete/'.$_PROJECT->id)?>">
+                                        <i class="q4bikon-delete"></i>
+                                    </span>
+                                    <span class="inline-options-text">
+                                        <?=__('Delete')?>
                                     </span>
                                 </span>
                                 <span class="inline-options">
@@ -107,7 +117,6 @@ $icons = [
                             </div>
                             <i class="input_icon q4bikon-project"></i>
                         </div>
-
                     </div>
                     <div class="col-md-3 rtl-float-right">
                         <label class="table_label"><?=__('Profession')?></label>

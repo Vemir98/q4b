@@ -32,6 +32,9 @@ class Controller_Plans extends HDVP_Controller_Template
         'delete_image,delete_plans_file,plan_delete,delete_tracking,delete_tracking_file' => [
             'GET' => 'delete'
         ],
+        'plans_delete' => [
+            'POST' => 'delete'
+        ]
     ];
 
     public $company, $project;
@@ -231,7 +234,6 @@ class Controller_Plans extends HDVP_Controller_Template
             }
 
             Breadcrumbs::add(Breadcrumb::factory()->set_title($this->project->name));
-
             $this->template->content = View::make('plans/update')
                 ->set('plansView', View::make('plans/plans/list',
                     $this->_getPlanListPaginatedData($this->project, null, $professionId)
@@ -461,6 +463,40 @@ class Controller_Plans extends HDVP_Controller_Template
             }
         }catch (HDVP_Exception $e){
             $this->_setErrors($e->getMessage());
+        }
+    }
+
+    public function action_plans_delete(){
+        $projectId = (int)$this->request->param('id');
+        $plansIds = Arr::get($this->post(), 'plans');
+        $this->project = ORM::factory('Project',$projectId);
+        $professionId = Arr::get($this->post(), 'professionId');
+        $objectId = Arr::get($this->post(), 'objectId');
+        $object = $this->project->objects->where('id','=',$objectId)->find();
+
+        if( ! $this->project->loaded() OR !$this->_user->canUseProject($this->project)) throw new HTTP_Exception_404;
+        $plans = ORM::factory('PrPlan')->where('id','IN', $plansIds)->find_all();
+        foreach ($plans as $plan) {
+            if( ! $plan->loaded()) throw new HTTP_Exception_404;
+            Event::instance()->fire('beforePlanDelete',['sender' => $this,'item' => $plan]);
+            try{
+                if($plan->hasQualityControl()){
+                    throw new HDVP_Exception('Cant delete the Plan, because it contained in Quality Control');
+                }
+                foreach ($plans as $p){
+                    if($p->hasQualityControl()){
+                        continue;
+                    }
+                    $p->delete();
+                }
+
+                $this->setResponseData('html', View::make('plans/update')
+                    ->set('plansView', View::make('plans/plans/list',
+                        $this->_getPlanListPaginatedData($this->project, $objectId ? $object : null, $professionId ? [$professionId] : null)
+                    )));
+            }catch (Exception $e){
+                $this->_setErrors($e->getMessage());
+            }
         }
     }
 
@@ -1141,10 +1177,8 @@ class Controller_Plans extends HDVP_Controller_Template
             $copyToObjectId = (int)Arr::get($this->post(),'object_id') ? (int)Arr::get($this->post(),'object_id') : (int)$objectId;
 
             $copyToProfessions = Arr::get($this->post(),'professions');
-            $copyToSelectedPlans = Arr::get($this->post(),'selected_plans');
-
+            $selectedPlans = Arr::get($this->post(),'selected_plans');
             $copyToProject = ORM::factory('Project', $copyToProjectId);
-
             $copyToObject = $copyToProject->objects->where('id', '=', $copyToObjectId)->find();
 
             if(! $copyToObject->loaded()){
@@ -1167,14 +1201,14 @@ class Controller_Plans extends HDVP_Controller_Template
                     $q = $q->where('object_id', '=', $objectId);
                 }
                 if ($this->project->id) {
-                    if (!$copyToSelectedPlans) {
+                    if (!$selectedPlans) {
                         $q = $q->where('prplan.id','IN',DB::expr(' (SELECT max(pp.id) id FROM pr_plans pp WHERE pp.project_id='.$this->project->id.' GROUP BY pp.scope ORDER BY pp.id DESC)'));
                     } else {
-                        $q = $q->where('prplan.id','IN',DB::expr(' (SELECT max(pp.id) id FROM pr_plans pp WHERE pp.project_id='.$this->project->id.' AND pp.id IN ('.$copyToSelectedPlans.') GROUP BY pp.scope ORDER BY pp.id DESC)'));
+                        $q = $q->where('prplan.id','IN',DB::expr(' (SELECT max(pp.id) id FROM pr_plans pp WHERE pp.project_id='.$this->project->id.' AND pp.id IN ('.$selectedPlans.') GROUP BY pp.scope ORDER BY pp.id DESC)'));
                     }
                 }
 
-                $copyToPlans = $q->find_all();
+                $plansToCopy = $q->find_all();
 //                $copyToPlans = $this->project
 //                    ->plans
 //                    ->where('profession_id', 'IN', DB::expr($professionsIds))
@@ -1184,11 +1218,11 @@ class Controller_Plans extends HDVP_Controller_Template
 //                    ->find_all();
 
 
-                foreach ($copyToPlans as $copyToPlan) {
-                    if ($copyToSelectedPlans && !(int)Arr::get($this->post(),'project_id') && !(int)Arr::get($this->post(),'object_id')) {
-                        $copyToPlan->name .= ' (copy)';
+                foreach ($plansToCopy as $planToCopy) {
+                    if ($selectedPlans && !(int)Arr::get($this->post(),'project_id') && !(int)Arr::get($this->post(),'object_id')) {
+                        $planToCopy->name .= ' (copy)';
                     }
-                    $copyToPlan->cloneIntoObject(clone $copyToObject);
+                    $planToCopy->cloneIntoObject(clone $copyToObject);
                 }
 
                 Database::instance()->commit();

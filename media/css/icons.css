@@ -1,260 +1,765 @@
 @font-face {
-  font-family: 'q4b';
-  src:  url('../fonts/q4b.eot?q3n7g7');
-  src:  url('../fonts/q4b.eot?q3n7g7#iefix') format('embedded-opentype'),
-  url('../fonts/q4b.ttf?q3n7g7') format('truetype'),
-  url('../fonts/q4b.woff?q3n7g7') format('woff'),
-  url('../fonts/q4b.svg?q3n7g7#q4b') format('svg');
-  font-weight: normal;
-  font-style: normal;
-  font-display: block;
+    font-family: 'q4b';
+    src:  url('../fonts/q4b.eot?vu9i8a');
+    src:  url('../fonts/q4b.eot?vu9i8a#iefix') format('embedded-opentype'),
+    url('../fonts/q4b.ttf?vu9i8a') format('truetype'),
+    url('../fonts/q4b.woff?vu9i8a') format('woff'),
+    url('../fonts/q4b.svg?vu9i8a#q4b') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
 }
 
 [class^="q4bikon-"], [class*=" q4bikon-"] {
-  /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'q4b' !important;
-  speak: none;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'q4b' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
 
-  /* Better Font Rendering =========== */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
+.q4bikon-appartment2:before {
+    content: "\e90f";
+}
+.q4bikon-public-new:before {
+    content: "\e910";
+}
+.q4bikon-private-new:before {
+    content: "\e911";
+}
+.q4bikon-stairway2:before {
+    content: "\e912";
+}
+.q4bikon-report:before {
+    content: "\e913";
+}
+.q4bikon-plus2:before {
+    content: "\e914";
+}
+.q4bikon-copy2:before {
+    content: "\e90b";
+}
+.q4bikon-delete2:before {
+    content: "\e90c";
+}
+.q4bikon-edit2:before {
+    content: "\e90d";
+}
+.q4bikon-reports3:before {
+    content: "\e90e";
+}
+.q4bikon-arrow_back2:before {
+    content: "\e905";
+}
+.q4bikon-update1:before {
+    content: "\e906";
+}
+.q4bikon-edition1:before {
+    content: "\e907";
+}
+.q4bikon-floor1:before {
+    content: "\e908";
+}
+.q4bikon-upload1:before {
+    content: "\e909";
+}
+.q4bikon-settings21:before {
+    content: "\e90a";
+}
+.q4bikon-appartment1:before {
+    content: "\e96b";
+}
+.q4bikon-balcony1:before {
+    content: "\e989";
+}
+.q4bikon-cafe1:before {
+    content: "\e98a";
+}
+.q4bikon-canteen1:before {
+    content: "\e98b";
+}
+.q4bikon-cellar1:before {
+    content: "\e98c";
+}
+.q4bikon-electricity_room1:before {
+    content: "\e98d";
+}
+.q4bikon-elevator1:before {
+    content: "\e98e";
+}
+.q4bikon-escalator1:before {
+    content: "\e98f";
+}
+.q4bikon-hair_salon1:before {
+    content: "\e990";
+}
+.q4bikon-parking1:before {
+    content: "\e991";
+}
+.q4bikon-pharmacy1:before {
+    content: "\e992";
+}
+.q4bikon-playground1:before {
+    content: "\e993";
+}
+.q4bikon-reception1:before {
+    content: "\e994";
+}
+.q4bikon-residents-club1:before {
+    content: "\e995";
+}
+.q4bikon-security_room1:before {
+    content: "\e996";
+}
+.q4bikon-shop1:before {
+    content: "\e997";
+}
+.q4bikon-smoking_room1:before {
+    content: "\e998";
+}
+.q4bikon-sporthall1:before {
+    content: "\e999";
+}
+.q4bikon-stairway1:before {
+    content: "\e99a";
+}
+.q4bikon-washing_room1:before {
+    content: "\e99b";
+}
+.q4bikon-wc1:before {
+    content: "\e99c";
+}
+.q4bikon-address1:before {
+    content: "\e99d";
+}
+.q4bikon-archive1:before {
+    content: "\e99e";
+}
+.q4bikon-arrow_bottom1:before {
+    content: "\e99f";
+}
+.q4bikon-arrow_left1:before {
+    content: "\e9a0";
+}
+.q4bikon-arrow_right1:before {
+    content: "\e9a1";
+}
+.q4bikon-arrow_top1:before {
+    content: "\e9a2";
+}
+.q4bikon-checked1:before {
+    content: "\e9a3";
+}
+.q4bikon-close1:before {
+    content: "\e9a4";
+}
+.q4bikon-companies1:before {
+    content: "\e9a5";
+}
+.q4bikon-company_id1:before {
+    content: "\e9a6";
+}
+.q4bikon-company_status1:before {
+    content: "\e9a7";
+}
+.q4bikon-copy1:before {
+    content: "\e9a8";
+}
+.q4bikon-country1:before {
+    content: "\e9a9";
+}
+.q4bikon-date1:before {
+    content: "\e9aa";
+}
+.q4bikon-delete1:before {
+    content: "\e9ab";
+}
+.q4bikon-double_arrow_bottom21:before {
+    content: "\e9ac";
+}
+.q4bikon-double_arrow_top1:before {
+    content: "\e9ad";
+}
+.q4bikon-download1:before {
+    content: "\e9ae";
+}
+.q4bikon-edit1:before {
+    content: "\e9af";
+}
+.q4bikon-email1:before {
+    content: "\e9b0";
+}
+.q4bikon-export1:before {
+    content: "\e9b1";
+}
+.q4bikon-file1:before {
+    content: "\e9b2";
+}
+.q4bikon-head_office1:before {
+    content: "\e9b3";
+}
+.q4bikon-menu1:before {
+    content: "\e9b4";
+}
+.q4bikon-minus1:before {
+    content: "\e9b5";
+}
+.q4bikon-not_found1:before {
+    content: "\e9b6";
+}
+.q4bikon-owner1:before {
+    content: "\e9b7";
+}
+.q4bikon-password1:before {
+    content: "\e9b8";
+}
+.q4bikon-phone1:before {
+    content: "\e9b9";
+}
+.q4bikon-plus1:before {
+    content: "\e9ba";
+}
+.q4bikon-position1:before {
+    content: "\e9bb";
+}
+.q4bikon-preview1:before {
+    content: "\e9bc";
+}
+.q4bikon-print1:before {
+    content: "\e9bd";
+}
+.q4bikon-private1:before {
+    content: "\e9be";
+}
+.q4bikon-project1:before {
+    content: "\e9bf";
+}
+.q4bikon-property1:before {
+    content: "\e9c0";
+}
+.q4bikon-public1:before {
+    content: "\e9c1";
+}
+.q4bikon-quantity1:before {
+    content: "\e9c2";
+}
+.q4bikon-reports1:before {
+    content: "\e9c3";
+}
+.q4bikon-search1:before {
+    content: "\e9c4";
+}
+.q4bikon-send-by-email1:before {
+    content: "\e9c5";
+}
+.q4bikon-setting1:before {
+    content: "\e9c6";
+}
+.q4bikon-sygment_type1:before {
+    content: "\e9c7";
+}
+.q4bikon-tick1:before {
+    content: "\e9c8";
+}
+.q4bikon-uncheked1:before {
+    content: "\e9c9";
+}
+.q4bikon-user_group1:before {
+    content: "\e9ca";
+}
+.q4bikon-user_status1:before {
+    content: "\e9cb";
+}
+.q4bikon-username1:before {
+    content: "\e9cc";
+}
 .q4bikon-update:before {
-  content: "\e900";
+    content: "\e900";
 }
 .q4bikon-edition:before {
-  content: "\e901";
+    content: "\e901";
 }
 .q4bikon-floor:before {
-  content: "\e902";
+    content: "\e902";
 }
 .q4bikon-upload:before {
-  content: "\e903";
+    content: "\e903";
 }
 .q4bikon-settings2:before {
-  content: "\e904";
+    content: "\e904";
 }
 .q4bikon-appartment:before {
-  content: "\e943";
+    content: "\e943";
 }
 .q4bikon-balcony:before {
-  content: "\e944";
+    content: "\e944";
 }
 .q4bikon-cafe:before {
-  content: "\e945";
+    content: "\e945";
 }
 .q4bikon-canteen:before {
-  content: "\e946";
+    content: "\e946";
 }
 .q4bikon-cellar:before {
-  content: "\e947";
+    content: "\e947";
 }
 .q4bikon-electricity_room:before {
-  content: "\e948";
+    content: "\e948";
 }
 .q4bikon-elevator:before {
-  content: "\e949";
+    content: "\e949";
 }
 .q4bikon-escalator:before {
-  content: "\e94a";
+    content: "\e94a";
 }
 .q4bikon-hair_salon:before {
-  content: "\e94b";
+    content: "\e94b";
 }
 .q4bikon-parking:before {
-  content: "\e94c";
+    content: "\e94c";
 }
 .q4bikon-pharmacy:before {
-  content: "\e94d";
+    content: "\e94d";
 }
 .q4bikon-playground:before {
-  content: "\e94e";
+    content: "\e94e";
 }
 .q4bikon-reception:before {
-  content: "\e94f";
+    content: "\e94f";
 }
 .q4bikon-residents-club:before {
-  content: "\e950";
+    content: "\e950";
 }
 .q4bikon-security_room:before {
-  content: "\e951";
+    content: "\e951";
 }
 .q4bikon-shop:before {
-  content: "\e952";
+    content: "\e952";
 }
 .q4bikon-smoking_room:before {
-  content: "\e953";
+    content: "\e953";
 }
 .q4bikon-sporthall:before {
-  content: "\e954";
+    content: "\e954";
 }
 .q4bikon-stairway:before {
-  content: "\e955";
+    content: "\e955";
 }
 .q4bikon-washing_room:before {
-  content: "\e956";
+    content: "\e956";
 }
 .q4bikon-wc:before {
-  content: "\e957";
+    content: "\e957";
 }
 .q4bikon-address:before {
-  content: "\e958";
+    content: "\e958";
 }
 .q4bikon-archive:before {
-  content: "\e959";
+    content: "\e959";
 }
 .q4bikon-arrow_bottom:before {
-  content: "\e95a";
+    content: "\e95a";
 }
 .q4bikon-arrow_left:before {
-  content: "\e95b";
+    content: "\e95b";
 }
 .q4bikon-arrow_right:before {
-  content: "\e95c";
+    content: "\e95c";
 }
 .q4bikon-arrow_top:before {
-  content: "\e95d";
+    content: "\e95d";
 }
 .q4bikon-checked:before {
-  content: "\e95e";
+    content: "\e95e";
 }
 .q4bikon-close:before {
-  content: "\e95f";
+    content: "\e95f";
 }
 .q4bikon-companies:before {
-  content: "\e960";
+    content: "\e960";
 }
 .q4bikon-company_id:before {
-  content: "\e961";
+    content: "\e961";
 }
 .q4bikon-company_status:before {
-  content: "\e962";
+    content: "\e962";
 }
 .q4bikon-copy:before {
-  content: "\e963";
+    content: "\e963";
 }
 .q4bikon-country:before {
-  content: "\e964";
+    content: "\e964";
 }
 .q4bikon-date:before {
-  content: "\e965";
+    content: "\e965";
 }
 .q4bikon-delete:before {
-  content: "\e966";
+    content: "\e966";
 }
 .q4bikon-double_arrow_bottom2:before {
-  content: "\e967";
+    content: "\e967";
 }
 .q4bikon-double_arrow_top:before {
-  content: "\e968";
+    content: "\e968";
 }
 .q4bikon-download:before {
-  content: "\e969";
+    content: "\e969";
 }
 .q4bikon-edit:before {
-  content: "\e96a";
+    content: "\e96a";
 }
 .q4bikon-email:before {
-  content: "\e96c";
+    content: "\e96c";
 }
 .q4bikon-export:before {
-  content: "\e96d";
+    content: "\e96d";
 }
 .q4bikon-file:before {
-  content: "\e96e";
+    content: "\e96e";
 }
 .q4bikon-head_office:before {
-  content: "\e96f";
+    content: "\e96f";
 }
 .q4bikon-menu:before {
-  content: "\e970";
+    content: "\e970";
 }
 .q4bikon-minus:before {
-  content: "\e971";
+    content: "\e971";
 }
 .q4bikon-not_found:before {
-  content: "\e972";
+    content: "\e972";
 }
 .q4bikon-owner:before {
-  content: "\e973";
+    content: "\e973";
 }
 .q4bikon-password:before {
-  content: "\e974";
+    content: "\e974";
 }
 .q4bikon-phone:before {
-  content: "\e975";
+    content: "\e975";
 }
 .q4bikon-plus:before {
-  content: "\e976";
+    content: "\e976";
 }
 .q4bikon-position:before {
-  content: "\e977";
+    content: "\e977";
 }
 .q4bikon-preview:before {
-  content: "\e978";
+    content: "\e978";
 }
 .q4bikon-print:before {
-  content: "\e979";
+    content: "\e979";
 }
 .q4bikon-private:before {
-  content: "\e97a";
+    content: "\e97a";
 }
 .q4bikon-project:before {
-  content: "\e97b";
+    content: "\e97b";
 }
 .q4bikon-property:before {
-  content: "\e97c";
+    content: "\e97c";
 }
 .q4bikon-public:before {
-  content: "\e97d";
+    content: "\e97d";
 }
 .q4bikon-quantity:before {
-  content: "\e97e";
+    content: "\e97e";
 }
 .q4bikon-reports:before {
-  content: "\e97f";
+    content: "\e97f";
 }
 .q4bikon-search:before {
-  content: "\e980";
+    content: "\e980";
 }
 .q4bikon-send-by-email:before {
-  content: "\e981";
+    content: "\e981";
 }
 .q4bikon-setting:before {
-  content: "\e982";
+    content: "\e982";
 }
 .q4bikon-sygment_type:before {
-  content: "\e983";
+    content: "\e983";
 }
 .q4bikon-tick:before {
-  content: "\e984";
+    content: "\e984";
 }
 .q4bikon-uncheked:before {
-  content: "\e985";
+    content: "\e985";
 }
 .q4bikon-user_group:before {
-  content: "\e986";
+    content: "\e986";
 }
 .q4bikon-user_status:before {
-  content: "\e987";
+    content: "\e987";
 }
 .q4bikon-username:before {
-  content: "\e988";
-}
-.q4bikon-settings2:before {
-  content: "\e903";
-}
-.q4bikon-upload:before {
-  content: "\e902";
+    content: "\e988";
 }
 
-/* elements // todo:: WTT */
+/*@font-face {*/
+  /*font-family: 'q4b';*/
+  /*src:  url('../fonts/q4b.eot?q3n7g7');*/
+  /*src:  url('../fonts/q4b.eot?q3n7g7#iefix') format('embedded-opentype'),*/
+  /*url('../fonts/q4b.ttf?q3n7g7') format('truetype'),*/
+  /*url('../fonts/q4b.woff?q3n7g7') format('woff'),*/
+  /*url('../fonts/q4b.svg?q3n7g7#q4b') format('svg');*/
+  /*font-weight: normal;*/
+  /*font-style: normal;*/
+  /*font-display: block;*/
+/*}*/
+
+/*[class^="q4bikon-"], [class*=" q4bikon-"] {*/
+  /*!* use !important to prevent issues with browser extensions that change fonts *!*/
+  /*font-family: 'q4b' !important;*/
+  /*speak: none;*/
+  /*font-style: normal;*/
+  /*font-weight: normal;*/
+  /*font-variant: normal;*/
+  /*text-transform: none;*/
+  /*line-height: 1;*/
+
+  /*!* Better Font Rendering =========== *!*/
+  /*-webkit-font-smoothing: antialiased;*/
+  /*-moz-osx-font-smoothing: grayscale;*/
+/*}*/
+
+/*.q4bikon-update:before {*/
+  /*content: "\e900";*/
+/*}*/
+/*.q4bikon-edition:before {*/
+  /*content: "\e901";*/
+/*}*/
+/*.q4bikon-floor:before {*/
+  /*content: "\e902";*/
+/*}*/
+/*.q4bikon-upload:before {*/
+  /*content: "\e903";*/
+/*}*/
+/*.q4bikon-settings2:before {*/
+  /*content: "\e904";*/
+/*}*/
+/*.q4bikon-appartment:before {*/
+  /*content: "\e943";*/
+/*}*/
+/*.q4bikon-balcony:before {*/
+  /*content: "\e944";*/
+/*}*/
+/*.q4bikon-cafe:before {*/
+  /*content: "\e945";*/
+/*}*/
+/*.q4bikon-canteen:before {*/
+  /*content: "\e946";*/
+/*}*/
+/*.q4bikon-cellar:before {*/
+  /*content: "\e947";*/
+/*}*/
+/*.q4bikon-electricity_room:before {*/
+  /*content: "\e948";*/
+/*}*/
+/*.q4bikon-elevator:before {*/
+  /*content: "\e949";*/
+/*}*/
+/*.q4bikon-escalator:before {*/
+  /*content: "\e94a";*/
+/*}*/
+/*.q4bikon-hair_salon:before {*/
+  /*content: "\e94b";*/
+/*}*/
+/*.q4bikon-parking:before {*/
+  /*content: "\e94c";*/
+/*}*/
+/*.q4bikon-pharmacy:before {*/
+  /*content: "\e94d";*/
+/*}*/
+/*.q4bikon-playground:before {*/
+  /*content: "\e94e";*/
+/*}*/
+/*.q4bikon-reception:before {*/
+  /*content: "\e94f";*/
+/*}*/
+/*.q4bikon-residents-club:before {*/
+  /*content: "\e950";*/
+/*}*/
+/*.q4bikon-security_room:before {*/
+  /*content: "\e951";*/
+/*}*/
+/*.q4bikon-shop:before {*/
+  /*content: "\e952";*/
+/*}*/
+/*.q4bikon-smoking_room:before {*/
+  /*content: "\e953";*/
+/*}*/
+/*.q4bikon-sporthall:before {*/
+  /*content: "\e954";*/
+/*}*/
+/*.q4bikon-stairway:before {*/
+  /*content: "\e955";*/
+/*}*/
+/*.q4bikon-washing_room:before {*/
+  /*content: "\e956";*/
+/*}*/
+/*.q4bikon-wc:before {*/
+  /*content: "\e957";*/
+/*}*/
+/*.q4bikon-address:before {*/
+  /*content: "\e958";*/
+/*}*/
+/*.q4bikon-archive:before {*/
+  /*content: "\e959";*/
+/*}*/
+/*.q4bikon-arrow_bottom:before {*/
+  /*content: "\e95a";*/
+/*}*/
+/*.q4bikon-arrow_left:before {*/
+  /*content: "\e95b";*/
+/*}*/
+/*.q4bikon-arrow_right:before {*/
+  /*content: "\e95c";*/
+/*}*/
+/*.q4bikon-arrow_top:before {*/
+  /*content: "\e95d";*/
+/*}*/
+/*.q4bikon-checked:before {*/
+  /*content: "\e95e";*/
+/*}*/
+/*.q4bikon-close:before {*/
+  /*content: "\e95f";*/
+/*}*/
+/*.q4bikon-companies:before {*/
+  /*content: "\e960";*/
+/*}*/
+/*.q4bikon-company_id:before {*/
+  /*content: "\e961";*/
+/*}*/
+/*.q4bikon-company_status:before {*/
+  /*content: "\e962";*/
+/*}*/
+/*.q4bikon-copy:before {*/
+  /*content: "\e963";*/
+/*}*/
+/*.q4bikon-country:before {*/
+  /*content: "\e964";*/
+/*}*/
+/*.q4bikon-date:before {*/
+  /*content: "\e965";*/
+/*}*/
+/*.q4bikon-delete:before {*/
+  /*content: "\e966";*/
+/*}*/
+/*.q4bikon-double_arrow_bottom2:before {*/
+  /*content: "\e967";*/
+/*}*/
+/*.q4bikon-double_arrow_top:before {*/
+  /*content: "\e968";*/
+/*}*/
+/*.q4bikon-download:before {*/
+  /*content: "\e969";*/
+/*}*/
+/*.q4bikon-edit:before {*/
+  /*content: "\e96a";*/
+/*}*/
+/*.q4bikon-email:before {*/
+  /*content: "\e96c";*/
+/*}*/
+/*.q4bikon-export:before {*/
+  /*content: "\e96d";*/
+/*}*/
+/*.q4bikon-file:before {*/
+  /*content: "\e96e";*/
+/*}*/
+/*.q4bikon-head_office:before {*/
+  /*content: "\e96f";*/
+/*}*/
+/*.q4bikon-menu:before {*/
+  /*content: "\e970";*/
+/*}*/
+/*.q4bikon-minus:before {*/
+  /*content: "\e971";*/
+/*}*/
+/*.q4bikon-not_found:before {*/
+  /*content: "\e972";*/
+/*}*/
+/*.q4bikon-owner:before {*/
+  /*content: "\e973";*/
+/*}*/
+/*.q4bikon-password:before {*/
+  /*content: "\e974";*/
+/*}*/
+/*.q4bikon-phone:before {*/
+  /*content: "\e975";*/
+/*}*/
+/*.q4bikon-plus:before {*/
+  /*content: "\e976";*/
+/*}*/
+/*.q4bikon-position:before {*/
+  /*content: "\e977";*/
+/*}*/
+/*.q4bikon-preview:before {*/
+  /*content: "\e978";*/
+/*}*/
+/*.q4bikon-print:before {*/
+  /*content: "\e979";*/
+/*}*/
+/*.q4bikon-private:before {*/
+  /*content: "\e97a";*/
+/*}*/
+/*.q4bikon-project:before {*/
+  /*content: "\e97b";*/
+/*}*/
+/*.q4bikon-property:before {*/
+  /*content: "\e97c";*/
+/*}*/
+/*.q4bikon-public:before {*/
+  /*content: "\e97d";*/
+/*}*/
+/*.q4bikon-quantity:before {*/
+  /*content: "\e97e";*/
+/*}*/
+/*.q4bikon-reports:before {*/
+  /*content: "\e97f";*/
+/*}*/
+/*.q4bikon-search:before {*/
+  /*content: "\e980";*/
+/*}*/
+/*.q4bikon-send-by-email:before {*/
+  /*content: "\e981";*/
+/*}*/
+/*.q4bikon-setting:before {*/
+  /*content: "\e982";*/
+/*}*/
+/*.q4bikon-sygment_type:before {*/
+  /*content: "\e983";*/
+/*}*/
+/*.q4bikon-tick:before {*/
+  /*content: "\e984";*/
+/*}*/
+/*.q4bikon-uncheked:before {*/
+  /*content: "\e985";*/
+/*}*/
+/*.q4bikon-user_group:before {*/
+  /*content: "\e986";*/
+/*}*/
+/*.q4bikon-user_status:before {*/
+  /*content: "\e987";*/
+/*}*/
+/*.q4bikon-username:before {*/
+  /*content: "\e988";*/
+/*}*/
+/*.q4bikon-settings2:before {*/
+  /*content: "\e903";*/
+/*}*/
+/*.q4bikon-upload:before {*/
+  /*content: "\e902";*/
+/*}*/
+
+/*!* elements // todo:: WTT *!*/
 
 /*.select_wrapper:before {*/
   /*content: "\e919";*/

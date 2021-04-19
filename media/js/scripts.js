@@ -1774,7 +1774,7 @@ function normalizeObjectStruct() {
         structureId = $(this).attr('id');
         $(document).find('.property-tab-content').find('#' + structureId + ' li').each(function(i, el) {
             var self = $(el);
-            innerWidth += self.width() + 30;
+            innerWidth += self.width() + 20;
             $(this).parent().width(innerWidth);
         });
         innerWidth = 0;

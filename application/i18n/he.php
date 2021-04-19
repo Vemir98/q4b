@@ -821,5 +821,11 @@ return [
     'Add review' => 'הוסף תגובה',
     'Attached images' => 'תמונות מצורפות',
     'Are you sure, you want to delete selected plans?' =>'האם אתה בטוח שברצונך למחוק את התוכניות?',
+    'Back to list' => 'בחזרה לרשימה',
+    'Report'=>'דוח',
+    'Report for place' => 'דוח למרחב',
+    'Report for structure' => 'דוח למבנה',
+    'Report for floor' => 'דוח לקומה',
+    'Edit floor description' => 'ערוך את התיאור הקומה',
     ''=>'',
 ];

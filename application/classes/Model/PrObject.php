@@ -188,6 +188,7 @@ class Model_PrObject extends MORM
             $newFloor->project_id = $floor->project_id;
             $newFloor->object_id = $floor->object_id;
             $newFloor->number = $floor->number + 1;
+            $newFloor->custom_name = $floor->custom_name;
             $newFloor->save();
 
             DB::query(Database::UPDATE,"UPDATE pr_places SET `number` = `number` + {$floorPrivatePlacesCount}  WHERE `ordering` > {$floorLastPlace->ordering} AND `project_id` = {$floor->project_id} AND `object_id` = {$floor->object_id} AND `type`='".Enum_ProjectPlaceType::PrivateS."'")->execute();
@@ -231,6 +232,7 @@ class Model_PrObject extends MORM
             $newFloor->project_id = $floor->project_id;
             $newFloor->object_id = $floor->object_id;
             $newFloor->number = $floor->number - 1;
+            $newFloor->custom_name = $floor->custom_name;
             $newFloor->save();
 
 

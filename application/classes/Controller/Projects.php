@@ -38,6 +38,9 @@ class Controller_Projects extends HDVP_Controller_Template
         ],
         'remove_users' => [
             'POST' => 'delete'
+        ],
+        'floor_update_title' => [
+            'GET' => 'update'
         ]
     ];
 
@@ -1013,6 +1016,29 @@ class Controller_Projects extends HDVP_Controller_Template
             throw $e;
         }
 
+
+    }
+
+    public function action_floor_update_title(){
+        $projectId = $this->request->param('param1');
+        $objectId = $this->request->param('param2');
+        $floorId = $this->request->param('param3');
+        $this->project = ORM::factory('Project',$projectId);
+        $customName = $this->request->query('custom_name');
+        if( ! $this->project->loaded() OR !$this->_user->canUseProject($this->project))
+            throw new HTTP_Exception_404;
+        $object = $this->project->objects->where('id','=',$objectId)->find();
+        if( ! $object->loaded()) throw new HTTP_Exception_404;
+        $floor = $object->floors->where('id','=',$floorId)->find();
+        if( ! $floor->loaded()) throw new HTTP_Exception_404;
+        try{
+            $floor->custom_name = $customName;
+            $floor->save();
+            $this->setResponseData('struct',$this->getObjectStruct($object->id));
+            Event::instance()->fire('onItemUpdated',['sender' => $this,'item' => $object, 'client_id' => (int)$this->project->client_id]);
+        }catch (Exception $e){
+            throw $e;
+        }
 
     }
 

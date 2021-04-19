@@ -823,5 +823,11 @@ return [
     'Add review' => 'Add review',
     'Attached images' => 'Attached images',
     'Are you sure, you want to delete selected plans?' =>'Are you sure, you want to delete selected plans?',
+    'Back to list' => 'Back to list',
+    'Report'=>'Report',
+    'Report for place' => 'Report for place',
+    'Report for structure' => 'Report for structure',
+    'Report for floor' => 'Report for floor',
+    'Edit floor description' => 'Edit floor description',
     ''=>'',
 ];

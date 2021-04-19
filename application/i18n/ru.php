@@ -794,5 +794,11 @@ return [
     'Add review' => 'Добавить отзыв',
     'Attached images' => 'Прикрепленные изображения',
     'Are you sure, you want to delete selected plans?' =>'Вы уверены, что хотите удалить выбранные планы?',
+    'Back to list' => 'Обратно к списку',
+    'Report'=>'Отчёт',
+    'Report for place' => 'Отчёт для помещения',
+    'Report for structure' => 'Отчёт для сооружения',
+    'Report for floor' => 'Отчёт для этажа',
+    'Edit floor description' => 'Изменить описание этажа',
     ''=>'',
 ];

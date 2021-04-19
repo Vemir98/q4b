@@ -634,6 +634,42 @@ $(document).ready(function() {
         });
     })
 
+    $(document).on('click','.edit-floor-custom-name',function (e) {
+        $(this).closest('.structure-floor-actions').siblings('.structure-title-cont').find('.floor-name-input').attr("contenteditable", true);
+        $(this).closest('.structure-floor-actions').siblings('.structure-title-cont').find('.floor-name-input').focus();
+        $(this).removeClass('edit-floor-custom-name');
+        $(this).addClass('update-floor-custom-name');
+        $(this).attr('title', __('Save'));
+        var editItem = $(this).find('.q4bikon-edit2');
+        editItem.removeClass('q4bikon-edit2');
+        editItem.addClass('q4bikon-tick');
+    });
+
+    $(document).on('click','.update-floor-custom-name',function (e) {
+        var _this = $(this);
+        var name  = $(this).closest('.structure-floor-actions').siblings('.structure-title-cont').find('.floor-name-input').text();
+        var url  = $(this).data('url') + '?custom_name=' + name;
+
+        $.ajax({
+            url: url,
+            cache: false,
+            method: 'GET',
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            success: function(data){
+                _this.closest('.structure-floor-actions').siblings('.structure-title-cont').find('.floor-name-input').removeAttr("contenteditable");
+                _this.removeClass('update-floor-custom-name');
+                _this.addClass('edit-floor-custom-name');
+                _this.attr('title', __('Save'));
+                var updateItem = _this.find('.q4bikon-tick');
+                updateItem.removeClass('q4bikon-tick');
+                updateItem.addClass('q4bikon-edit2');
+            },
+        });
+    });
+
+
     /**
      * Tasks on update event handler
      */
@@ -773,8 +809,8 @@ $(document).ready(function() {
      *  Манипуляция с объектами и этажами
      */
     $(document).on('click',
-        ' .property-structure-list-group.enabled .floor-copy,' +
-        ' .property-structure-list-group.enabled .floor-delete,' +
+        ' .property-structure-list-group .floor-copy,' +
+        ' .property-structure-list-group .floor-delete,' +
         ' .place-copy,' +
         ' .place-delete',
         function(e) {
@@ -1108,7 +1144,7 @@ $(document).ready(function() {
             var self = $(document).find('.panel_header.open');
             var sidebarWidth = $(document).find('.sidebar').is(":visible") ? 295 : 90;
             if (windowWidth > 480) {
-                var tabWidthOnLoad = windowWidth - sidebarWidth - 115;
+                var tabWidthOnLoad = windowWidth - sidebarWidth - 30;
             }
 
             var $panelContent = self.siblings('.panel_content');
@@ -1120,18 +1156,38 @@ $(document).ready(function() {
         var windowWidthResize = $(window).width();
 
         if (windowWidthResize > 992) {
-
+            $(document).find('.place-add').tooltip('enable');
+            $(document).find('.place-copy').tooltip('enable');
+            $(document).find('.place-delete').tooltip('enable');
+            $(document).find('.copy-elem').tooltip('enable');
+            $(document).find('.edit-elem').tooltip('enable');
+            $(document).find('.report-elem').tooltip('enable');
+            $(document).find('.delete-elem').tooltip('enable');
             $(document).find('.property-structure-actions .copy-element').tooltip('enable');
             $(document).find('.property-structure-actions .edit-element').tooltip('enable');
-            $(document).find('.property-structure-actions .delete_row').tooltip('enable');
+            $(document).find('.property-structure-actions .delete-element').tooltip('enable');
 
+            $(document).find('.place-add').tooltip({ title: "Add Element", placement: "top" });
+            $(document).find('.place-copy').tooltip({ title: "Add Element", placement: "top" });
+            $(document).find('.place-delete').tooltip({ title: "Add Element", placement: "top" });
+            $(document).find('.copy-elem').tooltip({ title: "Copy Element", placement: "top" });
+            $(document).find('.edit-elem').tooltip({ title: "Edit Element", placement: "top" });
+            $(document).find('.report-elem').tooltip({ title: "Report Element", placement: "top" });
+            $(document).find('.delete-elem').tooltip({ title: "Delete Element", placement: "top" });
             $(document).find('.property-structure-actions .copy-element').tooltip({ title: "Copy Element", placement: "top" });
             $(document).find('.property-structure-actions .edit-element').tooltip({ title: "Edit Element", placement: "top" });
-            $(document).find('.property-structure-actions .delete_row').tooltip({ title: "Delete Element", placement: "top" });
+            $(document).find('.property-structure-actions .delete-element').tooltip({ title: "Delete Element", placement: "top" });
         } else {
+            $(document).find('.place-add').tooltip('disable');
+            $(document).find('.place-copy').tooltip('disable');
+            $(document).find('.place-delete').tooltip('disable');
+            $(document).find('.copy-elem').tooltip('disable');
+            $(document).find('.edit-elem').tooltip('disable');
+            $(document).find('.report-elem').tooltip('disable');
+            $(document).find('.delete-elem').tooltip('disable');
             $(document).find('.property-structure-actions .copy-element').tooltip('disable');
             $(document).find('.property-structure-actions .edit-element').tooltip('disable');
-            $(document).find('.property-structure-actions .delete_row').tooltip('disable');
+            $(document).find('.property-structure-actions .delete-element').tooltip('disable');
         }
     });
     $(document).on('click', '.go-to-floor', function () {
@@ -1359,10 +1415,9 @@ $(document).ready(function() {
     })
 
 
-    $(document).on('click', '.apartment-box-top', function() {
+    $(document).on('click', '.apartment-box-more', function() {
         $(document).find('.apartment-box-clicked').hide()
-        $(this).siblings('.apartment-box-clicked').show();
-
+        $(this).closest('.apartment-box-top').siblings('.apartment-box-clicked').show();
     });
 
     $(document).on('click', '.apartment-box-clicked-close', function() {
