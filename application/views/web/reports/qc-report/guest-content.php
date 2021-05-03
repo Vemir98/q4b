@@ -9,7 +9,7 @@
         <div class=" qc_serche_section">
             <div class=" qc_top_right">
                 <div class="qc_back_btn rotate-180">
-                    <a href="<?=URL::site('reports')?>"><i class="q4bikon-arrow_back2 icon fs-22"></i></a>
+                    <a href="<?=URL::site('reports')?>"></a>
                 </div>
                 <div class="qc_report_title"><?=__('QC Report')?> </div>
                 <div class="qc_report_date">(<?=$data['from']?>-<?=$data['to']?>)</div>
