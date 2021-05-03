@@ -1,12 +1,12 @@
-<?php defined('SYSPATH') OR die('No direct script access.');
+<?php
 /**
  * Cookie helper.
  *
  * @package    Kohana
  * @category   Helpers
  * @author     Kohana Team
- * @copyright  (c) 2008-2012 Kohana Team
- * @license    http://kohanaframework.org/license
+ * @copyright  (c) Kohana Team
+ * @license    https://koseven.ga/LICENSE.md
  */
 class Kohana_Cookie {
 
@@ -38,7 +38,7 @@ class Kohana_Cookie {
 	/**
 	 * @var  boolean  Only transmit cookies over HTTP, disabling Javascript access
 	 */
-	public static $httponly = TRUE;
+	public static $httponly = FALSE;
 
 	/**
 	 * Gets the value of a signed cookie. Cookies without signatures will not

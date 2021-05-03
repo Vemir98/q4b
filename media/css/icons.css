@@ -1,10 +1,10 @@
 @font-face {
     font-family: 'q4b';
-    src:  url('../fonts/q4b.eot?vu9i8a');
-    src:  url('../fonts/q4b.eot?vu9i8a#iefix') format('embedded-opentype'),
-    url('../fonts/q4b.ttf?vu9i8a') format('truetype'),
-    url('../fonts/q4b.woff?vu9i8a') format('woff'),
-    url('../fonts/q4b.svg?vu9i8a#q4b') format('svg');
+    src:  url('../fonts/q4b.eot?48nir7');
+    src:  url('../fonts/q4b.eot?48nir7#iefix') format('embedded-opentype'),
+    url('../fonts/q4b.ttf?48nir7') format('truetype'),
+    url('../fonts/q4b.woff?48nir7') format('woff'),
+    url('../fonts/q4b.svg?48nir7#q4b') format('svg');
     font-weight: normal;
     font-style: normal;
     font-display: block;
@@ -25,6 +25,27 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
+.q4bikon-baseline-stairs:before {
+    content: "\e915";
+}
+.q4bikon-email2:before {
+    content: "\e916";
+}
+.q4bikon-N:before {
+    content: "\e917";
+}
+.q4bikon-printer:before {
+    content: "\e918";
+}
+.q4bikon-room-key:before {
+    content: "\e919";
+}
+.q4bikon-share:before {
+    content: "\e91a";
+}
+.q4bikon-worker:before {
+    content: "\e91b";
+}
 .q4bikon-appartment2:before {
     content: "\e90f";
 }

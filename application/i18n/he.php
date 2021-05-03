@@ -827,5 +827,12 @@ return [
     'Report for structure' => 'דוח למבנה',
     'Report for floor' => 'דוח לקומה',
     'Edit floor description' => 'ערוך את התיאור הקומה',
+    'Notes / corrective action' => 'הערות/פעולה מתקנת',
+    'Info' => 'מידע כללי',
+    'Quality controls' => 'בקרות איכות',
+    'Statistics' => 'סטטיסטיקה',
+    'Manager status' => 'סטטוס מנהל',
+    'QC statistics' => 'סטטיסטיקת בקרות',
+    'QC status' => 'סטטוס הבקרה',
     ''=>'',
 ];

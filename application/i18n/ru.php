@@ -800,5 +800,12 @@ return [
     'Report for structure' => 'Отчёт для сооружения',
     'Report for floor' => 'Отчёт для этажа',
     'Edit floor description' => 'Изменить описание этажа',
+    'Notes / corrective action' => 'Замечания/корректирующие действия',
+    'Info' => 'Информация',
+    'Quality controls' => 'ФКК',
+    'Statistics' => 'Статистика',
+    'Manager status' => 'Статус менеджера',
+    'QC statistics' => 'Статистика по ФКК',
+    'QC status' => 'Статус ФКК',
     ''=>'',
 ];

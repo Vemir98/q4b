@@ -1,6 +1,340 @@
 <?defined('SYSPATH') OR die('No direct script access.');?>
 <?$range = Arr::extract($_GET,["from","to"]);?>
+<?php
+//echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$tasks]); echo "</pre>"; exit;
+?>
 
+<div id='qc-list-printable-new' class="print-reports-list">
+    <?foreach ($qcs as $q):?>
+    <table class="report-container">
+        <thead class="report-header">
+        <tr>
+            <td class="report-header-cell">
+                <div class="header-space">&nbsp;</div>
+            </td>
+        </tr>
+        </thead>
+
+        <tfoot class="report-footer">
+        <tr>
+            <td class="report-footer-cell">
+                <div class="footer-space">&nbsp;</div>
+            </td>
+        </tr>
+
+        </tfoot>
+
+        <tbody class="report-content">
+        <tr>
+            <td class="report-content-cell">
+                <div>
+                    <div class="pdf_main_content">
+                        <div class="pdf_main_content_top_new">
+                            <div class="column">
+                                <ul>
+                                    <li class="pdf_main_content_top_list_item">
+                                        <span class="pdf_main_content_top_list_item_name first"><?=__('Quality control')?></span>
+                                        <span class="pdf_main_content_top_list_item_value first"> #<?=$q->id?></span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="column">
+                                <ul>
+                                    <li class="pdf_main_content_top_list_item">
+                                        <span class="pdf_main_content_top_list_item_name"><?=__('Created by')?>:</span>
+                                        <span class="pdf_main_content_top_list_item_value "><?=$q->createUser->name?></span>
+                                    </li>
+                                    <li class="pdf_main_content_top_list_item">
+                                        <span class="pdf_main_content_top_list_item_name"><?=__('Due Date')?>:</span>
+                                        <span class="pdf_main_content_top_list_item_value"><?=$q->due_date ? date('d/m/Y',$q->due_date): ''?></span>
+                                    </li>
+                                    <li class="pdf_main_content_top_list_item">
+                                        <span class="pdf_main_content_top_list_item_name"><?=__('Responsible profession')?>:</span>
+                                        <span class="pdf_main_content_top_list_item_value"><?=$q->profession->name?></span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="pdf_main_content_top_new mt-20">
+                            <div class="column">
+                                <ul>
+                                    <li class="pdf_main_content_properties_list_item">
+                                        <span class="pdf_main_content_properties_list_item_name"><?=__('Property')?> :</span>
+                                        <span class="pdf_main_content_properties_list_item_value"><?=__($q->object->type->name)?> - <?=$q->object->name?></span>
+                                    </li>
+                                    <li class="pdf_main_content_properties_list_item">
+                                        <span class="pdf_main_content_properties_list_item_name"><?=__('Floor')?> :</span>
+                                        <span class="pdf_main_content_properties_list_item_value"><?=$q->floor->number?></span>
+                                    </li>
+                                    <li class="pdf_main_content_properties_list_item">
+                                        <span class="pdf_main_content_properties_list_item_name"><?=__('Element')?> :</span>
+                                        <span class="pdf_main_content_properties_list_item_value"><?=$q->place->name?></span>
+                                    </li>
+                                    <li class="pdf_main_content_properties_list_item">
+                                        <span class="pdf_main_content_properties_list_item_name"><?=__('Element number')?> :</span>
+                                        <span class="pdf_main_content_properties_list_item_value">
+                                        <?
+                                        $placeNumber = !empty($q->place->custom_number) ? '('.$q->place->custom_number.')&lrm;' : '';
+                                        if($q->place->loaded()) echo $q->place->type. ' ' .$q->place->number.' '.$placeNumber;?>
+                                     </span>
+                                    </li>
+
+                                    <li class="pdf_main_content_properties_list_item">
+                                        <span class="pdf_main_content_properties_list_item_name"><?=__('Space')?> :</span>
+                                        <span class="pdf_main_content_properties_list_item_value"><?=$q->space->desc ? $q->space->desc : 'Space 1'?></span>
+                                    </li>
+                                    <li class="pdf_main_content_properties_list_item">
+                                        <span class="pdf_main_content_properties_list_item_name"><?=__('Due Date')?>:</span>
+                                        <span class="pdf_main_content_properties_list_item_value"><?=$q->due_date ? date('d/m/Y',$q->due_date): ''?></span>
+                                    </li>
+                                </ul>
+
+                            </div>
+
+                            <div class="column">
+                                <ul>
+                                    <li class="pdf_main_content_properties_list_item">
+                                        <span class="pdf_main_content_properties_list_item_name"><?=__('Stage')?>:</span>
+                                        <span class="pdf_main_content_properties_list_item_value"><?=__($q->project_stage)?></span>
+                                    </li>
+                                    <li class="pdf_main_content_properties_list_item">
+                                        <span class="pdf_main_content_properties_list_item_name"><?=__('Crafts')?> :</span>
+                                        <span class="pdf_main_content_properties_list_item_value"><?=$q->craft->name?></span>
+                                    </li>
+                                    <li class="pdf_main_content_properties_list_item">
+                                        <span class="pdf_main_content_properties_list_item_name"><?=__('Status')?>:</span>
+                                        <span class="pdf_main_content_properties_list_item_value"><?=__($q->status)?> | <?=__($q->approval_status)?></span>
+                                    </li>
+                                    <?if(strlen($q->severity_level)):?>
+                                        <li class="pdf_main_content_properties_list_item">
+                                            <span class="pdf_main_content_properties_list_item_name"><?=__('Severity Level')?>:</span>
+                                            <span class="pdf_main_content_properties_list_item_value"><?=__($q->severity_level)?></span>
+                                        </li>
+                                    <?endif?>
+
+                                    <?if(strlen($q->condition_list)):?>
+                                        <li class="pdf_main_content_properties_list_item">
+                                            <span class="pdf_main_content_properties_list_item_name"><?=__('Conditions List')?>:</span>
+                                            <span class="pdf_main_content_properties_list_item_value"><?=__($q->condition_list)?></span>
+                                        </li>
+                                    <?endif?>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!---Description-->
+                        <?if(strlen($q->description)>1):?>
+                            <div class="pdf_main_content_description">
+                                <div class="pdf_main_content_description_headline fw-700"><?=__('Description')?></div>
+                                <?$desc = explode("\n",$q->getDesc(html_entity_decode($q->description), "@##"));
+                                foreach ($desc as $line) {?>
+                                    <div class="pdf_main_content_description_paragraph"><?=$line?></div>
+                                <?}?>
+                            </div>
+                        <?endif?>
+
+                        <!---Dialog-->
+                        <?if(strlen($q->getDialog(html_entity_decode($q->description), "@##", "\n"))>1):?>
+                        <div  class="pdf_main_content_corrective_action">
+                        <div class="pdf_main_content_corrective_action_headline fw-700"><?=__('Corrective action/Performed work')?></div>
+                        <?$desc = explode("\n",$q->getDialog(html_entity_decode($q->description), "@##", "\n"));
+                        foreach ($desc as $line) {?>
+                        <div class="pdf_main_content_corrective_action_paragraph"><?=$line?></p>
+                            <?}?>
+                        </div>
+                        <?endif?>
+                            <?php
+                            $arrayTasks = $usedTasksAray = [];
+                            $itemTasks = $q->tasks->find_all();
+                            $usedtasks = $q->project->usedTasks($q->place->id);
+                            foreach($itemTasks as $task) {
+                                $arrayTasks[] = $task->id;
+                            }
+                            foreach ($usedTasks as $task) {
+                                $usedTasksAray[] = $task->id;
+                            }
+                            ?>
+                        <!--- Tasks-->
+                            <div class="qc-rep-images">
+                                <div class="pdf_main_content_description_headline fw-700"><?=__('Tasks')?></div>
+                                <div class="qc_tasks_wraper">
+                                <?foreach($tasks as $task):?>
+                                    <?
+                                    $crafts = $task->crafts->where('cmpcraft.status','=',Enum_Status::Enabled)->find_all();
+                                    $c = [];
+                                    foreach ($crafts as $cr){
+                                        $c []= $cr->id;
+                                    }
+                                    ?>
+                                    <div class="qc_task_item <?=in_array($task->id, $arrayTasks) ? ' selected' :  (in_array($q->craft_id,$c) ? '' : 'hidden' )?>">
+                                        <div class="task_title"><?=__('Task')?> <?=$task->id?></div>
+                                        <div class="task_desc_wrap">
+                                            <div class="task_descripticon">
+                                                <?$desc = explode("\n",$task->name);
+                                                foreach ($desc as $line) {?>
+                                                    <div><?=html_entity_decode($line)?></div>
+                                                <?}?>
+                                            </div>
+                                            <div class="report_task_status_print <?=in_array($task->id, $arrayTasks) ? ' selected' :  ''?>"">
+                                                <img src="https://qforb.sunrisedvp.systems/media/img/qc_task_done.png" >
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                <?endforeach?>
+                            </div>
+                        </div>
+                        <!-- end of taskas-->
+
+                        <!--images-->
+                        <?$images = $q->images->where('status','=',Enum_FileStatus::Active)->find_all()?>
+                        <?if(count($images)):?>
+                            <div class="pdf_main_content_images_headline fw-700"><?=__('Attached images')?> <span>(<?=count($images)?>)</span> </div>
+                            <div class="qc-rep-images">
+                                <?foreach ($images as $number => $img):?>
+                                    <?if(($number+2)%2==0):?>
+                                        <div class='f0_new'>
+                                    <?endif;?>
+                                        <div class="qc-rep-img">
+                                            <div class="pdf_main_content_image_prop report-plan-item-image">
+                                                <span class="pdf_main_content_image_prop1 fw-700"><?=$img->original_name?></span>
+                                                <span class="pdf_main_content_image_prop2 fw-700">(<?=__('uploaded')?>: <?=date('d.m.y H:i',$img->created_at)?> )&#x200E;</span>
+                                            </div>
+                                            <?if ($_SERVER['SERVER_NAME'] === 'qforb.net') :?>
+                                                <img src="<?=$img->getBigThumbPath()?>?<?=rand(100000,99999999)?>" alt="<?=$img->original_name?>">
+                                            <?else:?>
+                                                <img src="<?=$img->originalFilePath() . '?' . uniqid()?>" alt="<?=$img->original_name?>">
+                                            <?endif?>
+                                        </div>
+                                    <?if(($number+2)%2==1 || $number == count($images)):?>
+                                        </div>
+                                    <?endif;?>
+                                <?endforeach;?>
+                            </div>
+                        <?endif;?>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <?endforeach;?>
+
+    <div class="footer fw-700">
+        <span>
+            <?=__('Copyright © 2017 Q4B').'   '.__('All right reserved')?>
+        </span>
+    </div>
+    <div class="pdf_header-info header">
+        <div class="pdf_header_top">
+            <div class="pdf_header_top1">
+                <span class="report_range_text fw-700">
+                    <?=__('Report Range')?>:
+                </span>
+                <span class="report_range_value"><?=$range['from']?>-<?=$range['to']?></span>
+            </div>
+            <div class="pdf_header_top2">
+                <img class="pdf_logo1" src="/media/img/qforb_logo.png" alt="logo">
+                <img class="pdf_logo2" src="/media/img/qforb_iso.png" alt="logo">
+            </div>
+        </div>
+        <div class="pdf_header_body">
+            <div class="pdf_header_body_image">
+                <?if(!$_PROJECT->image_id):?>
+                    <img src="/media/img/camera.png" alt="project images">
+                <?else:?>
+                    <img src="<?=$_PROJECT->main_image->originalFilePath()?>" alt="project images">
+                <?endif?>
+            </div>
+            <div class="pdf_header_body_paragraphs">
+                <div class="pdf_header_body_paragraphs_main">
+                    <div class="pdf_main_content_top_new">
+                        <div class="column">
+                            <ul>
+                                <li class="pdf_header_body_paragraphs_main_item">
+                                    <span class="pdf_header_body_paragraphs_main_item_name">
+                                        <?=__('Company')?>:
+                                    </span>
+                                    <span class="pdf_header_body_paragraphs_main_item_value">
+                                        <?=$_COMPANY->name?>
+                                    </span>
+                                </li>
+                                <li class="pdf_header_body_paragraphs_main_item">
+                                    <span class="pdf_header_body_paragraphs_main_item_name">
+                                        <?=__('Project')?>:
+                                    </span>
+                                    <span class="pdf_header_body_paragraphs_main_item_value">
+                                        <?=$_PROJECT->name?>
+                                    </span>
+                                </li>
+                                <li class="pdf_header_body_paragraphs_main_item">
+                                    <span class="pdf_header_body_paragraphs_main_item_name">
+                                        <?=__('Project ID')?>:
+                                    </span>
+                                    <span class="pdf_header_body_paragraphs_main_item_value">
+                                        <?=$_PROJECT->id?>
+                                    </span>
+                                </li>
+                                <li class="pdf_header_body_paragraphs_main_item">
+                                    <span class="pdf_header_body_paragraphs_main_item_name">
+                                        <?=__('Project Status')?>:
+                                    </span>
+                                    <span class="pdf_header_body_paragraphs_main_item_value">
+                                        <?=__($_PROJECT->status)?>
+                                    </span>
+                                </li>
+                                <li class="pdf_header_body_paragraphs_main_item">
+                                    <span class="pdf_header_body_paragraphs_main_item_name">
+                                        <?=__('Owner')?>:
+                                    </span>
+                                    <span class="pdf_header_body_paragraphs_main_item_value">
+                                        <?=$_PROJECT->owner?>
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="column nml-100">
+                            <ul>
+                                <li class="pdf_header_body_paragraphs_main_item">
+                                    <span class="pdf_header_body_paragraphs_main_item_name">
+                                        <?=__('Structures')?>:
+                                    </span>
+                                    <span class="pdf_header_body_paragraphs_main_item_value">
+                                        <?=$_PROJECT->objects->count_all()?>
+                                    </span>
+                                </li>
+                                <li class="pdf_header_body_paragraphs_main_item">
+                                    <span class="pdf_header_body_paragraphs_main_item_name ">
+                                         <?=__('Project')?> <?=__('Start Date')?>:
+                                    </span>
+                                    <span class="pdf_header_body_paragraphs_main_item_value">
+                                        <?=date('d/m/Y',$_PROJECT->start_date)?>
+                                    </span>
+                                </li>
+                                <li class="pdf_header_body_paragraphs_main_item">
+                                    <span class="pdf_header_body_paragraphs_main_item_name">
+                                        <?=__('Project')?> <?=__('End Date')?>:
+                                    </span>
+                                    <span class="pdf_header_body_paragraphs_main_item_value">
+                                        <?=date('d/m/Y',$_PROJECT->end_date)?>
+                                    </span>
+                                </li>
+                                <li class="pdf_header_body_paragraphs_main_item">
+                                    <span class="pdf_header_body_paragraphs_main_item_name">
+                                        <?=__('Address')?>:
+                                    </span>
+                                    <span class="pdf_header_body_paragraphs_main_item_value">
+                                        <?=$_PROJECT->address?>
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap');
 
@@ -313,6 +647,7 @@
     }
     .pdf_main_content_description{
         margin-top: 20px;
+        margin-bottom: 20px;
     }
     .pdf_main_content_description_paragraph{
         font-size: 10px;
@@ -402,7 +737,6 @@
         left: 0;
         right: 0;
         width: 100%;
-
     }
     .footer>span{
         text-align: center!important;
@@ -412,298 +746,85 @@
         width: 100%;
         flex: 1;
     }
-
     #qc-list-printable-new .footer {
         text-align: center!important;
     }
+
+    /* tasks*/
+    /*.qc_task_item {*/
+    /*width: 30%;*/
+    /*float: left;*/
+    /*!*height: 114px;*!*/
+    /*background: #F2F9FF;*/
+    /*border: 1px solid #888;*/
+    /*border-radius: 5px;*/
+    /*padding: 10px 12px;*/
+    /*display: inline-block;*/
+    /*margin-right: 20px;*/
+    /*border-right: 5px solid #1EBCE8;*/
+    /*margin-bottom: 16px;*/
+    /*position: relative;*/
+    /*overflow: hidden;*/
+    /*}*/
+    .qc_task_item {
+        width: 96%;
+        background: #F2F9FF;
+        border-radius: 5px;
+        padding: 10px 25px 10px 12px;
+        display: inline-block;
+        margin-left: 15px;
+        margin-right: 15px;
+        border: 1px solid #888;
+        border-right: 5px solid #1EBCE8;
+        margin-bottom: 5px;
+        position: relative;
+        overflow: hidden;
+        page-break-after: avoid;
+        page-break-inside: avoid;
+    }
+    html.rtl  .qc_task_item {
+        padding: 10px 12px 10px 25px;
+        border: 1px solid #888;
+        border-left: 5px solid #1EBCE8;
+       
+    }
+    .qc_tasks_wraper{
+        padding-top: 10px;
+        display: block;
+        width: 100%;
+    }
+    .task_title{
+        font-size: 14px;
+        line-height: normal;
+        color: #666769;
+    }
+    .task_descripticon{
+        margin-top: 8px;
+        font-size: 14px;
+        line-height: normal;
+        color: #677390;
+        display: inline-block;
+        /*width: 85%;*/
+        width: 100%;
+    }
+    .report_task_status_print{
+        width: 21px;
+        height: 21px;
+        vertical-align: middle;
+        text-align: center;
+        overflow: hidden;
+        position: absolute;
+        right: 5px;
+        top: 40%;
+        display: none;
+    }
+    .report_task_status_print.selected {
+        display: inline-block;
+    }
+    html.rtl .report_task_status_print {
+        right: auto;
+        left: 5px;
+    }
+
 </style>
-
-<div id='qc-list-printable-new' class="print-reports-list">
-    <?foreach ($qcs as $q):?>
-    <table class="report-container">
-        <thead class="report-header">
-        <tr>
-            <td class="report-header-cell">
-                <div class="header-space">&nbsp;</div>
-            </td>
-        </tr>
-        </thead>
-
-        <tfoot class="report-footer">
-        <tr>
-            <td class="report-footer-cell">
-                <div class="footer-space">&nbsp;</div>
-            </td>
-        </tr>
-
-        </tfoot>
-
-        <tbody class="report-content">
-        <tr>
-            <td class="report-content-cell">
-                <div>
-                    <div class="pdf_main_content">
-                        <div class="pdf_main_content_top_new">
-                            <div class="column">
-                                <ul>
-                                    <li class="pdf_main_content_top_list_item">
-                                        <span class="pdf_main_content_top_list_item_name first"><?=__('Quality control')?></span>
-                                        <span class="pdf_main_content_top_list_item_value first"> #<?=$q->id?></span>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="column">
-                                <ul>
-                                    <li class="pdf_main_content_top_list_item">
-                                        <span class="pdf_main_content_top_list_item_name"><?=__('Created by')?>:</span>
-                                        <span class="pdf_main_content_top_list_item_value "><?=$q->createUser->name?></span>
-                                    </li>
-                                    <li class="pdf_main_content_top_list_item">
-                                        <span class="pdf_main_content_top_list_item_name"><?=__('Due Date')?>:</span>
-                                        <span class="pdf_main_content_top_list_item_value"><?=$q->due_date ? date('d/m/Y',$q->due_date): ''?></span>
-                                    </li>
-                                    <li class="pdf_main_content_top_list_item">
-                                        <span class="pdf_main_content_top_list_item_name"><?=__('Responsible profession')?>:</span>
-                                        <span class="pdf_main_content_top_list_item_value"><?=$q->profession->name?></span>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="pdf_main_content_top_new mt-20">
-                            <div class="column">
-                                <ul>
-                                    <li class="pdf_main_content_properties_list_item">
-                                        <span class="pdf_main_content_properties_list_item_name"><?=__('Property')?> :</span>
-                                        <span class="pdf_main_content_properties_list_item_value"><?=__($q->object->type->name)?> - <?=$q->object->name?></span>
-                                    </li>
-                                    <li class="pdf_main_content_properties_list_item">
-                                        <span class="pdf_main_content_properties_list_item_name"><?=__('Floor')?> :</span>
-                                        <span class="pdf_main_content_properties_list_item_value"><?=$q->floor->number?></span>
-                                    </li>
-                                    <li class="pdf_main_content_properties_list_item">
-                                        <span class="pdf_main_content_properties_list_item_name"><?=__('Element')?> :</span>
-                                        <span class="pdf_main_content_properties_list_item_value"><?=$q->place->name?></span>
-                                    </li>
-                                    <li class="pdf_main_content_properties_list_item">
-                                        <span class="pdf_main_content_properties_list_item_name"><?=__('Element number')?> :</span>
-                                        <span class="pdf_main_content_properties_list_item_value">
-                                        <?
-                                        $placeNumber = !empty($q->place->custom_number) ? '('.$q->place->custom_number.')&lrm;' : '';
-                                        if($q->place->loaded()) echo $q->place->type. ' ' .$q->place->number.' '.$placeNumber;?>
-                                     </span>
-                                    </li>
-
-                                    <li class="pdf_main_content_properties_list_item">
-                                        <span class="pdf_main_content_properties_list_item_name"><?=__('Space')?> :</span>
-                                        <span class="pdf_main_content_properties_list_item_value"><?=$q->space->desc ? $q->space->desc : 'Space 1'?></span>
-                                    </li>
-                                    <li class="pdf_main_content_properties_list_item">
-                                        <span class="pdf_main_content_properties_list_item_name"><?=__('Due Date')?>:</span>
-                                        <span class="pdf_main_content_properties_list_item_value"><?=$q->due_date ? date('d/m/Y',$q->due_date): ''?></span>
-                                    </li>
-                                </ul>
-
-                            </div>
-                            <div class="column">
-                                <ul>
-                                    <li class="pdf_main_content_properties_list_item">
-                                        <span class="pdf_main_content_properties_list_item_name"><?=__('Stage')?>:</span>
-                                        <span class="pdf_main_content_properties_list_item_value"><?=__($q->project_stage)?></span>
-                                    </li>
-                                    <li class="pdf_main_content_properties_list_item">
-                                        <span class="pdf_main_content_properties_list_item_name"><?=__('Crafts')?> :</span>
-                                        <span class="pdf_main_content_properties_list_item_value"><?=$q->craft->name?></span>
-                                    </li>
-                                    <li class="pdf_main_content_properties_list_item">
-                                        <span class="pdf_main_content_properties_list_item_name"><?=__('Status')?>:</span>
-                                        <span class="pdf_main_content_properties_list_item_value"><?=__($q->status)?> | <?=__($q->approval_status)?></span>
-                                    </li>
-                                    <?if(strlen($q->severity_level)):?>
-                                        <li class="pdf_main_content_properties_list_item">
-                                            <span class="pdf_main_content_properties_list_item_name"><?=__('Severity Level')?>:</span>
-                                            <span class="pdf_main_content_properties_list_item_value"><?=__($q->severity_level)?></span>
-                                        </li>
-                                    <?endif?>
-
-                                    <?if(strlen($q->condition_list)):?>
-                                        <li class="pdf_main_content_properties_list_item">
-                                            <span class="pdf_main_content_properties_list_item_name"><?=__('Conditions List')?>:</span>
-                                            <span class="pdf_main_content_properties_list_item_value"><?=__($q->condition_list)?></span>
-                                        </li>
-                                    <?endif?>
-                                </ul>
-                            </div>
-                        </div>
-                        <!---Description-->
-                        <?if(strlen($q->description)>1):?>
-                            <div class="pdf_main_content_description">
-                                <div class="pdf_main_content_description_headline fw-700"><?=__('Description')?></div>
-                                <?$desc = explode("\n",$q->getDesc(html_entity_decode($q->description), "@##"));
-                                foreach ($desc as $line) {?>
-                                    <div class="pdf_main_content_description_paragraph"><?=$line?></div>
-                                <?}?>
-                            </div>
-                        <?endif?>
-
-                        <!---Dialog-->
-                        <?if(strlen($q->getDialog(html_entity_decode($q->description), "@##", "\n"))>1):?>
-                        <div  class="pdf_main_content_corrective_action">
-                        <div class="pdf_main_content_corrective_action_headline fw-700"><?=__('Corrective action/Performed work')?></div>
-                        <?$desc = explode("\n",$q->getDialog(html_entity_decode($q->description), "@##", "\n"));
-                        foreach ($desc as $line) {?>
-                        <div class="pdf_main_content_corrective_action_paragraph"><?=$line?></p>
-                            <?}?>
-                        </div>
-                        <?endif?>
-
-                        <!--images-->
-                        <?$images = $q->images->where('status','=',Enum_FileStatus::Active)->find_all()?>
-                        <?if(count($images)):?>
-                            <div class="pdf_main_content_images_headline fw-700"><?=__('Attached images')?> <span>(<?=count($images)?>)</span> </div>
-                            <div class="qc-rep-images">
-                                <?foreach ($images as $number => $img):?>
-                                    <?if(($number+2)%2==0):?>
-                                        <div class='f0_new'>
-                                    <?endif;?>
-                                        <div class="qc-rep-img">
-                                            <div class="pdf_main_content_image_prop report-plan-item-image">
-                                                <span class="pdf_main_content_image_prop1 fw-700"><?=$img->original_name?></span>
-                                                <span class="pdf_main_content_image_prop2 fw-700">(<?=__('uploaded')?>: <?=date('d.m.y H:i',$img->created_at)?> )&#x200E;</span>
-                                            </div>
-                                            <?if ($_SERVER['SERVER_NAME'] === 'qforb.net') :?>
-                                                <img src="<?=$img->getBigThumbPath()?>?<?=rand(100000,99999999)?>" alt="<?=$img->original_name?>">
-                                            <?else:?>
-                                                <img src="<?=$img->originalFilePath() . '?' . uniqid()?>" alt="<?=$img->original_name?>">
-                                            <?endif?>
-                                        </div>
-                                    <?if(($number+2)%2==1 || $number == count($images)):?>
-                                        </div>
-                                    <?endif;?>
-                                <?endforeach;?>
-                            </div>
-                        <?endif;?>
-                        </div>
-                    </div>
-                </div>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <?endforeach;?>
-
-    <div class="footer fw-700">
-        <span>
-            <?=__('Copyright © 2017 Q4B').'   '.__('All right reserved')?>
-        </span>
-    </div>
-    <div class="pdf_header-info header">
-        <div class="pdf_header_top">
-            <div class="pdf_header_top1">
-                <span class="report_range_text fw-700">
-                    <?=__('Report Range')?>:
-                </span>
-                <span class="report_range_value"><?=$range['from']?>-<?=$range['to']?></span>
-            </div>
-            <div class="pdf_header_top2">
-                <img class="pdf_logo1" src="/media/img/qforb_logo.png" alt="logo">
-                <img class="pdf_logo2" src="/media/img/qforb_iso.png" alt="logo">
-            </div>
-        </div>
-        <div class="pdf_header_body">
-            <div class="pdf_header_body_image">
-                <?if(!$_PROJECT->image_id):?>
-                    <img src="/media/img/camera.png" alt="project images">
-                <?else:?>
-                    <img src="<?=$_PROJECT->main_image->originalFilePath()?>" alt="project images">
-                <?endif?>
-            </div>
-            <div class="pdf_header_body_paragraphs">
-                <div class="pdf_header_body_paragraphs_main">
-                    <div class="pdf_main_content_top_new">
-                        <div class="column">
-                            <ul>
-                                <li class="pdf_header_body_paragraphs_main_item">
-                                    <span class="pdf_header_body_paragraphs_main_item_name">
-                                        <?=__('Company')?>:
-                                    </span>
-                                    <span class="pdf_header_body_paragraphs_main_item_value">
-                                        <?=$_COMPANY->name?>
-                                    </span>
-                                </li>
-                                <li class="pdf_header_body_paragraphs_main_item">
-                                    <span class="pdf_header_body_paragraphs_main_item_name">
-                                        <?=__('Project')?>:
-                                    </span>
-                                    <span class="pdf_header_body_paragraphs_main_item_value">
-                                        <?=$_PROJECT->name?>
-                                    </span>
-                                </li>
-                                <li class="pdf_header_body_paragraphs_main_item">
-                                    <span class="pdf_header_body_paragraphs_main_item_name">
-                                        <?=__('Project ID')?>:
-                                    </span>
-                                    <span class="pdf_header_body_paragraphs_main_item_value">
-                                        <?=$_PROJECT->id?>
-                                    </span>
-                                </li>
-                                <li class="pdf_header_body_paragraphs_main_item">
-                                    <span class="pdf_header_body_paragraphs_main_item_name">
-                                        <?=__('Project Status')?>:
-                                    </span>
-                                    <span class="pdf_header_body_paragraphs_main_item_value">
-                                        <?=__($_PROJECT->status)?>
-                                    </span>
-                                </li>
-                                <li class="pdf_header_body_paragraphs_main_item">
-                                    <span class="pdf_header_body_paragraphs_main_item_name">
-                                        <?=__('Owner')?>:
-                                    </span>
-                                    <span class="pdf_header_body_paragraphs_main_item_value">
-                                        <?=$_PROJECT->owner?>
-                                    </span>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="column nml-100">
-                            <ul>
-                                <li class="pdf_header_body_paragraphs_main_item">
-                                    <span class="pdf_header_body_paragraphs_main_item_name">
-                                        <?=__('Structures')?>:
-                                    </span>
-                                    <span class="pdf_header_body_paragraphs_main_item_value">
-                                        <?=$_PROJECT->objects->count_all()?>
-                                    </span>
-                                </li>
-                                <li class="pdf_header_body_paragraphs_main_item">
-                                    <span class="pdf_header_body_paragraphs_main_item_name ">
-                                         <?=__('Project')?> <?=__('Start Date')?>:
-                                    </span>
-                                    <span class="pdf_header_body_paragraphs_main_item_value">
-                                        <?=date('d/m/Y',$_PROJECT->start_date)?>
-                                    </span>
-                                </li>
-                                <li class="pdf_header_body_paragraphs_main_item">
-                                    <span class="pdf_header_body_paragraphs_main_item_name">
-                                        <?=__('Project')?> <?=__('End Date')?>:
-                                    </span>
-                                    <span class="pdf_header_body_paragraphs_main_item_value">
-                                        <?=date('d/m/Y',$_PROJECT->end_date)?>
-                                    </span>
-                                </li>
-                                <li class="pdf_header_body_paragraphs_main_item">
-                                    <span class="pdf_header_body_paragraphs_main_item_name">
-                                        <?=__('Address')?>:
-                                    </span>
-                                    <span class="pdf_header_body_paragraphs_main_item_value">
-                                        <?=$_PROJECT->address?>
-                                    </span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 

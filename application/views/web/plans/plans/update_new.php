@@ -303,7 +303,7 @@
 </div>
 <script>
     $(document).ready(function(){
-        <?$p=''?>
+        <?$p=[]?>
         <?foreach ($places as $place):?>
         <?//$name = str_replace("'","\'",html_entity_decode($place->custom_number)).' '.__('floor').' '.$place->floor->number?>
         <?$name = str_replace("'","\'",html_entity_decode($place->custom_number))?>

@@ -4,21 +4,93 @@
 "use strict";
 var _URL = '';
 var CHANGED = false;
-$(document).ready(function() {
 
+$(document).ready(function() {
+    if (navigator.appVersion.indexOf("Linux")!=-1) {
+        $(document).find(".qc-report-redesign").addClass('os_linux');
+    };
     var reportsTasksListScroll = $(document).find('.reports-tasks-list-scroll').closest('.reports-tasks-box').width();
 
     $(document).find('.reports-tasks-list-group').each(function(i, elem) {
-
         var reportsTasksListScrollItem = 0;
         $(elem).find('li').each(function(key, el) {
             reportsTasksListScrollItem = reportsTasksListScrollItem + $(el).width() + 33;
         });
         $(elem).closest('.reports-tasks-list-scroll').width(reportsTasksListScroll);
         $(elem).width(reportsTasksListScrollItem);
-
-
     });
+    if (window.location.href.indexOf("page") == -1) {
+        setItemToLocalStorage('qc_report_selected_tab', 'tab_statistics');
+    }
+    var tabToSelect = window.localStorage.getItem('qc_report_selected_tab');
+    tabToSelect = tabToSelect ? tabToSelect : "tab_statistics";
+    selectTab(tabToSelect);
+    if (tabToSelect === 'tab_qc_controls') {
+        var destination = $(document).find('.content')
+        var pagination = $(document).find('.q4-pagination');
+        $(destination).addClass('qc_report_content');
+        moveDOMElement(pagination, destination);
+        pagination.show();
+    } else {
+        $(document).find('.q4-pagination').hide();
+    }
+    function selectTab(selectedTabName) {
+        var selectedTab = $(document).find(`[data-tab='${selectedTabName}']`);
+        var tabToSelect = $(document).find('#' + selectedTabName);
+        var prevActiveTab = selectedTab.siblings('.active');
+        prevActiveTab.removeClass('active');
+        $(document).find('.tab_content').hide();
+        selectedTab.addClass('active');
+        tabToSelect.show();
+    }
+    function setItemToLocalStorage(key, value) {
+        return window.localStorage.setItem(key, value);
+    }
+    function moveDOMElement(el, destination) {
+        return destination.append(el);
+    }
+    $(document).on('click', '.qc_tab', function() {
+        var newActiveTabName = $(this).data('tab');
+        selectTab(newActiveTabName);
+        setItemToLocalStorage('qc_report_selected_tab', newActiveTabName);
+        if (newActiveTabName === 'tab_qc_controls') {
+            var destination = $(document).find('.content')
+            var pagination = $(document).find('.q4-pagination');
+            $(destination).addClass('qc_report_content');
+            moveDOMElement(pagination, destination);
+            pagination.show();
+        } else {
+            $(document).find('.q4-pagination').hide();
+        }
+    });
+    $(document).on('click', '.tab_panel .panel_header_new', function() {
+        var self = $(this);
+        self.parent().siblings().find('.panel_content').slideUp();
+
+        var $headerIcon = self.find('i.panel_header_icon_new');
+        var $siblingsLi = self.closest('li').siblings('li');
+
+        $siblingsLi.find('i.panel_header_icon_new').removeClass('q4bikon-arrow_top').addClass('q4bikon-arrow_bottom');
+        $siblingsLi.find('.panel_header').removeClass('open');
+
+        if (self.hasClass('open')) {
+
+            self.removeClass('open');
+            $headerIcon.removeClass('q4bikon-arrow_top').addClass('q4bikon-arrow_bottom');
+        } else {
+            self.addClass('open');
+            $headerIcon.removeClass('q4bikon-arrow_bottom').addClass('q4bikon-arrow_top');
+
+            setFloor(self);
+
+            if($(document).find('html').hasClass('rtl')){
+                $(document).find('body').removeAttr('style');
+            }
+
+        }
+
+        self.siblings('.panel_content').slideToggle(300);
+    })
 
     function companySelected(val) {
         var projHtml = '';

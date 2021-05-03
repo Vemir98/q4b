@@ -417,7 +417,7 @@ if($_USER->is('project_supervisor') || $isSubcontractor){//запрет на и�
 
                         <div class="form-group col-md-6 rtl-float-right">
 
-                            <label class="table_label"><?=__('Notes')?></label>
+                            <label class="table_label"><?=__('Notes / corrective action')?></label>
 
                             <div class="form-group">
                                 <textarea name="description" class='modal-plans-details-textarea q4_required'><?=trim(html_entity_decode($item->getDesc(html_entity_decode($item->description), "@##")))?></textarea>

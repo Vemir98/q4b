@@ -150,6 +150,7 @@ $(document).ready(function() {
                     $(document).find('li.' + selectedTab + " .filter-settings-button").removeClass('active');
                     $(document).find('li.' + selectedTab + " .filter-settings-button[data-status='" + status + "']").addClass('active');
                     $(document).find('li.' + selectedTab + ' .q4-page-export').attr('href',url + '?export_qc_list=1');
+                    $(document).find('li.' + selectedTab + ' .q4-page-export-new').attr('href',url + '?export_qc_list=1');
 
                     $(document).find('.q4-inside-filter-mobile a.q4-inside-select-filter').html(html);
 

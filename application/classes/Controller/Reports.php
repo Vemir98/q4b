@@ -107,6 +107,7 @@ class Controller_Reports extends HDVP_Controller_Template
         }
 
         $this->project = ORM::factory('Project',$data['project']);
+        $tasks = $this->project->tasks->where('status','=',Enum_Status::Enabled)->find_all();
         if(empty($data['project'])){
             throw new HTTP_Exception_404();
 
@@ -301,7 +302,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         $qcs->and_where('qualitycontrol.due_date','<=',$data['to']);
         $paginationSettings = [
             'items_per_page' => 7,
-            'view'              => 'pagination/project',
+            'view'              => 'pagination/project-redesigned',
             'current_page'      => ['source' => 'query_string', 'key'    => 'page'],
         ];
 
@@ -480,14 +481,14 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                     $sendReportsEmailUrl = URL::site('reports/send_reports/'.$this->project->id.'/'.Session::instance()->get('token')->token);
                 else
                     $sendReportsEmailUrl = null;
-                $this->template->content = View::make('reports/generated',['qcs' => $qcs, 'pagination' => $result['pagination'],'crafts' => $data['crafts'],'craftsParams' => $craftsParams,'filteredCraftsParams' => $filteredCraftsParams, 'searchForm' => $this->searchForm(true),'sendReportsEmailUrl'=> $sendReportsEmailUrl,'craftsList' => $craftsList,'filteredCraftsList' => $filteredCraftsList, 'del_rep_id' => (int)$data['del_rep_id']]);
+                $this->template->content = View::make('reports/qc-report/generated',['qcs' => $qcs, 'tasks' => $tasks, 'pagination' => $result['pagination'],'crafts' => $data['crafts'],'craftsParams' => $craftsParams,'filteredCraftsParams' => $filteredCraftsParams, 'searchForm' => $this->searchForm(true),'sendReportsEmailUrl'=> $sendReportsEmailUrl,'craftsList' => $craftsList,'filteredCraftsList' => $filteredCraftsList, 'del_rep_id' => (int)$data['del_rep_id']]);
             }
             else{
-                $this->template = View::make('reports/guest-content',['qcs' => $qcs, 'pagination' => $result['pagination'],'crafts' => $data['crafts'],'craftsParams' => $craftsParams,'filteredCraftsParams' => $filteredCraftsParams,'craftsList' => $craftsList,'filteredCraftsList' => $filteredCraftsList, 'data' => json_decode($tparams,true)]);
+                $this->template = View::make('reports/qc-report/guest-content',['qcs' => $qcs, 'tasks' => $tasks, 'pagination' => $result['pagination'],'crafts' => $data['crafts'],'craftsParams' => $craftsParams,'filteredCraftsParams' => $filteredCraftsParams,'craftsList' => $craftsList,'filteredCraftsList' => $filteredCraftsList, 'data' => json_decode($tparams,true)]);
             }
         }else{
             $qcs = $qcs->find_all();
-            $this->setResponseData('html',View::make('reports/print',['qcs' => $qcs]));
+            $this->setResponseData('html',View::make('reports/print',['qcs' => $qcs, 'tasks' => $tasks]));
         }
 
     }
@@ -1325,9 +1326,6 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         }
 
         if(!$placeId){
-            $output['data'] = [];
-            $output['data']['private'] = [];
-            $output['data']['public'] = [];
             foreach ($crafts as $c){
                 if(isset($craftTotalTasksCnt[$c->id]) AND isset($craftUsedTasksCnt['public'][$c->id])){
                     $output['data']['public'][$c->id]['percent'] = round($craftUsedTasksCnt['public'][$c->id]['cnt'] * 100 / ($craftTotalTasksCnt[$c->id]['cnt'] * $placesCount['public']),2);

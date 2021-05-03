@@ -1,10 +1,8 @@
-<?php defined('SYSPATH') OR die('No direct script access.');
+<?php
 
-return array(
+return [
 
-	'trusted_hosts' => array(
-        'http://qforb.sunrisedvp.systems',
-        'https://qforb.sunrisedvp.systems'
+	'trusted_hosts' => [
 		// Set up your hostnames here
 		//
 		// Example:
@@ -15,6 +13,6 @@ return array(
 		// Do not forget to escape your dots (.) as these are regex patterns.
 		// These patterns should always fully match,
 		// as they are prepended with `^` and appended with `$`
-	),
+	],
 
-);
+];
