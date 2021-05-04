@@ -144,29 +144,14 @@
                         </div>
                         <?endif?>
                             <?php
-                            $arrayTasks = $usedTasksAray = [];
-                            $itemTasks = $q->tasks->find_all();
-                            $usedtasks = $q->project->usedTasks($q->place->id);
-                            foreach($itemTasks as $task) {
-                                $arrayTasks[] = $task->id;
-                            }
-                            foreach ($usedTasks as $task) {
-                                $usedTasksAray[] = $task->id;
-                            }
+                                $itemTasks = $q->tasks->find_all();
                             ?>
                         <!--- Tasks-->
                             <div class="qc-rep-images">
                                 <div class="pdf_main_content_description_headline fw-700"><?=__('Tasks')?></div>
                                 <div class="qc_tasks_wraper">
-                                <?foreach($tasks as $task):?>
-                                    <?
-                                    $crafts = $task->crafts->where('cmpcraft.status','=',Enum_Status::Enabled)->find_all();
-                                    $c = [];
-                                    foreach ($crafts as $cr){
-                                        $c []= $cr->id;
-                                    }
-                                    ?>
-                                    <div class="qc_task_item <?=in_array($task->id, $arrayTasks) ? ' selected' :  (in_array($q->craft_id,$c) ? '' : 'hidden' )?>">
+                                <?foreach($itemTasks as $task):?>
+                                    <div class="qc_task_item selected">
                                         <div class="task_title"><?=__('Task')?> <?=$task->id?></div>
                                         <div class="task_desc_wrap">
                                             <div class="task_descripticon">
@@ -175,7 +160,7 @@
                                                     <div><?=html_entity_decode($line)?></div>
                                                 <?}?>
                                             </div>
-                                            <div class="report_task_status_print <?=in_array($task->id, $arrayTasks) ? ' selected' :  ''?>"">
+                                            <div class="report_task_status_print selected">
                                                 <img src="https://qforb.sunrisedvp.systems/media/img/qc_task_done.png" >
                                             </div>
                                         </div>

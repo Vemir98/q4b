@@ -6,6 +6,7 @@ var _URL = '';
 var CHANGED = false;
 
 $(document).ready(function() {
+    $(document).find('.content').addClass('qc_report_content');
     if (navigator.appVersion.indexOf("Linux")!=-1) {
         $(document).find(".qc-report-redesign").addClass('os_linux');
     };
@@ -28,7 +29,6 @@ $(document).ready(function() {
     if (tabToSelect === 'tab_qc_controls') {
         var destination = $(document).find('.content')
         var pagination = $(document).find('.q4-pagination');
-        $(destination).addClass('qc_report_content');
         moveDOMElement(pagination, destination);
         pagination.show();
     } else {
@@ -54,9 +54,8 @@ $(document).ready(function() {
         selectTab(newActiveTabName);
         setItemToLocalStorage('qc_report_selected_tab', newActiveTabName);
         if (newActiveTabName === 'tab_qc_controls') {
-            var destination = $(document).find('.content')
+            var destination = $(document).find('.content');
             var pagination = $(document).find('.q4-pagination');
-            $(destination).addClass('qc_report_content');
             moveDOMElement(pagination, destination);
             pagination.show();
         } else {
@@ -419,6 +418,7 @@ $(document).ready(function() {
     $(document).on('click', '.generate-reports-bookmark-arrow', function() {
 
         var self = $(this);
+        $(document).find('.q4-pagination').hide()
         self.closest('#generated-content').toggle();
         self.closest('#generated-content').siblings('.generate-reports').slideDown();
 

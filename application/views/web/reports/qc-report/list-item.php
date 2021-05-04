@@ -162,8 +162,9 @@
                     <h4 class="reports-tasks-box-title" style="color: rgba(0, 0, 0, 0.7);"><?=__('Description')?></h4>
                     <div class="report_descripticon mt-15">
                         <?$desc = explode("\n",$q->getDesc(html_entity_decode($q->description), "@##"));
-                        echo implode($desc);?>
-
+                        foreach ($desc as $line) {?>
+                            <div><?=$line?></div>
+                        <?}?>
                     </div>
                 </div>
             </div>
