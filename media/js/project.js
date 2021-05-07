@@ -632,7 +632,34 @@ $(document).ready(function() {
                 }
             },
         });
-    })
+    });
+
+    $(document).on('keydown paste', '.floor-name-input', function(e) { //Prevent on paste as well
+        var maxLength = $(this).data('maxlength');
+        if($(this).text().length >= maxLength) {
+            switch(e.which) {
+                case 8: // backspace
+                    break;
+                case 16: // shift
+                    break;
+                case 17: // ctrl
+                    break;
+                case 18: // alt
+                    break;
+                case 37: // left
+                    break;
+                case 38: // up
+                    break;
+                case 39: // right
+                    break;
+                case 40: // down
+                    break;
+                case 46: // delete
+                    break;
+                default: e.preventDefault(); // exit this handler for other keys
+            }
+        }
+    });
 
     $(document).on('click','.edit-floor-custom-name',function (e) {
         $(this).closest('.structure-floor-actions').siblings('.structure-title-cont').find('.floor-name-input').attr("contenteditable", true);

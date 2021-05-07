@@ -236,7 +236,7 @@ class Controller_Plans extends HDVP_Controller_Template
             Breadcrumbs::add(Breadcrumb::factory()->set_title($this->project->name));
             $this->template->content = View::make('plans/update')
                 ->set('plansView', View::make('plans/plans/list',
-                    $this->_getPlanListPaginatedData($this->project, null, $professionId)
+                    $this->_getPlanListPaginatedData($this->project, null, null)
                 ));
         }
     }
@@ -494,7 +494,7 @@ class Controller_Plans extends HDVP_Controller_Template
                     ->set('plansView', View::make('plans/plans/list',
                         $this->_getPlanListPaginatedData($this->project, $objectId ? $object : null, $professionId ? [$professionId] : null)
                     )));
-            }catch (Exception $e){
+            }catch (HDVP_Exception $e){
                 $this->_setErrors($e->getMessage());
             }
         }

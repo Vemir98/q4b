@@ -173,7 +173,7 @@ class QualityReport
 
         $this->_stats['colors'] = [
             Enum_QualityControlStatus::Existing => '#28cf91',
-            self::STATUS_EXISTING_AND_FOR_REPAIR => '#28cf91',
+            self::STATUS_EXISTING_AND_FOR_REPAIR => '#d515d3',
             Enum_QualityControlStatus::Normal => '#005c87',
             Enum_QualityControlStatus::Repaired => '#f99c19',
             Enum_QualityControlStatus::Invalid => '#ff0000',
@@ -290,8 +290,8 @@ class QualityReport
             }
         }
 
-        $this->calculateStats($this->_stats['total']);
-        $this->calculateStats($this->_stats['filtered']);
+        $this->_stats['total'] = $this->calculateStats($this->_stats['total']);
+        $this->_stats['filtered'] = $this->calculateStats($this->_stats['filtered']);
 
 
         //for projects
@@ -323,8 +323,8 @@ class QualityReport
                     }
                 }
 
-                $this->calculateStats($this->_stats['projects'][$projectID]['total']);
-                $this->calculateStats($this->_stats['projects'][$projectID]['filtered']);
+                $this->_stats['projects'][$projectID]['total'] = $this->calculateStats($this->_stats['projects'][$projectID]['total']);
+                $this->_stats['projects'][$projectID]['filtered'] = $this->calculateStats($this->_stats['projects'][$projectID]['filtered']);
 
 
                 $this->_stats['projects'][$projectID]['crafts'] = DB::query(Database::SELECT,'SELECT cc.id, cc.name, count(craft_id) `count` FROM quality_controls qc JOIN cmp_crafts cc ON qc.craft_id = cc.id WHERE qc.project_id = '.$projectID.' AND qc.craft_id IN ('.implode(',',$this->_craftsID).') AND cc.status="'.Enum_Status::Enabled.'" AND cc.company_id='.$this->_companyID.' GROUP BY qc.craft_id')->execute()->as_array('id');
@@ -418,7 +418,7 @@ class QualityReport
 
     }
 
-    private function calculateStats(&$data){
+    private function calculateStats($data){
         $totalStatuses = array_sum($data['statuses']);
         $data['percents'] = [
             Enum_QualityControlStatus::Existing => $totalStatuses ? round($data['statuses'][Enum_QualityControlStatus::Existing] * 100 / $totalStatuses) : 0,
@@ -431,9 +431,11 @@ class QualityReport
         $data['statuses']['b'] = $data['statuses'][Enum_QualityControlStatus::Existing] + $data['statuses'][Enum_QualityControlStatus::Normal] + $data['statuses'][Enum_QualityControlStatus::Repaired];
         $data['statuses']['fixed'] = $data['statuses'][Enum_QualityControlStatus::Repaired];
 
-        $data['percents']['a'] = round(($data['statuses'][Enum_QualityControlStatus::Existing] + $data['statuses'][Enum_QualityControlStatus::Normal]) * 100 / $totalStatuses);
-        $data['percents']['b'] = round(($data['statuses'][Enum_QualityControlStatus::Existing] + $data['statuses'][Enum_QualityControlStatus::Normal] + $data['statuses'][Enum_QualityControlStatus::Repaired]) * 100 / $totalStatuses);
+        $data['percents']['a'] = $totalStatuses ? round(($data['statuses'][Enum_QualityControlStatus::Existing] + $data['statuses'][Enum_QualityControlStatus::Normal]) * 100 / $totalStatuses) : 0;
+        $data['percents']['b'] = $totalStatuses ? round(($data['statuses'][Enum_QualityControlStatus::Existing] + $data['statuses'][Enum_QualityControlStatus::Normal] + $data['statuses'][Enum_QualityControlStatus::Repaired]) * 100 / $totalStatuses) : 0;
         $data['percents']['fixed'] = round($data['statuses'][Enum_QualityControlStatus::Repaired] * 100 / ($data['statuses'][Enum_QualityControlStatus::Repaired] + $this->_stats['total']['statuses'][Enum_QualityControlStatus::Invalid]));
+
+        return $data;
     }
 
     private function getColor()
@@ -484,8 +486,8 @@ class QualityReport
             }
         }
 
-        $this->calculateStats($this->_stats['total']);
-        $this->calculateStats($this->_stats['filtered']);
+        $this->_stats['total'] = $this->calculateStats($this->_stats['total']);
+        $this->_stats['filtered'] = $this->calculateStats($this->_stats['filtered']);
 
 
         //for objects
@@ -517,8 +519,8 @@ class QualityReport
                     }
                 }
 
-                $this->calculateStats($this->_stats['objects'][$objectID]['total']);
-                $this->calculateStats($this->_stats['objects'][$objectID]['filtered']);
+                $this->_stats['objects'][$objectID]['total'] = $this->calculateStats($this->_stats['objects'][$objectID]['total']);
+                $this->_stats['objects'][$objectID]['filtered'] = $this->calculateStats($this->_stats['objects'][$objectID]['filtered']);
 
 
                 $this->_stats['objects'][$objectID]['crafts'] = DB::query(Database::SELECT,'SELECT cc.id, cc.name, count(craft_id) `count` FROM quality_controls qc JOIN cmp_crafts cc ON qc.craft_id = cc.id WHERE qc.object_id = '.$objectID.' AND qc.craft_id IN ('.implode(',',$this->_craftsID).') AND cc.status="'.Enum_Status::Enabled.'" AND cc.company_id='.$this->_companyID.' GROUP BY qc.craft_id')->execute()->as_array('id');

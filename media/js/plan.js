@@ -1128,7 +1128,8 @@ $(document).ready(function() {
                     }
                     var projectId = $("#plans-list-layout form").data('project');
                     $('#copy-plans-modal select[name=project_id]').val(projectId);
-                    }
+                    $('#copy-plans-modal select[name=project_id]').change();
+                }
             }
         });
     });
@@ -1392,10 +1393,7 @@ $(document).ready(function() {
             contentType: false,
             processData: false,
             success: function(response) {
-                var fmResp = Q4U.getAjaxResponse(response);
-                if (fmResp.needRedirect()) {
-                    fmResp.doRedirect();
-                }
+                Q4U.getAjaxResponse(response);
             }
         });
     }

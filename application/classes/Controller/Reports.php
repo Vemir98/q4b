@@ -1085,7 +1085,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                 $item->id,
                 $item->project->name,
                 $item->object->name,
-                $item->floor->number,
+                $item->floor->custom_name ? $item->floor->custom_name . ' (' . $item->floor->number . ')' : $item->floor->number,
                 __($item->place->type),
                 $item->place->custom_number,
                 __($item->project_stage),

@@ -11824,11 +11824,6 @@ header .header_bottom .header_create_company .header_add_company {
 
  .report-result .report-plans .report-plan-items .report-plan-item .report-plan-item-image-new a{
   text-align: center;
-  min-height: 444px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 62px 16px;
   background: #FFFFFF;
  }
 
@@ -14208,7 +14203,6 @@ table.scrollable-tbody-content tbody.report-status-result-scroll {
 }
 .qc-report-redesign .Specialties-list .double-cpt{
   font-size: 14px;
-  line-height: 22px;
   color: #78829D;
 }
 .qc-report-redesign .report-status-list table tr th .double-cpt .double-sub-cpt2 span {
@@ -14881,7 +14875,7 @@ html.rtl .qc-report-redesign .report_task_status {
     min-width: 45%;
   }
   .qc-report-redesign .report-result .reports-property .reports-prop-desc:nth-of-type(odd) {
-    border: none;
+    border: none!important;
   }
   html.rtl .qc-report-redesign .report-result .reports-property .reports-prop-desc:nth-of-type(odd) {
     border-left: 1px solid #C4C4C4;
@@ -15148,9 +15142,7 @@ html.rtl .qc-report-redesign .report-result .reports-property .reports-prop-desc
 .qc-report-redesign .dark-row .report-status-quantity {
   color: #064266;
 }
-.qc-report-redesign .report-status-list .report-status-result-multiple.Specialties-list table.scrollable-tbody-content tbody.report-status-result-scroll {
-  max-height: 253px;
-}
+
 .rtl .qc-report-redesign .report-result .reports-prop-title h3:last-child {
   margin-right: 0;
 }
@@ -15193,6 +15185,7 @@ html.rtl .qc-report-redesign .report-result .reports-property .reports-prop-desc
   margin-top: 3px;
   cursor: pointer;
 }
+
 
 @media (max-width: 1024px){
   .qc-report-redesign .report-result .reports-prop-title .reports-prop-title-status {
@@ -15251,4 +15244,75 @@ html.rtl .qc-report-redesign .qc_tabs_btn{
   .qc_report_content .report-result .report-conditions {
     width: 100%
   }
+}
+/* images  */ 
+
+.qc-report-redesign .report-result .report-plans .report-plan-items .report-plan-item .report-plan-item-image-new{
+  padding: 60px 16px;
+  height: 100%;
+  max-height:568px;
+  min-height:568px;
+  width: 100%;
+  overflow: hidden;
+}
+.qc-report-redesign .report-result .report-plans .report-plan-items .report-plan-item .report-plan-item-image-new a {
+  display: block;
+  overflow: hidden;
+  text-align: center;
+}
+
+@media only screen and (max-width:676px) {
+  .qc-report-redesign .report-result .report-plans .report-plan-items .report-plan-item .report-plan-item-image-new{
+    padding: 16px;
+    height: 100%;
+    max-height:auto;
+    min-height:auto;
+  }
+}
+
+/* qc report title */ 
+
+.qc-report-redesign .qc_top_right>div{
+  display: flex;
+}
+
+@media only screen and (max-width:776px) {
+  .q4-owl-carousel .owl-prev i, .q4-owl-carousel .owl-next i {
+    font-size: 12px !important;
+  }
+  .qc-report-redesign .qc_top_right {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+.qc-report-redesign .light-blue.ml_5.qc_report_date{
+  width: 100%;
+    text-align: center;
+    justify-content: center;
+}
+.qc-report-redesign .qc_top_right>div {
+  display: flex;
+  align-items: center;
+}
+
+.qc-report-redesign .report-result .report-plans 
+.report-plan-items .report-plan-item .report-plan-item-image-new{
+  max-width: 292px;
+  min-width: 292px;
+  min-height: 365px;
+  max-height: 365px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+.qc-report-redesign .report-result .report-plans .report-plan-items .report-plan-item .report-plan-item-image-new img {
+  max-height: 360px;
+}
+.qc-report-redesign .report-result .report-plans .report-plan-items .report-plan-item {
+   width: 100%;
+}
+}
+
+.qc-report-redesign .q4-page-export-new {
+    text-decoration: none;
 }

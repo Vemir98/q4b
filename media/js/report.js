@@ -6,12 +6,21 @@ var _URL = '';
 var CHANGED = false;
 
 $(document).ready(function() {
-    $(document).find('.content').addClass('qc_report_content');
-    if (navigator.appVersion.indexOf("Linux")!=-1) {
-        $(document).find(".qc-report-redesign").addClass('os_linux');
-    };
-    var reportsTasksListScroll = $(document).find('.reports-tasks-list-scroll').closest('.reports-tasks-box').width();
+    setTimeout(function() {
+        $(document).scrollTop(0);
+    }, 0);
+    if (window.location.href.indexOf("generate") > -1) {
+        $(document).find('.content').addClass('qc_report_content');
+        if (navigator.appVersion.indexOf("Linux")!=-1) $(document).find(".qc-report-redesign").addClass('os_linux');
+        var tabToSelect = location.hash ? window.location.hash.substring(1) : window.localStorage.getItem('qc_report_selected_tab');
+        tabToSelect = !tabToSelect ? "tab_statistics" : tabToSelect;
+        tabToSelect = tabToSelect ? tabToSelect : "tab_statistics";
+        var moveTo = $(document).find('.content')
+        var pagination = $(document).find('.q4-pagination');
+        selectTab(tabToSelect, pagination, moveTo);
+    }
 
+    var reportsTasksListScroll = $(document).find('.reports-tasks-list-scroll').closest('.reports-tasks-box').width();
     $(document).find('.reports-tasks-list-group').each(function(i, elem) {
         var reportsTasksListScrollItem = 0;
         $(elem).find('li').each(function(key, el) {
@@ -23,73 +32,57 @@ $(document).ready(function() {
     if (window.location.href.indexOf("page") == -1) {
         setItemToLocalStorage('qc_report_selected_tab', 'tab_statistics');
     }
-    var tabToSelect = window.localStorage.getItem('qc_report_selected_tab');
-    tabToSelect = tabToSelect ? tabToSelect : "tab_statistics";
-    selectTab(tabToSelect);
-    if (tabToSelect === 'tab_qc_controls') {
-        var destination = $(document).find('.content')
-        var pagination = $(document).find('.q4-pagination');
-        moveDOMElement(pagination, destination);
-        pagination.show();
-    } else {
-        $(document).find('.q4-pagination').hide();
-    }
-    function selectTab(selectedTabName) {
+
+    $(document).on('click', '.qc_tab', function() {
+        var newActiveTabName = $(this).data('tab');
+        selectTab(newActiveTabName, pagination, moveTo);
+    });
+    $(document).on('click', '.tab_panel .panel_header_new', handlePanelClick);
+
+    function selectTab(selectedTabName, moveEl, moveTo) {
         var selectedTab = $(document).find(`[data-tab='${selectedTabName}']`);
         var tabToSelect = $(document).find('#' + selectedTabName);
         var prevActiveTab = selectedTab.siblings('.active');
+        setItemToLocalStorage('qc_report_selected_tab', selectedTabName);
+        location.hash = selectedTabName;
         prevActiveTab.removeClass('active');
-        $(document).find('.tab_content').hide();
-        selectedTab.addClass('active');
+        $('.tab_content').hide();
         tabToSelect.show();
-    }
-    function setItemToLocalStorage(key, value) {
-        return window.localStorage.setItem(key, value);
-    }
-    function moveDOMElement(el, destination) {
-        return destination.append(el);
-    }
-    $(document).on('click', '.qc_tab', function() {
-        var newActiveTabName = $(this).data('tab');
-        selectTab(newActiveTabName);
-        setItemToLocalStorage('qc_report_selected_tab', newActiveTabName);
-        if (newActiveTabName === 'tab_qc_controls') {
-            var destination = $(document).find('.content');
-            var pagination = $(document).find('.q4-pagination');
-            moveDOMElement(pagination, destination);
+        console.log(tabToSelect);
+        selectedTab.addClass('active');
+        if (selectedTabName === 'tab_qc_controls') {
+            moveDOMElement(moveEl, moveTo);
             pagination.show();
         } else {
             $(document).find('.q4-pagination').hide();
         }
-    });
-    $(document).on('click', '.tab_panel .panel_header_new', function() {
+        $(document).scrollTop(0);
+    }
+
+    function setItemToLocalStorage(key, value) {
+        return window.localStorage.setItem(key, value);
+    }
+
+    function moveDOMElement(el, destination) {
+        return destination.append(el);
+    }
+
+    function handlePanelClick() {
         var self = $(this);
         self.parent().siblings().find('.panel_content').slideUp();
-
         var $headerIcon = self.find('i.panel_header_icon_new');
         var $siblingsLi = self.closest('li').siblings('li');
-
         $siblingsLi.find('i.panel_header_icon_new').removeClass('q4bikon-arrow_top').addClass('q4bikon-arrow_bottom');
         $siblingsLi.find('.panel_header').removeClass('open');
-
         if (self.hasClass('open')) {
-
             self.removeClass('open');
             $headerIcon.removeClass('q4bikon-arrow_top').addClass('q4bikon-arrow_bottom');
         } else {
             self.addClass('open');
             $headerIcon.removeClass('q4bikon-arrow_bottom').addClass('q4bikon-arrow_top');
-
-            setFloor(self);
-
-            if($(document).find('html').hasClass('rtl')){
-                $(document).find('body').removeAttr('style');
-            }
-
         }
-
         self.siblings('.panel_content').slideToggle(300);
-    })
+    }
 
     function companySelected(val) {
         var projHtml = '';
@@ -418,6 +411,8 @@ $(document).ready(function() {
     $(document).on('click', '.generate-reports-bookmark-arrow', function() {
 
         var self = $(this);
+        location.hash = '';
+        localStorage.removeItem('qc_report_selected_tab');
         $(document).find('.q4-pagination').hide()
         self.closest('#generated-content').toggle();
         self.closest('#generated-content').siblings('.generate-reports').slideDown();

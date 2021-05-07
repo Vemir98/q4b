@@ -121,8 +121,8 @@ $icons = [
                     <div class="col-md-3 rtl-float-right">
                         <label class="table_label"><?=__('Profession')?></label>
                         <div class="relative form-group">
-                            <input type="text" class="table_input" value="" id="prof" style="text-indent: 25px;"/>
-                            <input type="hidden" data-name="profession" name="profession" class="select-profession">
+                            <input type="text" class="table_input" value="<?=__('all')?>" id="prof" style="text-indent: 25px;"/>
+                            <input type="hidden" data-name="profession" name="profession" class="select-profession" value="0">
                                 <i class="input_icon q4bikon-position"></i>
                                 <script>
                                     var profs = [

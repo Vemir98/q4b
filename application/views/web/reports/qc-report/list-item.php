@@ -106,7 +106,7 @@
 
         <span class="reports-prop-desc">
             <i class="q4bikon-room-key"></i>
-            <span class="reports-prop-res"><?=$q->space->desc ? $q->space->desc : 'Space 1'?> </span>
+            <span class="reports-prop-res"><?=$q->space->type->name?> </span>
         </span>
 
         <span class="reports-prop-desc">

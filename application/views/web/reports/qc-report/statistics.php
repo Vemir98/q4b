@@ -7,7 +7,7 @@
  * Time: 6:51
  */
 use Helpers\ReportsHelper;
-if($_APPROVAL_STATUS) return;
+//if($_APPROVAL_STATUS) return;
 ?>
 <?
 

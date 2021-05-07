@@ -60,11 +60,13 @@
                                 <ul>
                                     <li class="pdf_main_content_properties_list_item">
                                         <span class="pdf_main_content_properties_list_item_name"><?=__('Property')?> :</span>
-                                        <span class="pdf_main_content_properties_list_item_value"><?=__($q->object->type->name)?> - <?=$q->object->name?></span>
+                                        <span class="pdf_main_content_properties_list_item_value"><?=$q->object->name?></span>
                                     </li>
                                     <li class="pdf_main_content_properties_list_item">
                                         <span class="pdf_main_content_properties_list_item_name"><?=__('Floor')?> :</span>
-                                        <span class="pdf_main_content_properties_list_item_value"><?=$q->floor->number?></span>
+                                        <span class="pdf_main_content_properties_list_item_name">
+                                            <?=$q->place->floor->custom_name ? $q->place->floor->custom_name .' &lrm;('. $q->place->floor->number .')&lrm; ' : '<span class="bidi-override">'. $q->place->floor->number .'</span>' ?>
+                                        </span>
                                     </li>
                                     <li class="pdf_main_content_properties_list_item">
                                         <span class="pdf_main_content_properties_list_item_name"><?=__('Element')?> :</span>
@@ -74,14 +76,14 @@
                                         <span class="pdf_main_content_properties_list_item_name"><?=__('Element number')?> :</span>
                                         <span class="pdf_main_content_properties_list_item_value">
                                         <?
-                                        $placeNumber = !empty($q->place->custom_number) ? '('.$q->place->custom_number.')&lrm;' : '';
-                                        if($q->place->loaded()) echo $q->place->type. ' ' .$q->place->number.' '.$placeNumber;?>
+                                        $placeNumber = !empty($q->place->custom_number) ? $q->place->custom_number : $q->place->number;
+                                        if($q->place->loaded()) echo $placeNumber . ' ' .'<i class="q4bikon-'.$q->place->type.'" style="margin: 0 5px;"></i> ';?>
                                      </span>
                                     </li>
 
                                     <li class="pdf_main_content_properties_list_item">
                                         <span class="pdf_main_content_properties_list_item_name"><?=__('Space')?> :</span>
-                                        <span class="pdf_main_content_properties_list_item_value"><?=$q->space->desc ? $q->space->desc : 'Space 1'?></span>
+                                        <span class="pdf_main_content_properties_list_item_value"><?=$q->space->type->name?></span>
                                     </li>
                                     <li class="pdf_main_content_properties_list_item">
                                         <span class="pdf_main_content_properties_list_item_name"><?=__('Due Date')?>:</span>
@@ -102,8 +104,12 @@
                                         <span class="pdf_main_content_properties_list_item_value"><?=$q->craft->name?></span>
                                     </li>
                                     <li class="pdf_main_content_properties_list_item">
-                                        <span class="pdf_main_content_properties_list_item_name"><?=__('Status')?>:</span>
-                                        <span class="pdf_main_content_properties_list_item_value"><?=__($q->status)?> | <?=__($q->approval_status)?></span>
+                                        <span class="pdf_main_content_properties_list_item_name"><?=__('QC status')?>:</span>
+                                        <span class="pdf_main_content_properties_list_item_value"><?=__($q->status)?></span>
+                                    </li>
+                                    <li class="pdf_main_content_properties_list_item">
+                                        <span class="pdf_main_content_properties_list_item_name"><?=__('Manager status')?>:</span>
+                                        <span class="pdf_main_content_properties_list_item_value"><?=__($q->approval_status)?></span>
                                     </li>
                                     <?if(strlen($q->severity_level)):?>
                                         <li class="pdf_main_content_properties_list_item">
@@ -779,18 +785,20 @@
         width: 100%;
     }
     .task_title{
-        font-size: 14px;
+        font-size: 10px;
         line-height: normal;
         color: #666769;
+        font-family: 'Lato', sans-serif !important;
     }
     .task_descripticon{
         margin-top: 8px;
-        font-size: 14px;
+        font-size: 10px;
         line-height: normal;
         color: #677390;
         display: inline-block;
         /*width: 85%;*/
         width: 100%;
+        font-family: 'Lato', sans-serif !important;
     }
     .report_task_status_print{
         width: 21px;

@@ -13,12 +13,15 @@ $range = Arr::extract($_GET,["from","to"]);
 <div id="generated-content" class="qc-report-redesign">
     <div class="qc_top_section">
         <div class=" qc_serche_section">
-            <div class=" qc_top_right">
-                <div class="qc_back_btn rotate-180">
-                    <a href="#"><i class="q4bikon-arrow_back2 icon fs-22 generate-reports-bookmark-arrow"></i></a>
+            <div class="qc_top_right">
+                <div>
+                    <div class="qc_back_btn rotate-180">
+                        <a href="#"><i class="q4bikon-arrow_back2 icon fs-22 generate-reports-bookmark-arrow"></i></a>
+                    </div>
+                    <div class="qc_report_title"><?=__('QC Report')?> </div>
+                    <div class="qc_report_date">(<?=$range['from']?>-<?=$range['to']?>)</div>
                 </div>
-                <div class="qc_report_title"><?=__('QC Report')?> </div>
-                <div class="qc_report_date">(<?=$range['from']?>-<?=$range['to']?>)</div>
+                <div class="light-blue ml_5 mr_5 qc_report_date"><?=$_PROJECT->name?></div>
             </div>
             <div class="qc_top_left">
                 <form class="qc-search-form" action="">
@@ -44,7 +47,7 @@ $range = Arr::extract($_GET,["from","to"]);
         <?else: ?>
         <div class="qc_tabs_sec">
             <div class="qc_tabs_sec_tabs">
-                <div class="qc_tab qc_tabs Statistics active" data-tab="tab_statistics"><?=__('Statistics')?></div>
+                <div class="qc_tab qc_tabs Statistics" data-tab="tab_statistics"><?=__('Statistics')?></div>
                 <div class="qc_tab qc_tabs Quality-controls" data-tab="tab_qc_controls"><?=__('Quality controls')?></div>
                 <div class="qc_tab qc_tabs Info" data-tab="tab_info"><?=__('Info')?></div>
             </div>
@@ -52,12 +55,10 @@ $range = Arr::extract($_GET,["from","to"]);
             <?if(empty($del_rep_id)):?>
             <div class="qc_tabs_sec_btns">
                 <div class="qc_tabs_sec_btns">
-                    <div class="qc_tabs_sec_btn-export q4-page-export-new qc_tabs_btn">
-                        <a href="<?='?'.Request::current()->getQueryString().'&export=1'?>">
-                            <!--                        <i class="q4bikon-share icon-orange mr_10"></i>-->
-                            <span class="q4-page-export-text"><?=__('Export')?></span>
-                        </a>
-                    </div>
+                    <a href="<?='?'.Request::current()->getQueryString().'&export=1'?>" class="qc_tabs_sec_btn-export q4-page-export-new qc_tabs_btn">
+                        <!--                        <i class="q4bikon-share icon-orange mr_10"></i>-->
+                        <span class="q4-page-export-text"><?=__('Export')?></span>
+                    </a>
 
                     <div class="send-reports qc_tabs_btn qc_tabs_sec_btn-send" data-url="<?=$sendReportsEmailUrl?>" data-id=<?=$_PROJECT->id?>>
 <!--                        <i class="q4bikon-email2 icon-orange mr_10"></i>-->
@@ -82,7 +83,6 @@ $range = Arr::extract($_GET,["from","to"]);
                 'craftsList' => $craftsList,
                 'filteredCraftsList' => $filteredCraftsList,
                 'craftName' => $qcs[0]->craft->name,
-                'qcsCount' => count($qcs),
                 'del_rep_id' => $del_rep_id
             ])
         ?>
@@ -100,4 +100,5 @@ $range = Arr::extract($_GET,["from","to"]);
             ])
         ?>
     <?endif;?>
+
 </div>
