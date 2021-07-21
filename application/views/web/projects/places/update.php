@@ -80,7 +80,7 @@ $icons = [
                             </div>
                             <div class="col-md-2">
                                 <label class="table_label"><?=__('Floor')?></label>
-                                <input type="text" class="table_input disabled-input" value="<?=$place->floor->number?>">
+                                <input type="text" class="table_input disabled-input" value="<?=$place->floor->custom_name ? $place->floor->custom_name : $place->floor->number?>">
                             </div>
                             <div class="col-md-2">
                                 <label class="table_label"><?=__('Element number')?></label>

@@ -32,7 +32,6 @@
 <script src="/media/js/core.js"></script>
 <script>Q4U.i18n.init(<?=JSON::encode(I18n::load(Language::getCurrent()->iso2))?>)</script>
 <script src="/media/js/jquery-ui.min.js"></script>
-<script src="/media/js/<?=Inflector::singular(strtolower(Request::current()->controller()))?>.js"></script>
 <script src="/media/js/bootstrap-select.min.js" type="text/javascript"></script>
 <script src="/media/js/bootstrap.min.js"></script>
 <script src="/media/js/bootstrap-table.min.js"></script>
@@ -41,13 +40,16 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react-with-addons.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react-dom.js"></script>
 <script src="/media/js/literallycanvas.js"></script>
-<script src="/media/js/scripts.js"></script>
 <script src="/media/js/owl.carousel.js"></script>
 <script src="/media/js/jquery.mCustomScrollbar.js"></script>
 <script src="/media/js/moment.min.js"></script>
 <script src="/media/js/bootstrap-datetimepicker.js"></script>
 <script src="/media/js/loader.js"></script>
 <script src="/media/js/validation.js"></script>
-<div class="loader_backdrop"><div class="loader"></div></div>
+<?if(file_exists(DOCROOT."media/js/".Inflector::singular(strtolower(Request::current()->controller())).".js")):?>
+    <script src="/media/js/<?=Inflector::singular(strtolower(Request::current()->controller()))?>.js"></script>
+<?endif?>
+<script src="/media/js/scripts.js"></script>
+
 </body>
 </html>

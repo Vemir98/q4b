@@ -40,7 +40,7 @@
                         <?if ($file): ?>
                             <ul class="choose-view-format-list">
                                 <li>
-                                    <a data-url="<?=$file->getImageLink().'?'.uniqid()?>" data-fileid="<?=$file->id?>" data-ext="<?=$file->mime?>" data-controller="add_quality_control_image_from_raw_plan"  class="call-lit-plugin" title="<?=$file->original_name?>">
+                                    <a data-url="<?=(strpos($file->getImageLink(), 'http') === false) ? '/' . trim($file->getImageLink(), '/') : $file->getImageLink()?>" data-fileid="<?=$file->id?>" data-ext="<?=$file->mime?>" data-controller="add_quality_control_image_from_raw_plan"  class="call-lit-plugin" title="<?=$file->original_name?>">
                                         <img src="/media/img/choose-format/format-<?=strtolower($file->ext)?>.png" alt="<?=$file->ext?>"/>
                                     </a>
 

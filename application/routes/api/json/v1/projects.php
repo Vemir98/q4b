@@ -5,6 +5,7 @@
  * Date: 03.12.2016
  * Time: 6:00
  */
+
 Route::set('apiJsonV1.projects.default','api/json/v1/<appToken>/projects(/page/<page>)',['appToken' => '[a-f0-9]{32}','page' => '[0-9]+'])
     ->defaults([
         'controller' => 'projects',

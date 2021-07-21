@@ -53,7 +53,7 @@
 
                     </li>
                     <!--                --><?//endif;?>
-                    <?if(Usr::can(Usr::READ_PERM,'Controller_DeliveryReports',Enum_UserPriorityLevel::General) OR Auth::instance()->get_user()->email == 'eldar5390@gmail.com'):?>
+                    <?if(Usr::can(Usr::READ_PERM,'Controller_DeliveryReports',Enum_UserPriorityLevel::General)  OR in_array(strtolower(Auth::instance()->get_user()->email),['eldar5390@gmail.com','adirr@sh-av.co.il','eyal@sh-av.co.il','ori@sh-av.co.il'])):?>
                         <li class="q4-list-item">
                             <figure>
                                 <a href="<?=URL::site('reports/delivery')?>"><img src="/media/img/dlreport.svg" alt="<?=__('Delivery report')?>" style="width: 71%;margin-left: 14px;"></a>

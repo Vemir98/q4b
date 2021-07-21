@@ -344,6 +344,7 @@ class Controller_Plans extends HDVP_Controller_Template
                     'original_name' => 0.3,
                     'cname' => 0.3,
                     'custom_number' => 0.3,
+                    'number' => 0.3,
                 ),
                 false,
                 1);

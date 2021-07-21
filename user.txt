@@ -1,0 +1,646 @@
+Model_User::__set_state(array(
+   '_has_many' => 
+  array (
+    'user_tokens' => 
+    array (
+      'foreign_key' => 'user_id',
+      'through' => NULL,
+      'far_key' => 'user_token_id',
+      'model' => 'User_Token',
+    ),
+    'roles' => 
+    array (
+      'foreign_key' => 'user_id',
+      'through' => 'roles_users',
+      'far_key' => 'role_id',
+      'model' => 'Role',
+    ),
+    'professions' => 
+    array (
+      'foreign_key' => 'user_id',
+      'through' => 'users_cmp_professions',
+      'far_key' => 'profession_id',
+      'model' => 'CmpProfession',
+    ),
+    'utokens' => 
+    array (
+      'foreign_key' => 'user_id',
+      'through' => NULL,
+      'far_key' => 'utoken_id',
+      'model' => 'UToken',
+    ),
+    'projects' => 
+    array (
+      'foreign_key' => 'user_id',
+      'through' => 'users_projects',
+      'far_key' => 'project_id',
+      'model' => 'Project',
+    ),
+  ),
+   '_belongs_to' => 
+  array (
+    'client' => 
+    array (
+      'foreign_key' => 'client_id',
+      'model' => 'Client',
+    ),
+    'company' => 
+    array (
+      'foreign_key' => 'company_id',
+      'model' => 'Company',
+    ),
+  ),
+   '_created_by_column' => NULL,
+   '_updated_by_column' => NULL,
+   '_life_time_cache' => 
+  array (
+    '_relevantRole' => 
+    Model_Role::__set_state(array(
+       '_has_many' => 
+      array (
+        'users' => 
+        array (
+          'foreign_key' => 'role_id',
+          'through' => 'roles_users',
+          'far_key' => 'user_id',
+          'model' => 'User',
+        ),
+      ),
+       '_has_one' => 
+      array (
+      ),
+       '_belongs_to' => 
+      array (
+      ),
+       '_load_with' => 
+      array (
+      ),
+       '_validation' => NULL,
+       '_object' => 
+      array (
+        'id' => '2',
+        'name' => 'super_admin',
+        'description' => 'Super Administrative user, has access to everything.',
+        'priority' => '1',
+        'outspread' => 'general',
+      ),
+       '_changed' => 
+      array (
+      ),
+       '_original_values' => 
+      array (
+        'id' => '2',
+        'name' => 'super_admin',
+        'description' => 'Super Administrative user, has access to everything.',
+        'priority' => '1',
+        'outspread' => 'general',
+      ),
+       '_related' => 
+      array (
+      ),
+       '_valid' => true,
+       '_loaded' => true,
+       '_saved' => false,
+       '_sorting' => NULL,
+       '_foreign_key_suffix' => '_id',
+       '_object_name' => 'role',
+       '_object_plural' => 'roles',
+       '_table_name' => 'roles',
+       '_table_columns' => 
+      array (
+        'id' => 
+        array (
+          'type' => 'int',
+          'min' => '0',
+          'max' => '4294967295',
+          'column_name' => 'id',
+          'column_default' => NULL,
+          'data_type' => 'int unsigned',
+          'is_nullable' => false,
+          'ordinal_position' => 1,
+          'display' => '11',
+          'comment' => '',
+          'extra' => 'auto_increment',
+          'key' => 'PRI',
+          'privileges' => 'select,insert,update,references',
+        ),
+        'name' => 
+        array (
+          'type' => 'string',
+          'column_name' => 'name',
+          'column_default' => NULL,
+          'data_type' => 'varchar',
+          'is_nullable' => false,
+          'ordinal_position' => 2,
+          'character_maximum_length' => '32',
+          'collation_name' => 'utf8_general_ci',
+          'comment' => '',
+          'extra' => '',
+          'key' => 'UNI',
+          'privileges' => 'select,insert,update,references',
+        ),
+        'description' => 
+        array (
+          'type' => 'string',
+          'column_name' => 'description',
+          'column_default' => NULL,
+          'data_type' => 'varchar',
+          'is_nullable' => false,
+          'ordinal_position' => 3,
+          'character_maximum_length' => '255',
+          'collation_name' => 'utf8_general_ci',
+          'comment' => '',
+          'extra' => '',
+          'key' => '',
+          'privileges' => 'select,insert,update,references',
+        ),
+        'priority' => 
+        array (
+          'type' => 'int',
+          'min' => '-2147483648',
+          'max' => '2147483647',
+          'column_name' => 'priority',
+          'column_default' => '0',
+          'data_type' => 'int',
+          'is_nullable' => false,
+          'ordinal_position' => 4,
+          'display' => '3',
+          'comment' => 'Приоритет Роли. Чем ниже число тем выше приоритет',
+          'extra' => '',
+          'key' => '',
+          'privileges' => 'select,insert,update,references',
+        ),
+        'outspread' => 
+        array (
+          'type' => 'string',
+          'column_name' => 'outspread',
+          'column_default' => NULL,
+          'data_type' => 'enum',
+          'is_nullable' => true,
+          'ordinal_position' => 5,
+          'collation_name' => 'utf8_general_ci',
+          'options' => 
+          array (
+            0 => 'general',
+            1 => 'corporate',
+            2 => 'company',
+            3 => 'project',
+          ),
+          'comment' => 'Распространение роли (тоесть доступ)',
+          'extra' => '',
+          'key' => '',
+          'privileges' => 'select,insert,update,references',
+        ),
+      ),
+       '_updated_column' => NULL,
+       '_created_column' => NULL,
+       '_serialize_columns' => 
+      array (
+      ),
+       '_primary_key' => 'id',
+       '_primary_key_value' => '2',
+       '_table_names_plural' => true,
+       '_reload_on_wakeup' => true,
+       '_db' => 
+      Database_MySQLi::__set_state(array(
+         '_connection_id' => 'b834504efd5808e474668f2cdf8ba7bfe70bf58e',
+         '_identifier' => '`',
+         'last_query' => 'SELECT `role`.`id` AS `id`, `role`.`name` AS `name`, `role`.`description` AS `description`, `role`.`priority` AS `priority`, `role`.`outspread` AS `outspread` FROM `roles` AS `role` JOIN `roles_users` ON (`roles_users`.`role_id` = `role`.`id`) WHERE `roles_users`.`user_id` = \'6\' ORDER BY `priority` ASC LIMIT 1',
+         '_instance' => 'default',
+         '_connection' => 
+        mysqli::__set_state(array(
+           'affected_rows' => NULL,
+           'client_info' => NULL,
+           'client_version' => NULL,
+           'connect_errno' => NULL,
+           'connect_error' => NULL,
+           'errno' => NULL,
+           'error' => NULL,
+           'error_list' => NULL,
+           'field_count' => NULL,
+           'host_info' => NULL,
+           'info' => NULL,
+           'insert_id' => NULL,
+           'server_info' => NULL,
+           'server_version' => NULL,
+           'sqlstate' => NULL,
+           'protocol_version' => NULL,
+           'thread_id' => NULL,
+           'warning_count' => NULL,
+        )),
+         '_config' => 
+        array (
+          'type' => 'MySQLi',
+          'connection' => 
+          array (
+            'hostname' => 'sunrisedvp.systems',
+            'database' => 'qforbnet_q4b',
+            'persistent' => false,
+            'ssl' => NULL,
+          ),
+          'table_prefix' => '',
+          'charset' => 'utf8',
+          'caching' => false,
+        ),
+      )),
+       '_db_group' => NULL,
+       '_db_applied' => 
+      array (
+      ),
+       '_db_pending' => 
+      array (
+      ),
+       '_db_reset' => true,
+       '_db_builder' => NULL,
+       '_with_applied' => 
+      array (
+      ),
+       '_cast_data' => 
+      array (
+      ),
+       '_errors_filename' => 'role',
+    )),
+  ),
+   '_has_one' => 
+  array (
+  ),
+   '_load_with' => 
+  array (
+  ),
+   '_validation' => NULL,
+   '_object' => 
+  array (
+    'id' => '6',
+    'client_id' => '0',
+    'company_id' => '0',
+    'name' => 'HDVP',
+    'email' => 'david@horizondvp.com',
+    'phone' => '0528388422',
+    'username' => 'david@horizondvp.com',
+    'password' => '983b451da6040f1088599430374e52d059d24307e836c9f219623fcf667d5c8c',
+    'logins' => '309063',
+    'last_login' => '1623756463',
+    'created_by' => '0',
+    'status' => 'active',
+    'terms_agreed' => '1',
+    'lang' => 'he',
+    'device_token' => 'fllkDuCJSfqtS_js0lMs25:APA91bHi7v3M5qrWG8zMR0c8iHoLs-_IpAKIBldmnj_JrZiCFscz1COgHOjrfwieOueJS_A4lMDhmje2p3aBr1Ol02NwjgL5aJhM6Mk08U6jX-hlQWeJz25ddPLWvXVc6Rh1NocaZLek',
+    'os_type' => '1',
+  ),
+   '_changed' => 
+  array (
+  ),
+   '_original_values' => 
+  array (
+    'id' => '6',
+    'client_id' => '0',
+    'company_id' => '0',
+    'name' => 'HDVP',
+    'email' => 'david@horizondvp.com',
+    'phone' => '0528388422',
+    'username' => 'david@horizondvp.com',
+    'password' => '983b451da6040f1088599430374e52d059d24307e836c9f219623fcf667d5c8c',
+    'logins' => '309063',
+    'last_login' => '1623756463',
+    'created_by' => '0',
+    'status' => 'active',
+    'terms_agreed' => '1',
+    'lang' => 'he',
+    'device_token' => 'fllkDuCJSfqtS_js0lMs25:APA91bHi7v3M5qrWG8zMR0c8iHoLs-_IpAKIBldmnj_JrZiCFscz1COgHOjrfwieOueJS_A4lMDhmje2p3aBr1Ol02NwjgL5aJhM6Mk08U6jX-hlQWeJz25ddPLWvXVc6Rh1NocaZLek',
+    'os_type' => '1',
+  ),
+   '_related' => 
+  array (
+  ),
+   '_valid' => true,
+   '_loaded' => true,
+   '_saved' => true,
+   '_sorting' => NULL,
+   '_foreign_key_suffix' => '_id',
+   '_object_name' => 'user',
+   '_object_plural' => 'users',
+   '_table_name' => 'users',
+   '_table_columns' => 
+  array (
+    'id' => 
+    array (
+      'type' => 'int',
+      'min' => '0',
+      'max' => '4294967295',
+      'column_name' => 'id',
+      'column_default' => NULL,
+      'data_type' => 'int unsigned',
+      'is_nullable' => false,
+      'ordinal_position' => 1,
+      'display' => '11',
+      'comment' => '',
+      'extra' => 'auto_increment',
+      'key' => 'PRI',
+      'privileges' => 'select,insert,update,references',
+    ),
+    'client_id' => 
+    array (
+      'type' => 'int',
+      'min' => '0',
+      'max' => '4294967295',
+      'column_name' => 'client_id',
+      'column_default' => '0',
+      'data_type' => 'int unsigned',
+      'is_nullable' => false,
+      'ordinal_position' => 2,
+      'display' => '10',
+      'comment' => '',
+      'extra' => '',
+      'key' => '',
+      'privileges' => 'select,insert,update,references',
+    ),
+    'company_id' => 
+    array (
+      'type' => 'int',
+      'min' => '0',
+      'max' => '4294967295',
+      'column_name' => 'company_id',
+      'column_default' => '0',
+      'data_type' => 'int unsigned',
+      'is_nullable' => false,
+      'ordinal_position' => 3,
+      'display' => '10',
+      'comment' => '',
+      'extra' => '',
+      'key' => '',
+      'privileges' => 'select,insert,update,references',
+    ),
+    'name' => 
+    array (
+      'type' => 'string',
+      'column_name' => 'name',
+      'column_default' => NULL,
+      'data_type' => 'varchar',
+      'is_nullable' => true,
+      'ordinal_position' => 4,
+      'character_maximum_length' => '150',
+      'collation_name' => 'utf8_general_ci',
+      'comment' => '',
+      'extra' => '',
+      'key' => '',
+      'privileges' => 'select,insert,update,references',
+    ),
+    'email' => 
+    array (
+      'type' => 'string',
+      'column_name' => 'email',
+      'column_default' => NULL,
+      'data_type' => 'varchar',
+      'is_nullable' => false,
+      'ordinal_position' => 5,
+      'character_maximum_length' => '254',
+      'collation_name' => 'utf8_general_ci',
+      'comment' => '',
+      'extra' => '',
+      'key' => 'UNI',
+      'privileges' => 'select,insert,update,references',
+    ),
+    'phone' => 
+    array (
+      'type' => 'string',
+      'column_name' => 'phone',
+      'column_default' => NULL,
+      'data_type' => 'varchar',
+      'is_nullable' => true,
+      'ordinal_position' => 6,
+      'character_maximum_length' => '50',
+      'collation_name' => 'utf8_general_ci',
+      'comment' => '',
+      'extra' => '',
+      'key' => '',
+      'privileges' => 'select,insert,update,references',
+    ),
+    'username' => 
+    array (
+      'type' => 'string',
+      'column_name' => 'username',
+      'column_default' => '',
+      'data_type' => 'varchar',
+      'is_nullable' => false,
+      'ordinal_position' => 7,
+      'character_maximum_length' => '32',
+      'collation_name' => 'utf8_general_ci',
+      'comment' => '',
+      'extra' => '',
+      'key' => 'UNI',
+      'privileges' => 'select,insert,update,references',
+    ),
+    'password' => 
+    array (
+      'type' => 'string',
+      'column_name' => 'password',
+      'column_default' => NULL,
+      'data_type' => 'varchar',
+      'is_nullable' => false,
+      'ordinal_position' => 8,
+      'character_maximum_length' => '64',
+      'collation_name' => 'utf8_general_ci',
+      'comment' => '',
+      'extra' => '',
+      'key' => '',
+      'privileges' => 'select,insert,update,references',
+    ),
+    'logins' => 
+    array (
+      'type' => 'int',
+      'min' => '0',
+      'max' => '4294967295',
+      'column_name' => 'logins',
+      'column_default' => '0',
+      'data_type' => 'int unsigned',
+      'is_nullable' => false,
+      'ordinal_position' => 9,
+      'display' => '10',
+      'comment' => '',
+      'extra' => '',
+      'key' => '',
+      'privileges' => 'select,insert,update,references',
+    ),
+    'last_login' => 
+    array (
+      'type' => 'int',
+      'min' => '0',
+      'max' => '4294967295',
+      'column_name' => 'last_login',
+      'column_default' => NULL,
+      'data_type' => 'int unsigned',
+      'is_nullable' => true,
+      'ordinal_position' => 10,
+      'display' => '10',
+      'comment' => '',
+      'extra' => '',
+      'key' => '',
+      'privileges' => 'select,insert,update,references',
+    ),
+    'created_by' => 
+    array (
+      'type' => 'int',
+      'min' => '0',
+      'max' => '4294967295',
+      'column_name' => 'created_by',
+      'column_default' => NULL,
+      'data_type' => 'int unsigned',
+      'is_nullable' => false,
+      'ordinal_position' => 11,
+      'display' => '11',
+      'comment' => '',
+      'extra' => '',
+      'key' => '',
+      'privileges' => 'select,insert,update,references',
+    ),
+    'status' => 
+    array (
+      'type' => 'string',
+      'column_name' => 'status',
+      'column_default' => 'pending',
+      'data_type' => 'enum',
+      'is_nullable' => false,
+      'ordinal_position' => 12,
+      'collation_name' => 'utf8_general_ci',
+      'options' => 
+      array (
+        0 => 'active',
+        1 => 'blocked',
+        2 => 'pending',
+      ),
+      'comment' => '',
+      'extra' => '',
+      'key' => '',
+      'privileges' => 'select,insert,update,references',
+    ),
+    'terms_agreed' => 
+    array (
+      'type' => 'int',
+      'min' => '0',
+      'max' => '255',
+      'column_name' => 'terms_agreed',
+      'column_default' => '0',
+      'data_type' => 'tinyint unsigned',
+      'is_nullable' => false,
+      'ordinal_position' => 13,
+      'display' => '1',
+      'comment' => '',
+      'extra' => '',
+      'key' => '',
+      'privileges' => 'select,insert,update,references',
+    ),
+    'lang' => 
+    array (
+      'type' => 'string',
+      'column_name' => 'lang',
+      'column_default' => 'en',
+      'data_type' => 'varchar',
+      'is_nullable' => false,
+      'ordinal_position' => 14,
+      'character_maximum_length' => '4',
+      'collation_name' => 'utf8_general_ci',
+      'comment' => '',
+      'extra' => '',
+      'key' => '',
+      'privileges' => 'select,insert,update,references',
+    ),
+    'device_token' => 
+    array (
+      'type' => 'string',
+      'character_maximum_length' => '65535',
+      'column_name' => 'device_token',
+      'column_default' => NULL,
+      'data_type' => 'text',
+      'is_nullable' => true,
+      'ordinal_position' => 15,
+      'collation_name' => 'utf8_general_ci',
+      'comment' => '',
+      'extra' => '',
+      'key' => '',
+      'privileges' => 'select,insert,update,references',
+    ),
+    'os_type' => 
+    array (
+      'type' => 'int',
+      'min' => '-2147483648',
+      'max' => '2147483647',
+      'column_name' => 'os_type',
+      'column_default' => NULL,
+      'data_type' => 'int',
+      'is_nullable' => true,
+      'ordinal_position' => 16,
+      'display' => '11',
+      'comment' => '',
+      'extra' => '',
+      'key' => '',
+      'privileges' => 'select,insert,update,references',
+    ),
+  ),
+   '_updated_column' => NULL,
+   '_created_column' => NULL,
+   '_serialize_columns' => 
+  array (
+  ),
+   '_primary_key' => 'id',
+   '_primary_key_value' => '6',
+   '_table_names_plural' => true,
+   '_reload_on_wakeup' => true,
+   '_db' => 
+  Database_MySQLi::__set_state(array(
+     '_connection_id' => 'b834504efd5808e474668f2cdf8ba7bfe70bf58e',
+     '_identifier' => '`',
+     'last_query' => 'SELECT `role`.`id` AS `id`, `role`.`name` AS `name`, `role`.`description` AS `description`, `role`.`priority` AS `priority`, `role`.`outspread` AS `outspread` FROM `roles` AS `role` JOIN `roles_users` ON (`roles_users`.`role_id` = `role`.`id`) WHERE `roles_users`.`user_id` = \'6\' ORDER BY `priority` ASC LIMIT 1',
+     '_instance' => 'default',
+     '_connection' => 
+    mysqli::__set_state(array(
+       'affected_rows' => NULL,
+       'client_info' => NULL,
+       'client_version' => NULL,
+       'connect_errno' => NULL,
+       'connect_error' => NULL,
+       'errno' => NULL,
+       'error' => NULL,
+       'error_list' => NULL,
+       'field_count' => NULL,
+       'host_info' => NULL,
+       'info' => NULL,
+       'insert_id' => NULL,
+       'server_info' => NULL,
+       'server_version' => NULL,
+       'sqlstate' => NULL,
+       'protocol_version' => NULL,
+       'thread_id' => NULL,
+       'warning_count' => NULL,
+    )),
+     '_config' => 
+    array (
+      'type' => 'MySQLi',
+      'connection' => 
+      array (
+        'hostname' => 'sunrisedvp.systems',
+        'database' => 'qforbnet_q4b',
+        'persistent' => false,
+        'ssl' => NULL,
+      ),
+      'table_prefix' => '',
+      'charset' => 'utf8',
+      'caching' => false,
+    ),
+  )),
+   '_db_group' => NULL,
+   '_db_applied' => 
+  array (
+  ),
+   '_db_pending' => 
+  array (
+  ),
+   '_db_reset' => true,
+   '_db_builder' => NULL,
+   '_with_applied' => 
+  array (
+  ),
+   '_cast_data' => 
+  array (
+  ),
+   '_errors_filename' => 'user',
+))

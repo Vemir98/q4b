@@ -20,7 +20,7 @@ class Process_LinuxProcessManager implements Process_Interface
     }
 
     private function _runCom(){
-        $command = 'nohup /opt/cpanel/ea-php56/root/usr/bin/php -f '.$this->_command.' > /dev/null 2>&1 & echo $!';
+        $command = 'nohup /opt/cpanel/ea-php74/root/usr/bin/php -f '.$this->_command.' > /dev/null 2>&1 & echo $!';
         exec($command ,$op);
         $this->_pid = (int)$op[0];
         return (bool) $this->_pid;

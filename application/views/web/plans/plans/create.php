@@ -6,8 +6,8 @@
  * Date: 23.03.2017
  * Time: 4:25
  */
+$floorNumbersWithNames = $object->floorNumbersWithNames();
 ?>
-
 
 <div id="add-plans-modal" class="modal fade" data-backdrop="static" data-keyboard="false" role="dialog">
     <div class="modal-dialog q4_project_modal modal-dialog-1070">
@@ -81,7 +81,7 @@
                                                         <option value=""><?=__('Please select')?></option>
 
                                                         <?foreach ($objects as $obj): ?>
-                                                            <option data-minfloor="<?=$obj->smaller_floor?>" data-maxfloor="<?=$obj->bigger_floor?>" value="<?=$obj->id?>" <?=($obj->id == $object->id) ? 'selected' : ''?>><?=$obj->name?></option>
+                                                            <option data-minfloor="<?=$obj->smaller_floor?>" data-maxfloor="<?=$obj->bigger_floor?>" data-floornames='<?=json_encode($obj->floorNumbersWithNames())?>' value="<?=$obj->id?>" <?=($obj->id == $object->id) ? 'selected' : ''?>><?=$obj->name?></option>
                                                         <?endforeach ?>
 
                                                     </select>
@@ -92,23 +92,30 @@
                                                     <label class="table_label">
                                                         <span class="check-all-links" data-seltxt="<?=__('select all')?>" data-unseltxt="<?=__('unselect all')?>"><?=__('select all')?></span>
                                                     </label>
+
                                                     <div class="multi-select-box-container">
-                                                        <div class="multi-select-box comma">
+                                                        <div class="multi-select-box comma floors-list">
                                                             <div class="select-imitation table_input floor-numbers<?=$disabled?>">
                                                                 <span class="select-imitation-title"></span>
                                                                 <div class="over-select"></div><i class="arrow-down q4bikon-arrow_bottom"></i>
                                                             </div>
                                                             <div class="checkbox-list">
                                                                 <?for($i = $object->smaller_floor; $i <= $object->bigger_floor; $i++):?>
-                                                                    <div class="checkbox-list-row">
+                                                                    <div class="checkbox-list-row" data-custom-label="true">
                                                                     <span class="checkbox-text">
                                                                         <label class="checkbox-wrapper-multiple inline" data-val="<?=$i?>">
                                                                             <span class="checkbox-replace"></span>
                                                                             <i class="checkbox-list-tick q4bikon-tick"></i>
                                                                         </label>
-                                                                        <span class="checkbox-text-content bidi-override">
-                                                                            <?=$i?>
-                                                                        </span>
+                                                                        <?if($floorNumbersWithNames[$i]):?>
+                                                                            <span class="checkbox-text-content" data-val="<?=$i?>">
+                                                                                <?=$floorNumbersWithNames[$i]?>
+                                                                            </span>
+                                                                        <?else:?>
+                                                                            <span class="checkbox-text-content bidi-override" data-val="<?=$i?>">
+                                                                                <?=$i?>
+                                                                            </span>
+                                                                        <?endif;?>
 
                                                                     </span>
                                                                     </div>
@@ -116,7 +123,9 @@
                                                             </div>
                                                             <select class="hidden-select" name="floors" multiple>
                                                                 <?for($i = $object->smaller_floor; $i <= $object->bigger_floor; $i++):?>
-                                                                    <option value="<?=$i?>"><?=$i?></option>
+                                                                    <option value="<?=$i?>">
+                                                                        <?=$floorNumbersWithNames[$i] ? $floorNumbersWithNames[$i] : $i?>
+                                                                    </option>
                                                                 <?endfor?>
                                                             </select>
                                                         </div>

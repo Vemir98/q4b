@@ -714,12 +714,12 @@
             self.siblings('.panel_content').slideToggle(300);
         },
 
-        generateMultiSelectFloor: function (min, max) {
+        generateMultiSelectFloor: function (min, max, customNames) {
             // var minF = min<=max ?  min : max;
             // var maxF = min>=max ?  max : min;
 
-
-            var html = '<div class="multi-select-box comma">'  +
+            console.log('customNames', customNames);
+            var html = '<div class="multi-select-box comma floors-list">'  +
                 '<div class="select-imitation q4-form-input floor-numbers">'  +
                 '<span class="select-imitation-title"></span>'  +
 
@@ -730,18 +730,25 @@
 
             for(var i = min; i <= max; i++){
                 html +=
-                '<div class="checkbox-list-row">'  +
+                '<div class="checkbox-list-row" data-custom-label="true">'  +
                         '<span class="checkbox-text">'  +
                         '<label class="checkbox-wrapper-multiple inline" data-val="'+i+'">'  +
                         '<span class="checkbox-replace"></span>'  +
                         '<i class="checkbox-list-tick q4bikon-tick"></i>'  +
-                        '</label>'  +
+                        '</label>';
+                if (customNames[i]) {
+                    html +=
                         '<span class="checkbox-text-content bidi-override">'  +
+                            customNames[i] +
+                        '</span>';
+                } else {
+                    html +=
+                        '<span class="checkbox-text-content bidi-override">'  +
+                        i +
+                        '</span>';
+                }
 
-                   i+
-
-                '</span>'  +
-                    '</span></div>';
+                html += '</span></div>';
 
                 select += '<option value="'+i+'">'+i+'</option>';
 

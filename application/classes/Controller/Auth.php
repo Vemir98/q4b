@@ -42,6 +42,10 @@ class Controller_Auth extends HDVP_Controller_Template
                     $this->_auth->logout(TRUE);
                     $this->_setErrors('Your Account is deactivated! Please contact Your Manager');
                 }else{
+                    $this->_user = $this->_auth->get_user();
+                    $utkn = Model_UToken::makeApplicationToken($this->_user->id);
+                    $this->_responseData['user']['token'] = $utkn->as_array()['token'];
+
                     if((bool)Arr::get($this->post(),'remember')){
                         Cookie::set('un',AesCtr::encrypt(Arr::get($this->post(),'login'),$_SERVER['SERVER_NAME'],256));
                     }

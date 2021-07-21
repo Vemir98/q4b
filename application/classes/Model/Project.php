@@ -89,6 +89,10 @@ class Model_Project extends MORM
             'model' => 'TransferableItems',
             'foreign_key' => 'project_id'
         ],
+        'floors' => [
+            'model' => 'PrFloor',
+            'foreign_key' => 'project_id'
+        ],
     ];
 
     /**
@@ -176,6 +180,16 @@ class Model_Project extends MORM
         ];
     }
 
+    public function floorNumbersWithNames(){
+        $floors = $this->floors->find_all();
+        $numbers = [];
+        foreach($floors as $floor){
+            $numbers [$floor->number]= $floor->custom_name ? $floor->custom_name . ' ('. $floor->number.')' : $floor->number;
+        }
+
+        return $numbers;
+    }
+
     public function filters()
     {
         return [
@@ -249,9 +263,11 @@ class Model_Project extends MORM
     public function qualityControlPath(){
         return implode(DS,[$this->filePath(),'quality_control']);
     }
-
+    public function labTestTicketsPath(){
+        return implode(DS,[$this->filePath(),'labtest-tickets']);
+    }
     public function makeProjectPaths(){
-        $directories = [$this->filePath(),$this->imagesPath(),$this->plansPath(),$this->certificationsPath(),$this->qualityControlPath(),$this->dateTrackingPath()];
+        $directories = [$this->filePath(),$this->imagesPath(),$this->plansPath(),$this->certificationsPath(),$this->qualityControlPath(),$this->dateTrackingPath(), $this->labTestTicketsPath()];
         foreach ($directories as $dir){
             if( ! is_dir($dir)){
                 mkdir($dir,0777,true);

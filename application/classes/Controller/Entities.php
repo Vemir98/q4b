@@ -31,12 +31,8 @@ class Controller_Entities extends HDVP_Controller_Template
                 $params = array($params);
             }
         }
-        $query = ORM::factory('Company');
-        if($this->_user->getRelevantRole('outspread') != Enum_UserOutspread::General){
-            $query->where('client_id','=',$this->_user->client_id);
-        }
-        $query->order_by('name','ASC');
-        $companies = $query->find_all();
+
+        $companies = $this->_user->relatedCompanies()->find_all();
         $response = [
             'items' => [],
             'count' => count($companies)
@@ -74,9 +70,9 @@ class Controller_Entities extends HDVP_Controller_Template
                 $params = array($params);
             }
         }
-
-        $model = ORM::factory('Project');
-        $items = $model->where('company_id','=',$id)->find_all();
+//        $model = ORM::factory('Project');
+//        $items = $model->where('company_id','=',$id)->find_all();
+        $items = $this->_user->relatedProjects($id);
         $response = [
             'items' => [],
             'count' => count($items)
@@ -273,7 +269,7 @@ class Controller_Entities extends HDVP_Controller_Template
                     'craftId' => $craft->id,
                     'desc' => $r->desc,
                     'status' => array('val' => $r->status, 'label' => __($r->status)),
-                    'file' => $r->file ? 'regulations/'.$r->file : null,
+                    'file' => strpos($r->file,'fs.qforb.net') === false ?  ($r->file ? '/media/data/regulations/'.$r->file : null) : $r->file,
                     'uploaded' => $r->uploaded ? date('d/m/Y',$r->uploaded) : null,
                     'created' => $r->created_at,
                     'edited' => false,
@@ -305,7 +301,7 @@ class Controller_Entities extends HDVP_Controller_Template
                     'desc' => $r->desc,
                     'companyId' => $r->company_id,
                     'status' => array('val' => $r->status, 'label' => __($r->status)),
-                    'file' => $r->file ? 'companies/' . $r->company_id . '/instructions/'.$r->file : null,
+                    'file' => strpos($r->file,'fs.qforb.net') === false ?  ($r->file ? '/media/data/companies/' . $r->company_id . '/instructions/'.$r->file : null) : $r->file,
                     'created' => $r->created_at,
                     'uploaded' => $r->uploaded ? date('d/m/Y',$r->uploaded) : null,
                     'edited' => false,
@@ -339,7 +335,7 @@ class Controller_Entities extends HDVP_Controller_Template
                     'projectId' => $r->project_id,
                     'desc' => $r->desc,
                     'status' => array('val' => $r->status, 'label' => __($r->status)),
-                    'file' => $r->file ? 'projects/' . $r->project_id . '/certifications/'.$r->file : null,
+                    'file' => strpos($r->file,'fs.qforb.net') === false ?  ($r->file ? '/media/data/projects/' . $r->project_id . '/certifications/'.$r->file : null) : $r->file,
                     'created' => $r->created_at,
                     'uploaded' => $r->uploaded ? date('d/m/Y',$r->uploaded) : null,
                     'edited' => false,

@@ -9,12 +9,11 @@ $(document).ready(function() {
     setTimeout(function() {
         $(document).scrollTop(0);
     }, 0);
-    if (window.location.href.indexOf("generate") > -1) {
+    if (window.location.href.indexOf("generate") > -1 || window.location.href.indexOf("reports/guest_access")) {
         $(document).find('.content').addClass('qc_report_content');
         if (navigator.appVersion.indexOf("Linux")!=-1) $(document).find(".qc-report-redesign").addClass('os_linux');
         var tabToSelect = location.hash ? window.location.hash.substring(1) : window.localStorage.getItem('qc_report_selected_tab');
         tabToSelect = !tabToSelect ? "tab_statistics" : tabToSelect;
-        tabToSelect = tabToSelect ? tabToSelect : "tab_statistics";
         var moveTo = $(document).find('.content')
         var pagination = $(document).find('.q4-pagination');
         selectTab(tabToSelect, pagination, moveTo);
@@ -29,9 +28,6 @@ $(document).ready(function() {
         $(elem).closest('.reports-tasks-list-scroll').width(reportsTasksListScroll);
         $(elem).width(reportsTasksListScrollItem);
     });
-    if (window.location.href.indexOf("page") == -1) {
-        setItemToLocalStorage('qc_report_selected_tab', 'tab_statistics');
-    }
 
     $(document).on('click', '.qc_tab', function() {
         var newActiveTabName = $(this).data('tab');
@@ -48,7 +44,6 @@ $(document).ready(function() {
         prevActiveTab.removeClass('active');
         $('.tab_content').hide();
         tabToSelect.show();
-        console.log(tabToSelect);
         selectedTab.addClass('active');
         if (selectedTabName === 'tab_qc_controls') {
             moveDOMElement(moveEl, moveTo);
@@ -240,17 +235,23 @@ $(document).ready(function() {
         })
 
         $(document).on('click', '.pr-object .checkbox-list-row', function() {
+            console.log('@@@')
             var select = $(this).closest('.pr-object').find('select');
 
             setTimeout(function() {
                 var selected = select.val();
+                console.log('selected', selected);
                 var floorsHtml = '';
                 var floorsSelectOptions = '';
                 var floorsArr = [];
-                if (selected && selected.length) {
+                let floorNames = {};
+                if (selected && selected.length === 1) {
+                    $('.floors-list').removeClass('disabled-input');
                     if($(document).find('[name=place_type]').val() != 'all')
                         $(document).find('[name=place_number]').removeClass('disabled-input').removeAttr('disabled');
                     for (var idx in selected) {
+                        floorNames = select.find('option[value=' + selected[idx] + ']').data('floornames');
+                        console.log('floorNames', floorNames);
                         var from = select.find('option[value=' + selected[idx] + ']').data('floor-from');
                         var to = select.find('option[value=' + selected[idx] + ']').data('floor-to');
                         for (var i = from; i <= to; i++) {
@@ -262,45 +263,46 @@ $(document).ready(function() {
                     floorsArr.sort(function(a, b) {
                         return a - b;
                     });
-                        console.log("floorsArr", floorsArr);
-                console.log(floorsArr)
+                    console.log("floorsArr", floorsArr);
+                    var parentSelector = $(document).find('.floors-list');
+
+                    if (floorsArr.length) {
+                        for (idx in floorsArr) {
+                            floorsHtml +=   '<div class="checkbox-list-row" data-custom-label="true">'+
+                                '<span class="checkbox-text">' +
+                                '<label class="checkbox-wrapper-multiple inline" data-val="' + floorsArr[idx] + '">'+
+                                '<span class="checkbox-replace"></span>'+
+                                '<i class="checkbox-list-tick q4bikon-tick"></i>'+
+                                '</label>' + '<span class="bidi-override">' + (floorNames[idx] ? floorNames[idx] : floorsArr[idx]) + '</span>' +
+                                '</span>' +
+                                '</div>';
+
+                            floorsSelectOptions += '<option value="' + floorsArr[idx] + '">' + floorsArr[idx] + '</option>';
+                        }
+                        parentSelector.find('.select-imitation-title').html('<i class="q4bikon-baseline-stairs active"></i>');
+                    }
+                    parentSelector.find('.select-imitation-title').html('<i class="q4bikon-baseline-stairs"></i>');
+
+                    parentSelector.find('.checkbox-list').html(floorsHtml);
+
+                    parentSelector.find('select').html(floorsSelectOptions);
                 } else {
+                    $('.floors-list').addClass('disabled-input');
+                    $('.floors-list').closest('.multi-select-col').find('.checkbox-wrapper-multiple.checked').each(function() {
+                        if ($(this).hasClass('checked')) $(this).trigger('click');
+                    });
+
                     $(document).find('[name=place_number]').addClass('disabled-input').attr('disabled', 'disabled');
                 }
-                if (floorsArr.length) {
-
-                    for (idx in floorsArr) {
-                        floorsHtml +=   '<div class="checkbox-list-row">'+
-                                '<span class="checkbox-text">' +
-                                    '<label class="checkbox-wrapper-multiple inline" data-val="' + floorsArr[idx] + '">'+
-                                        '<span class="checkbox-replace"></span>'+
-                                        '<i class="checkbox-list-tick q4bikon-tick"></i>'+
-                                    '</label>' + '<span class="bidi-override">' + floorsArr[idx] + '</span>' +
-                                '</span>' +
-                            '</div>';
-
-                        floorsSelectOptions += '<option value="' + floorsArr[idx] + '">' + floorsArr[idx] + '</option>';
-                    }
-                }
-
-
-                var parentSelector = $(document).find('.obj-floors');
-
-                parentSelector.find('.select-imitation-title').html('<span class="select-def-text">' + parentSelector.find('.select-imitation-title').data('text') + '</span>');
-                parentSelector.find('.checkbox-list').html(floorsHtml);
-
-                parentSelector.find('select').html(floorsSelectOptions);
-
-
             }, 50);
         });
 
         $(document).on('keyup', '[name=place_number]', function() {
             var number = parseInt($(this).val());
             if (!isNaN(number)) {
-                $('.pr-object,.obj-floors').addClass('disabled-input');
+                $('.pr-object,.floors-list').addClass('disabled-input');
             } else {
-                $('.pr-object,.obj-floors').removeClass('disabled-input');
+                $('.pr-object,.floors-list').removeClass('disabled-input');
             }
         });
 
@@ -802,6 +804,49 @@ $(document).ready(function() {
         setTimeout(function(){
             toggleCondLevel();
         },250)
+    });
+
+    function setupFloorsMultiselect(self) {
+        let parent = self.closest('.multi-select-box');
+        if (parent.hasClass('comma')) {
+            var val = self.find('.checkbox-wrapper-multiple').data('val');
+            var option = parent.find('.hidden-select option[value="' + val + '"]');
+            option['0'].selected = !option['0'].selected;
+            var select = parent.find('.hidden-select');
+
+            self.closest('.checkbox-list').find('.checkbox-wrapper-multiple').each(function() {
+                var opt = select.find('option[value="' + $(this).data('val') + '"]');
+                if (opt[0].selected) {
+                    let text = opt.text();
+                    $(this).addClass('checked');
+                } else {
+                    $(this).removeClass('checked');
+                }
+            });
+            //no scrollplugin version
+            self.closest('.checkbox-list-no-scroll').find('.checkbox-wrapper-multiple').each(function() {
+                var opt = select.find('option[value="' + $(this).data('val') + '"]');
+                if (opt[0].selected) {
+                    $(this).addClass('checked');
+                } else {
+                    $(this).removeClass('checked');
+                }
+            });
+
+            let lastChecked = parent.find('.checked').last();
+            let result = "<i class='q4bikon-baseline-stairs active'></i>";
+
+            if (lastChecked.length <= 0) {
+                console.log(55);
+                // result = "<span class='select-def-text'>" + __('Please select') + "</span>";
+                result = "<i class='q4bikon-baseline-stairs'></i>";
+            }
+            parent.find('.select-imitation .select-imitation-title').html(result);
+        }
+    }
+
+    $(document).on('click', '.floors-list .checkbox-list-row', function() {
+        setupFloorsMultiselect($(this));
     });
 
 });

@@ -1026,3 +1026,24 @@ ul li.tab_panel .panel_header h2 {
     }
 
 }
+
+/* bug fixing */ 
+
+#labtests-projects  .multiselect__content-wrapper{
+    min-width: 277px;
+    max-width: 277px;
+  }
+  #labtests-projects   .row-flex .multiselect-col {
+    z-index: 9999;
+  }
+  #labtests-projects   .multiselect__option {
+    white-space: initial; 
+}
+.multiselect__option--selected {
+    background: transparent !important;
+    color: unset !important;
+    font-weight: normal !important;
+}
+.new-styles .multiselect__element [type="checkbox"]:not(:checked), .new-styles .multiselect__element [type="checkbox"]:checked {
+    left: unset !important;
+}

@@ -1,0 +1,34 @@
+{
+  "name": "@vuelidate/validators",
+  "version": "2.0.0-alpha.15",
+  "description": "Validators for Vuelidate",
+  "main": "dist/index.js",
+  "types": "index.d.ts",
+  "module": "dist/index.esm.js",
+  "repository": "https://github.com/vuelidate/vuelidate",
+  "license": "MIT",
+  "scripts": {
+    "build": "bili src src/raw --format esm --format cjs",
+    "dev": "yarn build --watch",
+    "test:unit": "jest",
+    "lint": "eslint src"
+  },
+  "dependencies": {
+    "vue-demi": "^0.6.0"
+  },
+  "devDependencies": {
+    "bili": "^4.8.1",
+    "flush-promises": "^1.0.2"
+  },
+  "sideEffects": [
+    "./src/utils/common.js"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist",
+    "index.d.ts"
+  ],
+  "gitHead": "cc13b134842b642ace8bc27998a0b40f4e97a5b2"
+}

@@ -74,7 +74,7 @@ $icons = [
                                 </span>
                                 <span class="inline-options">
                                     <span class="circle-sm circle-sm red plans-bulk-delete disabled-link" title="<?=__('Delete')?>"
-                                        data-url="<?=URL::site('plans/plans_delete/'.$_PROJECT->id)?>">
+                                          data-url="<?=URL::site('plans/plans_delete/'.$_PROJECT->id)?>">
                                         <i class="q4bikon-delete"></i>
                                     </span>
                                     <span class="inline-options-text">
@@ -87,7 +87,7 @@ $icons = [
                                         <a class="circle-sm orange add-plan-modal" data-url="<?=URL::site('plans/create_plan/'.$_PROJECT->id)?>">
                                             <i class="plus q4bikon-plus"></i>
                                         </a>
-    <!--                                    <span class="inline-options-text">--><?//=__('Add new plan')?><!--</span>-->
+                                         <!--                                    <span class="inline-options-text">--><?//=__('Add new plan')?><!--</span>-->
                                         <span class="inline-options-text">
                                             <?=__('Add')?>
                                         </span>
@@ -123,66 +123,66 @@ $icons = [
                         <div class="relative form-group">
                             <input type="text" class="table_input" value="<?=__('all')?>" id="prof" style="text-indent: 25px;"/>
                             <input type="hidden" data-name="profession" name="profession" class="select-profession" value="0">
-                                <i class="input_icon q4bikon-position"></i>
-                                <script>
-                                    var profs = [
-                                        {data:0, value:'<?=__('all')?>'},
+                            <i class="input_icon q4bikon-position"></i>
+                            <script>
+                                var profs = [
+                                    {data:0, value:'<?=__('all')?>'},
                                     <?if(isset($professions)):?>
                                     <?foreach ($professions as $profession): ?>
-                                        {data:'<?=$profession->id?>',value:'<?=trim($profession->name)?>'},
+                                    {data:'<?=$profession->id?>',value:'<?=trim($profession->name)?>'},
                                     <?endforeach ?>
                                     <?endif?>
-                                    ];
-                                    $(document).ready(function(){
-                                        $('#prof').autocomplete({
-                                            lookup: profs,
-                                            minChars: 0,
-                                            onSelect: function (suggestion) {
-                                                if(suggestion.data) {
-                                                    $('input[name="profession"]').val(suggestion.data);
-                                                    $('#prof').blur();
-                                                    $('input[name="profession"]').change();
-                                                }else{
-                                                    $('input[name="profession"]').val(suggestion.data);
-                                                    $('input[name="profession"]').change();
-                                                }
+                                ];
+                                $(document).ready(function(){
+                                    $('#prof').autocomplete({
+                                        lookup: profs,
+                                        minChars: 0,
+                                        onSelect: function (suggestion) {
+                                            if(suggestion.data) {
+                                                $('input[name="profession"]').val(suggestion.data);
+                                                $('#prof').blur();
+                                                $('input[name="profession"]').change();
+                                            }else{
+                                                $('input[name="profession"]').val(suggestion.data);
+                                                $('input[name="profession"]').change();
                                             }
-                                        });
-
-                                        $('#prof').on('focus',function(){
-                                            if($(this).val().length){
-                                                $(this).val('').blur();
-                                                $('input[name="profession"]').val('0');
-                                                var that = $(this);
-                                                setTimeout(function () {
-                                                    that.focus();
-                                                },200);
-                                            }
-                                        });
+                                        }
                                     });
-                                </script>
+
+                                    $('#prof').on('focus',function(){
+                                        if($(this).val().length){
+                                            $(this).val('').blur();
+                                            $('input[name="profession"]').val('0');
+                                            var that = $(this);
+                                            setTimeout(function () {
+                                                that.focus();
+                                            },200);
+                                        }
+                                    });
+                                });
+                            </script>
                         </div>
                     </div>
                     <div class="col-md-3 rtl-float-right multi-select-col">
 
-                            <label class="visibility-hidden table_label">Search</label>
-                            <div class="form-group">
-                                <div class="search-input-wrapper block">
-                                    <input  type="search" class="search-input search-plan-input" value="">
-                                    <a data-url="<?=URL::site('/plans/search_in_plan_list/'.$_PROJECT->id.'/search/')?>" class="search-button search-plans search-button-text">
-                                        <?=__('Search')?>
-                                    </a>
-                                </div>
+                        <label class="visibility-hidden table_label">Search</label>
+                        <div class="form-group">
+                            <div class="search-input-wrapper block">
+                                <input  type="search" class="search-input search-plan-input" value="">
+                                <a data-url="<?=URL::site('/plans/search_in_plan_list/'.$_PROJECT->id.'/search/')?>" class="search-button search-plans search-button-text">
+                                    <?=__('Search')?>
+                                </a>
                             </div>
+                        </div>
 
                     </div>
                 </div>
                 <div class="row ev-has-file-menu">
-    <!--                <div class="col-md-1 rtl-float-right">-->
-    <!--                    <div class="form-group">-->
-    <!--                        <a class="plans-deselect-all q4-link-b-blue">--><?//=__('unselect all')?><!--</a>-->
-    <!--                    </div> -->
-    <!--                </div>-->
+                    <!--                <div class="col-md-1 rtl-float-right">-->
+                    <!--                    <div class="form-group">-->
+                    <!--                        <a class="plans-deselect-all q4-link-b-blue">--><?//=__('unselect all')?><!--</a>-->
+                    <!--                    </div> -->
+                    <!--                </div>-->
                     <div class="col-md-2 col-sm-12 rtl-float-right">
                         <a href="#" class="ev-with-file" data-with-file="0">
                             <div class="form-group">
@@ -225,7 +225,7 @@ $icons = [
                                     <th data-field="<?=__('Sheet Number')?>" class="td-100"><?=__('Sheet Number')?></th><!-- 3 -->
                                     <th data-field="<?=__('Name')?>" class="td-200"><?=__('Name')?></th><!-- 4 -->
                                     <th data-field="<?=__('File')?>" class="td-25"><?=__('File')?></th><!-- 5 -->
-                                    <th data-field="<?=__('Floor')?>" class="td-25"><?=__('Floor')?></th><!-- 6 -->
+                                    <th data-field="<?=__('Floor')?>" class="td-200"><?=__('Floor')?></th><!-- 6 -->
                                     <th data-field="<?=__('Edition')?>" class="td-100"><?=__('Edition')?> </th><!-- 7 -->
                                     <th data-field="<?=__('Status')?>" class="td-125"><?=__('Status')?></th>  <!-- 8  -->
                                     <th data-field="<?=__('Updates note')?>" class="td-200"><?=__('Updates note')?> </th><!-- 9 -->
@@ -239,9 +239,9 @@ $icons = [
 
                                 <?foreach($items as $item):?>
                                     <?
-                                        $disabled = $item->hasQualityControl() ? ' disabled-input' : '';
-                                        $disabledButton = $item->hasQualityControl() ? ' disabled-gray-button' : '';
-                                        $track = $item->trackings->order_by('id','DESC')->find();
+                                    $disabled = $item->hasQualityControl() ? ' disabled-input' : '';
+                                    $disabledButton = $item->hasQualityControl() ? ' disabled-gray-button' : '';
+                                    $track = $item->trackings->order_by('id','DESC')->find();
                                     ?>
 
                                     <tr data-planid="<?=$item->id?>" class="plan-row <?= $item->hasFile() ? (($track->loaded() AND ($track->departure_date AND $track->received_date)) ? 'success-plan' : '') : 'has-no-file'?>">
@@ -294,8 +294,8 @@ $icons = [
                                         <td class="rwd-td4 plan-name-field" data-th="<?=__('Name')?>">
 
                                             <?
-                                                $name = $item->name;
-                                                $mime = $item->file()->loaded() ? strtolower($item->file()->ext) : 'unknown';
+                                            $name = $item->name;
+                                            $mime = $item->file()->loaded() ? strtolower($item->file()->ext) : 'unknown';
                                             ?>
 
                                             <input type="text" name="plan_<?=$item->id?>_name" class="q4-form-input q4_required<?=$disabled?>" value="<?=$name?>">
@@ -331,44 +331,52 @@ $icons = [
 
                                             <?if($item->place->loaded()):?>
                                                 <span class="bidi-override">
-                                                    <input type="text" class="q4-form-input disabled-input"  value="<?=$item->place->floor->number?>">
+                                                    <div class="select-imitation q4-form-input floor-numbers disabled-input">
+                                                        <span class="select-imitation-title"><i class="q4bikon-baseline-stairs ml-4"></i></span>
+                                                    </div>
+                                                    <!--                                                    <input type="text" class="q4-form-input disabled-input"  value="--><?//=$item->place->floor->number?><!--">-->
+                                                    <!--                                                    <span class="select-imitation-title"><i class="q4bikon-baseline-stairs"></i></span>-->
                                                 </span>
                                             <?else:?>
 
-                                                <div class="multi-select-box comma">
+                                                <div class="multi-select-box comma floors-list">
                                                     <div class="select-imitation q4-form-input floor-numbers<?=$item->place->loaded() ? ' disabled-input' : ''?><?=$disabled?>">
-                                                        <span class="select-imitation-title"><?=$item->getFloorsAsString()?></span>
+                                                        <span class="select-imitation-title"><i class="q4bikon-baseline-stairs"></i></span>
 
                                                         <div class="over-select"></div><i class="arrow-down q4bikon-arrow_bottom"></i>
                                                     </div>
 
-                                                    <?$floorNumbers = $item->floorNumbers();?>
+                                                    <?$floorNumbers = $item->floorNumbers();
+                                                    $floorNumbersWithNames = $item->object->floorNumbersWithNames()?>
 
                                                     <div class="checkbox-list-no-scroll hidden">
 
                                                         <?for($i = $item->object->smaller_floor; $i <= $item->object->bigger_floor; $i++):?>
-                                                            <div class="checkbox-list-row">
+                                                            <div class="checkbox-list-row" data-custom-label="true">
                                                             <span class="checkbox-text">
                                                                 <label class="checkbox-wrapper-multiple inline <?=in_array($i,$floorNumbers) ? 'checked' : ''?>" data-val="<?=$i?>">
                                                                     <span class="checkbox-replace"></span>
                                                                     <i class="checkbox-list-tick q4bikon-tick"></i>
                                                                 </label>
-                                                                <span class="checkbox-text-content bidi-override">
-
-                                                                    <?=$i?>
-
-                                                                </span>
+                                                                <?if($floorNumbersWithNames[$i]):?>
+                                                                    <span class="checkbox-text-content" data-val="<?=$i?>">
+                                                                        <?=$floorNumbersWithNames[$i]?>
+                                                                    </span>
+                                                                <?else:?>
+                                                                    <span class="checkbox-text-content bidi-override" data-val="<?=$i?>">
+                                                                        <?=$i?>
+                                                                    </span>
+                                                                <?endif;?>
                                                             </span>
                                                             </div>
                                                         <?endfor?>
-
                                                     </div>
                                                     <select class="hidden-select" name="plan_<?=$item->id?>_floors" multiple>
-
                                                         <?for($i = $item->object->smaller_floor; $i <= $item->object->bigger_floor; $i++):?>
-                                                            <option <?=in_array($i,$floorNumbers) ? 'selected="selected"' : ''?> value="<?=$i?>"><?=$i?></option>
+                                                            <option <?=in_array($i,$floorNumbers) ? 'selected="selected"' : ''?> value="<?=$i?>" data-text="<?=$i?>">
+                                                                <?=$floorNumbersWithNames[$i] ? $floorNumbersWithNames[$i] : $i?>
+                                                            </option>
                                                         <?endfor?>
-
                                                     </select>
                                                 </div>
                                             <?endif?>
@@ -377,7 +385,7 @@ $icons = [
                                         <td class="rwd-td7 align-center-left" data-th="<?=__('Edition')?>">
 
                                             <div class="wrap-number inline-pickers">
-    <!--                                            <input type="text" class="numeric-input" value="3">-->
+                                                <!--                                            <input type="text" class="numeric-input" value="3">-->
                                                 <input name="plan_<?=$item->id?>_edition" type="text" class="numeric-input <?=$disabled?>" value="<?=$item->edition ?: null?>">
                                             </div>
                                             <span class="plans-add-edition add-plan-edition"
@@ -411,8 +419,8 @@ $icons = [
                                         <td class="rwd-td5 align-center-left">
 
                                             <?if($track->loaded() AND !empty($track->file)):?>
-                                            <span class="plans-inline-icon">
-                                                    <a target="_blank" href="/<?=$track->file?>" class="<?=$mime== 'unknown' ? 'disabled-input' : ''?>">
+                                                <span class="plans-inline-icon">
+                                                    <a target="_blank" href="<?=$track->file?>" class="<?=$mime== 'unknown' ? 'disabled-input' : ''?>">
                                                         <img src="/media/img/choose-format/format-<?=end(explode('.',$track->file))?>.png" title="Tracking id #<?=$track->id?>" alt="Tracking id #<?=$track->id?>">
                                                     </a>
                                                 </span>
@@ -439,9 +447,9 @@ $icons = [
             <div class="panel_footer text-align">
                 <div class="row">
                     <div class="col-sm-12">
-    <!--                    <a href="#" class="q4-btn-lg light-blue-bg disabled-gray-button plans-to-print-link" data-toggle="modal" data-target="#plans-to-print-modal">--><?//=__('Proceed to print')?><!--</a>-->
-    <!--                    <a href="#" class="q4-btn-lg light-blue-bg disabled-gray-button plans-to-send"
-    data-toggle="modal" data-id=--><?//=$_PROJECT->id?><!-- data-url="--><?//=URL::site('plans/plans_mailing/'.$item->project_id)?><!--">--><?//=__('Proceed to send')?><!--</a>-->
+                        <!--                    <a href="#" class="q4-btn-lg light-blue-bg disabled-gray-button plans-to-print-link" data-toggle="modal" data-target="#plans-to-print-modal">--><?//=__('Proceed to print')?><!--</a>-->
+                        <!--                    <a href="#" class="q4-btn-lg light-blue-bg disabled-gray-button plans-to-send"
+                        data-toggle="modal" data-id=--><?//=$_PROJECT->id?><!-- data-url="--><?//=URL::site('plans/plans_mailing/'.$item->project_id)?><!--">--><?//=__('Proceed to send')?><!--</a>-->
                         <a class="q4-btn-lg q4_form_submit orange update-plans"><?=__('Update')?></a>
                     </div>
                 </div>

@@ -7,12 +7,12 @@ return array(
     ),
     'cookie' => array(
         'name' => 's',
-        'encrypted' => TRUE,
+        'encrypted' => false,
         'lifetime' => 1209600,
     ),
     'database' => array(
         'name' => 's',
-        'encrypted' => TRUE,
+        'encrypted' => false,
         'lifetime' => 1209600,
         'group' => 'default',
         'table' => 'sessions',

@@ -21,7 +21,10 @@ if($_USER->is('project_supervisor') || $isSubcontractor){//запрет на и�
     $disabledStatus = ' disabled-input';
 }
 ?>
-<div id="quality-control-modal" data-backdrop="static" data-keyboard="false" class="quality-control-modal modal fade" role="dialog" data-qcid="<?=$item->id?>">
+<div id="quality-control-modal" data-backdrop="static" data-keyboard="false" class="quality-control-modal modal fade" role="dialog" data-qcid="<?=$item->id?>"
+     data-add-image-url="/projects/add_quality_control_image_from_raw_data/<?=$item->id?>"
+     data-update-image-url="/projects/update_quality_control_image/<?=$item->id?>/"
+>
     <div class="modal-dialog q4_project_modal modal-dialog-1070">
         <form id="qc-form-id" class="q4_form" action="<?=$formAction?>" data-ajax="true" data-submit="false" method="post">
             <input type="hidden" value="" name="x-form-secure-tkn"/>
@@ -142,7 +145,7 @@ if($_USER->is('project_supervisor') || $isSubcontractor){//запрет на и�
                                             <div class="row">
                                                 <div class="col-20 rtl-float-right">
                                                     <label class="table_label"><?=__('Floor')?></label>
-                                                    <input type="text" class="table_input bidi-override disabled-input" value="<?=$item->place->floor->number?>"/>
+                                                    <input type="text" class="table_input bidi-override disabled-input" value="<?=$item->place->floor->custom_name ? $item->place->floor->custom_name : $item->place->floor->number?>"/>
                                                 </div>
                                                 <div class="col-25 rtl-float-right">
                                                     <label class="table_label table_label-small"><?=__('Element number')?></label>
@@ -359,7 +362,14 @@ if($_USER->is('project_supervisor') || $isSubcontractor){//запрет на и�
 
                                                 <td data-th="Image">
                                                     <span class="modal-tasks-image-action">
-                                                        <a data-url="<?=$image->originalFilePath()?>" data-controller="update_quality_control_image" data-ext="<?=$image->mime?>" data-fileid="<?=$image->id?>" title="<?=$image->original_name?>" class="call-lit-plugin" >
+                                                        <a data-url="<?=$image->originalFilePath()?>"
+                                                           data-controller="update_quality_control_image"
+                                                           data-ext="<?=$image->mime?>"
+                                                           data-fileid="<?=$image->id?>"
+                                                           title="<?=$image->original_name?>"
+                                                           class="call-lit-plugin"
+                                                           data-update-url="/projects/update_quality_control_image/<?=$item->id?>/<?=$image->id?>"
+                                                        >
                                                         <span class="modal-tasks-image-number"><?=$number+1?>.</span>
                                                         <span class="modal-tasks-image-name"><?=$image->original_name?></span>
                                                          <span class="modal-img-upload-date">(<?=__('uploaded')?>: <?=date('d.m.Y',$image->created_at)?>)</span></a>

@@ -13,6 +13,7 @@ class HDVP_Controller_Template extends HDVP_Controller
      */
     public $template = 'template';
 
+    public $include_editor = false;
     /**
      * @var  boolean  auto render template
      **/
@@ -160,6 +161,7 @@ class HDVP_Controller_Template extends HDVP_Controller
         {
 //            $minyfy = new MatthiasMullie\Minify\JS(DOCROOT.'media/js/jquery/jquery-3.1.0.min.js',DOCROOT.'media/js/q4u/core.js',DOCROOT.'media/js/q4u/aes.js');
 //            $minyfy->minify(DOCROOT.'media/js/all.js');
+            $this->template->include_editor = $this->include_editor;
             $this->response->body($this->template->render());
 
         }else{

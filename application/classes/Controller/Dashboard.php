@@ -22,6 +22,7 @@ class Controller_Dashboard extends HDVP_Controller_Template
         ]
     ];
     public function action_index(){
+        $this->include_editor = true;
         $requestData = $selectedObjects = [];
         $selectedCompany = $selectedProject = null;
         if($this->request->method() == Request::POST) {

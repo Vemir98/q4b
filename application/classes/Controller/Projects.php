@@ -378,7 +378,7 @@ class Controller_Projects extends HDVP_Controller_Template
     }
 
     public function action_update(){
-
+        $this->include_editor = true;
         $this->project = ORM::factory('Project',(int)$this->request->param('id'));
         if( ! $this->project->loaded() OR !$this->_user->canUseProject($this->project)){
             throw new HTTP_Exception_404;

@@ -1,5 +1,6 @@
 <?php
 set_time_limit(90);
+
 /**
  * The directory in which your application specific resources are located.
  * The application directory must contain the bootstrap.php file.
@@ -44,7 +45,7 @@ define('EXT', '.php');
  * When using a legacy application with PHP >= 5.3, it is recommended to disable
  * deprecated notices. Disable with: E_ALL & ~E_DEPRECATED
  */
-//error_reporting(E_ALL | E_STRICT);
+error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED & ~E_WARNING);
 //error_reporting(0); // todo:: Uncomment
 
 
@@ -100,7 +101,6 @@ if ( ! defined('KOHANA_START_MEMORY'))
 {
 	define('KOHANA_START_MEMORY', memory_get_usage());
 }
-
 // Bootstrap the application
 require APPPATH.'bootstrap'.EXT;
 

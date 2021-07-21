@@ -286,6 +286,19 @@ class Model_PrObject extends MORM
         $this->_updatePlacesCount();
     }
 
+    public function floorNumbersWithNames(){
+        $floors = $this->floors->find_all();
+        $numbers = [];
+        foreach($floors as $floor){
+//            $numbers [$floor->number]= $floor->custom_name ? $floor->custom_name : $floor->number;
+            if ($floor->custom_name) {
+                $numbers [$floor->number]= $floor->custom_name;
+            }
+        }
+
+        return $numbers;
+    }
+
     public function copy()
     {
         $object = ORM::factory('PrObject');

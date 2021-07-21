@@ -43,30 +43,30 @@ $(document).ready(function() {
             planMarkup:'<tr class="new-link">' +
 
                 '<td class="rwd-td3" data-th=""> ' +
-                    '<input type="text" class="table_input" name="" value="3">' +
+                '<input type="text" class="table_input" name="" value="3">' +
                 '</td>' +
                 '<td class="rwd-td4" data-th="">  ' +
-                    '<input type="text" class="table_input" name="" value="4">' +
+                '<input type="text" class="table_input" name="" value="4">' +
                 '</td>' +
                 '<td class="rwd-td6" data-th="Floor">  ' +
-                    '<div class="multi-select-box comma">' +
-                        '<div class="select-imitation q4-form-input floor-numbers<?=$item->place->loaded() ">' +
-                            '<span class="select-imitation-title"><?=$item->getFloorsAsString()?></span>' +
-                            '<div class="over-select"></div><i class="arrow-down q4bikon-arrow_bottom"></i>' +
-                        '</div>' +
+                '<div class="multi-select-box comma floors-list">' +
+                '<div class="select-imitation q4-form-input floor-numbers<?=$item->place->loaded() ">' +
+                '<span class="select-imitation-title"><?=$item->getFloorsAsString()?></span>' +
+                '<div class="over-select"></div><i class="arrow-down q4bikon-arrow_bottom"></i>' +
+                '</div>' +
 
-                        '<div class="checkbox-list-no-scroll hidden">' +
+                '<div class="checkbox-list-no-scroll hidden">' +
 
-                        '<div class="checkbox-list-row">' +
-                            '<span class="checkbox-text">' +
-                            '<label class="checkbox-wrapper-multiple inline" data-val="">' +
-                            '<span class="checkbox-replace"></span>' +
-                            '<i class="checkbox-list-tick q4bikon-tick"></i>' +
-                            '</label>' +
-                            '<span class="checkbox-text-content bidi-override">' +
-                            '</span>' +
-                            '</span>' +
-                        '</div>' +
+                '<div class="checkbox-list-row" data-custom-label="true">' +
+                '<span class="checkbox-text">' +
+                '<label class="checkbox-wrapper-multiple inline" data-val="">' +
+                '<span class="checkbox-replace"></span>' +
+                '<i class="checkbox-list-tick q4bikon-tick"></i>' +
+                '</label>' +
+                '<span class="checkbox-text-content bidi-override">' +
+                '</span>' +
+                '</span>' +
+                '</div>' +
 
                         '</div>' +
                         '<select class="hidden-select" name="plan_<?=$item->id?>_floors" multiple>' +
@@ -109,7 +109,6 @@ $(document).ready(function() {
         },
 
     });
-
     var currentPage = Q4U.pages.updatePage;
 
     $(document).on('change','.plans-select-prof', function(){
@@ -119,14 +118,13 @@ $(document).ready(function() {
         var neightborVal = $(document).find('#profession_id').val();
         var minFloor = $(this).find('option:selected').data('minfloor');
         var maxFloor = $(this).find('option:selected').data('maxfloor');
-
+        var floorNames = $(this).find('option:selected').data('floornames');
         if($this > 0){
-
             if(neightborVal > 0){
                 self.closest('#add-plans-modal').find('.add-plan').removeClass('disabled-link');
             }
 
-            var floorsRange = $.fn.utilities('generateMultiSelectFloor', minFloor, maxFloor);
+            var floorsRange = $.fn.utilities('generateMultiSelectFloor', minFloor, maxFloor, floorNames);
             self.closest('#add-plans-modal').find('.floors-select .table_label').show();
             self.closest('#add-plans-modal').find('.floors-select .multi-select-box-container').empty().append(floorsRange);
 
@@ -225,7 +223,6 @@ $(document).ready(function() {
         floors = floors ? '/floors/' + floors.join('_') + '/': '';
         var page = CURRENT_PLAN_PAGE ? '/page/'+CURRENT_PLAN_PAGE : '';
         var url = current.data('url') + '/object/' + objectId + '/professions/' + professionId + floors + page;
-
         Q4U.ajaxGetRequest(url, {
             successCallback: function(data) {
                 if (data.getData()) {
@@ -279,7 +276,6 @@ $(document).ready(function() {
         var page = CURRENT_PLAN_PAGE ? '/page/'+CURRENT_PLAN_PAGE : '';
 
         var url = current.closest('form').data('url') + '/object/' + objectId + '/professions/' + professionId + floors + page;
-
         Q4U.ajaxGetRequest(url, {
             successCallback: function(data) {
                 if (data.getData()) {
@@ -776,6 +772,7 @@ $(document).ready(function() {
                     }
 
                     $('[data-toggle="table"]').bootstrapTable();
+                    setupFloorsInitialMultiselect();
                 }
             }
         });
@@ -2153,7 +2150,6 @@ $(document).ready(function() {
 
                     $.fn.utilities('setCarouselWidth', '.q4-carousel-table-wrap', window.innerWidth);
                     $.fn.utilities('setScrollBarWidth', self.closest('.tab_panel').find('.scrollable-table'), windowWidth);
-
                     setTimeout(function(){
 
                         $.fn.utilities('updateContentOnChange');
@@ -2186,6 +2182,7 @@ $(document).ready(function() {
         } else {
             $(document).find('.plans-to-print-link, .plans-to-send').addClass('disabled-link');
         }
+        setupFloorsInitialMultiselect();
     }
 
     function copyPlanModalCheckboxValidation(){
@@ -2200,13 +2197,13 @@ $(document).ready(function() {
     }
 
     $('body').on('planListUpdated', function(e, data) {
-
         $(document).find('.select-profession').trigger('change');
+        setupFloorsInitialMultiselect();
     });
 
     $('body').on('projectPlansUpdated', function(e, data) {
-
         $(document).find('.select-profession').trigger('change');
+        setupFloorsInitialMultiselect();
     });
 
     $(window).scroll(function() {
@@ -2225,5 +2222,71 @@ $(document).ready(function() {
             el.parent().css({paddingTop: "100px"});
         }
     })
+    function setupFloorsInitialMultiselect() {
+        let floorSelectBoxes = $(document).find('.floors-list');
+        floorSelectBoxes.each(function() {
+            let parent = $(this);
+            let checked = parent.find('.checked');
+            let result = "<i class='q4bikon-baseline-stairs active'></i>";
+            if (checked.length <= 0) {
+                // result = "<span class='select-def-text'>" + __('Please select') + "</span>";
+                result = "<i class='q4bikon-baseline-stairs'></i>";
+            }
+            parent.find('.select-imitation .select-imitation-title').html(result);
 
+        })
+    }
+    function setupFloorsMultiselect(self) {
+        let parent = self.closest('.multi-select-box');
+        if (parent.hasClass('comma')) {
+            var val = self.find('.checkbox-wrapper-multiple').data('val');
+            var option = parent.find('.hidden-select option[value="' + val + '"]');
+            option['0'].selected = !option['0'].selected;
+            var select = parent.find('.hidden-select');
+
+            self.closest('.checkbox-list').find('.checkbox-wrapper-multiple').each(function() {
+                var opt = select.find('option[value="' + $(this).data('val') + '"]');
+                if (opt[0].selected) {
+                    let text = opt.text();
+                    $(this).addClass('checked');
+                } else {
+                    $(this).removeClass('checked');
+                }
+            });
+            //no scrollplugin version
+            self.closest('.checkbox-list-no-scroll').find('.checkbox-wrapper-multiple').each(function() {
+                var opt = select.find('option[value="' + $(this).data('val') + '"]');
+                if (opt[0].selected) {
+                    $(this).addClass('checked');
+                } else {
+                    $(this).removeClass('checked');
+                }
+            });
+            let checked = parent.find('.checked');
+            let result = "<i class='q4bikon-baseline-stairs active'></i>";
+
+            if (checked.length <= 0) {
+                // result = "<span class='select-def-text'>" + __('Please select') + "</span>";
+                result = "<i class='q4bikon-baseline-stairs'></i>";
+            }
+            parent.find('.select-imitation .select-imitation-title').html(result);
+        }
+    }
+    $(document).on('show.bs.modal', function() {
+        let parent = $('.modal').find('.floors-list');
+        let checked = parent.find('.checked');
+        let result = "<i class='q4bikon-baseline-stairs active'></i>";
+
+        if (checked.length <= 0) {
+            // result = "<span class='select-def-text'>" + __('Please select') + "</span>";
+            result = "<i class='q4bikon-baseline-stairs'></i>";
+        }
+        parent.find('.select-imitation .select-imitation-title').html(result);
+    })
+
+    setupFloorsInitialMultiselect();
+
+    $(document).on('click', '.floors-list .checkbox-list-row', function() {
+        setupFloorsMultiselect($(this));
+    });
 });

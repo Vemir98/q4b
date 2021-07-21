@@ -13,12 +13,12 @@ return [
     'default' => 'primary',
     'connections' => [
         'primary' => [
-            'host' => 'smtp.yandex.ru',
-            'port' => '465',
-            'secure' => 'ssl', // null, 'ssl', or 'tls'
+            'secure' => 'tls', // null, 'ssl', or 'tls'
             'auth' => true, // true if authorization required
-            'user' => 'info@qforb.net',
-            'pass' => 'qforbnet',
+            'host'      => 'sunrisedvp.systems',
+            'port'      => 587,
+            'user'  => 'starphone@sunrisedvp.systems',
+            'pass'  => 'Ipr59m@2',
         ],
     ],
 

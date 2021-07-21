@@ -570,7 +570,6 @@ class Controller_QualityReports extends HDVP_Controller_Template
          * @see JonnyW\PhantomJs\Http\CaptureRequest
          **/
         $request = $client->getMessageFactory()->createPdfRequest(URL::site('/reports/quality/saved/'.$report->pk(),'https'), 'GET',15000);
-        $request->setRepeatingFooter('<footer>Footer <span style="float:right">%pageNum% / %pageTotal%</span></footer>');
         $request->addHeader('Pjsbot76463', '99642');
 
         $request->setOutputFile((DOCROOT.'media/data/reports/pdf/'.$report->pk().'.pdf'));

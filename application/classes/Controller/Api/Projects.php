@@ -446,6 +446,7 @@ class Controller_Api_Projects extends HDVP_Controller_API
                 'unique_token',
                 'del_rep_id'
             ]);
+        $isDebug = Arr::get($_POST,'debug',false);
         $clientData['plan_id'] *=1;
         if(empty($clientData['del_rep_id']) OR !(int)$clientData['del_rep_id']){
             unset($clientData['del_rep_id']);
@@ -467,6 +468,7 @@ class Controller_Api_Projects extends HDVP_Controller_API
         $clientData['description'] = '['.date('d/m/Y').'] '.$clientData['description'].PHP_EOL;
         $date = DateTime::createFromFormat('d/m/Y',$clientData['due_date']);
         if($date == null){
+            file_put_contents(DOCROOT.'date_err.log',$clientData['due_date']);
             throw API_Exception::factory(500,'Incorrect date format');
         }
         $clientData['due_date'] = $date->getTimestamp();
@@ -514,6 +516,7 @@ class Controller_Api_Projects extends HDVP_Controller_API
                 }
             }
             $imgData = $this->_GNormPArr('images');
+
             if(!empty($imgData)){
                 foreach ($imgData as $img){
                     if(isset($img['name'])){
@@ -586,6 +589,7 @@ class Controller_Api_Projects extends HDVP_Controller_API
             $clientData['description'] = '['.date('d/m/Y').'] '.$clientData['description'].PHP_EOL;
         $date = DateTime::createFromFormat('d/m/Y',$clientData['due_date']);
         if($date == null){
+            file_put_contents(DOCROOT.'date_err.log',$clientData['due_date']);
             throw API_Exception::factory(500,'Incorrect date format');
         }
         $clientData['due_date'] = $date->getTimestamp();

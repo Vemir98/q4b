@@ -70,6 +70,7 @@ class HDVP_Controller_API extends Controller
 
     public function __construct(Request $request, Response $response)
     {
+        PutRequestHandler::handle();
         parent::__construct($request, $response);
         if(Security::client_blocked()){
             throw API_Exception::factory(404,'blocked');
@@ -276,17 +277,66 @@ class HDVP_Controller_API extends Controller
 
     public function checkAppToken(){
         $tkn = $this->request->param('appToken');
-        if(empty($tkn) OR strlen($tkn) !== 32){
-            throw API_Exception::factory(401,'Not Authorized');
-        }
-        $tkn = ORM::factory('UToken',['token' => $tkn, 'type' => Enum_UToken::Application]);
-        if( ! $tkn->loaded()){
-            throw API_Exception::factory(401,'Not Authorized');
-        }
-        $this->_auth->force_login($tkn->user);
         $this->_user = $this->_auth->get_user();
 
+        if(empty($tkn) OR strlen($tkn) !== 32){
+            if (!$this->_user) {
+                throw API_Exception::factory(401,'Not Authorized');
+            }
+        }
+
+        if (!$this->_user) {
+            $tkn = ORM::factory('UToken',['token' => $tkn, 'type' => Enum_UToken::Application]);
+            if( ! $tkn->loaded()){
+                throw API_Exception::factory(401,'Not Authorized');
+            }
+            $this->_auth->force_login($tkn->user);
+            $this->_user = $this->_auth->get_user();
+        }
     }
+    public function b64ToFile($b64Str, $name, $path) {
+        $src = $b64Str;
+        if (preg_match('/^data:image\/(\w+);base64,/', $src, $type)) {
+
+            $data = substr($src, strpos($src, ',') + 1);
+            $type = strtolower($type[1]); // jpg, png, gif
+
+            if (!in_array($type, [ 'jpg', 'jpeg', 'png' ])) {
+                throw new \Exception('invalid image type');
+            }
+            $data = str_replace( ' ', '+', $data );
+            $data = base64_decode($data);
+
+            if ($data === false) {
+                throw new \Exception('base64_decode failed');
+            }
+        } else {
+            throw new \Exception('did not match data URI with image data');
+        }
+        $fileName = "{$path}/{$name}";
+        file_put_contents($fileName, $data);
+        return $name;
+    }
+
+    public function _b64Arr($filesArr, $path){
+        $output = [];
+        foreach ($filesArr as $key => $data){
+            if (!$data['id']) {
+                $b64Src = $data['src'];
+                $one = [
+                    'name' => $this->b64ToFile($b64Src, $data['fileName'], $path),
+                    'type' => $data['ext'],
+                    'tmp_name' => $data['fileOriginalName'],
+                    'error' => '',
+                    'size' => (int) (strlen($b64Src) / 1024)
+                ];
+                $output[] = $one;
+            }
+        }
+
+        return $output;
+    }
+
 
     public function _pFArr(){
         $output = [];
@@ -326,6 +376,7 @@ class HDVP_Controller_API extends Controller
             }
 
         }
+
         return $output;
     }
 
@@ -356,5 +407,9 @@ class HDVP_Controller_API extends Controller
         $f->status = Enum_FileStatus::Active;
         $f->save();
         return $f;
+    }
+
+    public function put(){
+        return $GLOBALS['_PUT'];
     }
 }

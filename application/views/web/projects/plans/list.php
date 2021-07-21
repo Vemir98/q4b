@@ -237,7 +237,11 @@ $icons = [
                                                     <span class="select-imitation-title"><?=$item->getFloorsAsString()?></span>
 
                                                     <div class="over-select"></div><i class="arrow-down q4bikon-arrow_bottom"></i>
-                                                </div><?$floorNumbers = $item->floorNumbers();?>
+                                                </div><?php $floorNumbers = $item->floorNumbers();
+                                                        $floorNumbersWithNames = $item->floorNumbersWithNames();
+                                                        echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$floorNumbersWithNames]); echo "</pre>"; exit;
+                                                        ?>
+
                                                 <div class="checkbox-list-no-scroll hidden">
                                                     <?for($i = $item->object->smaller_floor; $i <= $item->object->bigger_floor; $i++):?>
                                                         <div class="checkbox-list-row">

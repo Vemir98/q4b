@@ -75,30 +75,40 @@
                                         <span class="check-all-links" data-seltxt="<?=__('select all')?>" data-unseltxt="<?=__('unselect all')?>"><?=__('select all')?></span>
                                      <?endif?>
                                 </label>
-                                <div class="multi-select-box comma ">
+                                <div class="multi-select-box comma floors-list">
                                     <div class="select-imitation table_input floor-numbers<?=$disabled?>">
-                                        <span class="select-imitation-title"><?=$item->getFloorsAsString()?></span>
+                                        <span class="select-imitation-title"><i class="q4bikon-baseline-stairs"></i></span>
                                         <div class="over-select"></div><i class="arrow-down q4bikon-arrow_bottom"></i>
-                                    </div><?$floorNumbers = $item->floorNumbers();?>
+                                    </div>
+                                    <?$floorNumbers = $item->floorNumbers();
+                                    $floorNumbersWithNames = $item->object->floorNumbersWithNames()?>
+
                                     <div class="checkbox-list">
                                         <?for($i = $defaultObject->smaller_floor; $i <= $defaultObject->bigger_floor; $i++):?>
-                                            <div class="checkbox-list-row">
+                                            <div class="checkbox-list-row" data-custom-label="true">
                                             <span class="checkbox-text">
                                                 <label class="checkbox-wrapper-multiple inline <?=in_array($i,$floorNumbers) ? 'checked' : ''?>" data-val="<?=$i?>">
                                                     <span class="checkbox-replace"></span>
                                                     <i class="checkbox-list-tick q4bikon-tick"></i>
                                                 </label>
-                                                <span class="checkbox-text-content bidi-override">
-                                                    <?=$i?>
-                                                </span>
-
+                                                <?if($floorNumbersWithNames[$i]):?>
+                                                    <span class="checkbox-text-content" data-val="<?=$i?>">
+                                                        <?=$floorNumbersWithNames[$i]?>
+                                                    </span>
+                                                <?else:?>
+                                                    <span class="checkbox-text-content bidi-override" data-val="<?=$i?>">
+                                                        <?=$i?>
+                                                    </span>
+                                                <?endif;?>
                                             </span>
                                             </div>
                                         <?endfor?>
                                     </div>
                                     <select class="hidden-select" name="floors" multiple>
                                         <?for($i = $defaultObject->smaller_floor; $i <= $defaultObject->bigger_floor; $i++):?>
-                                            <option <?=in_array($i,$floorNumbers) ? 'selected="selected"' : ''?> value="<?=$i?>"><?=$i?></option>
+                                            <option <?=in_array($i,$floorNumbers) ? 'selected="selected"' : ''?> value="<?=$i?>" data-text="<?=$i?>">
+                                                <?=$floorNumbersWithNames[$i] ? $floorNumbersWithNames[$i] : $i?>
+                                            </option>
                                         <?endfor?>
                                     </select>
                                 </div>
@@ -108,7 +118,7 @@
                             <div class="form-group col-28 rtl-float-right">
                                 <label class="table_label table_label-small"><?=__('Element number')?></label>
                                 <input value="<?=!empty($item->place->custom_number) ? $item->place->custom_number : $item->place->number?>" type="text" class="q4-form-input plan-place-cnumber<?=$disabled?>">
-                                <input name="place_number" value="<?=$item->place->number?>" type="hidden">
+                                <input name="place_number" value="<?=$item->place->id?>" type="hidden">
                             </div>
                             <?
                                 $selectedCrafts = $item->crafts->find_all();
@@ -307,7 +317,7 @@
         <?foreach ($places as $place):?>
         <?//$name = str_replace("'","\'",html_entity_decode($place->custom_number)).' '.__('floor').' '.$place->floor->number?>
         <?$name = str_replace("'","\'",html_entity_decode($place->custom_number))?>
-        <?$p[] = "{name: '{$name}', id: '{$place->id}',floorId :'{$place->floor->number}',floorName :'".__('floor')." {$place->floor->number}'}"?>
+        <?$p[] = "{name: '{$name}', placeName: '{$place->name}', id: '{$place->id}',floorId :'{$place->floor->number}',floorName :'".__('floor')." {$place->floor->number}'}"?>
         <?endforeach;?>
         <? $p = implode(",\n",$p)?>
         var PLACES_DATA = [
@@ -327,7 +337,7 @@
             });
             $.each(PLACES_DATA, function(key, place) {
                 if(floors.indexOf(place.floorId + "") != -1 || floors.length < 1){
-                    places.push({'value': place.name + "  " + (floors.length > 1 || floors.length == 0 ? place.floorName : ""), 'data': place.id});
+                    places.push({'value': place.name + "  (" + place.placeName +")", 'data': place.id});
                 }
             });
             placeInput.autocomplete({

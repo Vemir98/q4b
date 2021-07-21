@@ -335,4 +335,54 @@ class Model_User extends Model_Auth_User
         return (bool)count(DB::query(Database::SELECT,'SELECT * FROM users_projects up WHERE up.user_id='.(int)$userId.' AND up.project_id='.(int)$projectId.' AND up.notify_changes')->execute()->as_array());
     }
 
+    public function getAuthToken() {
+        $utkn = ORM::factory('UToken')->where('user_id', '=', $this->id)->where('type', '=', Enum_UToken::Application)->find();
+//        if (!$utkn->loaded()) {
+//            $utkn = Model_UToken::makeApplicationToken($this->id);
+//        }
+        return $utkn->as_array()['token'];
+    }
+
+    public function relatedCompanies(){
+        $query = ORM::factory('Company');
+        if($this->getRelevantRole('outspread') != Enum_UserOutspread::General) {
+            if ($this->client_id == 0) {
+                $userProjects = $this->projects->find_all();
+                $cmpIds = [];
+                if ($userProjects) {
+                    foreach ($userProjects as $userProject) {
+                        $cmpIds[] = $userProject->company_id;
+                    }
+                }
+                if (!empty($cmpIds)) {
+                    $query->where('id', 'IN', DB::expr('('.implode(',',$cmpIds).')'));
+                }
+            } else {
+                $query->where('client_id', '=', $this->client_id);
+            }
+        }
+
+        $query->order_by('name','ASC');
+        return $query;
+    }
+
+    public function relatedProjects($companyId){
+        $query = ORM::factory('Project');
+        if($this->getRelevantRole('outspread') != Enum_UserOutspread::General) {
+            if ($this->client_id == 0) {
+                $userProjects = $this->projects->find_all();
+                $projIds = [];
+                if ($userProjects) {
+                    foreach ($userProjects as $userProject) {
+                        $projIds[] = $userProject->id;
+                    }
+                }
+                if (!empty($projIds)) {
+                    $query->where('id', 'IN', DB::expr('('.implode(',',$projIds).')'));
+                }
+            }
+        }
+        return $query->where('company_id','=',$companyId)->find_all();
+    }
+
 }

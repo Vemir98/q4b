@@ -191,11 +191,11 @@
                                                 <span class="pdf_main_content_image_prop1 fw-700"><?=$img->original_name?></span>
                                                 <span class="pdf_main_content_image_prop2 fw-700">(<?=__('uploaded')?>: <?=date('d.m.y H:i',$img->created_at)?> )&#x200E;</span>
                                             </div>
-                                            <?if ($_SERVER['SERVER_NAME'] === 'qforb.net') :?>
-                                                <img src="<?=$img->getBigThumbPath()?>?<?=rand(100000,99999999)?>" alt="<?=$img->original_name?>">
-                                            <?else:?>
+<!--                                            --><?//if ($_SERVER['SERVER_NAME'] === 'qforb.net') :?>
+<!--                                                <img src="--><?//=$img->getBigThumbPath()?><!--?--><?//=rand(100000,99999999)?><!--" alt="--><?//=$img->original_name?><!--">-->
+<!--                                            --><?//else:?>
                                                 <img src="<?=$img->originalFilePath() . '?' . uniqid()?>" alt="<?=$img->original_name?>">
-                                            <?endif?>
+<!--                                            --><?//endif?>
                                         </div>
                                     <?if(($number+2)%2==1 || $number == count($images)):?>
                                         </div>

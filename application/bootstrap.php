@@ -147,6 +147,7 @@ Kohana::modules(array(
 	'reports'  => MODPATH.'reports',  // reports
 	'vuejs'  => MODPATH.'vue',  // vue js
     'authenticator'  => MODPATH.'authenticator',  // Google Authenticator
+    'put-request-handler'  => MODPATH.'put-request-handler',  // Google Authenticator
 	));
 
 /**

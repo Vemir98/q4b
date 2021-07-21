@@ -1,0 +1,152 @@
+array (
+  0 => 
+  array (
+    'slug' => 'quality_control/create',
+    'text' => 'Create Quality Control',
+    'tooltip' => 'Create Quality Control',
+    'icon' => 'q4bikon-tick',
+    'resource' => 'Controller_QualityControl',
+    'priority' => 219,
+    'disabled' => false,
+    'active' => false,
+  ),
+  1 => 
+  array (
+    'slug' => 'labtests',
+    'text' => 'Lab control',
+    'icon' => 'q4bikon-lab',
+    'resource' => 'Controller_LabTests',
+    'priority' => 219,
+    'children' => 
+    array (
+      0 => 
+      array (
+        'slug' => '#',
+        'text' => 'Lab control list',
+        'resource' => 'Controller_LabTests',
+        'priority' => 219,
+        'disabled' => true,
+        'active' => false,
+      ),
+      1 => 
+      array (
+        'slug' => '#',
+        'text' => 'Elements Type',
+        'resource' => 'Controller_LabTests',
+        'priority' => 219,
+        'disabled' => true,
+        'active' => false,
+      ),
+      2 => 
+      array (
+        'slug' => '#',
+        'text' => 'Elements List',
+        'resource' => 'Controller_LabTests',
+        'priority' => 219,
+        'disabled' => true,
+        'active' => false,
+      ),
+    ),
+    'disabled' => false,
+    'active' => false,
+  ),
+  2 => 
+  array (
+    'slug' => 'dashboard',
+    'text' => 'Dashboard',
+    'tooltip' => 'Dashboard',
+    'icon' => 'q4bikon-uncheked',
+    'resource' => 'Controller_Dashboard',
+    'priority' => 219,
+    'disabled' => false,
+    'active' => false,
+  ),
+  3 => 
+  array (
+    'slug' => 'companies',
+    'text' => 'Companies',
+    'tooltip' => 'Companies',
+    'icon' => 'q4bikon-companies',
+    'resource' => 'Controller_Companies',
+    'priority' => 129,
+    'disabled' => false,
+    'active' => false,
+  ),
+  4 => 
+  array (
+    'slug' => 'projects',
+    'text' => 'Menu _Projects',
+    'tooltip' => 'Tooltip _Projects',
+    'icon' => 'q4bikon-project',
+    'resource' => 'Controller_Projects',
+    'priority' => 219,
+    'children' => 
+    array (
+      0 => 
+      array (
+        'slug' => '#',
+        'text' => 'Tasks',
+        'resource' => 'Controller_Projects',
+        'priority' => 219,
+        'disabled' => true,
+        'active' => false,
+      ),
+    ),
+    'disabled' => false,
+    'active' => false,
+  ),
+  5 => 
+  array (
+    'slug' => 'plans',
+    'text' => 'Plans',
+    'tooltip' => 'Plans',
+    'icon' => 'q4bikon-file',
+    'resource' => 'Controller_Plans',
+    'priority' => 219,
+    'disabled' => false,
+    'active' => false,
+  ),
+  6 => 
+  array (
+    'slug' => 'reports/list',
+    'text' => 'Reports',
+    'tooltip' => 'Reports',
+    'icon' => 'q4bikon-reports',
+    'resource' => 'Controller_Reports',
+    'priority' => 219,
+    'disabled' => false,
+    'active' => false,
+  ),
+  7 => 
+  array (
+    'slug' => 'consultants',
+    'text' => 'Menu_Consultants And Auditors',
+    'tooltip' => 'Tooltip_Consultants And Auditors',
+    'icon' => 'q4bikon-public',
+    'resource' => 'Controller_Consultants',
+    'priority' => 159,
+    'disabled' => false,
+    'active' => false,
+  ),
+  8 => 
+  array (
+    'slug' => 'settings',
+    'text' => 'Settings',
+    'tooltip' => 'Settings',
+    'icon' => 'q4bikon-settings2',
+    'resource' => 'Controller_Settings',
+    'priority' => 99,
+    'disabled' => false,
+    'active' => false,
+  ),
+  9 => 
+  array (
+    'slug' => '',
+    'text' => 'Archive',
+    'icon' => 'q4bikon-archive',
+    'resource' => 'Controller_Archive',
+    'priority' => 159,
+    'disabled' => false,
+    'active' => false,
+  ),
+)

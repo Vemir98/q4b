@@ -70,11 +70,11 @@ class Controller_Companies extends HDVP_Controller_Template
         $filterBy = $this->request->param('status');
         $sortBy = $this->request->param('sorting');
         $export = $this->request->param('export');
-
-        $query = ORM::factory('Company');
-        if($this->_user->getRelevantRole('outspread') != Enum_UserOutspread::General){
-            $query->where('client_id','=',$this->_user->client_id);
-        }
+        $query = $this->_user->relatedCompanies();
+//        $query = ORM::factory('Company');
+//        if($this->_user->getRelevantRole('outspread') != Enum_UserOutspread::General){
+//            $query->where('client_id','=',$this->_user->client_id);
+//        }
         if(!empty($filterBy)){
             $query->and_where('status','=',$filterBy);
         }

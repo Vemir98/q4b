@@ -43,7 +43,7 @@ class Controller_Api_Companies extends HDVP_Controller_API
             if(!is_dir(self::CACHE_DIR.'/companies/')){
                 mkdir(self::CACHE_DIR.'/companies/', 0777, true);
             }
-            file_put_contents($filename,json_encode($this->_responseData['items']));
+            //file_put_contents($filename,json_encode($this->_responseData['items']));
         }
         if(!empty($this->_responseData['items']) AND !empty($clientItems)){
             foreach ($this->_responseData['items'] as $key => $item){
@@ -118,7 +118,7 @@ class Controller_Api_Companies extends HDVP_Controller_API
             if(!is_dir(self::CACHE_DIR.'/companies/crafts-professions')){
                 mkdir(self::CACHE_DIR.'/companies/crafts-professions', 0777, true);
             }
-            file_put_contents($filename,json_encode(['professions' => $this->_responseData['professions'], 'crafts' => $this->_responseData['crafts'],'relation' => $this->_responseData['relation']]));
+           // file_put_contents($filename,json_encode(['professions' => $this->_responseData['professions'], 'crafts' => $this->_responseData['crafts'],'relation' => $this->_responseData['relation']]));
         }
         $this->_responseData['updated'] = filemtime($filename);
     }

@@ -12,6 +12,7 @@ class FileServer
 
     private $_lazyImageTaksData = array();
     private $_lazyPdfTaksData = array();
+    private $_lazyFileTaksData = array();
 
     public function addImageTask($imageUrl,$callbackUrl){
 //        $a = new GAuthenticator();
@@ -24,8 +25,27 @@ class FileServer
                 'imageUrl' => $imageUrl,
                 'callbackUrl' => $callbackUrl
             ));
+        $request->client()->options(array(
+            CURLOPT_SSL_VERIFYPEER => FALSE,
+            CURLOPT_SSL_VERIFYHOST => FALSE
+        ));
         $response = $request->execute();
 //        file_put_contents(DOCROOT.'resp.txt',$response);
+    }
+
+    public function addFileTask($imageUrl,$callbackUrl){
+        $request = Request::factory('https://fs.qforb.net/api/v1/download-file')
+            ->method(Request::POST)
+            ->post(
+                array(
+                    'fileUrl' => $imageUrl,
+                    'callbackUrl' => $callbackUrl
+                ));
+        $request->client()->options(array(
+            CURLOPT_SSL_VERIFYPEER => FALSE,
+            CURLOPT_SSL_VERIFYHOST => FALSE
+        ));
+        echo $request->execute();
     }
 
     public function addPdfTask($pdfUrl,$callbackUrl,$convertToJpg = 0, $mobileMinimize = 0){
@@ -38,7 +58,45 @@ class FileServer
                     'convertToJpg' => $convertToJpg,
                     'mobileMinimize' => $mobileMinimize,
                 ));
+        $request->client()->options(array(
+            CURLOPT_SSL_VERIFYPEER => FALSE,
+            CURLOPT_SSL_VERIFYHOST => FALSE
+        ));
         $request->execute();
+    }
+
+    public function addReplaceImageTask($imageUrl,$replaceUrl,$callbackUrl){
+        $request = Request::factory('https://fs.qforb.net/api/v1/replace-image')
+            ->method(Request::POST)
+            ->post(
+                array(
+                    'imageUrl' => $imageUrl,
+                    'callbackUrl' => $callbackUrl,
+                    'replaceUrl' => $replaceUrl,
+                ));
+        $request->client()->options(array(
+            CURLOPT_SSL_VERIFYPEER => FALSE,
+            CURLOPT_SSL_VERIFYHOST => FALSE
+        ));
+        $request->execute();
+    }
+
+    public function deleteFile($path){
+        $request = Request::factory('https://fs.qforb.net/api/v1/delete-file')
+            ->method(Request::POST)
+            ->post(
+                array(
+                    'fileUrl' => $path,
+                ));
+        $request->client()->options(array(
+            CURLOPT_SSL_VERIFYPEER => FALSE,
+            CURLOPT_SSL_VERIFYHOST => FALSE
+        ));
+        $request->execute();
+    }
+
+    public function addLazyFileTask($fileUrl,$callbackUrl){
+        $this->_lazyFileTaksData[] = ['url' => $fileUrl, 'callback' => $callbackUrl];
     }
 
     public function addLazyPdfTask($pdfUrl,$callbackUrl,$convertToJpg = 0, $mobileMinimize = 0){
@@ -63,6 +121,10 @@ class FileServer
 
         foreach ($this->_lazyPdfTaksData as $pdf){
             $this->addPdfTask($pdf['url'],$pdf['callback'],$pdf['toJpg'],$pdf['min']);
+        }
+
+        foreach ($this->_lazyFileTaksData as $file){
+            $this->addFileTask($file['url'],$file['callback']);
         }
     }
 

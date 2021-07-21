@@ -628,4 +628,11 @@ class Kohana_Arr {
 		return $flat;
 	}
 
+    public static function decamelize($fields)
+    {
+        return array_map(function ($item){
+            return Inflector::underscore(Inflector::decamelize($item));
+        },$fields);
+    }
+
 }

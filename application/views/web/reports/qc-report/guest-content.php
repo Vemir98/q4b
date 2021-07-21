@@ -24,7 +24,7 @@
         <?else: ?>
             <div class="qc_tabs_sec">
                 <div class="qc_tabs_sec_tabs">
-                    <div class="qc_tab qc_tabs Statistics active" data-tab="tab_statistics"><?=__('Statistics')?></div>
+                    <div class="qc_tab qc_tabs Statistics" data-tab="tab_statistics"><?=__('Statistics')?></div>
                     <div class="qc_tab qc_tabs Quality-controls" data-tab="tab_qc_controls"><?=__('Quality controls')?></div>
                     <div class="qc_tab qc_tabs Info" data-tab="tab_info"><?=__('Info')?></div>
                 </div>

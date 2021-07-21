@@ -21,7 +21,9 @@ if(Auth::instance()->get_user()->is('project_supervisor')){//запрет на �
 }
 ?>
 
-<div id="quality-control-modal-mobile"  data-backdrop="static" data-keyboard="false" class="quality-control-modal modal fade" role="dialog" data-qcid="<?=$item->id?>">
+<div id="quality-control-modal-mobile"  data-backdrop="static" data-keyboard="false" class="quality-control-modal modal fade" role="dialog" data-qcid="<?=$item->id?>"
+     data-add-image-url="/projects/add_quality_control_image_from_raw_data/<?=$item->id?>"
+     data-update-image-url="/projects/update_quality_control_image/<?=$item->id?>/">
     <div class="modal-dialog q4_project_modal quality-control-dialog-mobile q4-mobile-layout">
         <form action="<?=$formAction?>" data-ajax="true" data-submit="false" method="post">
             <input type="hidden" value="" name="x-form-secure-tkn"/>
@@ -53,7 +55,7 @@ if(Auth::instance()->get_user()->is('project_supervisor')){//запрет на �
                             </li>
                             <li>
                                 <i class="icon q4bikon-stairway light-blue"></i>
-                                <span class="qc-mobile-list-text"><?=__('Floor')?>: <span class="bidi-override"><?=$item->place->floor->number?></span></span> <span class="reports-prop-title-divider"> | </span><span class="qc-mobile-list-text"><?=__('Element id')?>:<span class="bidi-override"><?=$itemPlace->number?></span></span>
+                                <span class="qc-mobile-list-text"><?=__('Floor')?>: <span class="bidi-override"><?=$item->place->floor->custom_name ? $item->place->floor->custom_name : $item->place->floor->number?></span></span> <span class="reports-prop-title-divider"> | </span><span class="qc-mobile-list-text"><?=__('Element id')?>:<span class="bidi-override"><?=$itemPlace->number?></span></span>
                             </li>
                         </ul>
                     </div>
@@ -276,7 +278,8 @@ if(Auth::instance()->get_user()->is('project_supervisor')){//запрет на �
                         <div data-structurecount="<?=count($itemImages)?>" class="qc-image-list-mobile q4-owl-carousel">
                              <?foreach ($itemImages as $number => $image):?>
                                 <div class="item qc-image-list-mobile-item">
-                                    <a data-url="<?=$image->originalFilePath()?>" data-controller="update_quality_control_image" data-ext="<?=$image->mime?>" data-fileid="<?=$image->id?>" title="<?=$image->original_name?>" class="call-lit-plugin">
+                                    <a data-url="<?=$image->originalFilePath()?>" data-controller="update_quality_control_image" data-ext="<?=$image->mime?>" data-fileid="<?=$image->id?>" title="<?=$image->original_name?>" class="call-lit-plugin"
+                                       data-update-url="/projects/update_quality_control_image/<?=$item->id?>/<?=$image->id?>">
                                         <span class="modal-tasks-image-number"><?=$number+1?>&nbsp;</span>
                                         <span class="modal-tasks-image-name"><?=$image->original_name?></span>
                                         <span class="modal-img-upload-date">

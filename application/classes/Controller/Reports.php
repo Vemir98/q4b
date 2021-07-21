@@ -84,6 +84,7 @@ class Controller_Reports extends HDVP_Controller_Template
     }
 
     public function action_generate(){
+        $this->include_editor = true;
         Breadcrumbs::add(Breadcrumb::factory()->set_title(__('QC Report'))->set_url('/reports'));
         if(Request::current()->is_initial()){
             $this->_checkPermOrFail('read');

@@ -21,7 +21,7 @@ class Controller_QualityControl extends HDVP_Controller_Template
     public $company, $project;
 
     public function action_create(){
-
+        $this->include_editor = true;
         View::set_global('_PROJECT', $this->project);
         if($this->request->method() == HTTP_Request::POST){
             $placeId = (int)Arr::get($this->post(),'place_id');

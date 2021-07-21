@@ -59,8 +59,9 @@ $selectedSpace = $selectedArray["space"] ? $selectedArray["space"] : '';
                 </div>
                 <select class="hidden-select" name="object_id[]" multiple>
                     <?foreach($props as $prop):?>
+                    <?=$obj=ORM::factory('PrObject',$prop['id']);?>
                     <?$selected = in_array($prop['id'], $selectedObjects) ? "selected":""?>
-                        <option value="<?= $prop['id'] ?>" <?=$selected?> data-floor-from="<?=$prop['smaller_floor']?>" data-floor-to="<?=$prop['bigger_floor']?>"><?=$prop['type']?> - <?=$prop['name']?></option>
+                        <option value="<?= $prop['id'] ?>" <?=$selected?> data-floornames='<?=json_encode($obj->floorNumbersWithNames())?>' data-floor-from="<?=$prop['smaller_floor']?>" data-floor-to="<?=$prop['bigger_floor']?>"><?=$prop['type']?> - <?=$prop['name']?></option>
                     <?endforeach?>
                 </select>
             </div>
@@ -70,17 +71,10 @@ $selectedSpace = $selectedArray["space"] ? $selectedArray["space"] : '';
                 <?=__('Floor')?>
                 <span class="check-all-links" data-seltxt="<?=__('select all')?>" data-unseltxt="<?=__('unselect all')?>"><?=__('select all')?></span>
             </label>
-            <div class="multi-select-box comma obj-floors">
+            <div class="multi-select-box comma floors-list">
                 <div class="select-imitation table_input">
                     <span class="select-imitation-title" data-text="<?=__('Please select')?>">
-                        <span class="select-def-text">
-                        <?if($selectedFloors):?>
-                        <?=Model_PrPlan::getNumbersRangeString($selectedFloors)?>
-                        <?else:?>
-                            <?=__('Please select')?>
-                        <?endif;?>
-
-                        </span>
+                        <i class="q4bikon-baseline-stairs"></i>
                     </span>
                      <div class="over-select<?=$selectedFloors ? '' : ' disabled-input' ?>" id="reports-adv-floor"></div>
                      <i class="arrow-down q4bikon-arrow_bottom"></i>
@@ -104,7 +98,7 @@ $selectedSpace = $selectedArray["space"] ? $selectedArray["space"] : '';
                     ?>
                     <?if($smallFloor == $bigFloor):?>
                         <?$checked = in_array($bigFloor, $selectedFloors) ? "checked":""?>
-                        <div class="checkbox-list-row">
+                        <div class="checkbox-list-row"  data-custom-label="true">
                             <span class="checkbox-text">
                                 <label class="checkbox-wrapper-multiple inline <?=$checked?>" data-val="<?=$bigFloor?>">
                                     <span class="checkbox-replace"></span>
@@ -119,7 +113,7 @@ $selectedSpace = $selectedArray["space"] ? $selectedArray["space"] : '';
                         <?for($i=$smallFloor; $i <= $bigFloor; $i++):?>
 
                             <?$checked = in_array($i, $selectedFloors) ? "checked":""?>
-                            <div class="checkbox-list-row">
+                            <div class="checkbox-list-row" data-custom-label="true">
                                 <span class="checkbox-text">
                                     <label class="checkbox-wrapper-multiple inline <?=$checked?>" data-val="<?=$i?>">
                                         <span class="checkbox-replace"></span>

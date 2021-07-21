@@ -144,6 +144,39 @@ use Helpers\ReportsHelper;
                             </td>
                         </tr>
                     <?endforeach;?>
+                        <tr class="dark-row">
+                            <td data-th="<?=__('Status List')?>"><span class="report-status-link total"><?=__("Total_sum")?></span></td>
+                            <td data-th="<?=__('Quantity')?>" class="enlarged">
+                                <div class="double-cell-cpt">
+                                    <div class="double-cell-cpt1">
+                                        <span class="report-status-quantity">
+                                            <?php
+                                                $sum = 0;
+                                                foreach ($craftsList as $id=>$craft) {
+                                                    if ($craft['count']) {
+                                                        $sum += $craft['count'];
+                                                    }
+                                                }
+                                                echo $sum;
+                                            ?>
+                                        </span>
+                                    </div>
+                                    <div class="double-cell-cpt2">
+                                        <span class="report-status-quantity">
+                                            <?php
+                                            $sum = 0;
+                                            foreach ($filteredCraftsList as $id=>$craft) {
+                                                if ($craft['count']) {
+                                                    $sum += $craft['count'];
+                                                }
+                                            }
+                                            echo $sum;
+                                            ?>
+                                        </span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             <?endif?>

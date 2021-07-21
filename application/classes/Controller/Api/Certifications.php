@@ -42,13 +42,18 @@ class Controller_Api_Certifications extends HDVP_Controller_API
         foreach ($crafts as $craft){
             $instructions = $craft->instructions->where('project_id','IS',null)->find_all();
             foreach ($instructions as $r){
+                $images = [];
+                foreach ($r->images->find_all() as $img){
+                    $images []= $img->path . '/' . $img->name;
+                }
                 $regData[] = [
                     'id' => $r->id,
                     'craftId' => $craft->id,
                     'craftName' => $craft->name,
                     'desc' => $r->desc,
                     'status' => $r->status,
-                    'file' => !empty($r->file) ? str_replace('/home/qforbnet/public_html','',$this->instructionsPath($id).str_replace('.pdf','.jpg',$r->file)) : null,
+                    'file' => strpos($r->file,'fs.qforb.net') === false ?  ($r->file ? Kohana_URL::site('/media/data/companies/' . $r->company_id . '/instructions/'.$r->file,'https') : null) : $r->file,
+                    'images' => $images,
                     'createdAt' => $r->created_at,
                     'updatedAt' => $r->updated_at,
                     'createdBy' => $r->created_by,
@@ -68,13 +73,18 @@ class Controller_Api_Certifications extends HDVP_Controller_API
         foreach ($crafts as $craft){
             $certifications = $craft->instructions->where('project_id','=',$id2)->find_all();
             foreach ($certifications as $r){
+                $images = [];
+                foreach ($r->images->find_all() as $img){
+                    $images []= $img->path . '/' . $img->name;
+                }
                 $regData[] = [
                     'id' => $r->id,
                     'craftId' => $craft->id,
                     'craftName' => $craft->name,
                     'desc' => $r->desc,
                     'status' => $r->status,
-                    'file' => !empty($r->file) ? str_replace('/home/qforbnet/public_html','',$this->certificationsPath($id2).str_replace('.pdf','.jpg',$r->file)) : null,
+                    'file' => strpos($r->file,'fs.qforb.net') === false ?  ($r->file ? Kohana_URL::site('/media/data/projects/' . $r->project_id . '/certifications/'.$r->file,'https') : null) : $r->file,
+                    'images' => $images,
                     'createdAt' => $r->created_at,
                     'updatedAt' => $r->updated_at,
                     'createdBy' => $r->created_by,

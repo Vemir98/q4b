@@ -7,6 +7,7 @@
  * Time: 17:40
  */
 $detector = new Mobile_Detect;
+$token = !$_USER->isGuest() ? $_USER->getAuthToken() : null;
 ?>
 <!DOCTYPE html>
 <html lang="<?=Language::getCurrent()->iso2?>" class="<?=Language::getCurrent()->direction?>" <?=$detector->isMobile() ? 'data-mobile="true"': '' ?>>
@@ -18,6 +19,9 @@ $detector = new Mobile_Detect;
     <meta name="fps" content="<?=(int)ini_get('upload_max_filesize')?>-<?=(int)ini_get('post_max_size')?>">
     <meta name="base-uri" content="<?=URL::base()?>">
     <meta name="current-uri" content="<?=Request::current()->uri()?>">
+    <meta name="u_token" content="<?=$token?>">
+    <meta name="site_url" content="<?=trim(URL::site('','http'),'/')?>">
+    <meta name="api_path" content="/api/json/v2">
     <link rel="stylesheet" href="/media/css/styles.min.css">
     <link rel="stylesheet" href="/media/css/select2.min.css">
     <link rel="stylesheet" href="/media/css/print.min.css">
@@ -36,6 +40,7 @@ $detector = new Mobile_Detect;
     <script src="/media/js/jquery.autocomplete.js"></script>
     <script src="/media/js/jquery.multiselect.js"></script>
     <script src= "/media/js/zingchart.min.js"></script>
+    <script src="https://unpkg.com/json-form-data@^1.7.0/dist/jsonToFormData.min.js"></script>
     <script src="/media/js/scripts.js"></script>
     <script src="/media/js/print.min.js"></script>
     <?if(file_exists(DOCROOT."media/js/".Inflector::singular(strtolower(Request::current()->controller())).".js")):?>
@@ -44,7 +49,26 @@ $detector = new Mobile_Detect;
     <script>
         window.eventBus = new Vue({})
     </script>
-
+    <script type="text/javascript" src="/media/js/vue/libs/vue2-pagination/vue-pagination-2-master/dist/vue-pagination-2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vee-validate@<3.0.0/dist/vee-validate.js"></script>
+    <script src="/media/js/moment.min.js"></script>
+    <script src="/media/js/moment-timezone.js"></script>
+    <?if(!$include_editor):?>
+        <script src="/media/js/pixel_perfect/js/pixp.editor.js"></script>
+    <?endif;?>
+    <script>
+        Vue.use(VeeValidate, {
+            dictionary: {
+                msg: {
+                    messages: {
+                        "required": "<?=__('This field is required.')?>",
+                        "decimal": "<?=__('This field should be numeric.')?>",
+                        "numeric": "<?=__('This field should be numeric.')?>"
+                    }
+                }
+            }
+        });
+    </script>
 </head>
 <body>
     <style >
@@ -123,14 +147,15 @@ $detector = new Mobile_Detect;
 <script src="/media/js/owl.carousel.js"></script>
 <script src="/media/js/jcarousellite.min.js"></script>
 <script src="/media/js/jquery.mCustomScrollbar.js"></script>
-<script src="/media/js/moment.min.js"></script>
+<!--<script src="/media/js/moment.min.js"></script>-->
 <script src="/media/js/bootstrap-datetimepicker.js"></script>
 
 
 <script src="/media/js/loader.js"></script>
 <script src="/media/js/validation.js"></script>
-
-
+    <?if($include_editor):?>
+        <?require_once('utility/pixp-editor-modal.php')?>
+    <?endif;?>
     <div class="progress-bg">
         <div class="progress-bar-modal">
                 <span class="progress-bar-text"></span>

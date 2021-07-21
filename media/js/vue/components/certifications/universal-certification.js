@@ -58,7 +58,7 @@ Vue.component('universal-certification', {
                                         <input v-if="item.status.val != 'approved'" :id="'file_' + item.id" type="file" @change="fileInputChange($event, idx, rIdx)" class="d-none">
                                         <label v-if="item.status.val != 'approved'" :for="'file_' + item.id"><img src="/media/img/new-images/upload-icon.svg" alt="file"></label>
                                     </a>
-                                    <a target="_blank" :href="'/media/data/' + item.file" v-else><img src="/media/img/new-images/pdf-icon.svg" alt="file"></a>
+                                    <a target="_blank" :href="item.file" v-else><img src="/media/img/new-images/pdf-icon.svg" alt="file"></a>
                                 </td>
                                 <td>
                                     <span v-if="item.file">{{item.uploaded}}</span>

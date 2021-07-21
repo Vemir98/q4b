@@ -7,16 +7,16 @@
  * Time: 6:05
  */
 $detector = new Mobile_Detect;
-$max_left_pages = $detector->isMobile() ? 3 : $max_left_pages;
-$max_right_pages = $detector->isMobile() ? 3 : $max_right_pages;
+$max_left_pages = 3;
+$max_right_pages = 3;
 ?>
 
 <div class="q4-pagination">
     <ul class="pagination">
         <?php if ($previous_page !== FALSE): ?>
-            <li class="prev_arrow"><a href="<?php echo HTML::chars($page->url($previous_page)) ?>"></a></li>
+            <li class="prev_arrow"><a href="<?php echo HTML::chars($page->url($previous_page)) ?>">&lt; <?php echo $detector->isMobile() ? '': __('Previous') ?></a></li>
         <?php else: ?>
-            <li class="prev_arrow"><a href="#"></a></li>
+            <li class="prev_arrow"><a href="#"> &lt; <?php echo $detector->isMobile() ? '': __('Previous') ?></a></li>
         <?php endif ?>
 
         <?php
@@ -32,7 +32,7 @@ $max_right_pages = $detector->isMobile() ? 3 : $max_right_pages;
                 <li><a href="<?php echo HTML::chars($page->url(abs($i))) ?>"><?php echo abs($i) ?></a></li>
 
             <?php endfor ?>
-
+        <pre class="bla"><?=$total_pages?></pre>
         <?php
         /* max right links */
         $right = $current_page + $max_right_pages;
@@ -43,15 +43,17 @@ $max_right_pages = $detector->isMobile() ? 3 : $max_right_pages;
             <?php if ($i == $current_page): ?>
             <li class="active"><a href="#"><?php echo $i ?></a></li>
         <?php else: ?>
+        <pre class="bla2"><?=$i?></pre>
+        <pre class="bla3"><?=HTML::chars($page->url($i))?></pre>
             <li><a href="<?php echo HTML::chars($page->url($i)) ?>"><?php echo $i ?></a></li>
         <?php endif ?>
 
         <?php endfor ?>
 
         <?php if ($next_page !== FALSE): ?>
-            <li class="next_arrow"><a href="<?php echo HTML::chars($page->url($next_page)) ?>" rel="next"></a></li>
+            <li class="next_arrow"><a href="<?php echo HTML::chars($page->url($next_page)) ?>" rel="next"><?php echo $detector->isMobile() ? '': __('Next') ?> &gt; </a></li>
         <?php else: ?>
-            <li class="next_arrow"><a href="#" rel="next"></a></li>
+            <li class="next_arrow"><a href="#" rel="next"><?php echo $detector->isMobile() ? '': __('Next') ?> &gt; </a></li>
         <?php endif ?>
 
     </ul>
