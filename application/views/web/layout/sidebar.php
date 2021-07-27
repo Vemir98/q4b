@@ -88,7 +88,7 @@ $items = [
                 'priority' => Enum_UserPriorityLevel::Project,
                 'disabled' => false,
                 'active' => false
-            ],
+            ]
         ],
         'disabled' => false,
         'active' => false
@@ -186,7 +186,7 @@ $items = json_decode(json_encode($items));
                         <i class="fw-600 icon <?=$i->icon?>" style="font-weight: 600"></i>
                         <span class="sidebar-items_title"><?=__($i->text)?></span>
                     </a>
-                    <?if(isset($i->children)):?>
+                    <?if(isset($i->children) && count($i->children)):?>
                         <ul class="submenu">
                             <?foreach ($i->children as $child):?>
                                 <li>

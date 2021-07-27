@@ -1047,3 +1047,19 @@ ul li.tab_panel .panel_header h2 {
 .new-styles .multiselect__element [type="checkbox"]:not(:checked), .new-styles .multiselect__element [type="checkbox"]:checked {
     left: unset !important;
 }
+.rtl .new-styles.tasks-container [type="checkbox"]:not(:checked), .rtl .new-styles [type="checkbox"]:checked {
+    right: unset !important; }
+.lt_elements_list.tasks .labtest_filters1_left {
+    border: none !important;
+}
+.ltr .new-styles .multiselect__input, .ltr .new-styles .multiselect__single {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.new-styles.tasks-container .save {
+    color: #F99C19;
+    font-weight: 600;
+    cursor: pointer;
+}

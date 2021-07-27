@@ -117,5 +117,8 @@ class Controller_Api_Companies_Entities extends HDVP_Controller_API
         $items = Api_DBCompanies::getCmpProjects($id);
         $this->_responseData['items'] = $items;
     }
-
+    public function action_modules_get(){
+        $modules = Api_DBModules::getModules();
+        $this->_responseData['items'] = $modules;
+    }
 }

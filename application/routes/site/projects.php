@@ -5,6 +5,11 @@
  * Date: 03.12.2016
  * Time: 6:16
  */
+Route::set('site.projectTasks','projects/update/<id>/<action>',['action' => '[a-z0-9_]+', 'id' => '[0-9]+'])
+    ->defaults([
+        'controller' => 'projects',
+        'action' => 'tasks_list'
+    ]);
 Route::set('site.projectsWithFilters','projects(/status/<status>)(/sorting/<sorting>)(/page/<page>)(/export/<export>)',['status' => implode('|',Enum_ProjectStatus::toArray()),'sorting' => 'name|status', 'page' => '[0-9]+','export' => 'excel'])
     ->defaults([
         'controller' => 'projects',
@@ -61,6 +66,7 @@ Route::set('site.project.files','projects/<action>/<param1>/<param2>/<token>',['
     ->defaults([
         'controller' => 'projects',
     ]);
+
 //Route::set('site.file','file/<action>/<param1>/<param2>/<token>',['action' => '[a-z0-9_]+', 'param1' => '[0-9]+', 'param2' => '[0-9]+','token' => '[a-z0-9]+'])
 //    ->defaults([
 //        'controller' => 'file',

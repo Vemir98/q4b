@@ -26,7 +26,7 @@ class Menu
 
                 $item['active'] = true;
                 if($parentIndex !== false){
-                    $items[$parentIndex]['active'] = true;
+//                    $items[$parentIndex]['active'] = true;
                 }
             }else{
                 $item['active'] = false;

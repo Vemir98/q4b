@@ -41,6 +41,9 @@ class Controller_Projects extends HDVP_Controller_Template
         ],
         'floor_update_title' => [
             'GET' => 'update'
+        ],
+        'tasks' => [
+            'GET' => 'read'
         ]
     ];
 
@@ -3339,6 +3342,47 @@ class Controller_Projects extends HDVP_Controller_Template
 
         }
         return $output;
+    }
+    public function action_tasks()
+    {
+        $id = $this->getUIntParamOrDie($this->request->param('id'));
+        $project = ORM::factory('Project',$id);
+        if( ! $project->loaded()){
+            throw new HTTP_Exception_404;
+        }
+
+        $translations = [
+            "enabled" => __("Enabled"),
+            "disabled" => __("Disabled"),
+            "enable" => __("enable"),
+            "disable" => __("disable"),
+            "copy_to" => __("Copy to"),
+            "copy" => __("Copy"),
+            "show" => __("Show"),
+            "save" => __("Save"),
+            "modules" => __("Modules"),
+            "task" => __("Task"),
+            "tasks" => __("Tasks"),
+            "task_description" => __("Task_description"),
+            "select_specialty" => __("Select_specialty"),
+            "select_module" => __('Select Module'),
+            "select_company" => __("Select Company"),
+            "select_project" => __("Select project"),
+            "enter_task_description" => __("Enter task description"),
+            "select_all" => __('select all'),
+            "unselect_all" => __('unselect all'),
+            "confirm" => __('Confirm'),
+            "cancel" => __('Cancel'),
+            "quality_control" => __('Quality control'),
+            "delivery_report" => __('Delivery report'),
+            "lab_control" => __('Lab control'),
+            "approve_element" => __('Approve element'),
+        ];
+
+        VueJs::instance()->addComponent('tasks/tasks-list');
+        VueJs::instance()->addComponent('tasks/task-item');
+        VueJs::instance()->includeMultiselect();
+        $this->template->content = View::make('tasks/tasks-list', ['projectId' => $project->id, 'translations' => $translations]);
     }
 
 }
