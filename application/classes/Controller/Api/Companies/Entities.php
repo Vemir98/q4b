@@ -118,7 +118,8 @@ class Controller_Api_Companies_Entities extends HDVP_Controller_API
         $this->_responseData['items'] = $items;
     }
     public function action_modules_get(){
-        $modules = Api_DBModules::getModules();
+//        $modules = Api_DBModules::getModules();
+        $modules = Api_DBModules::getModulesForTasks();
         $this->_responseData['items'] = $modules;
     }
 }

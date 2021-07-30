@@ -1,227 +1,254 @@
 Vue.component('tasks-list', {
     template: `
         <section class='lt_elements_list tasks'>
-   <div v-if="showLoader || copyInProgress" class="loader-backdrop">
-        <div class="loader"></div>
-    </div>
-    <div class="new-styles tasks-container" id="tasks-container">
-    <section class='q4b-modules'>
-        <div class="elements_title_sec qb-modules">
-            <div class="lt_page_title">{{ trans.tasks }} / <span class="project_name"> {{ project?.name }}</span></div>
-            <div class="qm-header-btns">
-                <a 
-                    :class="[ 'flex-center enabled', {selected: activeTab === 'enabled' }]" 
-                    @click="activeTab = 'enabled'"
-                    >
-                    {{ trans.enabled }}
-                </a>
-                <a 
-                     :class="[ 'flex-center disabled-module', { selected: activeTab === 'disabled' }]" 
-                     @click="activeTab = 'disabled'"
-                     >
-                     {{ trans.disabled }}
-                </a>
+            <div v-if="showLoader || copyInProgress" class="loader_backdrop_vue">
+                <div class="loader"></div>
             </div>
-        </div>
-        <div class="lt_elements_list_inputs" v-if="items.length">
-            <div class="lt_elements_list_input_headline">{{ trans.copy_to }}:</div>
-            <div class="lt_elements_list_input">             
-               <div class="multiselect-col">
-                    <multiselect v-model="selectedCompany"  :option-height="104" :placeholder="trans.select_company" :disabled="companies.length < 1" :options="companies" track-by="id" label="name" :searchable="true" :allow-empty="false" :show-labels="false">
-                        <template slot="singleLabel" slot-scope="props">{{ props.option.name }}</template>
-                        <template slot="option" slot-scope="props">
-                        <span>{{ props.option.name }}</span>
-                        </template>
-                    </multiselect>  
-                </div>                                           
-            </div>
-            <div class="lt_elements_list_input">     
-                <div class="multiselect-col">
-                     <multiselect v-model="selectedProject"  :option-height="104" :placeholder="trans.select_project" :disabled="cmpProjects.length < 1" :options="cmpProjects" track-by="id" label="name" :searchable="true" :allow-empty="false" :show-labels="false">
-                        <template slot="singleLabel" slot-scope="props">{{ props.option.name }}</template>
-                        <template slot="option" slot-scope="props">
-                        <span>{{ props.option.name }}</span>
-                        </template>
-                     </multiselect>
-                </div>
-            </div>
-            <div class="lt_elements_list_input_button">
-                <button 
-                    @click="copy" 
-                    :class="{'labtest-disabled': (!selectedProject || copyInProgress || !checkedTasks || activeTab === 'disabled')}"
-                >
-                    {{ trans.copy }} 
-                </button> 
-            </div>
-        </div>
-        <div class="labtest_filters">
-            <div class="labtest_filters1">
-                <div class="labtest_filters1_left">
-                    <div class="labtest_filter_input">                      
-                        <div class="multiselect-col">
-                            <div class="labtest_filter_input">                           
-                                <label class="table_label" :class="{'labtest-disabled': !crafts.length}">
-                                    <span @click="toggleSelectAll('selectedCrafts', 'crafts')">
-                                        <template v-if="selectedCrafts.length < crafts.length">
-                                               {{ trans.select_all }}
-                                        </template>
-                                        <template v-else>
-                                               {{ trans.unselect_all }}
-                                        </template>
-                                    </span>
-                                </label>
-                                <multiselect v-model="selectedCrafts"  
-                                        :placeholder="trans.select_specialty" 
-                                        :disabled="!crafts.length" 
-                                        :options="crafts" 
-                                        label="name" 
-                                        track-by="id"
-                                        :multiple="true" 
-                                        :hide-selected="false"
-                                        :close-on-select="false"
-                                        :clear-on-select="false"
-                                        :preserve-search="true"
-                                        :internal-search="true"
-                                        :taggable="false"
-                                        :show-labels="false"                                       
-                                        @select="onSelect($event, 'crafts')"
-                                        @remove="onRemove($event, 'crafts')"
-                                        >
-                                        <span class="multiselect-checkbox-label" :class="{'checked': scope.option.checked}"  slot="option" slot-scope="scope" >
-                                            <span class="multiselect-option-icon"><i class="q4bikon-tick"></i><span></span></span>
-                                            <span class="multiselect-option-name">{{ scope.option.name }}</span>
-                                        </span>
-                                      
-                                    
-                                        <template slot='selection' slot-scope="{values, option, isOpen}"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ getMultiselectSelectionValue(values) }} </span></template>
-                                        <template slot="tag">{{ '' }}</template>
-                                </multiselect>      
-                            </div>          
+            <div class="new-styles tasks-container" id="tasks-container">
+                <section class='q4b-modules'>
+                    <div class="elements_title_sec qb-modules">
+                        <div class="lt_page_title">{{ trans.tasks }} / <span class="project_name"> {{ project?.name }}</span></div>
+                        <div class="qm-header-btns">
+                            <a 
+                                :class="[ 'flex-center enabled', {selected: activeTab === 'enabled' }]" 
+                                @click="activeTab = 'enabled'"
+                                >
+                                {{ trans.enabled }}
+                            </a>
+                            <div style="width: 1px;background-color: rgba(0, 0, 0, 0.2);"></div>
+                            <a 
+                                 :class="[ 'flex-center disabled-module', { selected: activeTab === 'disabled' }]" 
+                                 @click="activeTab = 'disabled'"
+                                 >
+                                 {{ trans.disabled }}
+                            </a>
+                            <div style="width: 1px;background-color: rgba(0, 0, 0, 0.2);"></div>
+                            <a 
+                                 :class="[ 'flex-center disabled-module', { selected: activeTab === 'all' }]" 
+                                 @click="activeTab = 'all'"
+                                 >
+                                 {{ trans.all }}
+                            </a>
                         </div>
                     </div>
-                    <div class="labtest_filter_input">
-                        <div class="multiselect-col">
-                            <div class="labtest_filter_input">                           
-                                <label class="table_label" :class="{'labtest-disabled': !modulesData.length}">
-                                    <span @click="toggleSelectAll('selectedModules', 'modulesData')">
-                                        <template v-if="selectedModules.length < modulesData.length">
-                                               {{ trans.select_all }}
-                                        </template>
-                                        <template v-else>
-                                               {{ trans.unselect_all }}
-                                        </template>
-                                    </span>
-                                </label>
-                                <multiselect v-model="selectedModules"  
-                                        :placeholder="trans.select_module" 
-                                        :disabled="!modulesData.length" 
-                                        :options="modulesData" 
-                                        label="name" 
-                                        track-by="id"
-                                        :multiple="true" 
-                                        :hide-selected="false"
-                                        :close-on-select="false"
-                                        :clear-on-select="false"
-                                        :preserve-search="true"
-                                        :internal-search="true"
-                                        :taggable="false"
-                                        :show-labels="false"                                       
-                                        @select="onSelect($event, 'modulesData')"
-                                        @remove="onRemove($event, 'modulesData')"
-                                        >
-                                        <span class="multiselect-checkbox-label" :class="{'checked': scope.option.checked}"  slot="option" slot-scope="scope" >
-                                            <span class="multiselect-option-icon"><i class="q4bikon-tick"></i><span></span></span>
-                                            <span class="multiselect-option-name">{{ scope.option.name }}</span>
-                                        </span>
-                                      
-                                    
-                                        <template slot='selection' slot-scope="{values, option, isOpen}"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ getMultiselectSelectionValue(values) }} </span></template>
-                                        <template slot="tag">{{ '' }}</template>
-                                </multiselect>      
-                            </div> 
+                    <div class="lt_elements_list_inputs" v-if="items.length">
+                        <div class="lt_elements_list_input_headline">{{ trans.copy_to }}:</div>
+                        <div class="lt_elements_list_input">             
+                           <div class="multiselect-col">
+                                <multiselect v-model="selectedCompany"  :option-height="104" :placeholder="trans.select_company" :disabled="(companies.length < 1) || (activeTab !== 'enabled')" :options="companies" track-by="id" label="name" :searchable="true" :allow-empty="false" :show-labels="false">
+                                    <template slot="singleLabel" slot-scope="props">{{ props.option.name }}</template>
+                                    <template slot="option" slot-scope="props">
+                                    <span>{{ props.option.name }}</span>
+                                    </template>
+                                </multiselect>  
+                            </div>                                           
                         </div>
-                    </div>
-                    <div class="labtest_filter_input">
-                        <button 
-                            class="labtest_filter_show_btn"
-                            @click="setupFilter">
-                            {{ trans.show }}
-                        </button>
-                    </div>
-                </div>
-            </div>    
-        </div>
-        <div class="q4b-modules-actions">    
-            <div class="q4b-modules-actions-wraper">
-                <div class="q4b-modules-actions-sec flex-center">
-                    <a href="#" id="" class="ceck-all">                    
-                        <input type="checkbox" :checked="checkedTasks == this.filteredItems.length ? 'checked' : ''" @click="toggleCheckAllTasks('checkedTasks', 'filteredItems')"><span class="checkboxImg"><span></span></span>
-                    </a>
-                    <a class="add-new" :class="{'labtest-disabled': (createTaskInProgress || activeTab === 'disabled' )  }" @click.prevent="addNewTask">
-                        <i class=" q4bikon-plus"></i>
-                    </a>
-                </div>
-                <div class="q4b-modules-actions-sec flex-center">
-                    <span class="save" :class="{'labtest-disabled': !this.items.length || createTaskInProgress}" @click="handleSave">
-                        {{ trans.save }}                    
-                    </span>
-                </div>    
-            </div>    
-        </div>    
-        <div class="tasks-section">    
-            <div class="tasks-wraper">
-                <template v-for="(item, index) in filteredItems">
-                    <task-item 
-                        :taskData="item" 
-                        :trans="trans"
-                        :key="item.id"
-                        :ind="index"
-                        :ref="item.id"
-                        :companyCrafts="cmpCrafts"
-                        :modules="modules"
-                        @taskUpdated="taskUpdated"
-                        @togglePopup="togglePopup"
-                        @taskChecked="taskChecked"
-                    />
-                </template>  
-            </div>
-        </div>
-    </section>
-    
-    <div class="modul-popup-wrap" v-if="openPopup">
-    <div class="modul-popup">
-    <div class="modul-popup-top">
-        <span class="modul-popup-headline">{{ trans.modules }}</span>
-    </div>
-    <div class="modul-popup-main">
-        <template v-for="module in modules">
-           <div class="modul-popup-item" :class="{checked: selectedModulesOfCraft.includes(module.id)}">
-                <div class="modul-popup-item-left" >
-                    <span class="modul-popup-check">
-                        <input 
-                            type="checkbox" 
-                            :checked="selectedModulesOfCraft.includes(module.id) ? 'checked' : ''"
-                            @click="toggleModule(module.id)"
+                        <div class="lt_elements_list_input">     
+                            <div class="multiselect-col">
+                                 <multiselect v-model="selectedProject"  :option-height="104" :placeholder="trans.select_project" :disabled="(cmpProjects.length < 1) || (activeTab !== 'enabled')" :options="cmpProjects" track-by="id" label="name" :searchable="true" :allow-empty="false" :show-labels="false">
+                                    <template slot="singleLabel" slot-scope="props">{{ props.option.name }}</template>
+                                    <template slot="option" slot-scope="props">
+                                    <span>{{ props.option.name }}</span>
+                                    </template>
+                                 </multiselect>
+                            </div>
+                        </div>
+                        <div class="lt_elements_list_input_button">
+                            <button 
+                                @click="copy" 
+                                :class="{'labtest-disabled': (!selectedProject || copyInProgress || !checkedTasks || activeTab === 'disabled')}"
                             >
-                        <span class="checkboxImg">
-                            <span></span>
+                                {{ trans.copy }} 
+                            </button> 
+                        </div>
+                    </div>
+                    <div class="labtest_filters">
+                        <div class="labtest_filters1">
+                            <div class="labtest_filters1_left">
+                                <div class="labtest_filter_input">                      
+                                    <div class="multiselect-col">
+                                        <div class="labtest_filter_input">                           
+                                            <label class="table_label" :class="{'labtest-disabled': !crafts.length}">
+                                                <span @click="toggleSelectAll('selectedCrafts', 'crafts')">
+                                                    <template v-if="selectedCrafts.length < crafts.length">
+                                                           {{ trans.select_all }}
+                                                    </template>
+                                                    <template v-else>
+                                                           {{ trans.unselect_all }}
+                                                    </template>
+                                                </span>
+                                            </label>
+                                            <multiselect v-model="selectedCrafts"  
+                                                    :placeholder="trans.select_specialty" 
+                                                    :disabled="!crafts.length" 
+                                                    :options="crafts" 
+                                                    label="name" 
+                                                    track-by="id"
+                                                    :multiple="true" 
+                                                    :hide-selected="false"
+                                                    :close-on-select="false"
+                                                    :clear-on-select="false"
+                                                    :preserve-search="true"
+                                                    :internal-search="true"
+                                                    :taggable="false"
+                                                    :show-labels="false"                                       
+                                                    @select="onSelect($event, 'crafts')"
+                                                    @remove="onRemove($event, 'crafts')"
+                                                    >
+                                                    <span class="multiselect-checkbox-label" :class="{'checked': scope.option.checked}"  slot="option" slot-scope="scope" >
+                                                        <span class="multiselect-option-icon"><i class="q4bikon-tick"></i><span></span></span>
+                                                        <span class="multiselect-option-name">{{ scope.option.name }}</span>
+                                                    </span>
+                                                  
+                                                
+                                                    <template slot='selection' slot-scope="{values, option, isOpen}"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ getMultiselectSelectionValue(values) }} </span></template>
+                                                    <template slot="tag">{{ '' }}</template>
+                                            </multiselect>      
+                                        </div>          
+                                    </div>
+                                </div>
+                                <div class="labtest_filter_input">
+                                    <div class="multiselect-col">
+                                        <div class="labtest_filter_input">                           
+                                            <label class="table_label" :class="{'labtest-disabled': !modulesData.length}">
+                                                <span @click="toggleSelectAll('selectedModules', 'modulesData')">
+                                                    <template v-if="selectedModules.length < modulesData.length">
+                                                           {{ trans.select_all }}
+                                                    </template>
+                                                    <template v-else>
+                                                           {{ trans.unselect_all }}
+                                                    </template>
+                                                </span>
+                                            </label>
+                                            <multiselect v-model="selectedModules"  
+                                                    :placeholder="trans.select_module" 
+                                                    :disabled="!modulesData.length" 
+                                                    :options="modulesData" 
+                                                    label="name" 
+                                                    track-by="id"
+                                                    :multiple="true" 
+                                                    :hide-selected="false"
+                                                    :close-on-select="false"
+                                                    :clear-on-select="false"
+                                                    :preserve-search="true"
+                                                    :internal-search="true"
+                                                    :taggable="false"
+                                                    :show-labels="false"                                       
+                                                    @select="onSelect($event, 'modulesData')"
+                                                    @remove="onRemove($event, 'modulesData')"
+                                                    >
+                                                    <span class="multiselect-checkbox-label" :class="{'checked': scope.option.checked}"  slot="option" slot-scope="scope" >
+                                                        <span class="multiselect-option-icon"><i class="q4bikon-tick"></i><span></span></span>
+                                                        <span class="multiselect-option-name">{{ scope.option.name }}</span>
+                                                    </span>
+                                                  
+                                                
+                                                    <template slot='selection' slot-scope="{values, option, isOpen}"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ getMultiselectSelectionValue(values) }} </span></template>
+                                                    <template slot="tag">{{ '' }}</template>
+                                            </multiselect>      
+                                        </div> 
+                                    </div>
+                                </div>
+                                <div class="labtest_filter_input">
+                                    <button 
+                                        class="labtest_filter_show_btn"
+                                        @click="setupFilter">
+                                        {{ trans.show }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>    
+                    </div>
+                    <div class="q4b-modules-actions">    
+                        <div class="q4b-modules-actions-wraper">
+                            <div class="q4b-modules-actions-sec flex-center">
+                                <a 
+                                  href="#"
+                                  class="ceck-all"
+                                  v-if="(this.filteredItems.length && (this.activeTab === 'enabled'))"
+                                >                    
+                                    <input 
+                                        type="checkbox" 
+                                        :checked="checkedTasks == this.filteredItems.length ? 'checked' : ''"
+                                        @click="toggleCheckAllTasks('checkedTasks', 'filteredItems')"
+                                    >
+                                    <span 
+                                        class="checkboxImg"
+                                    ><span></span></span>
+                                </a>
+                                <a 
+                                    class="add-new" 
+                                    :class="{'labtest-disabled': (createTaskInProgress || activeTab !== 'enabled' )  }" 
+                                    @click.prevent="addNewTask"
+                                >
+                                    <i class=" q4bikon-plus"></i>
+                                </a>
+                            </div>
+                            <div class="q4b-modules-actions-sec flex-center">
+                                <span 
+                                    class="save" 
+                                    :class="{'labtest-disabled': !this.items.length || createTaskInProgress || showLoader || activeTab !== 'enabled'}" 
+                                    @click="handleSave"
+                                >
+                                    {{ trans.save }}                    
+                                </span>
+                            </div>    
+                        </div>    
+                    </div>    
+                    <div class="tasks-section">    
+                        <div class="tasks-wraper">
+                            <template v-for="(item, index) in filteredItems">
+                                <task-item 
+                                    :taskData="item" 
+                                    :trans="trans"
+                                    :key="item.id"
+                                    :ind="index"
+                                    :ref="item.id"
+                                    :activeTab="activeTab"
+                                    :companyCrafts="cmpCrafts"
+                                    :modules="modules"
+                                    @taskUpdated="taskUpdated"
+                                    @togglePopup="togglePopup"
+                                    @taskChecked="taskChecked"
+                                />
+                            </template>  
+                        </div>
+                    </div>
+                </section>
+                <div class="modul-popup-wrap" v-if="openPopup">
+        <div class="modul-popup">
+        <div class="modul-popup-top">
+            <span class="modul-popup-headline">{{ trans.modules }}</span>
+        </div>
+        <div class="modul-popup-main">
+            <template v-for="module in modules">
+               <div class="modul-popup-item" :class="{checked: selectedModulesOfCraft.includes(module.id)}">
+                    <div class="modul-popup-item-left" >
+                        <span class="modul-popup-check">
+                            <input 
+                                type="checkbox" 
+                                :checked="selectedModulesOfCraft.includes(module.id) ? 'checked' : ''"
+                                @click="toggleModule(module.id)"
+                                >
+                            <span class="checkboxImg">
+                                <span></span>
+                            </span>
                         </span>
-                    </span>
-                    <span class="modul-popup-name">{{ trans[transformTranslationsKey(module.name)] }}</span>
-                </div>
-                <span class="modul-popup-icon" :class="getModuleIconClass(module.id)"></span>
-           </div>         
-        </template>
-    </div>
-    <div class="modul-popup-btns">
-    <button class="modul-popup-Confirm" @click="changeCraftModules">{{ trans.confirm }}</button>
-    <button class="modul-popup-Cancel" @click="openPopup=false" >{{ trans.cancel }}</button>
-    </div>
-    
-    </div>
-    </div>
-    </div>
-    </section>
+                        <span class="modul-popup-name">{{ trans[transformTranslationsKey(module.name)] }}</span>
+                    </div>
+                    <span class="modul-popup-icon" :class="getModuleIconClass(module.id)"></span>
+               </div>         
+            </template>
+        </div>
+        <div class="modul-popup-btns">
+        <button class="modul-popup-Confirm" @click="changeCraftModules">{{ trans.confirm }}</button>
+        <button class="modul-popup-Cancel" @click="openPopup=false" >{{ trans.close }}</button>
+        </div>
+        
+        </div>
+        </div>
+            </div>
+        </section>
 `,
     /** Props
      * projectId: 52
@@ -262,48 +289,79 @@ Vue.component('tasks-list', {
             selectedModules: [],
             selectedCraftsIds: [],
             selectedModulesIds: [],
-            checkedTasks: 0
+            checkedTasks: 0,
+            firstFilterOfCrafts: false,
+            firstFilterOfModules: false
         }
     },
     computed: {
         filteredItems() {
             return this.items.filter((item) => {
                 let shouldBeInList = item.status === this.activeTab;
-                let craftsCheck = true, modulesCheck = true;
+
+                if(this.activeTab === 'all') {
+                    shouldBeInList = true;
+                }
+
+                let craftsCheck = false, modulesCheck = false;
 
                 if (this.selectedCraftsIds.length) {
-                    craftsCheck = false;
                     if  (item.crafts) {
-                        Object.keys(item.crafts).forEach(craftId => {
-                            if (this.selectedCraftsIds.includes(craftId)) {
-                                craftsCheck = true;
-                            }
-                        })
-                    }
-                }
-                if (this.selectedModulesIds.length) {
-                    modulesCheck = false
-                    if  (item.crafts) {
-                        Object.keys(item.crafts).forEach(craftId => {
-                            const modules = item.crafts[craftId].modules
-                            if(modules) {
-                                modules.forEach(m => {
-                                    if (this.selectedModulesIds.includes(m)) {
-                                        modulesCheck = true
+                        if(!Object.keys(item.crafts).length) {
+                            craftsCheck = true;
+                            modulesCheck = true;
+                        } else {
+                            Object.keys(item.crafts).forEach(craftId => {
+                                if(this.selectedCraftsIds.includes(craftId)) {
+                                    craftsCheck = true;
+                                    const modules = item.crafts[craftId].modules
+                                    if(modules) {
+                                        if(!modules.length) {
+                                            modulesCheck = true;
+                                        } else {
+                                            modules.forEach(m => {
+                                                if (this.selectedModulesIds.includes(m)) {
+                                                    modulesCheck = true
+                                                    // console.log('moduleID',m,this.selectedModulesIds,item.id,craftId,craftsCheck,modulesCheck,shouldBeInList)
+                                                }
+                                            })
+                                        }
                                     }
-                                })
-                            }
-                        })
+                                }
+                            })
+                        }
                     }
                 }
+                // if (this.selectedModulesIds.length) {
+                //     if  (item.crafts) {
+                //         Object.keys(item.crafts).forEach(craftId => {
+                //             const modules = item.crafts[craftId].modules
+                //             if(modules) {
+                //                 if(!modules.length) {
+                //                     modulesCheck = true;
+                //                 } else {
+                //                     modules.forEach(m => {
+                //                         if (this.selectedModulesIds.includes(m)) {
+                //                             console.log('moduleID',m,this.selectedModulesIds,item.id,true)
+                //                             modulesCheck = true
+                //                         }
+                //                     })
+                //                 }
+                //             }
+                //         })
+                //     }
+                // }
+
+                if ( (this.activeTab === 'enabled' && item.id.includes('new_'))) {
+                    return true;
+                }
+
                 return (shouldBeInList && craftsCheck && modulesCheck)
             });
         },
         createTaskInProgress() {
             let inProgress = false
-            const newTasks = this.items.filter(t => t.id.includes('new_'));
-            if (newTasks.length) {
-                newTasks.forEach(task => {
+                this.items.forEach(task => {
                     if (!task.name || !Object.keys(task.crafts).length) {
                         inProgress = true
                     }
@@ -316,9 +374,8 @@ Vue.component('tasks-list', {
                         })
                     }
                 })
-            }
             return inProgress
-        }
+        },
     },
     created() {
 
@@ -335,6 +392,19 @@ Vue.component('tasks-list', {
                 this.selectedCompany = null
             }
             this.selectedProject = null;
+        },
+        selectedCrafts() {
+            if(!this.firstFilterOfCrafts) {
+                this.setupFilter();
+                this.firstFilterOfCrafts = true;
+            }
+
+        },
+        selectedModules() {
+            if(!this.firstFilterOfModules) {
+                this.setupFilter();
+                this.firstFilterOfModules = true;
+            }
         }
     },
     methods: {
@@ -429,7 +499,7 @@ Vue.component('tasks-list', {
 
             qfetch(url, {method: 'PUT', headers: {}, body: {tasks: tasks}})
                 .then(response => {
-                    // location.reload();
+                    location.reload();
                 }).catch(err =>  {
                 this.showLoader = false;
             })
@@ -510,7 +580,14 @@ Vue.component('tasks-list', {
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
                     this.modules = response.items;
-                    this.modulesData = JSON.parse(JSON.stringify(this.modules));
+                    this.modulesData = JSON.parse(JSON.stringify(this.modules.map(module => {
+                        return {
+                            id: module.id,
+                            name: this.trans[this.transformTranslationsKey(module.name)],
+                            status: module.status
+                        };
+                    })));
+
                     this.toggleSelectAll('selectedModules', 'modulesData');
                 })
         },
@@ -531,7 +608,9 @@ Vue.component('tasks-list', {
                 if (this[checkedCount] < this[list].length) {
                     let newArr = [];
                     this['items'].forEach((i) => {
-                        i.checked = true;
+                        if(i.status === 'enabled') {
+                            i.checked = true;
+                        }
                         newArr.push(JSON.parse(JSON.stringify(i)))
                     });
                     this['items'] = [...newArr]
@@ -539,7 +618,9 @@ Vue.component('tasks-list', {
                 } else {
                     let newArr = [];
                     this['items'].forEach((i) => {
-                        i.checked = false;
+                        if(i.status === 'enabled') {
+                            i.checked = false;
+                        }
                         newArr.push(JSON.parse(JSON.stringify(i)))
                     });
                     this['items'] = [...newArr]

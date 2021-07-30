@@ -2925,7 +2925,7 @@ ul li.tab_panel .panel_content.open .fixed-table-container {
   color: #1ebae5;
 }
 
-.loader_backdrop {
+.loader_backdrop, .loader_backdrop_vue {
   display: block;
   position: fixed;
   top: 0;
@@ -23034,4 +23034,16 @@ html.rtl .task-description ,html.rtl .task-modules-ddown,html.rtl .task-craft-it
   position: absolute;
   top: 12px;
   transition: 0.2s ease-in;
+}
+
+html.rtl .q4b-modules .multiselect__single {
+  padding-left: 35px;
+  margin-bottom: 8px;
+}
+html.rtl .new-styles .q4b-modules .lt_elements_list_input .multiselect__tags,
+html.rtl .new-styles .q4b-modules .lt_elements_list_input .multiselect {
+  min-height: 33px;
+}
+.qm-header-btns .enabled.selected, .qm-header-btns .disabled-module.selected {
+  border: 0 !important;
 }

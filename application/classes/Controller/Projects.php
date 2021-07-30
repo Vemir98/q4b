@@ -3352,10 +3352,11 @@ class Controller_Projects extends HDVP_Controller_Template
         }
 
         $translations = [
-            "enabled" => __("Enabled"),
-            "disabled" => __("Disabled"),
-            "enable" => __("enable"),
-            "disable" => __("disable"),
+            "enabled" => __("task_enabled"),
+            "disabled" => __("task_disabled"),
+            "enable" => __("task_enable"),
+            "disable" => __("task_disable"),
+            "all" => __("All"),
             "copy_to" => __("Copy to"),
             "copy" => __("Copy"),
             "show" => __("Show"),
@@ -3372,9 +3373,9 @@ class Controller_Projects extends HDVP_Controller_Template
             "select_all" => __('select all'),
             "unselect_all" => __('unselect all'),
             "confirm" => __('Confirm'),
-            "cancel" => __('Cancel'),
+            "close" => __('Close'),
             "quality_control" => __('Quality control'),
-            "delivery_report" => __('Delivery report'),
+            "delivery_report" => __('task_deliver_report'),
             "lab_control" => __('Lab control'),
             "approve_element" => __('Approve element'),
         ];

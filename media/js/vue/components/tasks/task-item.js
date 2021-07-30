@@ -3,7 +3,16 @@ Vue.component('task-item', {
     <div class="task-item " v-if="task">
         <div class="task-top-sec flex-between">
             <div class="task-top-description flex-center">
-                <span class="check-task" v-if="!task.id.includes('new_')"><input type="checkbox" :checked="task.checked ? 'checked' : ''" @change="checkOrUncheckTask"><span class="checkboxImg"><span></span></span></span>
+                <span class="check-task" v-if="!task.id.includes('new_') && (task.status !== 'disabled') && (activeTab === 'enabled')">
+                    <input 
+                        type="checkbox" 
+                        :checked="task.checked ? 'checked' : ''" 
+                        @change="checkOrUncheckTask"
+                    >
+                    <span 
+                        class="checkboxImg"
+                    ><span></span></span>
+                </span>
                 <span class="task-headline">{{ trans.task }} </span>
                 <span class="task-id">{{ task.id.includes('new_') ? ' - ' : task.id }}</span>
             </div>
@@ -15,7 +24,13 @@ Vue.component('task-item', {
         </div>
         <div class="task-main-sec flex-start">
             <div class="task-description">
-                <textarea v-model="task.name" :placeholder="trans.enter_task_description" cols="30" rows="10"></textarea>
+                <textarea
+                   v-model="task.name"
+                   :placeholder="trans.enter_task_description"
+                   cols="30"
+                   rows="10"
+                   :disabled="(task.status === 'disabled' || (activeTab === 'all'))"
+                ></textarea>
             </div>
             <div class="task-modules-sec">
                 <div class="task-modules-top flex-start">
@@ -24,7 +39,7 @@ Vue.component('task-item', {
                         <multiselect 
                             v-model="selectedCrafts"  
                             :placeholder="trans.select_specialty" 
-                            :disabled="!crafts.length" 
+                            :disabled="!crafts.length || (task.status === 'disabled') || (activeTab === 'all')" 
                             :options="crafts" 
                             label="name" 
                             track-by="id"
@@ -47,19 +62,19 @@ Vue.component('task-item', {
                             <template slot="tag">{{ '' }}</template>                          
                         </multiselect>   
                     </div>
-                </div>    
-<!--                <div class="task-modules-type-wraper flex-start">-->
-<!--                    <div class="task-module-type">Module</div>-->
-<!--                    <div class="task-module-type">Module</div>-->
-<!--                    <div class="task-module-type">Module</div>   -->
-<!--                </div>-->
+                </div>
                 </div>
                 <div class="task-modules-item-wraper">
                     <template v-for="craft in selectedCrafts">
                         <div class="task-modules-item flex-start" :key="craft.id">
                         <div class="task-craft-item flex-between">
                             <span class="task-craft-name">{{ craft.name }}</span>
-                            <button class="task-craft-remove" @click="onRemove(craft)"><i class="q4bikon-close"></i></button>
+                            <button 
+                                class="task-craft-remove" 
+                                v-if="(task.status !== 'disabled') && (activeTab !== 'all')" 
+                                @click="onRemove(craft)"
+                            >
+                            <i class="q4bikon-close"></i></button>
                         </div>
                         <div class="task-modules-wrap flex-start">
                             <template v-for="module in craft.modules">
@@ -69,7 +84,14 @@ Vue.component('task-item', {
                                     </button>
                                 </div>
                             </template>
-                            <div class="task-module-add" ><button @click="togglePopup(craft)" ><i class="q4bikon-plus"></i></button></div>
+                            <div 
+                                class="task-module-add" 
+                                v-if="(craft.modules.length !== modules.length) && (task.status !== 'disabled') && (activeTab === 'enabled')"
+                            >
+                                <button @click="togglePopup(craft)" >
+                                    <i class="q4bikon-plus"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                     </template>
@@ -84,7 +106,8 @@ Vue.component('task-item', {
         taskData: {required: true},
         trans: {required: true},
         companyCrafts: {required: true},
-        modules: {required: true}
+        modules: {required: true},
+        activeTab: {required: true}
     },
     components: {
         Multiselect: window.VueMultiselect.default,
@@ -172,6 +195,9 @@ Vue.component('task-item', {
             this.updateTask()
         },
         togglePopup(craft) {
+            if(this.task.status === 'disabled' || this.activeTab === 'all') {
+                return false;
+            }
             if(!craft.modules) craft.modules = [];
             this.$emit('togglePopup', {
                 craft: JSON.parse(JSON.stringify(craft)),
