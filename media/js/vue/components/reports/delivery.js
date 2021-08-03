@@ -136,7 +136,8 @@ Vue.component('report-delivery', {
                                 </div>
                                 <div class="edit-box hide">
                                     <a :href="item.print" target="_blank"><span>{{printTxt}}</span></a>
-                                    <a :href="item.qcReport" target="_blank"><span>{{qcReportTxt}}</span></a>                    
+                                    
+                                    <a :href="getQCReportUrl(item.qcReport)" target="_blank"><span>{{qcReportTxt}}</span></a>                    
                                 </div>  
                             </div>
                         </td>
@@ -242,6 +243,15 @@ Vue.component('report-delivery', {
         this.time = [date, new Date()];
     },
     methods: {
+        getQCReportUrl(qcUrl) {
+            const from = this.time[0].toLocaleDateString("en-GB");
+            const to = this.time[1].toLocaleDateString("en-GB");
+            if (!from || !to) {
+                return `${qcUrl}`
+            }
+            return `${qcUrl}?from=${from}&to=${to}`
+
+        },
         toggleDropdown (event) {
             var open = document.getElementsByClassName("edit-box");
             var moreBox = document.getElementsByClassName('more-box');

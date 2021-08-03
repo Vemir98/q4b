@@ -137,11 +137,12 @@ class Controller_DeliveryReports extends HDVP_Controller_Template
         $id = $this->getUIntParamOrDie($this->request->param('id'));
         $report = ORM::factory('DeliveryReport',$id);
         $query = '?';
+        $params = Arr::extract(Request::current()->query(),['from','to']);
         foreach ($report->company->crafts->find_all() as $craft){
             $query .= 'crafts[]=' . $craft->id .'&';
         }
         //$query .='place_id='.$report->place->id.'&place_type='.$report->place->type.'&floors[]='.$report->floor->number.'&place_number='.$report->place->number.'&object_id[]='.$report->object->id.'&company='.$report->company->id.'&project='.$report->project->id.'&statuses[]=existing&statuses[]=normal&statuses[]=invalid&statuses[]=repaired&approval_status=all&from=29/04/2010&to=04/06/2070&project_stage[]=pr_stage_9&profession_id=all&advanced=1';
-        $query .='x-form-secure-tkn=&company='.$report->company->id.'&project='.$report->project->id.'&statuses[]=existing&statuses[]=normal&statuses[]=invalid&statuses[]=repaired&approval_status=all&from=15/05/2010&to=20/06/2070&object_id[]='.$report->object->id.'&place_number=&place_id='.$report->place->id.'&place_type='.$report->place->type.'&project_stage[]=pr_stage_1&project_stage[]=pr_stage_2&project_stage[]=pr_stage_3&project_stage[]=pr_stage_4&project_stage[]=pr_stage_5&project_stage[]=pr_stage_6&project_stage[]=pr_stage_7&project_stage[]=pr_stage_8&project_stage[]=pr_stage_9&project_stage[]=pr_stage_10&project_stage[]=pr_stage_11&project_stage[]=pr_stage_12&profession_id=all&del_rep_id='.$report->id;
+        $query .='x-form-secure-tkn=&company='.$report->company->id.'&project='.$report->project->id.'&statuses[]=existing&statuses[]=normal&statuses[]=invalid&statuses[]=repaired&approval_status=all&from='.$params['from'].'&to='.$params['to'].'&object_id[]='.$report->object->id.'&place_number=&place_id='.$report->place->id.'&place_type='.$report->place->type.'&project_stage[]=pr_stage_1&project_stage[]=pr_stage_2&project_stage[]=pr_stage_3&project_stage[]=pr_stage_4&project_stage[]=pr_stage_5&project_stage[]=pr_stage_6&project_stage[]=pr_stage_7&project_stage[]=pr_stage_8&project_stage[]=pr_stage_9&project_stage[]=pr_stage_10&project_stage[]=pr_stage_11&project_stage[]=pr_stage_12&profession_id=all&del_rep_id='.$report->id;
 
         //echo URL::site('reports/generate','https').$query;
         header("Location: ".URL::site('reports/generate','https').$query);die;
@@ -187,7 +188,9 @@ class Controller_DeliveryReports extends HDVP_Controller_Template
     private function _makePdf($report){
 
         $client = Client::getInstance();
-        $client->getEngine()->setPath('/home/qforbnet/www/phantomjs-2.1.1-linux-x86_64/bin/phantomjs');
+        $client->getEngine()->setPath(DOCROOT.'phantomjs-2.1.1-linux-x86_64/bin/phantomjs');
+
+//        $client->getEngine()->setPath('/home/qforbnet/www/phantomjs-2.1.1-linux-x86_64/bin/phantomjs');
         $client->getEngine()->addOption('--cookies-file=cook.txt');
 
 

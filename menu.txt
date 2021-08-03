@@ -84,16 +84,16 @@ array (
     array (
       0 => 
       array (
-        'slug' => 'projects/update/52/tasks',
+        'slug' => '#',
         'text' => 'Tasks',
         'resource' => 'Controller_Projects',
         'priority' => 219,
-        'disabled' => false,
-        'active' => true,
+        'disabled' => true,
+        'active' => false,
       ),
     ),
     'disabled' => false,
-    'active' => true,
+    'active' => false,
   ),
   5 => 
   array (

@@ -528,7 +528,7 @@ if($_USER->is('project_supervisor') || $isSubcontractor){//запрет на и�
                                     <textarea name="dialog" class='modal-plans-details-textarea'></textarea>
                                 </div>
                             </div>
-                        <?endif?>   
+                        <?endif?>
                     </div>
                 </div>
                 </div>

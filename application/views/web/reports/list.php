@@ -63,6 +63,12 @@
                         </li>
                     <?endif;?>
                 <?endif?>
+                <li class="q4-list-item">
+                    <figure>
+                        <a href="<?=URL::site('reports/approve_element')?>"><img src="/media/img/reports_icon.svg" alt="<?=__('approve_element_uppercase')?>"></a>
+                        <figcaption><a href="<?=URL::site('reports/approve_element')?>"><?=__('approve_element_uppercase')?></a></figcaption>
+                    </figure>
+                </li>
 
             </ul>
 

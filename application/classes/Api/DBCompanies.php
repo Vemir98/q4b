@@ -16,4 +16,8 @@ class Api_DBCompanies
         return DB::query(Database::SELECT,'
         SELECT * FROM projects WHERE company_id='.$id)->execute()->as_array();
     }
+    public static function getCompanyCraftByName($cmpId, $craftName){
+        return DB::query(Database::SELECT,"
+        SELECT id, status FROM cmp_crafts WHERE TRIM(`name`)='{$craftName}' AND `company_id`={$cmpId}")->execute()->as_array();
+    }
 }

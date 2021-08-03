@@ -207,20 +207,20 @@
                             ])?>
                     </div>
                 </li>
-                <?if(Usr::can(Usr::TASKS_PERM)):?>
-                <li class="tab_panel">
-                    <div class="panel_header">
-                        <span class="sign"><i class="panel_header_icon q4bikon-plus"></i></span><h2><?=__('Tasks')?></h2>
-                    </div>
-                    <div class="panel_content">
-                        <?=View::make($_VIEWPATH.'tasks/form',
-                            ['action' => URL::site('projects/update_tasks/'.$_PROJECT->company_id.'/'.$_PROJECT->id),
-                                'items' => $tasks,
-                                'secure_tkn' => AesCtr::encrypt($_PROJECT->id.Text::random('alpha'),$_PROJECT->id,192)
-                            ])?>
-                    </div>
-                </li>
-                <?endif;?>
+<!--                --><?//if(Usr::can(Usr::TASKS_PERM)):?>
+<!--                <li class="tab_panel">-->
+<!--                    <div class="panel_header">-->
+<!--                        <span class="sign"><i class="panel_header_icon q4bikon-plus"></i></span><h2>--><?//=__('Tasks')?><!--</h2>-->
+<!--                    </div>-->
+<!--                    <div class="panel_content">-->
+<!--                        --><?//=View::make($_VIEWPATH.'tasks/form',
+//                            ['action' => URL::site('projects/update_tasks/'.$_PROJECT->company_id.'/'.$_PROJECT->id),
+//                                'items' => $tasks,
+//                                'secure_tkn' => AesCtr::encrypt($_PROJECT->id.Text::random('alpha'),$_PROJECT->id,192)
+//                            ])?>
+<!--                    </div>-->
+<!--                </li>-->
+<!--                --><?//endif;?>
             <?endif;?>
             <li class="tab_panel">
                 <div class="panel_header open">

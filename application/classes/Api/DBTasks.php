@@ -48,6 +48,11 @@ class Api_DBTasks
         return DB::query(Database::SELECT,'SELECT pt.id AS taskId, pt.name AS taskName, pt.status AS taskStatus FROM pr_tasks pt WHERE pt.id='.$id)->execute()->as_array();
     }
 
+    public static function getProjectTaskByName($projectId, $name)
+    {
+        return DB::query(Database::SELECT,"SELECT id, name, status FROM pr_tasks WHERE TRIM(`name`)='{$name}' AND `project_id`={$projectId}")->execute()->as_array();
+    }
+
     public static function getTaskCrafts($taskIds, $fields=null) {
         return DB::query(Database::SELECT,'SELECT DISTINCT ptc.craft_id, ptc.task_id, ptc.status, cr.name 
         FROM pr_tasks_crafts ptc 

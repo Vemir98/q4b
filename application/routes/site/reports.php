@@ -11,6 +11,12 @@ Route::set('site.delivery.reports','reports/delivery(/<action>(/<id>))',['action
         'controller' => 'DeliveryReports',
     ]);
 
+//approve element
+Route::set('site.approveElement.reports','reports/approve_element(/<action>(/<id>))',['action' => '[a-z0-9_]+', 'id' => '[0-9]+'])
+    ->defaults([
+        'controller' => 'ApproveElementReports',
+    ]);
+
 
 //quality reports
 Route::set('site.quality.reports','reports/quality(/<action>)',['action' => '[a-z0-9_]+'])

@@ -30,7 +30,7 @@ foreach ($usedTasks as $task) {
     <?endforeach;?>
 </ul>
 <select class="hidden-select q4_select" name="tasks" multiple>
-    <?foreach($project->tasks->where('status','=',Enum_Status::Enabled)->find_all() as $task):?>
+    <?foreach($project->getTasksByModuleName('Quality Control')->where('prtask.status','=',Enum_Status::Enabled)->find_all() as $task):?>
         <?php
         $crafts = $task->crafts->where('cmpcraft.status','=',Enum_Status::Enabled)->find_all();
         $c = [];

@@ -108,7 +108,7 @@ class Controller_Reports extends HDVP_Controller_Template
         }
 
         $this->project = ORM::factory('Project',$data['project']);
-        $tasks = $this->project->tasks->where('status','=',Enum_Status::Enabled)->find_all();
+        $tasks = $this->project->getTasksByModuleName('Quality Control')->where('prtask.status','=',Enum_Status::Enabled)->find_all();
         if(empty($data['project'])){
             throw new HTTP_Exception_404();
 
@@ -702,7 +702,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                     'approveUsr' => $qc->approveUser,
                     'project' => $qc->project,
                     'projectStages' => Enum_ProjectStage::toArray(),
-                    'tasks' => $qc->project->tasks->where('status','=',Enum_Status::Enabled)->find_all(),
+                    'tasks' => $qc->project->getTasksByModuleName('Quality Control')->where('prtask.status','=',Enum_Status::Enabled)->find_all(),
                     'professions' => $qc->project->company->professions->where('status','=',Enum_Status::Enabled)->find_all(),
                     'crafts' => $qc->project->company->crafts->where('status','=',Enum_Status::Enabled)->order_by('name')->find_all(),
                     'plan' => $qc->plan,

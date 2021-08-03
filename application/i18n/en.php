@@ -899,6 +899,7 @@ return [
     'Select floor/level'=>'Select floor/level',
     'Are you sure, you want delete this' => 'Are you sure, you want delete this',
     'Approve element' => 'Approve element',
+    'approve_element_uppercase' => 'APPROVE ELEMENT',
     'Modules' => 'Modules',
     ''=>'',
 ];

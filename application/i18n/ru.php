@@ -872,6 +872,7 @@ return [
     'task_enable' => 'Актививировать',
     'Enter task description' => 'Введите описание проверки',
     'Approve element' => 'Подтверждение элемента',
+    'approve_element_uppercase' => 'ПОДТВЕРЖДЕНИЕ ЭЛЕМЕНТА',
     'Modules' => 'Модули',
     ''=>'',
 ];
