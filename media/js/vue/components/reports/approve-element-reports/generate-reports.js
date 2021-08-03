@@ -5,163 +5,64 @@ Vue.component('generate-reports', {
             <div class="page-title"> {{ trans.approve_element }} </div>
         </div>
         <div class="filters-section">
-            <form method="post" action="approve_element/generate">
-                <div class="filters-wraper flex-start">
-                    <div class="filter-item">
-                        <div class="multiselect-col">
-                            <div class="filter-item-label" >{{ trans.company }}</div>
-                            <multiselect 
-                                v-model="selectedCompany"
-                                :option-height="104" 
-                                :placeholder="trans.select_company" 
-                                :disabled="companies.length < 1" 
-                                :options="companies" 
-                                track-by="id" 
-                                label="name" 
-                                :searchable="true" 
-                                :allow-empty="false" 
-                                :show-labels="false"
-                            >
-                                <template slot="singleLabel" slot-scope="props">{{ props.option.name }}</template>
-                                <template slot="option" slot-scope="props">
-                                    <span>{{ props.option.name }}</span>
-                                </template>
-                                <template slot="option-selected" slot-scope="props">
-                                    <span>{{ props.option.name }}</span>
-                                </template>
-                            </multiselect>
-                        </div>
-                    </div>
-                    <div class="filter-item">
-                        <div class="multiselect-col">
-                            <div class="filter-item-label" >{{ trans.project }}</div>
-                            <multiselect 
-                                v-model="selectedProject"
-                                :option-height="104" 
-                                :placeholder="trans.select_project" 
-                                :disabled="(cmpProjects.length < 1)" 
-                                :options="cmpProjects" 
-                                track-by="id" 
-                                label="name" 
-                                :searchable="true" 
-                                :allow-empty="false" 
-                                :show-labels="false"
-                            >
-                                <template slot="singleLabel" slot-scope="props">{{ props.option.name }}</template>
-                                <template slot="option" slot-scope="props">
-                                    <span>{{ props.option.name }}</span>
-                                </template>
-                                <template slot="option-selected" slot-scope="props">
-                                    <span>{{ props.option.name }}</span>
-                                </template>
-                            </multiselect>
-                        </div>
-                    </div>
-                    <div class="filter-item">
-                        <div class="multiselect-col">
-                            <div class="filter-item-label flex-between">
-                            {{ trans.structure }}
-                            <label class="table_label" :class="{'labtest-disabled': !structures.length}">
-                                    <span @click="toggleSelectAll('selectedStructures', 'structures')">
-                                       <template v-if="selectedStructures.length < structures.length">
-                                               {{ trans.select_all }}
-                                        </template>
-                                        <template v-else>
-                                               {{ trans.unselect_all }}
-                                        </template>
-                                    </span>
-                                </label>
-                            </div>
-                                <multiselect 
-                                    v-model="selectedStructures"  
-                                    placeholder="Set structures[*]" 
-                                    :disabled="project.length < 1" 
-                                    :options="structures" 
-                                    label="name" 
-                                    track-by="id"
-                                    :multiple="true" 
-                                    :hide-selected="false"
-                                    :close-on-select="false"
-                                    :clear-on-select="false"
-                                    :preserve-search="true"
-                                    :internal-search="true"
-                                    :taggable="false"
-                                    :show-labels="false"  
-                                    @change="getObjectFloors()"                                     
-                                    @select="onSelect($event, 'structures')"
-                                    @remove="onRemove($event, 'structures')"
-                                    >
-                                    <span class="multiselect-checkbox-label" :class="{'checked': scope.option.checked}"  slot="option" slot-scope="scope" >
-                                        <span class="multiselect-option-icon"><i class="q4bikon-tick"></i><span></span></span>
-                                        <span class="multiselect-option-name">{{ scope.option.name }}</span>
-                                    </span>
-                                    <template slot='selection' slot-scope="{values, option, isOpen}"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ getMultiselectSelectionValue(values) }} </span></template>
-                                    <template slot="tag">{{ '' }}</template>
-                                </multiselect> 
-                        </div>
-                    </div>
-                    <div class="filter-item datepicker">
-                        <div class="filter-item-label" >{{ trans.date }}</div>
-                        <date-picker 
-                            v-model="time"
-                            :lang="langs[currentLang]"
-                            :editable="false" 
-                            :clearable="false"
-                            :disabled="false" 
-                            @change="timeChanged" 
-                            type="date"
-                            :range="true" 
-                            format="DD/MM/YYYY"
+            <div class="filters-wraper flex-start">
+                <div class="filter-item">
+                    <div class="multiselect-col">
+                        <div class="filter-item-label" >{{ trans.company }}</div>
+                        <multiselect 
+                            v-model="selectedCompany"
+                            :option-height="104" 
+                            :placeholder="trans.select_company" 
+                            :disabled="companies.length < 1" 
+                            :options="companies" 
+                            track-by="id" 
+                            label="name" 
+                            :searchable="true" 
+                            :allow-empty="false" 
+                            :show-labels="false"
                         >
-                        </date-picker>
+                            <template slot="singleLabel" slot-scope="props">{{ props.option.name }}</template>
+                            <template slot="option" slot-scope="props">
+                                <span>{{ props.option.name }}</span>
+                            </template>
+                            <template slot="option-selected" slot-scope="props">
+                                <span>{{ props.option.name }}</span>
+                            </template>
+                        </multiselect>
                     </div>
-                    <div class="filter-item">
-                        <div class="multiselect-col">
-                            <div class="filter-item-label flex-between" >
-                            {{ trans.floor_level }}
-                                <label class="table_label" :class="{'labtest-disabled': !floors.length}">
-                                    <span @click="toggleSelectAll('selectedFloor', 'floors')">
-                                        <template v-if="selectedFloor.length < floors.length">
-                                               {{ trans.select_all }}
-                                        </template>
-                                        <template v-else>
-                                               {{ trans.unselect_all }}
-                                        </template>
-                                    </span>
-                                </label>
-                            </div>
-                                <multiselect v-model="selectedFloor"  
-                                    placeholder="Set Floor/Level[*]" 
-                                    :disabled="!floors.length || floorsDisabled" 
-                                    :options="floors" 
-                                    label="name" 
-                                    track-by="id"
-                                    :multiple="true" 
-                                    :hide-selected="false"
-                                    :close-on-select="false"
-                                    :clear-on-select="false"
-                                    :preserve-search="true"
-                                    :internal-search="true"
-                                    :taggable="false"
-                                    :show-labels="false"                                       
-                                    @select="onSelect($event, 'floors')"
-                                    @remove="onRemove($event, 'floors')"
-                                    >
-                                    <span class="multiselect-checkbox-label" :class="{'checked': scope.option.checked}"  slot="option" slot-scope="scope" >
-                                        <span class="multiselect-option-icon"><i class="q4bikon-tick"></i><span></span></span>
-                                        <span class="multiselect-option-name">{{ scope.option.custom_name ? scope.option.custom_name : scope.option.number }}</span>
-                                    </span>                                   
-                                    <template slot='selection' slot-scope="{values, option, isOpen}"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ getFloorsMultiselectSelectionValue(values) }} </span></template>
-                                    <template slot="tag">{{ '' }}</template>
-                                </multiselect>
-                        </div>
+                </div>
+                <div class="filter-item">
+                    <div class="multiselect-col">
+                        <div class="filter-item-label" >{{ trans.project }}</div>
+                        <multiselect 
+                            v-model="selectedProject"
+                            :option-height="104" 
+                            :placeholder="trans.select_project" 
+                            :disabled="(cmpProjects.length < 1)" 
+                            :options="cmpProjects" 
+                            track-by="id" 
+                            label="name" 
+                            :searchable="true" 
+                            :allow-empty="false" 
+                            :show-labels="false"
+                        >
+                            <template slot="singleLabel" slot-scope="props">{{ props.option.name }}</template>
+                            <template slot="option" slot-scope="props">
+                                <span>{{ props.option.name }}</span>
+                            </template>
+                            <template slot="option-selected" slot-scope="props">
+                                <span>{{ props.option.name }}</span>
+                            </template>
+                        </multiselect>
                     </div>
-                    <div class="filter-item">
+                </div>
+                <div class="filter-item">
+                    <div class="multiselect-col">
                         <div class="filter-item-label flex-between">
-                        {{ trans.places }}
-                            <label class="table_label" :class="{'labtest-disabled': !places.length}">
-                                <span @click="toggleSelectAll('selectedPlaces', 'places')">
-                                    <template v-if="selectedPlaces.length < places.length">
+                        {{ trans.structure }}
+                        <label class="table_label" :class="{'labtest-disabled': !structures.length}">
+                                <span @click="toggleSelectAll('selectedStructures', 'structures')">
+                                   <template v-if="selectedStructures.length < structures.length">
                                            {{ trans.select_all }}
                                     </template>
                                     <template v-else>
@@ -170,142 +71,70 @@ Vue.component('generate-reports', {
                                 </span>
                             </label>
                         </div>
-                        <div class="multiselect-col">
-                            <multiselect v-model="selectedPlaces"  
-                                    placeholder="Set places[*]" 
-                                    :disabled="!places.length || placesDisabled" 
-                                    :options="places" 
-                                    label="name" 
-                                    track-by="id"
-                                    :multiple="true" 
-                                    :hide-selected="false"
-                                    :close-on-select="false"
-                                    :clear-on-select="false"
-                                    :preserve-search="true"
-                                    :internal-search="true"
-                                    :taggable="false"
-                                    :show-labels="false"                                       
-                                    @select="onSelect($event, 'places')"
-                                    @remove="onRemove($event, 'places')"
-                                    >
-                                    <span class="multiselect-checkbox-label" :class="{'checked': scope.option.checked}"  slot="option" slot-scope="scope" >
-                                        <span class="multiselect-option-icon"><i class="q4bikon-tick"></i><span></span></span>
-                                        <span class="multiselect-option-name">{{ scope.option.name }}</span>
-                                    </span>
-                                  
-                                
-                                    <template slot='selection' slot-scope="{values, option, isOpen}"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ getMultiselectSelectionValue(values) }} </span></template>
-                                    <template slot="tag">{{ '' }}</template>
-                            </multiselect>   
-                        </div>
-                    </div>
-                    <div class="filter-item">
-                        <div class="filter-item-label flex-between">
-                        {{ trans.element }}
-                            <label class="table_label" :class="{'labtest-disabled': !elements.length}">
-                                <span @click="toggleSelectAll('selectedElements', 'elements')">
-                                    <template v-if="selectedElements.length < elements.length">
-                                           {{ trans.select_all }}
-                                    </template>
-                                    <template v-else>
-                                           {{ trans.unselect_all }}
-                                    </template>
-                                </span>
-                            </label>
-                        </div>
-                        <div class="multiselect-col">
-                            <multiselect v-model="selectedElements"  
-                                    placeholder="Set elements[*]" 
-                                    :disabled="!elements.length" 
-                                    :options="elements" 
-                                    label="name" 
-                                    track-by="id"
-                                    :multiple="true" 
-                                    :hide-selected="false"
-                                    :close-on-select="false"
-                                    :clear-on-select="false"
-                                    :preserve-search="true"
-                                    :internal-search="true"
-                                    :taggable="false"
-                                    :show-labels="false"                                       
-                                    @select="onSelect($event, 'elements')"
-                                    @remove="onRemove($event, 'elements')"
-                                    >
-                                    <span class="multiselect-checkbox-label" :class="{'checked': scope.option.checked}"  slot="option" slot-scope="scope" >
-                                        <span class="multiselect-option-icon"><i class="q4bikon-tick"></i><span></span></span>
-                                        <span class="multiselect-option-name">{{ scope.option.name }}</span>
-                                    </span>
-                                  
-                                
-                                    <template slot='selection' slot-scope="{values, option, isOpen}"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ getMultiselectSelectionValue(values) }} </span></template>
-                                    <template slot="tag">{{ '' }}</template>
-                            </multiselect>   
-                        </div>
-                    </div>
-                    <div class="filter-item">
-                        <div class="filter-item-label flex-between">
-                        {{ trans.crafts }}
-                            <label class="table_label" :class="{'labtest-disabled': !crafts.length}">
-                                <span @click="toggleSelectAll('selectedCrafts', 'crafts')">
-                                    <template v-if="selectedCrafts.length < crafts.length">
-                                           {{ trans.select_all }}
-                                    </template>
-                                    <template v-else>
-                                           {{ trans.unselect_all }}
-                                    </template>
-                                </span>
-                            </label>
-                        </div>
-                        <div class="multiselect-col">
-                            <multiselect v-model="selectedCrafts"  
-                                    placeholder="Set specialities[*]" 
-                                    :disabled="!crafts.length" 
-                                    :options="crafts" 
-                                    label="name" 
-                                    track-by="id"
-                                    :multiple="true" 
-                                    :hide-selected="false"
-                                    :close-on-select="false"
-                                    :clear-on-select="false"
-                                    :preserve-search="true"
-                                    :internal-search="true"
-                                    :taggable="false"
-                                    :show-labels="false"                                       
-                                    @select="onSelect($event, 'crafts')"
-                                    @remove="onRemove($event, 'crafts')"
-                                    >
-                                    <span class="multiselect-checkbox-label" :class="{'checked': scope.option.checked}"  slot="option" slot-scope="scope" >
-                                        <span class="multiselect-option-icon"><i class="q4bikon-tick"></i><span></span></span>
-                                        <span class="multiselect-option-name">{{ scope.option.name }}</span>
-                                    </span>
-                                    <template slot='selection' slot-scope="{values, option, isOpen}"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ getMultiselectSelectionValue(values) }} </span></template>
-                                    <template slot="tag">{{ '' }}</template>
-                            </multiselect>
-                        </div>
-                    </div>
-                    <div class="filter-item">
-                        <div class="filter-item-label flex-between">
-                        {{ trans.status }}
-                            <label class="table_label" :class="{'labtest-disabled': !ltStatuses.length}">
-                                <span @click="toggleSelectAll('selectedStatuses', 'ltStatuses')">
-                                    <template v-if="selectedStatuses.length < ltStatuses.length">
-                                       {{ trans.select_all }}
-                                </template>
-                                <template v-else>
-                                       {{ trans.unselect_all }}
-                                </template>
-                                </span>
-                            </label>
-                        </div>
-                        <div class="multiselect-col"> 
                             <multiselect 
-                                v-model="selectedStatuses"  
-                                placeholder="Set statuses[*]" 
-                                :disabled="!ltStatuses.length" 
-                                :options="ltStatuses" 
+                                v-model="selectedStructures"  
+                                placeholder="Set structures[*]" 
+                                :disabled="project.length < 1" 
+                                :options="structures" 
                                 label="name" 
                                 track-by="id"
-                                @change="getObjectFloors()" 
+                                :multiple="true" 
+                                :hide-selected="false"
+                                :close-on-select="false"
+                                :clear-on-select="false"
+                                :preserve-search="true"
+                                :internal-search="true"
+                                :taggable="false"
+                                :show-labels="false"  
+                                @change="getObjectFloors()"                                     
+                                @select="onSelect($event, 'structures')"
+                                @remove="onRemove($event, 'structures')"
+                                >
+                                <span class="multiselect-checkbox-label" :class="{'checked': scope.option.checked}"  slot="option" slot-scope="scope" >
+                                    <span class="multiselect-option-icon"><i class="q4bikon-tick"></i><span></span></span>
+                                    <span class="multiselect-option-name">{{ scope.option.name }}</span>
+                                </span>
+                                <template slot='selection' slot-scope="{values, option, isOpen}"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ getMultiselectSelectionValue(values) }} </span></template>
+                                <template slot="tag">{{ '' }}</template>
+                            </multiselect> 
+                    </div>
+                </div>
+                <div class="filter-item datepicker">
+                    <div class="filter-item-label" >{{ trans.date }}</div>
+                    <date-picker 
+                        v-model="time"
+                        :lang="langs[currentLang]"
+                        :editable="false" 
+                        :clearable="false"
+                        :disabled="false" 
+                        @change="timeChanged" 
+                        type="date"
+                        :range="true" 
+                        format="DD/MM/YYYY"
+                    >
+                    </date-picker>
+                </div>
+                <div class="filter-item">
+                    <div class="multiselect-col">
+                        <div class="filter-item-label flex-between" >
+                        {{ trans.floor_level }}
+                            <label class="table_label" :class="{'labtest-disabled': !floors.length}">
+                                <span @click="toggleSelectAll('selectedFloors', 'floors')">
+                                    <template v-if="selectedFloors.length < floors.length">
+                                           {{ trans.select_all }}
+                                    </template>
+                                    <template v-else>
+                                           {{ trans.unselect_all }}
+                                    </template>
+                                </span>
+                            </label>
+                        </div>
+                            <multiselect v-model="selectedFloors"  
+                                placeholder="Set Floor/Level[*]" 
+                                :disabled="!floors.length || floorsDisabled" 
+                                :options="floors" 
+                                label="name" 
+                                track-by="id"
                                 :multiple="true" 
                                 :hide-selected="false"
                                 :close-on-select="false"
@@ -314,61 +143,228 @@ Vue.component('generate-reports', {
                                 :internal-search="true"
                                 :taggable="false"
                                 :show-labels="false"                                       
-                                @select="onSelect($event, 'ltStatuses')"
-                                @remove="onRemove($event, 'ltStatuses')"
+                                @select="onSelect($event, 'floors')"
+                                @remove="onRemove($event, 'floors')"
                                 >
                                 <span class="multiselect-checkbox-label" :class="{'checked': scope.option.checked}"  slot="option" slot-scope="scope" >
                                     <span class="multiselect-option-icon"><i class="q4bikon-tick"></i><span></span></span>
-                                    <span class="multiselect-option-name">{{ trans[scope.option.name] }}</span>
-                                </span>
-                                <template slot='selection' slot-scope="{values, option, isOpen}"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ getMultiselectSelectionValue(values, true) }} </span></template>
+                                    <span class="multiselect-option-name">{{ scope.option.custom_name ? scope.option.custom_name : scope.option.number }}</span>
+                                </span>                                   
+                                <template slot='selection' slot-scope="{values, option, isOpen}"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ getFloorsMultiselectSelectionValue(values) }} </span></template>
                                 <template slot="tag">{{ '' }}</template>
-                            </multiselect>                        
-                        </div>
-                    </div>
-                    <div class="filter-item">
-                        <div class="filter-item-label" >Positions[*]</div>
-                        <div class="multiselect-col">
-                            <multiselect 
-                                :option-height="104" 
-                                placeholder="Set positions[*]" 
-                                :disabled="options.length < 1" 
-                                :options="options" 
-                                track-by="id" 
-                                label="name" 
-                                :searchable="true" 
-                                :allow-empty="false" 
-                                :show-labels="false"
-                            >
-                                <template slot="singleLabel" slot-scope="props">{{ props.option.name }}</template>
-                                <template slot="option" slot-scope="props">
-                                    <span>{{ props.option.name }}</span>
-                                </template>
-                                <template slot="option-selected" slot-scope="props">
-                                    <span>{{ props.option.name }}</span>
-                                </template>
                             </multiselect>
-                        </div>
-                    </div>
-                    <div class="filter-buttons">
-                        <button 
-                            class="filter-button generate"
-                            :class="{'labtest-disabled': (!canGenerate)}"
-                            @click="generateReports"
-                        >
-                        {{ trans.generate }}
-                        </button>
                     </div>
                 </div>
-            </form>
-            
+                <div class="filter-item">
+                    <div class="filter-item-label flex-between">
+                    {{ trans.places }}
+                        <label class="table_label" :class="{'labtest-disabled': !places.length}">
+                            <span @click="toggleSelectAll('selectedPlaces', 'places')">
+                                <template v-if="selectedPlaces.length < places.length">
+                                       {{ trans.select_all }}
+                                </template>
+                                <template v-else>
+                                       {{ trans.unselect_all }}
+                                </template>
+                            </span>
+                        </label>
+                    </div>
+                    <div class="multiselect-col">
+                        <multiselect v-model="selectedPlaces"  
+                                placeholder="Set places[*]" 
+                                :disabled="!places.length || placesDisabled" 
+                                :options="places" 
+                                label="name" 
+                                track-by="id"
+                                :multiple="true" 
+                                :hide-selected="false"
+                                :close-on-select="false"
+                                :clear-on-select="false"
+                                :preserve-search="true"
+                                :internal-search="true"
+                                :taggable="false"
+                                :show-labels="false"                                       
+                                @select="onSelect($event, 'places')"
+                                @remove="onRemove($event, 'places')"
+                                >
+                                <span class="multiselect-checkbox-label" :class="{'checked': scope.option.checked}"  slot="option" slot-scope="scope" >
+                                    <span class="multiselect-option-icon"><i class="q4bikon-tick"></i><span></span></span>
+                                    <span class="multiselect-option-name">{{ scope.option.name }}</span>
+                                </span>
+                              
+                            
+                                <template slot='selection' slot-scope="{values, option, isOpen}"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ getMultiselectSelectionValue(values) }} </span></template>
+                                <template slot="tag">{{ '' }}</template>
+                        </multiselect>   
+                    </div>
+                </div>
+                <div class="filter-item">
+                    <div class="filter-item-label flex-between">
+                    {{ trans.element }}
+                        <label class="table_label" :class="{'labtest-disabled': !elements.length}">
+                            <span @click="toggleSelectAll('selectedElements', 'elements')">
+                                <template v-if="selectedElements.length < elements.length">
+                                       {{ trans.select_all }}
+                                </template>
+                                <template v-else>
+                                       {{ trans.unselect_all }}
+                                </template>
+                            </span>
+                        </label>
+                    </div>
+                    <div class="multiselect-col">
+                        <multiselect v-model="selectedElements"  
+                                placeholder="Set elements[*]" 
+                                :disabled="!elements.length" 
+                                :options="elements" 
+                                label="name" 
+                                track-by="id"
+                                :multiple="true" 
+                                :hide-selected="false"
+                                :close-on-select="false"
+                                :clear-on-select="false"
+                                :preserve-search="true"
+                                :internal-search="true"
+                                :taggable="false"
+                                :show-labels="false"                                       
+                                @select="onSelect($event, 'elements')"
+                                @remove="onRemove($event, 'elements')"
+                                >
+                                <span class="multiselect-checkbox-label" :class="{'checked': scope.option.checked}"  slot="option" slot-scope="scope" >
+                                    <span class="multiselect-option-icon"><i class="q4bikon-tick"></i><span></span></span>
+                                    <span class="multiselect-option-name">{{ scope.option.name }}</span>
+                                </span>
+                              
+                            
+                                <template slot='selection' slot-scope="{values, option, isOpen}"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ getMultiselectSelectionValue(values) }} </span></template>
+                                <template slot="tag">{{ '' }}</template>
+                        </multiselect>   
+                    </div>
+                </div>
+                <div class="filter-item">
+                    <div class="filter-item-label flex-between">
+                    {{ trans.crafts }}
+                        <label class="table_label" :class="{'labtest-disabled': !crafts.length}">
+                            <span @click="toggleSelectAll('selectedCrafts', 'crafts')">
+                                <template v-if="selectedCrafts.length < crafts.length">
+                                       {{ trans.select_all }}
+                                </template>
+                                <template v-else>
+                                       {{ trans.unselect_all }}
+                                </template>
+                            </span>
+                        </label>
+                    </div>
+                    <div class="multiselect-col">
+                        <multiselect v-model="selectedCrafts"  
+                                placeholder="Set specialities[*]" 
+                                :disabled="!crafts.length" 
+                                :options="crafts" 
+                                label="name" 
+                                track-by="id"
+                                :multiple="true" 
+                                :hide-selected="false"
+                                :close-on-select="false"
+                                :clear-on-select="false"
+                                :preserve-search="true"
+                                :internal-search="true"
+                                :taggable="false"
+                                :show-labels="false"                                       
+                                @select="onSelect($event, 'crafts')"
+                                @remove="onRemove($event, 'crafts')"
+                                >
+                                <span class="multiselect-checkbox-label" :class="{'checked': scope.option.checked}"  slot="option" slot-scope="scope" >
+                                    <span class="multiselect-option-icon"><i class="q4bikon-tick"></i><span></span></span>
+                                    <span class="multiselect-option-name">{{ scope.option.name }}</span>
+                                </span>
+                                <template slot='selection' slot-scope="{values, option, isOpen}"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ getMultiselectSelectionValue(values) }} </span></template>
+                                <template slot="tag">{{ '' }}</template>
+                        </multiselect>
+                    </div>
+                </div>
+                <div class="filter-item">
+                    <div class="filter-item-label flex-between">
+                    {{ trans.status }}
+                        <label class="table_label" :class="{'labtest-disabled': !ltStatuses.length}">
+                            <span @click="toggleSelectAll('selectedStatuses', 'ltStatuses')">
+                                <template v-if="selectedStatuses.length < ltStatuses.length">
+                                   {{ trans.select_all }}
+                            </template>
+                            <template v-else>
+                                   {{ trans.unselect_all }}
+                            </template>
+                            </span>
+                        </label>
+                    </div>
+                    <div class="multiselect-col"> 
+                        <multiselect 
+                            v-model="selectedStatuses"  
+                            placeholder="Set statuses[*]" 
+                            :disabled="!ltStatuses.length" 
+                            :options="ltStatuses" 
+                            label="name" 
+                            track-by="id"
+                            @change="getObjectFloors()" 
+                            :multiple="true" 
+                            :hide-selected="false"
+                            :close-on-select="false"
+                            :clear-on-select="false"
+                            :preserve-search="true"
+                            :internal-search="true"
+                            :taggable="false"
+                            :show-labels="false"                                       
+                            @select="onSelect($event, 'ltStatuses')"
+                            @remove="onRemove($event, 'ltStatuses')"
+                            >
+                            <span class="multiselect-checkbox-label" :class="{'checked': scope.option.checked}"  slot="option" slot-scope="scope" >
+                                <span class="multiselect-option-icon"><i class="q4bikon-tick"></i><span></span></span>
+                                <span class="multiselect-option-name">{{ trans[scope.option.name] }}</span>
+                            </span>
+                            <template slot='selection' slot-scope="{values, option, isOpen}"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ getMultiselectSelectionValue(values, true) }} </span></template>
+                            <template slot="tag">{{ '' }}</template>
+                        </multiselect>                        
+                    </div>
+                </div>
+                <div class="filter-item">
+                    <div class="filter-item-label" >Positions[*]</div>
+                    <div class="multiselect-col">
+                        <multiselect 
+                            :option-height="104" 
+                            placeholder="Set positions[*]" 
+                            :disabled="options.length < 1" 
+                            :options="options" 
+                            track-by="id" 
+                            label="name" 
+                            :searchable="true" 
+                            :allow-empty="false" 
+                            :show-labels="false"
+                        >
+                            <template slot="singleLabel" slot-scope="props">{{ props.option.name }}</template>
+                            <template slot="option" slot-scope="props">
+                                <span>{{ props.option.name }}</span>
+                            </template>
+                            <template slot="option-selected" slot-scope="props">
+                                <span>{{ props.option.name }}</span>
+                            </template>
+                        </multiselect>
+                    </div>
+                </div>
+                <div class="filter-buttons">
+                    <button 
+                        class="filter-button generate"
+                        :class="{'labtest-disabled': (!canGenerate)}"
+                        @click="generateReports"
+                    >
+                    {{ trans.generate }}
+                    </button>
+                </div>
+            </div>            
         </div>                
     </section>
     `,
     props: {
         statuses: {required: true},
         translations: {required: true},
-        // generateReportsUrl: {required: true}
     },
     components: {
         Multiselect: window.VueMultiselect.default,
@@ -423,7 +419,7 @@ Vue.component('generate-reports', {
             selectedStructures: [],
             ltStatuses:  this.getStatuses(this.statuses),
             trans: JSON.parse(this.translations),
-            selectedFloor: [],
+            selectedFloors: [],
             selectedPlaces: [],
             selectedElements: [],
             selectedCrafts: [],
@@ -472,7 +468,7 @@ Vue.component('generate-reports', {
             return this.selectedStructures.length > 1
         },
         placesDisabled() {
-            return (this.selectedStructures.length > 1) || (this.selectedFloor.length > 1)
+            return (this.selectedStructures.length > 1) || (this.selectedFloors.length > 1)
         },
         currentLang() {
             return $(".header-current-lang").data("lang")
@@ -509,13 +505,13 @@ Vue.component('generate-reports', {
                 if (val.length === 1) {
                     this.getStructureFloors()
                 } else {
-                    this.emptyFilter('selectedFloor', 'floors')
+                    this.emptyFilter('selectedFloors', 'floors')
                 }
             } else {
-                this.emptyFilter('selectedFloor', 'floors')
+                this.emptyFilter('selectedFloors', 'floors')
             }
         },
-        selectedFloor(val) {
+        selectedFloors(val) {
             if (val.length) {
                 if (val.length === 1) {
                     this.getFloorPlaces()
@@ -569,7 +565,6 @@ Vue.component('generate-reports', {
             let url = `/projects/entities/objects/${this.selectedStructures[0].id}/floors?fields=id,name`;
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
-                    console.log("FLOORS", response.items)
                     this.floors = response.items;
                 })
         },
@@ -605,7 +600,7 @@ Vue.component('generate-reports', {
             return vals.join(', ');
         },
         getFloorPlaces() {
-            let url = `/projects/entities/floors/${this.selectedFloor[0].id}/places?fields=id,name`;
+            let url = `/projects/entities/floors/${this.selectedFloors[0].id}/places?fields=id,name`;
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
                     this.places = response.items;
@@ -646,6 +641,16 @@ Vue.component('generate-reports', {
         },
         generateReports() {
 
+            this.$emit('getFiltersForReportsGenerating', {
+                company: this.selectedCompany,
+                project: this.selectedProject,
+                crafts: this.selectedCrafts,
+                structures: this.selectedStructures,
+                elements: this.selectedElements,
+                floors: this.selectedFloors,
+                statuses: this.selectedStatuses,
+                places: this.selectedPlaces
+            })
         }
     },
     created() {

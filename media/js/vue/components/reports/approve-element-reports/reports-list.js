@@ -1,8 +1,17 @@
 Vue.component('reports-list', {
     template: `
-    <section class='q4b-approve-el app-element-list'>
+    <section class='q4b-approve-el app-element-list new-styles'>
         <div class="page-title-sec flex-start">
-            <div class="page-title"><a class="back-to-filter" href=""><i class="q4bikon-arrow_back2"></i></a>{{ trans.approve_element }} / <span class="project_name"> ITAMAR 4</span></div>
+            <div class="page-title">
+                <a class="back-to-filter">
+                    <i 
+                        class="q4bikon-arrow_back2"
+                        @click="$emit('tabChanged')"
+                    ></i>
+                </a>
+                {{ trans.approve_element }} / 
+                <span class="project_name"> ITAMAR 4</span>
+            </div>
         </div>
         <div class="report-project-desc_wraper flex-start">
             <div class="report-project-desc-image">
@@ -136,7 +145,7 @@ Vue.component('reports-list', {
                             <td>
                                 <button class="open-more" @click="toggleReportOptions(report)"><img src="./img/more-icon.svg" alt="">
                                     <div  class="td-options-wrap" v-if="report.show_options">
-                                        <a href=""><i class="q4bikon-preview1"></i>View[*]</a>
+                                        <a @click="$emit('toReportDetails', report.id)"><i class="q4bikon-preview1"></i>View[*]</a>
                                         <a href=""><i class="q4bikon-uncheked"></i>{{ trans.qc_report }}</a>
                                     </div>
                                 </button>
@@ -192,9 +201,6 @@ Vue.component('reports-list', {
         toggleReportOptions(report) {
             report.show_options = !report.show_options
         }
-    },
-    mounted() {
-        console.log('ITEM', this.item)
     }
 });
 
