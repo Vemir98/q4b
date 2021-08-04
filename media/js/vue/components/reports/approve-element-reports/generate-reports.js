@@ -1,6 +1,9 @@
 Vue.component('generate-reports', {
     template: `
     <section class='q4b-approve-el new-styles'>
+        <div v-if="showLoader" class="loader_backdrop_vue">
+            <div class="loader"></div>
+        </div>
         <div class="page-title-sec flex-start">
             <div class="page-title"> {{ trans.approve_element }} </div>
         </div>
@@ -73,7 +76,7 @@ Vue.component('generate-reports', {
                         </div>
                             <multiselect 
                                 v-model="selectedStructures"  
-                                placeholder="Set structures[*]" 
+                                :placeholder="trans.set_structures" 
                                 :disabled="project.length < 1" 
                                 :options="structures" 
                                 label="name" 
@@ -130,7 +133,7 @@ Vue.component('generate-reports', {
                             </label>
                         </div>
                             <multiselect v-model="selectedFloors"  
-                                placeholder="Set Floor/Level[*]" 
+                                :placeholder="trans.set_floor_level" 
                                 :disabled="!floors.length || floorsDisabled" 
                                 :options="floors" 
                                 label="name" 
@@ -171,7 +174,7 @@ Vue.component('generate-reports', {
                     </div>
                     <div class="multiselect-col">
                         <multiselect v-model="selectedPlaces"  
-                                placeholder="Set places[*]" 
+                                :placeholder="trans.set_places" 
                                 :disabled="!places.length || placesDisabled" 
                                 :options="places" 
                                 label="name" 
@@ -214,7 +217,7 @@ Vue.component('generate-reports', {
                     </div>
                     <div class="multiselect-col">
                         <multiselect v-model="selectedElements"  
-                                placeholder="Set elements[*]" 
+                                :placeholder="trans.set_elements" 
                                 :disabled="!elements.length" 
                                 :options="elements" 
                                 label="name" 
@@ -257,7 +260,7 @@ Vue.component('generate-reports', {
                     </div>
                     <div class="multiselect-col">
                         <multiselect v-model="selectedCrafts"  
-                                placeholder="Set specialities[*]" 
+                                :placeholder="trans.set_specialities" 
                                 :disabled="!crafts.length" 
                                 :options="crafts" 
                                 label="name" 
@@ -299,7 +302,7 @@ Vue.component('generate-reports', {
                     <div class="multiselect-col"> 
                         <multiselect 
                             v-model="selectedStatuses"  
-                            placeholder="Set statuses[*]" 
+                            :placeholder="trans.set_statuses" 
                             :disabled="!ltStatuses.length" 
                             :options="ltStatuses" 
                             label="name" 
@@ -330,7 +333,7 @@ Vue.component('generate-reports', {
                     <div class="multiselect-col">
                         <multiselect 
                             :option-height="104" 
-                            placeholder="Set positions[*]" 
+                            :placeholder="trans.set_positions" 
                             :disabled="options.length < 1" 
                             :options="options" 
                             track-by="id" 
@@ -459,7 +462,8 @@ Vue.component('generate-reports', {
                         firstWeekContainsDate: 1,
                     }
                 }
-            }
+            },
+            showLoader: false
 
         }
     },
@@ -495,7 +499,7 @@ Vue.component('generate-reports', {
         },
         project(val) {
             if(val) {
-                this.getStructures()
+                this.getStructures();
                 this.getElements();
                 this.getCompanyCrafts();
             }
@@ -530,42 +534,52 @@ Vue.component('generate-reports', {
             this[list] = [];
         },
         getCompanies(){
+            this.showLoader = true;
             let url = '/companies/entities/list';
 
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
                     this.companies = response.items ? response.items : [];
+                    this.showLoader = false;
                 })
         },
         getCmpProjects(){
             if (!this.selectedCompany) return
+            this.showLoader = true;
             let url = `/companies/${this.selectedCompany.id}/entities/projects`;
 
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
                     this.cmpProjects = response.items ? response.items : [];
+                    this.showLoader = false;
                 })
         },
         getProject(id) {
+            this.showLoader = true;
             let url = `/projects/${id}/entities/project?fields=id,name`;
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
                     this.project = response.item;
+                    this.showLoader = false;
                 })
         },
         getStructures() {
+            this.showLoader = true;
             let url = `/projects/${this.project.id}/entities/objects?fields=id,name`;
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
                     this.structures = response.items;
                     this.toggleSelectAll('selectedStructures', 'structures');
+                    this.showLoader = false;
                 })
         },
         getStructureFloors() {
+            this.showLoader = true;
             let url = `/projects/entities/objects/${this.selectedStructures[0].id}/floors?fields=id,name`;
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
                     this.floors = response.items;
+                    this.showLoader = false;
                 })
         },
         toggleSelectAll(selected, list) {
@@ -600,13 +614,16 @@ Vue.component('generate-reports', {
             return vals.join(', ');
         },
         getFloorPlaces() {
+            this.showLoader = true;
             let url = `/projects/entities/floors/${this.selectedFloors[0].id}/places?fields=id,name`;
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
                     this.places = response.items;
+                    this.showLoader = false;
                 })
         },
         getElements(){
+            this.showLoader = true;
             let url = `/projects/${this.project.id}/labtests/elements`;
             let param = encodeURIComponent('?search=')
             url +=  param;
@@ -614,15 +631,18 @@ Vue.component('generate-reports', {
                 .then(response => {
                     this.elements = response.items;
                     this.toggleSelectAll('selectedElements', 'elements');
+                    this.showLoader = false;
                 })
         },
         getCompanyCrafts() {
+            this.showLoader = true;
             let fields="id,name,companyId,catalogNumber,status,relatedId";
             let url = `/companies/${this.project.company_id}/entities/crafts?fields=${fields}`;
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
                     this.crafts = response.items;
                     this.toggleSelectAll('selectedCrafts', 'crafts');
+                    this.showLoader = false;
                 })
         },
         getStatuses(statusesArr) {

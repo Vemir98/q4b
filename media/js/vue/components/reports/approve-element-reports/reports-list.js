@@ -10,12 +10,12 @@ Vue.component('reports-list', {
                     ></i>
                 </a>
                 {{ trans.approve_element }} / 
-                <span class="project_name"> ITAMAR 4</span>
+                <span class="project_name">{{ item.project_name }}</span>
             </div>
         </div>
         <div class="report-project-desc_wraper flex-start">
             <div class="report-project-desc-image">
-                <img src="./img/project-img.jpg" alt="project images">
+                <img src="/media/img/project-img.jpg" alt="project images">
             </div>
             <div class="report-project-desc-list flex-start">
                 <ul class="flex-start">
@@ -116,15 +116,15 @@ Vue.component('reports-list', {
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Check N[*]</th>
-                        <th>Check Date[*]</th>
+                        <th>{{ trans.check_number }}</th>
+                        <th>{{ trans.check_date }}</th>
                         <th>{{ trans.element }}</th>
                         <th>{{ trans.craft }}</th>
                         <th>{{ trans.floor }}</th>
                         <th>{{ trans.status }}</th>
-                        <th>Approval Date[*]</th>
+                        <th>{{ trans.approval_date }}</th>
                         <th>{{ trans.position }}</th>
-                        <th>Signer Name[*]</th>
+                        <th>{{ trans.signer_name }}</th>
                         <th>{{ trans.signature }}</th>
                         <th>{{ trans.more }}</th>
                     </tr>
@@ -143,7 +143,7 @@ Vue.component('reports-list', {
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>
                             <td>
-                                <button class="open-more" @click="toggleReportOptions(report)"><img src="./img/more-icon.svg" alt="">
+                                <button class="open-more" @click="toggleReportOptions(report)"><img src="/media/img/more-icon.svg" alt="">
                                     <div  class="td-options-wrap" v-if="report.show_options">
                                         <a @click="$emit('toReportDetails', report.id)"><i class="q4bikon-preview1"></i>View[*]</a>
                                         <a href=""><i class="q4bikon-uncheked"></i>{{ trans.qc_report }}</a>

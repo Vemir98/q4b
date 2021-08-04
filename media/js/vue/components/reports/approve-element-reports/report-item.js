@@ -7,27 +7,25 @@ Vue.component('report-item', {
                     <a class="back-to-filter">
                         <i @click="$emit('toReportsList')" class="q4bikon-arrow_back2"></i>
                     </a>
-                    <span class="approve-elv-top-item-name">Check #</span>
+                    <span class="approve-elv-top-item-name">{{ trans.check_number }}</span>
                     <span class="approve-elv-top-item-value">{{ data.id }}</span>
 
                 </div>
                 <div class="approve-elv-top-item">
-                    <span class="approve-elv-top-item-name">Element</span>
+                    <span class="approve-elv-top-item-name">{{ trans.element }}</span>
                     <span class="approve-elv-top-item-value">{{ data.element_name }}</span>
-
                 </div>
-
             </div>
             <div class="approve-elv-top-right flex-end">
 
                 <div class="approve-elv-top-item">
-                    <span class="approve-elv-top-item-name">Created by</span>
+                    <span class="approve-elv-top-item-name">{{ trans.created_by }}</span>
                     <span class="approve-elv-top-item-value">{{ data.creator }} ({{ data.check_date }})</span>
 
                 </div>
 
                 <div class="approve-elv-top-item">
-                    <span class="approve-elv-top-item-name">Status</span>
+                    <span class="approve-elv-top-item-name">{{ trans.status }}</span>
                     <span class="approve-elv-top-item-value">{{ data.status }}</span>
                 </div>
 
@@ -35,7 +33,7 @@ Vue.component('report-item', {
         </div>
         <div class="approve-elv-filter flex-end">
             <div class="filter-item">
-                <div class="filter-item-label">Manager Status</div>
+                <div class="filter-item-label">{{ trans.manager_status }}</div>
                 <div class="multiselect-col">
                     <multiselect 
                         :option-height="104" 
@@ -64,621 +62,673 @@ Vue.component('report-item', {
 
         <div class="approve-elv-properties flex-start disabled">
             <div class=" approve-elv-property flex-start">
-                <span class="approve-elv-properties-name ">Company</span>
+                <span class="approve-elv-properties-name ">{{ trans.company }}</span>
                 <span class="approve-elv-property-value">{{ filters.company.name }}</span>
             </div>
             <div class=" approve-elv-property flex-start">
-                <span class="approve-elv-properties-name ">Project</span>
+                <span class="approve-elv-properties-name ">{{ trans.project }}</span>
                 <span class="approve-elv-property-value">{{ filters.project.name }}</span>
             </div>
             <div class=" approve-elv-property flex-start">
-                <span class="approve-elv-properties-name ">Structure</span>
-                <span class="approve-elv-property-value">{{ arrayToStringByValue(filters.structures,'name') }}</span>
+                <span class="approve-elv-properties-name ">{{ trans.structure }}</span>
+                <span class="approve-elv-property-value">{{ data.structure }}</span>
             </div>
             <div class=" approve-elv-property flex-start">
-                <span class="approve-elv-properties-name ">Floor/Level</span>
-                <span class="approve-elv-property-value">{{ arrayToStringByValue(filters.floors,'number') }}</span>
+                <span class="approve-elv-properties-name ">{{ trans.floor_level }}</span>
+                <span class="approve-elv-property-value">{{ data.floor }}</span>
             </div>
             <div class=" approve-elv-property flex-start">
-                <span class="approve-elv-properties-name ">Place</span>
-                <span class="approve-elv-property-value">{{ arrayToStringByValue(filters.places,'name') }}</span>
+                <span class="approve-elv-properties-name ">{{ trans.place }}</span>
+                <span class="approve-elv-property-value">{{ data.place }}</span>
             </div>
 
         </div>
 
         <div class="report-buttons">
             <div class="report-buttons-wraper ">
-                <a class="report-button  " href=""><i class="q4bikon-print1"></i>Print</a>
+                <a class="report-button  " href=""><i class="q4bikon-print1"></i>{{ trans.print }}</a>
             </div>
         </div>
 
         <div class="approve-elv-reports">
             <div class="approve-elv-reports-top flex-between">
-                <div class="approve-elv-reports-top-headline">Speciality List</div>
-                <div class="approve-elv-reports-delete-all"><button class="delete-all">Delete</button>
+                <div class="approve-elv-reports-top-headline">{{ trans.speciality_list }}</div>
+                <div class="approve-elv-reports-delete-all"><button class="delete-all">Delete All[*]</button>
                 </div>
             </div>
             <div class="approve-elv-reports-wraper">
-                <!--report-item-->
-                <div class="approve-elv-report-item">
-                    <div class="approve-elv-report-top flex-start">
-                        <span class="approve-elv-report-name not-appropriate">בטון יצוק באתר </span>
-                        <span class="approve-elv-report-status flex-start">
-                            <span class="approve-elv-report-status-title">Status</span>
-                            <span class="approve-elv-report-status-value">Not appropriate</span>
-                        </span>
-                        <span class="approve-elv-report-view"><a href=""> View a QC</a> </span>
-                    </div>
-                    <div class="approve-elv-report-sign">
-                        <div class="approve-elv-properties flex-start ">
-                            <div class=" approve-elv-property flex-start">
-                                <span class="approve-elv-properties-name ">Updated by</span>
-                                <span class="approve-elv-property-value"> יורם</span>
-                            </div>
-                            <div class=" approve-elv-property flex-start">
-                                <span class="approve-elv-properties-name ">Date</span>
-                                <span class="approve-elv-property-value"> 10/05/2021 </span>
-                            </div>
-
-
+                <template v-for="speciality in report.specialities">
+                    <div class="approve-elv-report-item">
+                        <div class="approve-elv-report-top flex-start">
+                            <span class="approve-elv-report-name not-appropriate">{{ speciality.name }}</span>
+                            <span class="approve-elv-report-status flex-start">
+                                <span class="approve-elv-report-status-title">{{ trans.status }}</span>
+                                <span class="approve-elv-report-status-value">{{ speciality.status }}</span>
+                            </span>
+                            <span class="approve-elv-report-view"><a href="">{{ trans.view_qc }}</a></span>
                         </div>
-                    </div>
-                    <div class="ltest_info_certificate ">
-                        <div class="ltest_info_certificate_title">Notes</div>
-                        <div class="ltest_info_certificate_area">
-                            <div class="labtest_edit_textarea">
-                                <textarea cols="30" rows="10" name="delivery_cert">
-Lorem Ipsum has been the industry's standard 
-dummy text ever since the 1500s, when an unknown 
-printer took a galley of type and scrambled it to
-make a type specimen book.
-Lorem Ipsum has been the industry's standard 
-dummy text ever since the 1500s, when an unknown 
-printer took a galley of type and scrambled it to
-make a type specimen book.
-                            </textarea>
+                        <div class="approve-elv-report-sign">
+                            <div class="approve-elv-properties flex-start ">
+                                <div class=" approve-elv-property flex-start">
+                                    <span class="approve-elv-properties-name ">{{ trans.updated_by }}</span>
+                                    <span class="approve-elv-property-value">{{ speciality.updated_by }}</span>
+                                </div>
+                                <div class=" approve-elv-property flex-start">
+                                    <span class="approve-elv-properties-name ">{{ trans.date }}</span>
+                                    <span class="approve-elv-property-value">{{ speciality.approval_date }}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="approve-elv-report-tasks">
-                        <div class="report_tasks">
-                            <h4 class="reports-tasks-box-title" style="color: rgba(0, 0, 0, 0.7);">Tasks
-                                <span>*</span>
-                            </h4>
-                            <div class="report_tasks_wraper">
-                                <div class="report_tasks_item not-appropriate">
-                                    <div class="report_task_title">Task 9518</div>
-                                    <div class="report_task_desc_wrap">
-                                        <div class="report_task_descripticon">
-                                            <div> בדיקת מיקום נק' מים בחדרים רטובים/ מטבח אל מול תכנית
-                                                יועץ/ שינוי דיירים/ חברת מטבחים </div>
-                                        </div>
-                                        <div class="report_task_status  "></div>
-                                    </div>
+                        <div class="ltest_info_certificate">
+                            <div class="ltest_info_certificate_title">{{ trans.notes }}</div>
+                            <div class="ltest_info_certificate_area">
+                                <div class="labtest_edit_textarea">
+                                    <textarea cols="30" rows="10" name="delivery_cert">{{ speciality.description }}</textarea>
                                 </div>
-                                <div class="report_tasks_item not-appropriate ">
-                                    <div class="report_task_title">Task 9524</div>
-                                    <div class="report_task_desc_wrap">
-                                        <div class="report_task_descripticon">
-                                            <div> התאמת שלביות ביצוע אל מול מפרט/ פתיחת מלאכה </div>
-                                        </div>
-                                        <div class="report_task_status  "></div>
-                                    </div>
-                                </div>
-                                <div class="report_tasks_item appropriate">
-                                    <div class="report_task_title">Task 9536</div>
-                                    <div class="report_task_desc_wrap">
-                                        <div class="report_task_descripticon">
-                                            <div> בדיקת מידות דירה/ חללים אל מול תוכנית אדריכלות/שינוי
-                                                דיירים </div>
-                                        </div>
-                                        <div class="report_task_status  "></div>
-                                    </div>
-                                </div>
-                                <div class="report_tasks_item not-appropriate">
-                                    <div class="report_task_title">Task 9542</div>
-                                    <div class="report_task_desc_wrap">
-                                        <div class="report_task_descripticon">
-                                            <div> בדיקת הארקות לפי תכנית יועץ חשמל </div>
-                                        </div>
-                                        <div class="report_task_status  "></div>
-                                    </div>
-                                </div>
-                                <div class="report_tasks_item appropriate">
-                                    <div class="report_task_title">Task 9565</div>
-                                    <div class="report_task_desc_wrap">
-                                        <div class="report_task_descripticon">
-                                            <div> בדיקת סימון תוואי דיפון + מרכז קידוח+ אבטחת סימון
+                            </div>
+                        </div>
+                        <div class="approve-elv-report-tasks">
+                            <div class="report_tasks">
+                                <h4 class="reports-tasks-box-title" style="color: rgba(0, 0, 0, 0.7);">
+                                    {{ trans.tasks }}
+                                    <span>*</span>
+                                </h4>
+                                <div class="report_tasks_wraper">
+                                    <template v-for="task in speciality.tasks">
+                                        <div :class="[ 'report_tasks_item', {'not-appropriate': task.status === 'disabled', 'appropriate': task.status === 'enabled' }]">
+                                            <div class="report_task_title">{{ trans.task }} {{ task.id }}</div>
+                                            <div class="report_task_desc_wrap">
+                                                <div class="report_task_descripticon">
+                                                        <div>{{ task.description }}</div>
+                                                </div>
+                                                <div class="report_task_status"></div>
                                             </div>
                                         </div>
-                                        <div class="report_task_status  "></div>
-                                    </div>
+                                    </template>  
                                 </div>
-                                <div class="report_tasks_item not-appropriate">
-                                    <div class="report_task_title">Task 9566</div>
-                                    <div class="report_task_desc_wrap">
-                                        <div class="report_task_descripticon">
-                                            <div> בדיקת אנכיות קידוח כלונס/ קירות סלרי </div>
-                                        </div>
-                                        <div class="report_task_status  "></div>
-                                    </div>
-                                </div>
-                                <div class="report_tasks_item appropriate">
-                                    <div class="report_task_title">Task 9567</div>
-                                    <div class="report_task_desc_wrap">
-                                        <div class="report_task_descripticon">
-                                            <div> בדיקת קיבוע הקונסטרוקציה ע"פ תכנית ומפרט מאושר יועץ /
-                                                תקן </div>
-                                        </div>
-                                        <div class="report_task_status  "></div>
-                                    </div>
-                                </div>
-
                             </div>
                         </div>
                     </div>
-
-                </div>
+                </template>
                 <!--report-item-->
-                <div class="approve-elv-report-item">
-
-                    <div class="approve-elv-report-top flex-start">
-                        <span class="approve-elv-report-name appropriate">עבודות אלומיניום , קירות מסך
-                            וחיפויים - אלוקובונד</span>
-                        <span class="approve-elv-report-status flex-start">
-                            <span class="approve-elv-report-status-title">Status</span>
-                            <span class="approve-elv-report-status-value"> Appropriate</span>
-                        </span>
-                        <span class="approve-elv-report-view"><a href=""> View a QC</a> </span>
-                    </div>
-                    <div class="approve-elv-report-sign-wraper">
-                        <div class="approve-elv-report-sign">
-                            <div class="approve-elv-properties flex-start ">
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Updated by</span>
-                                    <span class="approve-elv-property-value"> יורם</span>
-                                </div>
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Date</span>
-                                    <span class="approve-elv-property-value">10/05/2021 </span>
-                                </div>
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Approved by</span>
-                                    <span class="approve-elv-property-value">דניאל </span>
-                                </div>
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Position</span>
-                                    <span class="approve-elv-property-value"> מנהל צוות </span>
-                                </div>
-                                <div class=" approve-elv-property flex-start sign-image">
-                                    <img src="./img/signature.png">
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class="approve-elv-report-sign">
-                            <div class="approve-elv-properties flex-start ">
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Updated by</span>
-                                    <span class="approve-elv-property-value"> יורם</span>
-                                </div>
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Date</span>
-                                    <span class="approve-elv-property-value">10/05/2021 </span>
-                                </div>
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Approved by</span>
-                                    <span class="approve-elv-property-value">דניאל </span>
-                                </div>
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Position</span>
-                                    <span class="approve-elv-property-value"> מנהל צוות </span>
-                                </div>
-                                <div class=" approve-elv-property flex-start sign-image">
-                                    <img src="./img/signature.png">
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class="approve-elv-report-sign">
-                            <div class="approve-elv-properties flex-start ">
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Updated by</span>
-                                    <span class="approve-elv-property-value"> יורם</span>
-                                </div>
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Date</span>
-                                    <span class="approve-elv-property-value">10/05/2021 </span>
-                                </div>
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Approved by</span>
-                                    <span class="approve-elv-property-value">דניאל </span>
-                                </div>
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Position</span>
-                                    <span class="approve-elv-property-value"> מנהל צוות </span>
-                                </div>
-                                <div class=" approve-elv-property flex-start sign-image">
-                                    <img src="./img/signature.png">
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class="approve-elv-report-sign">
-                            <div class="approve-elv-properties flex-start ">
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Updated by</span>
-                                    <span class="approve-elv-property-value"> יורם</span>
-                                </div>
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Date</span>
-                                    <span class="approve-elv-property-value">10/05/2021 </span>
-                                </div>
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Approved by</span>
-                                    <span class="approve-elv-property-value">דניאל </span>
-                                </div>
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Position</span>
-                                    <span class="approve-elv-property-value"> מנהל צוות </span>
-                                </div>
-                                <div class=" approve-elv-property flex-start sign-image">
-                                    <img src="./img/signature.png">
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class="approve-elv-report-sign">
-                            <div class="approve-elv-properties flex-start ">
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Updated by</span>
-                                    <span class="approve-elv-property-value"> יורם</span>
-                                </div>
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Date</span>
-                                    <span class="approve-elv-property-value">10/05/2021 </span>
-                                </div>
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Approved by</span>
-                                    <span class="approve-elv-property-value">דניאל </span>
-                                </div>
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Position</span>
-                                    <span class="approve-elv-property-value"> מנהל צוות </span>
-                                </div>
-                                <div class=" approve-elv-property flex-start sign-image">
-                                    <img src="./img/signature.png">
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
+<!--                <div class="approve-elv-report-item">-->
+<!--                    <div class="approve-elv-report-top flex-start">-->
+<!--                        <span class="approve-elv-report-name not-appropriate">בטון יצוק באתר </span>-->
+<!--                        <span class="approve-elv-report-status flex-start">-->
+<!--                            <span class="approve-elv-report-status-title">Status</span>-->
+<!--                            <span class="approve-elv-report-status-value">Not appropriate</span>-->
+<!--                        </span>-->
+<!--                        <span class="approve-elv-report-view"><a href=""> View a QC</a> </span>-->
+<!--                    </div>-->
+<!--                    <div class="approve-elv-report-sign">-->
+<!--                        <div class="approve-elv-properties flex-start ">-->
+<!--                            <div class=" approve-elv-property flex-start">-->
+<!--                                <span class="approve-elv-properties-name ">Updated by</span>-->
+<!--                                <span class="approve-elv-property-value"> יורם</span>-->
+<!--                            </div>-->
+<!--                            <div class=" approve-elv-property flex-start">-->
+<!--                                <span class="approve-elv-properties-name ">Date</span>-->
+<!--                                <span class="approve-elv-property-value"> 10/05/2021 </span>-->
+<!--                            </div>-->
 
 
-                    <div class="ltest_info_certificate ">
-                        <div class="ltest_info_certificate_title">Notes</div>
-                        <div class="ltest_info_certificate_area">
-                            <div class="labtest_edit_textarea">
-                                <textarea cols="30" rows="10" name="delivery_cert">
-Lorem Ipsum has been the industry's standard 
-dummy text ever since the 1500s, when an unknown 
-printer took a galley of type and scrambled it to
-make a type specimen book.
-Lorem Ipsum has been the industry's standard 
-dummy text ever since the 1500s, when an unknown 
-printer took a galley of type and scrambled it to
-make a type specimen book.
-                            </textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="approve-elv-report-tasks">
-                        <div class="report_tasks">
-                            <h4 class="reports-tasks-box-title" style="color: rgba(0, 0, 0, 0.7);">Tasks
-                                <span>*</span>
-                            </h4>
-                            <div class="report_tasks_wraper">
-                                <div class="report_tasks_item appropriate">
-                                    <div class="report_task_title">Task 9518</div>
-                                    <div class="report_task_desc_wrap">
-                                        <div class="report_task_descripticon">
-                                            <div> בדיקת מיקום נק' מים בחדרים רטובים/ מטבח אל מול תכנית
-                                                יועץ/ שינוי דיירים/ חברת מטבחים </div>
-                                        </div>
-                                        <div class="report_task_status  "></div>
-                                    </div>
-                                </div>
-                                <div class="report_tasks_item appropriate ">
-                                    <div class="report_task_title">Task 9524</div>
-                                    <div class="report_task_desc_wrap">
-                                        <div class="report_task_descripticon">
-                                            <div> התאמת שלביות ביצוע אל מול מפרט/ פתיחת מלאכה </div>
-                                        </div>
-                                        <div class="report_task_status  "></div>
-                                    </div>
-                                </div>
-                                <div class="report_tasks_item appropriate">
-                                    <div class="report_task_title">Task 9536</div>
-                                    <div class="report_task_desc_wrap">
-                                        <div class="report_task_descripticon">
-                                            <div> בדיקת מידות דירה/ חללים אל מול תוכנית אדריכלות/שינוי
-                                                דיירים </div>
-                                        </div>
-                                        <div class="report_task_status  "></div>
-                                    </div>
-                                </div>
-                                <div class="report_tasks_item appropriate">
-                                    <div class="report_task_title">Task 9542</div>
-                                    <div class="report_task_desc_wrap">
-                                        <div class="report_task_descripticon">
-                                            <div> בדיקת הארקות לפי תכנית יועץ חשמל </div>
-                                        </div>
-                                        <div class="report_task_status  "></div>
-                                    </div>
-                                </div>
-                                <div class="report_tasks_item appropriate">
-                                    <div class="report_task_title">Task 9565</div>
-                                    <div class="report_task_desc_wrap">
-                                        <div class="report_task_descripticon">
-                                            <div> בדיקת סימון תוואי דיפון + מרכז קידוח+ אבטחת סימון
-                                            </div>
-                                        </div>
-                                        <div class="report_task_status  "></div>
-                                    </div>
-                                </div>
-                                <div class="report_tasks_item appropriate">
-                                    <div class="report_task_title">Task 9566</div>
-                                    <div class="report_task_desc_wrap">
-                                        <div class="report_task_descripticon">
-                                            <div> בדיקת אנכיות קידוח כלונס/ קירות סלרי </div>
-                                        </div>
-                                        <div class="report_task_status  "></div>
-                                    </div>
-                                </div>
-                                <div class="report_tasks_item appropriate">
-                                    <div class="report_task_title">Task 9567</div>
-                                    <div class="report_task_desc_wrap">
-                                        <div class="report_task_descripticon">
-                                            <div> בדיקת קיבוע הקונסטרוקציה ע"פ תכנית ומפרט מאושר יועץ /
-                                                תקן </div>
-                                        </div>
-                                        <div class="report_task_status  "></div>
-                                    </div>
-                                </div>
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="ltest_info_certificate ">-->
+<!--                        <div class="ltest_info_certificate_title">Notes</div>-->
+<!--                        <div class="ltest_info_certificate_area">-->
+<!--                            <div class="labtest_edit_textarea">-->
+<!--                                <textarea cols="30" rows="10" name="delivery_cert">-->
+<!--Lorem Ipsum has been the industry's standard -->
+<!--dummy text ever since the 1500s, when an unknown -->
+<!--printer took a galley of type and scrambled it to-->
+<!--make a type specimen book.-->
+<!--Lorem Ipsum has been the industry's standard -->
+<!--dummy text ever since the 1500s, when an unknown -->
+<!--printer took a galley of type and scrambled it to-->
+<!--make a type specimen book.-->
+<!--                            </textarea>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="approve-elv-report-tasks">-->
+<!--                        <div class="report_tasks">-->
+<!--                            <h4 class="reports-tasks-box-title" style="color: rgba(0, 0, 0, 0.7);">Tasks-->
+<!--                                <span>*</span>-->
+<!--                            </h4>-->
+<!--                            <div class="report_tasks_wraper">-->
+<!--                                <div class="report_tasks_item not-appropriate">-->
+<!--                                    <div class="report_task_title">Task 9518</div>-->
+<!--                                    <div class="report_task_desc_wrap">-->
+<!--                                        <div class="report_task_descripticon">-->
+<!--                                            <div> בדיקת מיקום נק' מים בחדרים רטובים/ מטבח אל מול תכנית-->
+<!--                                                יועץ/ שינוי דיירים/ חברת מטבחים </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="report_task_status  "></div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="report_tasks_item not-appropriate ">-->
+<!--                                    <div class="report_task_title">Task 9524</div>-->
+<!--                                    <div class="report_task_desc_wrap">-->
+<!--                                        <div class="report_task_descripticon">-->
+<!--                                            <div> התאמת שלביות ביצוע אל מול מפרט/ פתיחת מלאכה </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="report_task_status  "></div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="report_tasks_item appropriate">-->
+<!--                                    <div class="report_task_title">Task 9536</div>-->
+<!--                                    <div class="report_task_desc_wrap">-->
+<!--                                        <div class="report_task_descripticon">-->
+<!--                                            <div> בדיקת מידות דירה/ חללים אל מול תוכנית אדריכלות/שינוי-->
+<!--                                                דיירים </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="report_task_status  "></div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="report_tasks_item not-appropriate">-->
+<!--                                    <div class="report_task_title">Task 9542</div>-->
+<!--                                    <div class="report_task_desc_wrap">-->
+<!--                                        <div class="report_task_descripticon">-->
+<!--                                            <div> בדיקת הארקות לפי תכנית יועץ חשמל </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="report_task_status  "></div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="report_tasks_item appropriate">-->
+<!--                                    <div class="report_task_title">Task 9565</div>-->
+<!--                                    <div class="report_task_desc_wrap">-->
+<!--                                        <div class="report_task_descripticon">-->
+<!--                                            <div> בדיקת סימון תוואי דיפון + מרכז קידוח+ אבטחת סימון-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="report_task_status  "></div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="report_tasks_item not-appropriate">-->
+<!--                                    <div class="report_task_title">Task 9566</div>-->
+<!--                                    <div class="report_task_desc_wrap">-->
+<!--                                        <div class="report_task_descripticon">-->
+<!--                                            <div> בדיקת אנכיות קידוח כלונס/ קירות סלרי </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="report_task_status  "></div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="report_tasks_item appropriate">-->
+<!--                                    <div class="report_task_title">Task 9567</div>-->
+<!--                                    <div class="report_task_desc_wrap">-->
+<!--                                        <div class="report_task_descripticon">-->
+<!--                                            <div> בדיקת קיבוע הקונסטרוקציה ע"פ תכנית ומפרט מאושר יועץ /-->
+<!--                                                תקן </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="report_task_status  "></div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
 
-                            </div>
-                        </div>
-                    </div>
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
 
-                </div>
+<!--                </div>-->
                 <!--report-item-->
-                <div class="approve-elv-report-item">
-                    <div class="approve-elv-report-top flex-start">
-                        <span class="approve-elv-report-name appropriate">עבודות אלומיניום </span>
-                        <span class="approve-elv-report-status flex-start">
-                            <span class="approve-elv-report-status-title">Status</span>
-                            <span class="approve-elv-report-status-value"> Appropriate</span>
-                        </span>
-                        <span class="approve-elv-report-view"><a href=""> View a QC</a> </span>
-                    </div>
-                    <div class="approve-elv-report-sign-wraper">
-                        <div class="approve-elv-report-sign">
-                            <div class="approve-elv-properties flex-start ">
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Updated by</span>
-                                    <span class="approve-elv-property-value"> יורם</span>
-                                </div>
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Date</span>
-                                    <span class="approve-elv-property-value">10/05/2021 </span>
-                                </div>
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Approved by</span>
-                                    <span class="approve-elv-property-value">דניאל </span>
-                                </div>
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Position</span>
-                                    <span class="approve-elv-property-value"> מנהל צוות </span>
-                                </div>
-                                <div class=" approve-elv-property flex-start sign-image">
-                                    <img src="./img/signature.png">
-                                </div>
+<!--                <div class="approve-elv-report-item">-->
+<!--                    <div class="approve-elv-report-top flex-start">-->
+<!--                        <span class="approve-elv-report-name appropriate">עבודות אלומיניום , קירות מסך-->
+<!--                            וחיפויים - אלוקובונד</span>-->
+<!--                        <span class="approve-elv-report-status flex-start">-->
+<!--                            <span class="approve-elv-report-status-title">Status</span>-->
+<!--                            <span class="approve-elv-report-status-value"> Appropriate</span>-->
+<!--                        </span>-->
+<!--                        <span class="approve-elv-report-view"><a href=""> View a QC</a> </span>-->
+<!--                    </div>-->
+<!--                    <div class="approve-elv-report-sign-wraper">-->
+<!--                        <div class="approve-elv-report-sign">-->
+<!--                            <div class="approve-elv-properties flex-start ">-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Updated by</span>-->
+<!--                                    <span class="approve-elv-property-value"> יורם</span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Date</span>-->
+<!--                                    <span class="approve-elv-property-value">10/05/2021 </span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Approved by</span>-->
+<!--                                    <span class="approve-elv-property-value">דניאל </span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Position</span>-->
+<!--                                    <span class="approve-elv-property-value"> מנהל צוות </span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start sign-image">-->
+<!--                                    <img src="./img/signature.png">-->
+<!--                                </div>-->
 
-                            </div>
-                        </div>
-                        <div class="approve-elv-report-sign">
-                            <div class="approve-elv-properties flex-start ">
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Updated by</span>
-                                    <span class="approve-elv-property-value"> יורם</span>
-                                </div>
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Date</span>
-                                    <span class="approve-elv-property-value">10/05/2021 </span>
-                                </div>
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Approved by</span>
-                                    <span class="approve-elv-property-value">דניאל </span>
-                                </div>
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Position</span>
-                                    <span class="approve-elv-property-value"> מנהל צוות </span>
-                                </div>
-                                <div class=" approve-elv-property flex-start sign-image">
-                                    <img src="./img/signature.png">
-                                </div>
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="approve-elv-report-sign">-->
+<!--                            <div class="approve-elv-properties flex-start ">-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Updated by</span>-->
+<!--                                    <span class="approve-elv-property-value"> יורם</span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Date</span>-->
+<!--                                    <span class="approve-elv-property-value">10/05/2021 </span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Approved by</span>-->
+<!--                                    <span class="approve-elv-property-value">דניאל </span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Position</span>-->
+<!--                                    <span class="approve-elv-property-value"> מנהל צוות </span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start sign-image">-->
+<!--                                    <img src="./img/signature.png">-->
+<!--                                </div>-->
 
-                            </div>
-                        </div>
-                        <div class="approve-elv-report-sign">
-                            <div class="approve-elv-properties flex-start ">
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Updated by</span>
-                                    <span class="approve-elv-property-value"> יורם</span>
-                                </div>
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Date</span>
-                                    <span class="approve-elv-property-value">10/05/2021 </span>
-                                </div>
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Approved by</span>
-                                    <span class="approve-elv-property-value">דניאל </span>
-                                </div>
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Position</span>
-                                    <span class="approve-elv-property-value"> מנהל צוות </span>
-                                </div>
-                                <div class=" approve-elv-property flex-start sign-image">
-                                    <img src="./img/signature.png">
-                                </div>
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="approve-elv-report-sign">-->
+<!--                            <div class="approve-elv-properties flex-start ">-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Updated by</span>-->
+<!--                                    <span class="approve-elv-property-value"> יורם</span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Date</span>-->
+<!--                                    <span class="approve-elv-property-value">10/05/2021 </span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Approved by</span>-->
+<!--                                    <span class="approve-elv-property-value">דניאל </span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Position</span>-->
+<!--                                    <span class="approve-elv-property-value"> מנהל צוות </span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start sign-image">-->
+<!--                                    <img src="./img/signature.png">-->
+<!--                                </div>-->
 
-                            </div>
-                        </div>
-                        <div class="approve-elv-report-sign">
-                            <div class="approve-elv-properties flex-start ">
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Updated by</span>
-                                    <span class="approve-elv-property-value"> יורם</span>
-                                </div>
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Date</span>
-                                    <span class="approve-elv-property-value">10/05/2021 </span>
-                                </div>
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Approved by</span>
-                                    <span class="approve-elv-property-value">דניאל </span>
-                                </div>
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Position</span>
-                                    <span class="approve-elv-property-value"> מנהל צוות </span>
-                                </div>
-                                <div class=" approve-elv-property flex-start sign-image">
-                                    <img src="./img/signature.png">
-                                </div>
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="approve-elv-report-sign">-->
+<!--                            <div class="approve-elv-properties flex-start ">-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Updated by</span>-->
+<!--                                    <span class="approve-elv-property-value"> יורם</span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Date</span>-->
+<!--                                    <span class="approve-elv-property-value">10/05/2021 </span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Approved by</span>-->
+<!--                                    <span class="approve-elv-property-value">דניאל </span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Position</span>-->
+<!--                                    <span class="approve-elv-property-value"> מנהל צוות </span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start sign-image">-->
+<!--                                    <img src="./img/signature.png">-->
+<!--                                </div>-->
 
-                            </div>
-                        </div>
-                        <div class="approve-elv-report-sign">
-                            <div class="approve-elv-properties flex-start ">
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Updated by</span>
-                                    <span class="approve-elv-property-value"> יורם</span>
-                                </div>
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Date</span>
-                                    <span class="approve-elv-property-value">10/05/2021 </span>
-                                </div>
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Approved by</span>
-                                    <span class="approve-elv-property-value">דניאל </span>
-                                </div>
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">Position</span>
-                                    <span class="approve-elv-property-value"> מנהל צוות </span>
-                                </div>
-                                <div class=" approve-elv-property flex-start sign-image">
-                                    <img src="./img/signature.png">
-                                </div>
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="approve-elv-report-sign">-->
+<!--                            <div class="approve-elv-properties flex-start ">-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Updated by</span>-->
+<!--                                    <span class="approve-elv-property-value"> יורם</span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Date</span>-->
+<!--                                    <span class="approve-elv-property-value">10/05/2021 </span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Approved by</span>-->
+<!--                                    <span class="approve-elv-property-value">דניאל </span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Position</span>-->
+<!--                                    <span class="approve-elv-property-value"> מנהל צוות </span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start sign-image">-->
+<!--                                    <img src="./img/signature.png">-->
+<!--                                </div>-->
 
-                            </div>
-                        </div>
-                    </div>
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
 
 
-                    <div class="ltest_info_certificate ">
-                        <div class="ltest_info_certificate_title">Notes</div>
-                        <div class="ltest_info_certificate_area">
-                            <div class="labtest_edit_textarea">
-                                <textarea cols="30" rows="10" name="delivery_cert">
-Lorem Ipsum has been the industry's standard 
-dummy text ever since the 1500s, when an unknown 
-printer took a galley of type and scrambled it to
-make a type specimen book.
-Lorem Ipsum has been the industry's standard 
-dummy text ever since the 1500s, when an unknown 
-printer took a galley of type and scrambled it to
-make a type specimen book.
-                            </textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="approve-elv-report-tasks">
-                        <div class="report_tasks">
-                            <h4 class="reports-tasks-box-title" style="color: rgba(0, 0, 0, 0.7);">Tasks
-                                <span>*</span>
-                            </h4>
-                            <div class="report_tasks_wraper">
-                                <div class="report_tasks_item appropriate">
-                                    <div class="report_task_title">Task 9518</div>
-                                    <div class="report_task_desc_wrap">
-                                        <div class="report_task_descripticon">
-                                            <div> בדיקת מיקום נק' מים בחדרים רטובים/ מטבח אל מול תכנית
-                                                יועץ/ שינוי דיירים/ חברת מטבחים </div>
-                                        </div>
-                                        <div class="report_task_status  "></div>
-                                    </div>
-                                </div>
-                                <div class="report_tasks_item appropriate ">
-                                    <div class="report_task_title">Task 9524</div>
-                                    <div class="report_task_desc_wrap">
-                                        <div class="report_task_descripticon">
-                                            <div> התאמת שלביות ביצוע אל מול מפרט/ פתיחת מלאכה </div>
-                                        </div>
-                                        <div class="report_task_status  "></div>
-                                    </div>
-                                </div>
-                                <div class="report_tasks_item appropriate">
-                                    <div class="report_task_title">Task 9536</div>
-                                    <div class="report_task_desc_wrap">
-                                        <div class="report_task_descripticon">
-                                            <div> בדיקת מידות דירה/ חללים אל מול תוכנית אדריכלות/שינוי
-                                                דיירים </div>
-                                        </div>
-                                        <div class="report_task_status  "></div>
-                                    </div>
-                                </div>
-                                <div class="report_tasks_item appropriate">
-                                    <div class="report_task_title">Task 9542</div>
-                                    <div class="report_task_desc_wrap">
-                                        <div class="report_task_descripticon">
-                                            <div> בדיקת הארקות לפי תכנית יועץ חשמל </div>
-                                        </div>
-                                        <div class="report_task_status  "></div>
-                                    </div>
-                                </div>
-                                <div class="report_tasks_item appropriate">
-                                    <div class="report_task_title">Task 9565</div>
-                                    <div class="report_task_desc_wrap">
-                                        <div class="report_task_descripticon">
-                                            <div> בדיקת סימון תוואי דיפון + מרכז קידוח+ אבטחת סימון
-                                            </div>
-                                        </div>
-                                        <div class="report_task_status  "></div>
-                                    </div>
-                                </div>
-                                <div class="report_tasks_item appropriate">
-                                    <div class="report_task_title">Task 9566</div>
-                                    <div class="report_task_desc_wrap">
-                                        <div class="report_task_descripticon">
-                                            <div> בדיקת אנכיות קידוח כלונס/ קירות סלרי </div>
-                                        </div>
-                                        <div class="report_task_status  "></div>
-                                    </div>
-                                </div>
-                                <div class="report_tasks_item appropriate">
-                                    <div class="report_task_title">Task 9567</div>
-                                    <div class="report_task_desc_wrap">
-                                        <div class="report_task_descripticon">
-                                            <div> בדיקת קיבוע הקונסטרוקציה ע"פ תכנית ומפרט מאושר יועץ /
-                                                תקן </div>
-                                        </div>
-                                        <div class="report_task_status  "></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<!--                    <div class="ltest_info_certificate ">-->
+<!--                        <div class="ltest_info_certificate_title">Notes</div>-->
+<!--                        <div class="ltest_info_certificate_area">-->
+<!--                            <div class="labtest_edit_textarea">-->
+<!--                                <textarea cols="30" rows="10" name="delivery_cert">-->
+<!--Lorem Ipsum has been the industry's standard -->
+<!--dummy text ever since the 1500s, when an unknown -->
+<!--printer took a galley of type and scrambled it to-->
+<!--make a type specimen book.-->
+<!--Lorem Ipsum has been the industry's standard -->
+<!--dummy text ever since the 1500s, when an unknown -->
+<!--printer took a galley of type and scrambled it to-->
+<!--make a type specimen book.-->
+<!--                            </textarea>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="approve-elv-report-tasks">-->
+<!--                        <div class="report_tasks">-->
+<!--                            <h4 class="reports-tasks-box-title" style="color: rgba(0, 0, 0, 0.7);">Tasks-->
+<!--                                <span>*</span>-->
+<!--                            </h4>-->
+<!--                            <div class="report_tasks_wraper">-->
+<!--                                <div class="report_tasks_item appropriate">-->
+<!--                                    <div class="report_task_title">Task 9518</div>-->
+<!--                                    <div class="report_task_desc_wrap">-->
+<!--                                        <div class="report_task_descripticon">-->
+<!--                                            <div> בדיקת מיקום נק' מים בחדרים רטובים/ מטבח אל מול תכנית-->
+<!--                                                יועץ/ שינוי דיירים/ חברת מטבחים </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="report_task_status  "></div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="report_tasks_item appropriate ">-->
+<!--                                    <div class="report_task_title">Task 9524</div>-->
+<!--                                    <div class="report_task_desc_wrap">-->
+<!--                                        <div class="report_task_descripticon">-->
+<!--                                            <div> התאמת שלביות ביצוע אל מול מפרט/ פתיחת מלאכה </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="report_task_status  "></div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="report_tasks_item appropriate">-->
+<!--                                    <div class="report_task_title">Task 9536</div>-->
+<!--                                    <div class="report_task_desc_wrap">-->
+<!--                                        <div class="report_task_descripticon">-->
+<!--                                            <div> בדיקת מידות דירה/ חללים אל מול תוכנית אדריכלות/שינוי-->
+<!--                                                דיירים </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="report_task_status  "></div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="report_tasks_item appropriate">-->
+<!--                                    <div class="report_task_title">Task 9542</div>-->
+<!--                                    <div class="report_task_desc_wrap">-->
+<!--                                        <div class="report_task_descripticon">-->
+<!--                                            <div> בדיקת הארקות לפי תכנית יועץ חשמל </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="report_task_status  "></div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="report_tasks_item appropriate">-->
+<!--                                    <div class="report_task_title">Task 9565</div>-->
+<!--                                    <div class="report_task_desc_wrap">-->
+<!--                                        <div class="report_task_descripticon">-->
+<!--                                            <div> בדיקת סימון תוואי דיפון + מרכז קידוח+ אבטחת סימון-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="report_task_status  "></div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="report_tasks_item appropriate">-->
+<!--                                    <div class="report_task_title">Task 9566</div>-->
+<!--                                    <div class="report_task_desc_wrap">-->
+<!--                                        <div class="report_task_descripticon">-->
+<!--                                            <div> בדיקת אנכיות קידוח כלונס/ קירות סלרי </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="report_task_status  "></div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="report_tasks_item appropriate">-->
+<!--                                    <div class="report_task_title">Task 9567</div>-->
+<!--                                    <div class="report_task_desc_wrap">-->
+<!--                                        <div class="report_task_descripticon">-->
+<!--                                            <div> בדיקת קיבוע הקונסטרוקציה ע"פ תכנית ומפרט מאושר יועץ /-->
+<!--                                                תקן </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="report_task_status  "></div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                </div>-->
+                <!--report-item-->
+<!--                <div class="approve-elv-report-item">-->
+<!--                    <div class="approve-elv-report-top flex-start">-->
+<!--                        <span class="approve-elv-report-name appropriate">עבודות אלומיניום </span>-->
+<!--                        <span class="approve-elv-report-status flex-start">-->
+<!--                            <span class="approve-elv-report-status-title">Status</span>-->
+<!--                            <span class="approve-elv-report-status-value"> Appropriate</span>-->
+<!--                        </span>-->
+<!--                        <span class="approve-elv-report-view"><a href="">{{ trans.view_qc }}</a></span>-->
+<!--                    </div>-->
+<!--                    <div class="approve-elv-report-sign-wraper">-->
+<!--                        <div class="approve-elv-report-sign">-->
+<!--                            <div class="approve-elv-properties flex-start ">-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Updated by</span>-->
+<!--                                    <span class="approve-elv-property-value"> יורם</span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Date</span>-->
+<!--                                    <span class="approve-elv-property-value">10/05/2021 </span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Approved by</span>-->
+<!--                                    <span class="approve-elv-property-value">דניאל </span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Position</span>-->
+<!--                                    <span class="approve-elv-property-value"> מנהל צוות </span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start sign-image">-->
+<!--                                    <img src="./img/signature.png">-->
+<!--                                </div>-->
+
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="approve-elv-report-sign">-->
+<!--                            <div class="approve-elv-properties flex-start ">-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Updated by</span>-->
+<!--                                    <span class="approve-elv-property-value"> יורם</span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Date</span>-->
+<!--                                    <span class="approve-elv-property-value">10/05/2021 </span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Approved by</span>-->
+<!--                                    <span class="approve-elv-property-value">דניאל </span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Position</span>-->
+<!--                                    <span class="approve-elv-property-value"> מנהל צוות </span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start sign-image">-->
+<!--                                    <img src="./img/signature.png">-->
+<!--                                </div>-->
+
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="approve-elv-report-sign">-->
+<!--                            <div class="approve-elv-properties flex-start ">-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Updated by</span>-->
+<!--                                    <span class="approve-elv-property-value"> יורם</span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Date</span>-->
+<!--                                    <span class="approve-elv-property-value">10/05/2021 </span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Approved by</span>-->
+<!--                                    <span class="approve-elv-property-value">דניאל </span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Position</span>-->
+<!--                                    <span class="approve-elv-property-value"> מנהל צוות </span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start sign-image">-->
+<!--                                    <img src="./img/signature.png">-->
+<!--                                </div>-->
+
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="approve-elv-report-sign">-->
+<!--                            <div class="approve-elv-properties flex-start ">-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Updated by</span>-->
+<!--                                    <span class="approve-elv-property-value"> יורם</span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Date</span>-->
+<!--                                    <span class="approve-elv-property-value">10/05/2021 </span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Approved by</span>-->
+<!--                                    <span class="approve-elv-property-value">דניאל </span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Position</span>-->
+<!--                                    <span class="approve-elv-property-value"> מנהל צוות </span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start sign-image">-->
+<!--                                    <img src="./img/signature.png">-->
+<!--                                </div>-->
+
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="approve-elv-report-sign">-->
+<!--                            <div class="approve-elv-properties flex-start ">-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Updated by</span>-->
+<!--                                    <span class="approve-elv-property-value"> יורם</span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Date</span>-->
+<!--                                    <span class="approve-elv-property-value">10/05/2021 </span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Approved by</span>-->
+<!--                                    <span class="approve-elv-property-value">דניאל </span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start">-->
+<!--                                    <span class="approve-elv-properties-name ">Position</span>-->
+<!--                                    <span class="approve-elv-property-value"> מנהל צוות </span>-->
+<!--                                </div>-->
+<!--                                <div class=" approve-elv-property flex-start sign-image">-->
+<!--                                    <img src="./img/signature.png">-->
+<!--                                </div>-->
+
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+
+<!--                    <div class="ltest_info_certificate ">-->
+<!--                        <div class="ltest_info_certificate_title">Notes</div>-->
+<!--                        <div class="ltest_info_certificate_area">-->
+<!--                            <div class="labtest_edit_textarea">-->
+<!--                                <textarea cols="30" rows="10" name="delivery_cert">-->
+<!--Lorem Ipsum has been the industry's standard -->
+<!--dummy text ever since the 1500s, when an unknown -->
+<!--printer took a galley of type and scrambled it to-->
+<!--make a type specimen book.-->
+<!--Lorem Ipsum has been the industry's standard -->
+<!--dummy text ever since the 1500s, when an unknown -->
+<!--printer took a galley of type and scrambled it to-->
+<!--make a type specimen book.-->
+<!--                            </textarea>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="approve-elv-report-tasks">-->
+<!--                        <div class="report_tasks">-->
+<!--                            <h4 class="reports-tasks-box-title" style="color: rgba(0, 0, 0, 0.7);">Tasks-->
+<!--                                <span>*</span>-->
+<!--                            </h4>-->
+<!--                            <div class="report_tasks_wraper">-->
+<!--                                <div class="report_tasks_item appropriate">-->
+<!--                                    <div class="report_task_title">Task 9518</div>-->
+<!--                                    <div class="report_task_desc_wrap">-->
+<!--                                        <div class="report_task_descripticon">-->
+<!--                                            <div> בדיקת מיקום נק' מים בחדרים רטובים/ מטבח אל מול תכנית-->
+<!--                                                יועץ/ שינוי דיירים/ חברת מטבחים </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="report_task_status  "></div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="report_tasks_item appropriate ">-->
+<!--                                    <div class="report_task_title">Task 9524</div>-->
+<!--                                    <div class="report_task_desc_wrap">-->
+<!--                                        <div class="report_task_descripticon">-->
+<!--                                            <div> התאמת שלביות ביצוע אל מול מפרט/ פתיחת מלאכה </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="report_task_status  "></div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="report_tasks_item appropriate">-->
+<!--                                    <div class="report_task_title">Task 9536</div>-->
+<!--                                    <div class="report_task_desc_wrap">-->
+<!--                                        <div class="report_task_descripticon">-->
+<!--                                            <div> בדיקת מידות דירה/ חללים אל מול תוכנית אדריכלות/שינוי-->
+<!--                                                דיירים </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="report_task_status  "></div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="report_tasks_item appropriate">-->
+<!--                                    <div class="report_task_title">Task 9542</div>-->
+<!--                                    <div class="report_task_desc_wrap">-->
+<!--                                        <div class="report_task_descripticon">-->
+<!--                                            <div> בדיקת הארקות לפי תכנית יועץ חשמל </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="report_task_status  "></div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="report_tasks_item appropriate">-->
+<!--                                    <div class="report_task_title">Task 9565</div>-->
+<!--                                    <div class="report_task_desc_wrap">-->
+<!--                                        <div class="report_task_descripticon">-->
+<!--                                            <div> בדיקת סימון תוואי דיפון + מרכז קידוח+ אבטחת סימון-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="report_task_status  "></div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="report_tasks_item appropriate">-->
+<!--                                    <div class="report_task_title">Task 9566</div>-->
+<!--                                    <div class="report_task_desc_wrap">-->
+<!--                                        <div class="report_task_descripticon">-->
+<!--                                            <div> בדיקת אנכיות קידוח כלונס/ קירות סלרי </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="report_task_status  "></div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="report_tasks_item appropriate">-->
+<!--                                    <div class="report_task_title">Task 9567</div>-->
+<!--                                    <div class="report_task_desc_wrap">-->
+<!--                                        <div class="report_task_descripticon">-->
+<!--                                            <div> בדיקת קיבוע הקונסטרוקציה ע"פ תכנית ומפרט מאושר יועץ /-->
+<!--                                                תקן </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="report_task_status  "></div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
             </div>
         </div>
         <div class="report-buttons-update flex-center ">
@@ -728,6 +778,7 @@ make a type specimen book.
             trans: JSON.parse(this.translations),
             value: [],
             time: [],
+            report: this.data,
             options: [
                 {
                     "name": "Waiting",
