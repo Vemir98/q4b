@@ -59,8 +59,12 @@ class VueJs
     }
 
     public function includeMultiselect(){
-        $this->addScript("https://unpkg.com/vue-multiselect@2.1.0",5);
-        $this->addStyle("https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css");
+        $this->addScript("https://unpkg.com/vue-multiselect@2.1.6",5);
+        $this->addStyle("https://unpkg.com/vue-multiselect@2.1.6/dist/vue-multiselect.min.css");
+    }
+
+    public function includeSignaturePad(){
+        $this->addScript("https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js",5);
     }
 
     public function includeDateTimePiker(){

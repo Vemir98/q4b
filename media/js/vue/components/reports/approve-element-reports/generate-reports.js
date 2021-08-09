@@ -381,40 +381,19 @@ Vue.component('generate-reports', {
             time: [],
             options: [
                 {
+                    id: 1,
                     "name": "San Martin",
-                    "city_ascii": "San Martin",
-                    "lat": -33.06998533,
-                    "lng": -68.49001612,
-                    "pop": 99974,
-                    "country": "Argentina",
-                    "iso2": "AR",
-                    "iso3": "ARG",
-                    "province": "Mendoza",
-                    "timezone": "America/Argentina/Mendoza"
+                    "checked": false
                 },
                 {
+                    id: 2,
                     "name": "San Nicolas",
-                    "city_ascii": "San Nicolas",
-                    "lat": -33.33002114,
-                    "lng": -60.24000289,
-                    "pop": 117123.5,
-                    "country": "Argentina",
-                    "iso2": "AR",
-                    "iso3": "ARG",
-                    "province": "Ciudad de Buenos Aires",
-                    "timezone": "America/Argentina/Buenos_Aires"
+                    "checked": false
                 },
                 {
+                    id: 3,
                     "name": "San Francisco",
-                    "city_ascii": "San Francisco",
-                    "lat": -31.43003375,
-                    "lng": -62.08996749,
-                    "pop": 43231,
-                    "country": "Argentina",
-                    "iso2": "AR",
-                    "iso3": "ARG",
-                    "province": "Córdoba",
-                    "timezone": "America/Argentina/Cordoba"
+                    "checked": false
                 }
             ],
             selectedCompany: null,

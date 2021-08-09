@@ -43,7 +43,7 @@ Vue.component('report-item', {
                         track-by="id" 
                         label="name"
                         :searchable="true" 
-                        :allow-empty="false" 
+                        :allow-empty="false"
                         :show-labels="false"
                     >
                         <template slot="singleLabel" slot-scope="props">
@@ -135,7 +135,10 @@ Vue.component('report-item', {
                                 </h4>
                                 <div class="report_tasks_wraper">
                                     <template v-for="task in speciality.tasks">
-                                        <div :class="[ 'report_tasks_item', {'not-appropriate': task.status === 'disabled', 'appropriate': task.status === 'enabled' }]">
+                                        <div 
+                                            :class="[ 'report_tasks_item', {'not-appropriate': task.status === 'disabled', 'appropriate': task.status === 'enabled' }]"
+                                            @click="changeTaskStatus(task, speciality)"
+                                        >
                                             <div class="report_task_title">{{ trans.task }} {{ task.id }}</div>
                                             <div class="report_task_desc_wrap">
                                                 <div class="report_task_descripticon">
@@ -732,13 +735,13 @@ Vue.component('report-item', {
             </div>
         </div>
         <div class="report-buttons-update flex-center ">
-            <button class="report-button" @click="openPopup=true" href="">Update</button>
+            <button class="report-button" @click="togglePopup" href="">Update</button>
         </div>
-        <div class="modul-popup-wrap approve-elv-popup" v-if="openPopup">
+        <div class="modul-popup-wrap approve-elv-popup" v-show="openPopup">
             <div class="modul-popup">
                 <div class="modul-popup-top">
                     <span class="modul-popup-headline">Please sign</span>
-                    <span class="modul-popup-close" @click="openPopup=false"><i class="q4bikon-close"></i></span>
+                    <span class="modul-popup-close" @click="togglePopup"><i class="q4bikon-close"></i></span>
                 </div>
                 <div class="modul-popup-main">
                     <div class="approve-elv-popup-inputs flex-between">
@@ -753,13 +756,14 @@ Vue.component('report-item', {
                     </div>
 
                     <div class="approve-elv-popup-sign">
-                        <span class="clear-sign">Clear sign</span>
+                        <canvas ref="signaturePad"></canvas>
+                        <span class="clear-sign" @click="clearSignaturePad">Clear sign</span>
                         <div class="approve-elv-popup-sign-line"></div>
                     </div>
                 </div>
 
                 <div class="modul-popup-btns">
-                    <button class="modul-popup-Confirm">Sign</button>
+                    <button class="modul-popup-Confirm" @click="saveSignatureImage">Sign</button>
                     <button class="modul-popup-Cancel">Additional Signature</button>
                 </div>
 
@@ -779,6 +783,7 @@ Vue.component('report-item', {
             value: [],
             time: [],
             report: this.data,
+            currentSpeciality: null,
             options: [
                 {
                     "name": "Waiting",
@@ -816,7 +821,9 @@ Vue.component('report-item', {
                     "province": "Córdoba",
                     "timezone": "America/Argentina/Cordoba"
                 }
-            ]
+            ],
+            signaturePad: null
+
         }
     },
     components: { Multiselect: window.VueMultiselect.default },
@@ -838,7 +845,47 @@ Vue.component('report-item', {
             })
 
             return arrayOfValues.join(',');
+        },
+        togglePopup() {
+            if(this.openPopup) {
+                this.openPopup = false;
+                this.clearSignaturePad();
+                this.currentSpeciality = null;
+            } else {
+                this.openPopup = true;
+            }
+        },
+        clearSignaturePad() {
+            this.signaturePad.clear();
+        },
+        saveSignatureImage() {
+            let savedImage = this.signaturePad.toDataURL();
+
+            console.log('SAVED IMAGE', savedImage);
+        },
+        changeTaskStatus(task, speciality) {
+            switch (task.status) {
+                case "enabled":
+                    task.status = "disabled";
+                    break;
+                case "disabled":
+                    task.status = "enabled";
+                    break;
+            }
+            if(this.checkAllTasksEnabled(speciality.tasks)) {
+                this.currentSpeciality = speciality;
+                this.togglePopup();
+            }
+        },
+        checkAllTasksEnabled(specialityTasks) {
+            const result =  specialityTasks.filter(task => {
+                return task.status === 'disabled'
+            })
+            return result.length < 1
         }
+    },
+    mounted() {
+        this.signaturePad = new SignaturePad(this.$refs['signaturePad'])
     }
 });
 

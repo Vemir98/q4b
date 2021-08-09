@@ -24217,3 +24217,9 @@ html.rtl  .approve-elv-report-item .report_tasks_wraper {
   transition: 0.2s ease-in;
   margin-bottom: 0;
 }
+
+.task-craft-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
