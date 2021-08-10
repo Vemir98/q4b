@@ -131,11 +131,11 @@ Vue.component('task-item', {
     watch: {
         selectedCrafts(newVal) {
             if(this.task.crafts) {
-                Object.keys(this.task.crafts).forEach(craftId => {
-                    this.crafts.forEach(craft => {
-                        if (+craft.id === +craftId) {
-                            craft.checked = true;
-                            craft.modules = this.task.crafts[craftId].modules;
+                this.task.crafts.forEach(c => {
+                    this.crafts.forEach((craft, idx) => {
+                        if (+craft.id === +c.id) {
+                            this.crafts[idx].checked = true;
+                            this.crafts[idx].modules = c.modules;
                         }
                     })
                 })
@@ -211,9 +211,10 @@ Vue.component('task-item', {
             this.crafts[index].checked = true;
             this.crafts[index].selectedTimestampForSorting = (+ new Date());
             this.task.render = true;
-            this.task.crafts[craft.id] = {
-                modules: []
-            }
+            this.task.crafts.push({
+                id: craft.id,
+                modules: [],
+            })
             this.updateTask();
         },
         onRemove(craft, fromOutside) {
@@ -222,16 +223,16 @@ Vue.component('task-item', {
             this.crafts[index].checked = false;
             delete this.crafts[index].modules
             this.task.render = true;
-            delete this.task.crafts[craft.id];
+            this.task.crafts.splice(this.task.crafts.findIndex(item => item.id==craft.id),1);
             this.updateTask();
         },
         renderCrafts() {
             if(this.task.crafts) {
-                Object.keys(this.task.crafts).forEach(craftId => {
-                    let crafts = this.crafts.map(craft => {
-                        if (+craft.id === +craftId) {
+                this.task.crafts.forEach(c => {
+                    this.crafts.map(craft => {
+                        if (+craft.id === +c.id) {
                             craft.checked = true;
-                            craft.modules = this.task.crafts[craftId].modules;
+                            craft.modules = c.modules;
                         }
                     })
                 })

@@ -49,7 +49,7 @@ class Api_DBLabtests
         }
         if(isset($params['search'])){
             $search = $params['search'];
-            $query .= " AND (lt.id='$search' OR lbt.number='$search')";
+            $query .= " AND (lt.id='$search' OR lt.cert_number='$search' OR lbt.number='$search')";
         }
         if(isset($params['element_id']) && !empty($params['element_id'])){
             $query .= ' AND element_id IN (' . implode(",", $params["element_id"]) . ')';
@@ -80,6 +80,9 @@ class Api_DBLabtests
     }
     public static function getLabtestsListWithRelations($params)
     {
+//        echo "<pre>";print_r($params);echo "</pre>";die;
+
+
         $query = 'SELECT DISTINCT lt.*,
           u.name AS created_by_name, 
           u.id AS created_user_id,
@@ -119,7 +122,7 @@ class Api_DBLabtests
         }
         if(isset($params['search'])){
             $search = $params['search'];
-            $query .= " AND (lt.id='$search' OR lbt.number='$search')";
+            $query .= " AND (lt.id='$search' OR lt.cert_number='$search' OR lbt.number='$search')";
         }
         if(isset($params['element_id']) && !empty($params['element_id'])){
             $query .= ' AND element_id IN (' . implode(",", $params["element_id"]) . ')';

@@ -67,10 +67,10 @@ class Controller_Api_Projects_Tasks extends HDVP_Controller_API {
                         ->execute($this->_db);
 
                     $dataModuleTaskCrafts = [];
-                    foreach ($t['crafts'] as $key=>$value) {
+                    foreach ($t['crafts'] as $craft) {
                         $dataTaskCrafts = [
                             'task_id' => $task[0],
-                            'craft_id' => $key,
+                            'craft_id' => $craft['id'],
                         ];
                         $valid = Validation::factory($dataTaskCrafts);
                         $valid
@@ -83,7 +83,7 @@ class Controller_Api_Projects_Tasks extends HDVP_Controller_API {
                             ->columns(array_keys($dataTaskCrafts))
                             ->values(array_values($dataTaskCrafts))
                             ->execute($this->_db);
-                        foreach ($value['modules'] as $m) {
+                        foreach ($craft['modules'] as $m) {
                             $dataModuleTaskCrafts[] = [$m, $taskCraft[0]];
                         }
                     }
@@ -152,10 +152,10 @@ class Controller_Api_Projects_Tasks extends HDVP_Controller_API {
                 for ($i=count($tasks)-1; $i>=0; $i--) {
                     $t = $tasks[$i];
                     $dataModuleTaskCrafts = [];
-                    foreach ($t['crafts'] as $key=>$value) {
+                    foreach ($t['crafts'] as $craft) {
                         $dataTaskCrafts = [
                             'task_id' => $t['id'],
-                            'craft_id' => $key,
+                            'craft_id' => $craft['id'],
                         ];
                         $valid = Validation::factory($dataTaskCrafts);
                         $valid
@@ -168,7 +168,7 @@ class Controller_Api_Projects_Tasks extends HDVP_Controller_API {
                             ->columns(array_keys($dataTaskCrafts))
                             ->values(array_values($dataTaskCrafts))
                             ->execute($this->_db);
-                        foreach ($value['modules'] as $m) {
+                        foreach ($craft['modules'] as $m) {
                             $dataModuleTaskCrafts[] = [$m, $taskCraft[0]];
                         }
                     }
@@ -424,13 +424,17 @@ class Controller_Api_Projects_Tasks extends HDVP_Controller_API {
                     'id' => $task['taskId'],
                     'name' => ltrim(rtrim($task['taskName'])),
                     'status' => $task['taskStatus'],
+                    'crafts' => []
                 ];
                 $taskIds[] = $task['taskId'];
             }
             $crafts = Api_DBTasks::getTasksCrafts($taskIds);
             if(count($crafts)){
                 foreach ($crafts as $craft){
-                    $taskItems[$craft['task_id']]['crafts'][$craft['craft_id']]['modules'] = [];
+                    $taskItems[$craft['task_id']]['crafts'][$craft['craft_id']] = [
+                        'id' => $craft['craft_id'],
+                        'modules' => []
+                    ];
                     $taskCraftsIds[] = $craft['id'];
                 }
             }
@@ -441,6 +445,9 @@ class Controller_Api_Projects_Tasks extends HDVP_Controller_API {
             if(count($modules)){
                 foreach ($modules as $module){
                     array_push($taskItems[$module['task_id']]['crafts'][$module['craft_id']]['modules'], $module['module_id']);
+                }
+                foreach ($modules as $module){
+                    $taskItems[$module['task_id']]['crafts'] = array_values($taskItems[$module['task_id']]['crafts']);
                 }
             }
         }

@@ -307,14 +307,14 @@ Vue.component('tasks-list', {
 
                 if (this.selectedCraftsIds.length) {
                     if  (item.crafts) {
-                        if(!Object.keys(item.crafts).length) {
+                        if(!item.crafts.length) {
                             craftsCheck = true;
                             modulesCheck = true;
                         } else {
-                            Object.keys(item.crafts).forEach(craftId => {
-                                if(this.selectedCraftsIds.includes(craftId)) {
+                            item.crafts.forEach((i) => {
+                                if(this.selectedCraftsIds.includes(i.id)) {
                                     craftsCheck = true;
-                                    const modules = item.crafts[craftId].modules
+                                    const modules = i.modules
                                     if(modules) {
                                         if(!modules.length) {
                                             modulesCheck = true;
@@ -322,7 +322,6 @@ Vue.component('tasks-list', {
                                             modules.forEach(m => {
                                                 if (this.selectedModulesIds.includes(m)) {
                                                     modulesCheck = true
-                                                    // console.log('moduleID',m,this.selectedModulesIds,item.id,craftId,craftsCheck,modulesCheck,shouldBeInList)
                                                 }
                                             })
                                         }
@@ -362,12 +361,12 @@ Vue.component('tasks-list', {
         createTaskInProgress() {
             let inProgress = false
                 this.items.forEach(task => {
-                    if (!task.name || !Object.keys(task.crafts).length) {
+                    if (!task.name || !task.crafts.length) {
                         inProgress = true
                     }
                     if (task.crafts) {
-                        Object.keys(task.crafts).forEach(craftId => {
-                            const modules = task.crafts[craftId].modules
+                        task.crafts.forEach(craft => {
+                            const modules = craft.modules
                             if(!modules || !modules.length) {
                                 inProgress = true
                             }
@@ -414,7 +413,7 @@ Vue.component('tasks-list', {
                 id: `new_${+ new Date()}`,
                 name: "",
                 status: 'enabled',
-                crafts: {}
+                crafts: []
             })
             this.items = [...tasks]
         },
@@ -470,7 +469,9 @@ Vue.component('tasks-list', {
                 if (task.id.includes('new_')) {
                     tasksToCreate.push(task)
                 } else {
-                    tasksToUpdate.push(task)
+                    if(task.updated) {
+                        tasksToUpdate.push(task)
+                    }
                 }
             })
 
@@ -558,6 +559,7 @@ Vue.component('tasks-list', {
                     this.items = response.items;
                     this.items.forEach(i => {
                         i.checked = false
+                        i.updated = false
                     })
                     this.showLoader = false;
                 })
@@ -660,9 +662,10 @@ Vue.component('tasks-list', {
             }
         },
         changeCraftModules() {
-            Object.keys(this.currentTask.crafts).forEach(craftId => {
-                if(+craftId === +this.currentCraft.id) {
-                    this.currentTask.crafts[craftId].modules = this.selectedModulesOfCraft;
+            // Object.keys(this.currentTask.crafts).forEach(craftId => {
+            this.currentTask.crafts.forEach(craft => {
+                if(+craft.id === +this.currentCraft.id) {
+                    craft.modules = this.selectedModulesOfCraft;
 
                     try {
                         this.$refs[this.currentTask.id][0].renderCrafts()
@@ -696,6 +699,7 @@ Vue.component('tasks-list', {
             let { index, task } = data;
             let items = [... this.items];
             let t = this.filteredItems[index];
+            task.updated = true;
 
             let itemInd = this.items.findIndex(i => {
                 return t.id === i.id;

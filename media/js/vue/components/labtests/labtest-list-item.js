@@ -2,7 +2,7 @@ Vue.component('labtest-list-item', {
     template: `
         <tr>
             <td scope="row" class="element_name">{{ item.id }}</td>
-            <td>{{ item.ticketNumber }}</td>
+            <td>{{ item.cert_number }}</td>
             <td>{{ getDate(item.create_date) }}</td>
             <td>{{ item.building_name }}</td>
             <td v-if="item.floor_custom_name">{{ item.floor_custom_name }} <span class="bidi-override">({{ item.floor_number }})</span></td>
