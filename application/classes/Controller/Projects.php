@@ -3383,6 +3383,10 @@ class Controller_Projects extends HDVP_Controller_Template
         VueJs::instance()->addComponent('tasks/tasks-list');
         VueJs::instance()->addComponent('tasks/task-item');
         VueJs::instance()->includeMultiselect();
+        Breadcrumbs::add(Breadcrumb::factory()->set_title($project->name)->set_url(URL::site('projects/update/'.$project->id)));
+        Breadcrumbs::add(Breadcrumb::factory()->set_title(__("Tasks")));
+
+
         $this->template->content = View::make('tasks/tasks-list', ['projectId' => $project->id, 'translations' => $translations]);
     }
 

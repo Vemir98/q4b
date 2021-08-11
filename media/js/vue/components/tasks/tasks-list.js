@@ -447,19 +447,23 @@ Vue.component('tasks-list', {
         },
         getCmpProjects(){
             if (!this.selectedCompany) return
+            this.showLoader = true;
             let url = `/companies/${this.selectedCompany.id}/entities/projects`;
 
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
                     this.cmpProjects = response.items ? response.items : [];
+                    this.showLoader = false;
                 })
         },
         getCompanies(){
+            this.showLoader = true;
             let url = '/companies/entities/list';
 
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
                     this.companies = response.items ? response.items : [];
+                    this.showLoader = false;
                 })
         },
         handleSave() {
@@ -488,7 +492,7 @@ Vue.component('tasks-list', {
 
             qfetch(url, {method: 'POST', headers: {}, body: tasks})
                 .then(response => {
-                    location.reload();
+                    this.getTasks(this.projectId);
                 }).catch(err =>  {
                 this.showLoader = false;
             })
@@ -500,7 +504,7 @@ Vue.component('tasks-list', {
 
             qfetch(url, {method: 'PUT', headers: {}, body: {tasks: tasks}})
                 .then(response => {
-                    location.reload();
+                    this.getTasks(this.projectId);
                 }).catch(err =>  {
                 this.showLoader = false;
             })
@@ -546,7 +550,7 @@ Vue.component('tasks-list', {
                     this.copyInProgress = false;
                     this.editing = false;
                     this.selectedProject = null;
-                }).catch(()=> {
+                }).catch(() => {
                     this.editing = false;
                     this.copyInProgress = false;
             });
@@ -564,10 +568,11 @@ Vue.component('tasks-list', {
                     this.showLoader = false;
                 })
                 .catch(() => {
-                    this.showLoader = false
+                    this.showLoader = false;
                 })
         },
         getProject(id) {
+            this.showLoader = true;
             let url = `/projects/${id}/entities/project?fields=id,name`;
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
@@ -575,9 +580,11 @@ Vue.component('tasks-list', {
                     this.getCompanies();
                     this.getCompanyCrafts(this.project.company_id);
                     this.getModules(this.project.company_id);
+                    this.showLoader = false;
                 })
         },
         getModules(companyId) {
+            this.showLoader = true;
             let url = `/companies/${companyId}/entities/modules`;
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
@@ -591,9 +598,11 @@ Vue.component('tasks-list', {
                     })));
 
                     this.toggleSelectAll('selectedModules', 'modulesData');
+                    this.showLoader = false;
                 })
         },
         getCompanyCrafts(companyId) {
+            this.showLoader = true;
             let fields="id,name,companyId,catalogNumber,status,relatedId";
             let url = `/companies/${companyId}/entities/crafts?fields=${fields}`;
             qfetch(url, {method: 'GET', headers: {}})
@@ -603,6 +612,7 @@ Vue.component('tasks-list', {
                     this.cmpCrafts = cmpCrafts;
                     this.crafts = JSON.parse(JSON.stringify(this.cmpCrafts));
                     this.toggleSelectAll('selectedCrafts', 'crafts');
+                    this.showLoader = false;
                 })
         },
         toggleCheckAllTasks(checkedCount, list) {
