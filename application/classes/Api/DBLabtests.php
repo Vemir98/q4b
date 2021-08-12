@@ -80,8 +80,6 @@ class Api_DBLabtests
     }
     public static function getLabtestsListWithRelations($params)
     {
-//        echo "<pre>";print_r($params);echo "</pre>";die;
-
 
         $query = 'SELECT DISTINCT lt.*,
           u.name AS created_by_name, 

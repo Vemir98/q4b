@@ -207,7 +207,7 @@ class Controller_Api_Projects_Tasks extends HDVP_Controller_API {
         $items = $taskIds = [];
         if(count($tasks)){
             foreach ($tasks as $t){
-                $taskIds[] = $t['id'];
+                $taskIds[] = $t['taskId'];
             }
            if (!empty($taskIds)) {
                $items = Api_DBTasks::getTaskCrafts($taskIds, $fields);
@@ -405,9 +405,9 @@ class Controller_Api_Projects_Tasks extends HDVP_Controller_API {
 
     public function action_list_get(){
         $projectId = $this->getUIntParamOrDie($this->request->param('projectId'));
-        $taskId = $this->getUIntParamOrDie($this->request->param('id'));
-        $moduleId = $this->getUIntParamOrDie($this->request->param('moduleId'));
-        $craftId = $this->getUIntParamOrDie($this->request->param('craftId'));
+        $taskId = $this->request->param('id');
+        $moduleId = $this->request->param('moduleId');
+        $craftId = $this->request->param('craftId');
         $project = Api_DBProjects::getProjectById($projectId);
         if(empty($project)){
             throw API_Exception::factory(500,'Incorrect identifier');

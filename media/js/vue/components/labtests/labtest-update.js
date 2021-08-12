@@ -244,7 +244,11 @@ Vue.component('labtest-update', {
                         <div class="ltest_attachment_wraper">
                             <template v-for="(image, index) in images">
                                 <div class="ltest_attachment_item" v-if="!image.planId" :key="index">
-                                    <div class="ltest_attachment_icon"><i class="icon q4bikon-file" @click="openModal(index)"></i></div>
+                                    <div v-if="fileIsImage(image.fileName)" class="ltest_attachment_icon"><i class="icon q4bikon-file" @click="openModal(index)"></i></div>
+                                    <div v-else class="ltest_attachment_icon">
+                                        <a v-if="image.filePath.length > 1" :href="imagePath(image.filePath,image.fileName)" target="_blank"><i class="icon q4bikon-file"></i></a>
+                                        <i v-else class="icon q4bikon-file" style="cursor: default"></i>
+                                    </div>
                                     <div class="ltest_attachment_right">
                                         <div class="ltest_attachment_name">{{ image.fileName }}</div>
                                         <div class="ltest_attachment_line"></div>
@@ -471,6 +475,16 @@ Vue.component('labtest-update', {
                 }
             })
             return val
+        },
+        fileIsImage(file){
+            let ext = file.split('.').pop().toLowerCase()
+            return ['jpe','jpeg','jpg','png','tif','tiff'].includes(ext)
+        },
+        imagePath(path,name){
+            if(path.indexOf('https://') >= 0){
+                return path + '/' + name
+            }
+            return '/' + path + '/' + name
         },
         handleAttachFileClick() {
             document.getElementById('fileInput').click()

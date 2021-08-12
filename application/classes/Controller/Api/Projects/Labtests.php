@@ -839,7 +839,7 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
             throw API_Exception::factory(500,'Incorrect data');
         }catch (Exception $e){
             Database::instance()->rollback();
-            throw API_Exception::factory(500,'Operation Error');
+            throw API_Exception::factory(500,$e->getMessage());
         }
     }
 
@@ -1056,5 +1056,32 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
             }
         }
         $this->_responseData = $response;
+    }
+
+    public function b64ToFile($b64Str, $name, $path) {
+        $src = $b64Str;
+        if (
+            preg_match('/^data:image\/(\w+);base64,/', $src, $type) ||
+            preg_match('/^data:application\/(\w+);base64,/', $src, $type)
+        ) {
+
+            $data = substr($src, strpos($src, ',') + 1);
+            $type = strtolower($type[1]); // jpg, png, gif
+
+            if (!in_array($type, [ 'jpe','jpeg','jpg','png','tif','tiff','pdf','docx','doc','txt','xlsx','xlsm','xls','xlt','xls' ])) {
+                throw new \Exception('invalid image type');
+            }
+            $data = str_replace( ' ', '+', $data );
+            $data = base64_decode($data);
+
+            if ($data === false) {
+                throw new \Exception('base64_decode failed');
+            }
+        } else {
+            throw new \Exception('did not match data URI with image data');
+        }
+        $fileName = "{$path}/{$name}";
+        file_put_contents($fileName, $data);
+        return $name;
     }
 }
