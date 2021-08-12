@@ -1,6 +1,9 @@
 Vue.component('reports-list', {
     template: `
     <section class='q4b-approve-el app-element-list new-styles'>
+        <div v-if="showLoader" class="loader_backdrop_vue">
+            <div class="loader"></div>
+        </div>
         <div class="page-title-sec flex-start">
             <div class="page-title">
                 <a class="back-to-filter">
@@ -10,10 +13,10 @@ Vue.component('reports-list', {
                     ></i>
                 </a>
                 {{ trans.approve_element }} / 
-                <span class="project_name">{{ item.project_name }}</span>
+                <span class="project_name">{{ project?.name }}</span>
             </div>
         </div>
-        <div class="report-project-desc_wraper flex-start">
+        <div class="report-project-desc_wraper flex-start" v-if="Object.keys(project).length">
             <div class="report-project-desc-image">
                 <img src="/media/img/project-img.jpg" alt="project images">
             </div>
@@ -24,7 +27,7 @@ Vue.component('reports-list', {
                             {{ trans.company_name }}
                         </span>
                         <span class="light-blue">
-                            {{ item.company_name }}
+                            {{ company.name }}
                         </span>
                     </li>
                     <li>
@@ -32,7 +35,7 @@ Vue.component('reports-list', {
                             {{ trans.project_name }}
                         </span>
                         <span class="light-blue">
-                            {{ item.project_name }}
+                            {{ project.name }}
                         </span>
                     </li>
                     <li>
@@ -40,7 +43,7 @@ Vue.component('reports-list', {
                             {{ trans.owner }}
                         </span>
                         <span class="light-blue">
-                            {{ item.owner }}
+                            {{ project.owner }}
                         </span>
                     </li>
                     <li>
@@ -48,7 +51,7 @@ Vue.component('reports-list', {
                             {{ trans.start_date }}
                         </span>
                         <span class="light-blue">
-                            {{ item.start_date }}
+                            {{ convertTimestampToDate(project.start_date) }}
                         </span>
                     </li>
                     <li>
@@ -56,7 +59,7 @@ Vue.component('reports-list', {
                             {{ trans.end_date }}
                         </span>
                         <span class="light-blue">
-                            {{ item.end_date }}
+                            {{ convertTimestampToDate(project.end_date) }}
                         </span>
                     </li>
                 </ul>
@@ -66,7 +69,7 @@ Vue.component('reports-list', {
                             {{ trans.project_id }}
                         </span>
                         <span class="light-blue">
-                            {{ item.project_id }}
+                            {{ project.id }}
                         </span>
                     </li>
                     <li>
@@ -74,7 +77,7 @@ Vue.component('reports-list', {
                             {{ trans.project_status }}
                         </span>
                         <span class="light-blue">
-                            {{ item.project_status }}
+                            {{ project.status }}
                         </span>
                     </li>
                     <li>
@@ -82,7 +85,7 @@ Vue.component('reports-list', {
                             {{ trans.address }}
                         </span>
                         <span class="light-blue">
-                            {{ item.address }}
+                            {{ project.address }}
                         </span>
                     </li>
                     <li>
@@ -90,7 +93,7 @@ Vue.component('reports-list', {
                             {{ trans.structures_quantity }}
                         </span>
                         <span class="light-blue">
-                            {{ item.structures_quantity }}
+                            {{ filters.object_ids.length }}
                         </span>
                     </li>
                     <li>
@@ -98,7 +101,7 @@ Vue.component('reports-list', {
                             {{ trans.report_range }}
                         </span>
                         <span class="light-blue ">
-                            <span>{{ item.report_range }}</span>
+                            <span>{{ filters.from }} - {{filters.to}}</span>
                         </span>
                     </li>
                 </ul>
@@ -175,6 +178,7 @@ Vue.component('reports-list', {
     props: {
         data: {required: true},
         translations: {required: true},
+        filters: {required: false}
     },
     components: {
         Multiselect: window.VueMultiselect.default,
@@ -182,6 +186,9 @@ Vue.component('reports-list', {
     },
     data() {
         return {
+            company: {},
+            project: {},
+            showLoader: false,
             item: this.data,
             toggleExportButton: false,
             trans: JSON.parse(this.translations),
@@ -200,7 +207,43 @@ Vue.component('reports-list', {
         },
         toggleReportOptions(report) {
             report.show_options = !report.show_options
+        },
+        getFilteredReports() {
+            this.showLoader = true;
+            let url = `/el-approvals/list`;
+            qfetch(url, {method: 'POST', headers: {}, body: this.filters})
+                .then((response) => {
+                    this.showLoader = false;
+                });
+        },
+        getProject(id) {
+            this.showLoader = true;
+            let url = `/projects/${id}/entities/project?fields=id,name`;
+            qfetch(url, {method: 'GET', headers: {}})
+                .then(response => {
+                    this.project = response.item;
+                    this.showLoader = false;
+                })
+        },
+        getCompanies(){
+            this.showLoader = true;
+            let url = '/companies/entities/list';
+
+            qfetch(url, {method: 'GET', headers: {}})
+                .then(response => {
+                    this.company = response.items.filter(company => +company.id === this.filters.company_id)[0]
+                    this.showLoader = false;
+                })
+        },
+        convertTimestampToDate(timestamp) {
+            let date = new Date(+timestamp*1000)
+            return date.getDate()+ '/' + (date.getMonth()+1) + '/' + date.getFullYear();
         }
+    },
+    mounted() {
+        this.getFilteredReports();
+        this.getProject(this.filters.project_id)
+        this.getCompanies(this.filters.company_id)
     }
 });
 

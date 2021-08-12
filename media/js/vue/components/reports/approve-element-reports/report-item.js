@@ -63,11 +63,11 @@ Vue.component('report-item', {
         <div class="approve-elv-properties flex-start disabled">
             <div class=" approve-elv-property flex-start">
                 <span class="approve-elv-properties-name ">{{ trans.company }}</span>
-                <span class="approve-elv-property-value">{{ filters.company.name }}</span>
+                <span class="approve-elv-property-value">test company name</span>
             </div>
             <div class=" approve-elv-property flex-start">
                 <span class="approve-elv-properties-name ">{{ trans.project }}</span>
-                <span class="approve-elv-property-value">{{ filters.project.name }}</span>
+                <span class="approve-elv-property-value">test project name</span>
             </div>
             <div class=" approve-elv-property flex-start">
                 <span class="approve-elv-properties-name ">{{ trans.structure }}</span>

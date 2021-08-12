@@ -11,6 +11,7 @@ Vue.component('approve-elements-tab', {
             <template v-else-if="activeTab === 'reports-list'">
                 <reports-list
                     :data="item"
+                    :filters="filters"
                     :translations='translations'
                     @tabChanged="activeTab = 'generate-reports'"
                     @toReportDetails="goToReportDetails"
@@ -48,13 +49,6 @@ Vue.component('approve-elements-tab', {
             this.item = this.data;
             this.filters = filters;
             this.activeTab = 'reports-list';
-
-            // let url = `/projects/${this.selectedProject.id}/labtests/copy/elements`;
-            // //
-            // qfetch(url, {method: 'POST', headers: {}, body: filters})
-            // .then((response) => {
-            //     this.item = response.items;
-            // });
         },
         goToReportDetails(reportId) {
             this.report = this.item.reports.filter(report => {

@@ -458,6 +458,9 @@ Vue.component('generate-reports', {
         },
         canGenerate() {
             return (this.selectedCompany && this.selectedProject)
+        },
+        getIds(selectedItem) {
+            return this[selectedItem].map(item => item.id)
         }
     },
     watch: {
@@ -639,16 +642,17 @@ Vue.component('generate-reports', {
             return vals.join(', ');
         },
         generateReports() {
-
             this.$emit('getFiltersForReportsGenerating', {
-                company: this.selectedCompany,
-                project: this.selectedProject,
-                crafts: this.selectedCrafts,
-                structures: this.selectedStructures,
-                elements: this.selectedElements,
-                floors: this.selectedFloors,
-                statuses: this.selectedStatuses,
-                places: this.selectedPlaces
+                'company_id': +this.selectedCompany.id,
+                'project_id': +this.selectedProject.id,
+                'object_ids': this.selectedStructures.map(structure => +structure.id),
+                'element_ids': this.selectedElements.map(element => +element.id),
+                'speciality_ids': this.selectedCrafts.map(craft => +craft.id),
+                'place_ids': this.selectedPlaces.map(place => +place.id),
+                'floor_ids': this.selectedFloors.map(floor => +floor.id),
+                'statuses': this.selectedStatuses.map(status => status.id),
+                'from': this.time[0] ? this.time[0].toLocaleDateString("en-GB") : '',
+                'to': this.time[1] ? this.time[1].toLocaleDateString("en-GB") : ''
             })
         }
     },

@@ -124,8 +124,31 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
      * https://qforb.net/api/json/<appToken>/el-approvals/<id>
      */
     public function action_index_put(){
-        $id = $this->getUIntParamOrDie($this->request->param('id'));
-        die('PUT Update El Approval - id='.$id);
+        $elApprovalId = $this->getUIntParamOrDie($this->request->param('id'));
+        try {
+            $elApproval = Api_DBElApprovals::getElApprovalById($elApprovalId);
+
+            if(empty($elApproval)){
+                throw API_Exception::factory(500,'Incorrect identifier');
+            }
+
+            $clientData = Arr::extract($this->put(),
+                [
+                    'company_id',
+                    'project_id',
+                    'object_id',
+                    'place_id',
+                    'element_id',
+                    'specialities',
+                    'notify'
+                ]);
+
+            echo "<pre>";print_r($clientData);echo "</pre>";die;
+
+        } catch (Exception $e){
+            Database::instance()->rollback();
+            throw API_Exception::factory(500,'Operation Error');
+        }
     }
 
     /**

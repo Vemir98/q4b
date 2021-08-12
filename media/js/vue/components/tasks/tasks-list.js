@@ -709,6 +709,9 @@ Vue.component('tasks-list', {
             let { index, task } = data;
             let items = [... this.items];
             let t = this.filteredItems[index];
+            if(t.status !== task.status) {
+                this.updateTasks([task])
+            }
             task.updated = true;
 
             let itemInd = this.items.findIndex(i => {
