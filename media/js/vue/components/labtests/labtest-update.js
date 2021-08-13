@@ -830,6 +830,9 @@ Vue.component('labtest-update', {
             let image = event.target.files[0];
             if(image){
                 let ext = image.type.split('/')[1];
+                if(!['jpe','jpeg','jpg','png','tif','tiff','pdf'].includes(ext)) {
+                    ext = image.name.split('.').pop().toLowerCase()
+                }
                 let fileReader = new FileReader();
                 fileReader.onload = (e) => {
                     this.images.unshift({

@@ -21,34 +21,34 @@ array (
     array (
       0 => 
       array (
-        'slug' => '#',
+        'slug' => 'labtests/project/52',
         'text' => 'Lab control list',
         'resource' => 'Controller_LabTests',
         'priority' => 219,
-        'disabled' => true,
-        'active' => false,
+        'disabled' => false,
+        'active' => true,
       ),
       1 => 
       array (
-        'slug' => '#',
+        'slug' => 'labtests/project/52/elements_type',
         'text' => 'Elements Type',
         'resource' => 'Controller_LabTests',
         'priority' => 219,
-        'disabled' => true,
+        'disabled' => false,
         'active' => false,
       ),
       2 => 
       array (
-        'slug' => '#',
+        'slug' => 'labtests/project/52/elements_list',
         'text' => 'Elements List',
         'resource' => 'Controller_LabTests',
         'priority' => 219,
-        'disabled' => true,
+        'disabled' => false,
         'active' => false,
       ),
     ),
     'disabled' => false,
-    'active' => false,
+    'active' => true,
   ),
   2 => 
   array (
@@ -84,11 +84,11 @@ array (
     array (
       0 => 
       array (
-        'slug' => '#',
+        'slug' => 'projects/update/321/tasks',
         'text' => 'Tasks',
         'resource' => 'Controller_Projects',
         'priority' => 219,
-        'disabled' => true,
+        'disabled' => false,
         'active' => false,
       ),
     ),

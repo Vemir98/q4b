@@ -1062,13 +1062,17 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
         $src = $b64Str;
         if (
             preg_match('/^data:image\/(\w+);base64,/', $src, $type) ||
-            preg_match('/^data:application\/(\w+);base64,/', $src, $type)
+            preg_match('/^data:application\/([^;]+);base64,/', $src, $type)
         ) {
 
             $data = substr($src, strpos($src, ',') + 1);
             $type = strtolower($type[1]); // jpg, png, gif
 
-            if (!in_array($type, [ 'jpe','jpeg','jpg','png','tif','tiff','pdf','docx','doc','txt','xlsx','xlsm','xls','xlt','xls' ])) {
+            if (!in_array($type, [ 'jpe','jpeg','jpg','png','tif','tiff','pdf', 'vnd.ms-excel',
+                'vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'vnd.ms-excel.sheet.binary.macroEnabled.12',
+                'vnd.ms-excel.sheet.macroEnabled.12',
+                'msword', 'vnd.openxmlformats-officedocument.wordprocessingml.document'])) {
                 throw new \Exception('invalid image type');
             }
             $data = str_replace( ' ', '+', $data );
