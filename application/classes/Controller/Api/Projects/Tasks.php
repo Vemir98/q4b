@@ -446,9 +446,10 @@ class Controller_Api_Projects_Tasks extends HDVP_Controller_API {
                 foreach ($modules as $module){
                     array_push($taskItems[$module['task_id']]['crafts'][$module['craft_id']]['modules'], $module['module_id']);
                 }
-                foreach ($modules as $module){
-                    $taskItems[$module['task_id']]['crafts'] = array_values($taskItems[$module['task_id']]['crafts']);
-                }
+            }
+            $taskItems = array_values($taskItems);
+            for($i = 0; $i < count($taskItems); $i++) {
+                $taskItems[$i]['crafts'] = array_values($taskItems[$i]['crafts']);
             }
         }
         $this->_responseData['items'] = $taskItems;

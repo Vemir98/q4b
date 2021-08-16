@@ -130,7 +130,7 @@ Vue.component('task-item', {
     },
     watch: {
         selectedCrafts(newVal) {
-            if(this.task.crafts) {
+            if(this.task.crafts && this.task.crafts.length) {
                 this.task.crafts.forEach(c => {
                     this.crafts.forEach((craft, idx) => {
                         if (+craft.id === +c.id) {
@@ -206,11 +206,17 @@ Vue.component('task-item', {
             })
         },
         onSelect(craft) {
+            console.log('TASK',this.task)
 
             let index = this.crafts.findIndex(item => item.id==craft.id);
             this.crafts[index].checked = true;
             this.crafts[index].selectedTimestampForSorting = (+ new Date());
             this.task.render = true;
+            // if(!Object.keys(this.task.crafts).length) {
+            //     console.log('TASK',this.task)
+            //     this.task.crafts = [];
+            // }
+
             this.task.crafts.push({
                 id: craft.id,
                 modules: [],
@@ -227,7 +233,7 @@ Vue.component('task-item', {
             this.updateTask();
         },
         renderCrafts() {
-            if(this.task.crafts) {
+            if(this.task.crafts && this.task.crafts.length) {
                 this.task.crafts.forEach(c => {
                     this.crafts.map(craft => {
                         if (+craft.id === +c.id) {

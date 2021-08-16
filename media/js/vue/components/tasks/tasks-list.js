@@ -364,7 +364,7 @@ Vue.component('tasks-list', {
                     if (!task.name || !task.crafts.length) {
                         inProgress = true
                     }
-                    if (task.crafts) {
+                    if (task.crafts && task.crafts.length) {
                         task.crafts.forEach(craft => {
                             const modules = craft.modules
                             if(!modules || !modules.length) {

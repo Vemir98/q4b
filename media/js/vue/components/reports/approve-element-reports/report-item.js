@@ -8,19 +8,19 @@ Vue.component('report-item', {
                         <i @click="$emit('toReportsList')" class="q4bikon-arrow_back2"></i>
                     </a>
                     <span class="approve-elv-top-item-name">{{ trans.check_number }}</span>
-                    <span class="approve-elv-top-item-value">{{ data.id }}</span>
+                    <span class="approve-elv-top-item-value">{{ report.id }}</span>
 
                 </div>
                 <div class="approve-elv-top-item">
                     <span class="approve-elv-top-item-name">{{ trans.element }}</span>
-                    <span class="approve-elv-top-item-value">{{ data.element_name }}</span>
+                    <span class="approve-elv-top-item-value">{{ report.element_name }}</span>
                 </div>
             </div>
             <div class="approve-elv-top-right flex-end">
 
                 <div class="approve-elv-top-item">
                     <span class="approve-elv-top-item-name">{{ trans.created_by }}</span>
-                    <span class="approve-elv-top-item-value">{{ data.creator }} ({{ data.check_date }})</span>
+                    <span class="approve-elv-top-item-value">{{ report.creator_name }} ({{ convertTimestampToDate(report.created_at) }})</span>
 
                 </div>
 
@@ -63,23 +63,23 @@ Vue.component('report-item', {
         <div class="approve-elv-properties flex-start disabled">
             <div class=" approve-elv-property flex-start">
                 <span class="approve-elv-properties-name ">{{ trans.company }}</span>
-                <span class="approve-elv-property-value">test company name</span>
+                <span class="approve-elv-property-value">{{ company?.name }}</span>
             </div>
             <div class=" approve-elv-property flex-start">
                 <span class="approve-elv-properties-name ">{{ trans.project }}</span>
-                <span class="approve-elv-property-value">test project name</span>
+                <span class="approve-elv-property-value">{{ project?.name }}</span>
             </div>
             <div class=" approve-elv-property flex-start">
                 <span class="approve-elv-properties-name ">{{ trans.structure }}</span>
-                <span class="approve-elv-property-value">{{ data.structure }}</span>
+                <span class="approve-elv-property-value">{{ report.object_name }}</span>
             </div>
             <div class=" approve-elv-property flex-start">
                 <span class="approve-elv-properties-name ">{{ trans.floor_level }}</span>
-                <span class="approve-elv-property-value">{{ data.floor }}</span>
+                <span class="approve-elv-property-value">{{ report.floor_name }}</span>
             </div>
             <div class=" approve-elv-property flex-start">
                 <span class="approve-elv-properties-name ">{{ trans.place }}</span>
-                <span class="approve-elv-property-value">{{ data.place }}</span>
+                <span class="approve-elv-property-value">{{ report.place_name }}</span>
             </div>
 
         </div>
@@ -100,10 +100,10 @@ Vue.component('report-item', {
                 <template v-for="speciality in report.specialities">
                     <div class="approve-elv-report-item">
                         <div class="approve-elv-report-top flex-start">
-                            <span class="approve-elv-report-name not-appropriate">{{ speciality.name }}</span>
+                            <span class="approve-elv-report-name not-appropriate">{{ speciality.craft_name }}</span>
                             <span class="approve-elv-report-status flex-start">
                                 <span class="approve-elv-report-status-title">{{ trans.status }}</span>
-                                <span class="approve-elv-report-status-value">{{ speciality.status }}</span>
+                                <span class="approve-elv-report-status-value">[STATUS]</span>
                             </span>
                             <span class="approve-elv-report-view"><a href="">{{ trans.view_qc }}</a></span>
                         </div>
@@ -123,7 +123,7 @@ Vue.component('report-item', {
                             <div class="ltest_info_certificate_title">{{ trans.notes }}</div>
                             <div class="ltest_info_certificate_area">
                                 <div class="labtest_edit_textarea">
-                                    <textarea cols="30" rows="10" name="delivery_cert">{{ speciality.description }}</textarea>
+                                    <textarea cols="30" rows="10" name="delivery_cert">{{ speciality.notice }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -136,13 +136,13 @@ Vue.component('report-item', {
                                 <div class="report_tasks_wraper">
                                     <template v-for="task in speciality.tasks">
                                         <div 
-                                            :class="[ 'report_tasks_item', {'not-appropriate': task.status === 'disabled', 'appropriate': task.status === 'enabled' }]"
+                                            :class="[ 'report_tasks_item', {'not-appropriate': task.appropriate === '0', 'appropriate': task.appropriate === '1' }]"
                                             @click="changeTaskStatus(task, speciality)"
                                         >
-                                            <div class="report_task_title">{{ trans.task }} {{ task.id }}</div>
+                                            <div class="report_task_title">{{ trans.task }} {{ task.task_id }}</div>
                                             <div class="report_task_desc_wrap">
                                                 <div class="report_task_descripticon">
-                                                        <div>{{ task.description }}</div>
+                                                        <div>{{ task.task_name }}</div>
                                                 </div>
                                                 <div class="report_task_status"></div>
                                             </div>
@@ -747,11 +747,11 @@ Vue.component('report-item', {
                     <div class="approve-elv-popup-inputs flex-between">
                         <div class="filter-item">
                             <div class="filter-item-label">Signer Name</div>
-                            <input type="text" name="signer_name" id="" value="Gabriel Belmont">
+                            <input type="text" name="signer_name" value="Gabriel Belmont">
                         </div>
                         <div class="filter-item">
                             <div class="filter-item-label">Position</div>
-                            <input type="text" name="signer_name" id="" value="Director">
+                            <input type="text" name="signer_position" value="Director">
                         </div>
                     </div>
 
@@ -766,12 +766,13 @@ Vue.component('report-item', {
                     <button class="modul-popup-Confirm" @click="saveSignatureImage">Sign</button>
                     <button class="modul-popup-Cancel">Additional Signature</button>
                 </div>
-
             </div>
         </div>
     </section>
     `,
     props: {
+        project: {required: true},
+        company: {required: true},
         data: {required: true},
         translations: {required: true},
         filters: {required: true}
@@ -785,42 +786,8 @@ Vue.component('report-item', {
             report: this.data,
             currentSpeciality: null,
             options: [
-                {
-                    "name": "Waiting",
-                    "city_ascii": "San Martin",
-                    "lat": -33.06998533,
-                    "lng": -68.49001612,
-                    "pop": 99974,
-                    "country": "Argentina",
-                    "iso2": "AR",
-                    "iso3": "ARG",
-                    "province": "Mendoza",
-                    "timezone": "America/Argentina/Mendoza"
-                },
-                {
-                    "name": "Normal",
-                    "city_ascii": "San Nicolas",
-                    "lat": -33.33002114,
-                    "lng": -60.24000289,
-                    "pop": 117123.5,
-                    "country": "Argentina",
-                    "iso2": "AR",
-                    "iso3": "ARG",
-                    "province": "Ciudad de Buenos Aires",
-                    "timezone": "America/Argentina/Buenos_Aires"
-                },
-                {
-                    "name": "Invalid",
-                    "city_ascii": "San Francisco",
-                    "lat": -31.43003375,
-                    "lng": -62.08996749,
-                    "pop": 43231,
-                    "country": "Argentina",
-                    "iso2": "AR",
-                    "iso3": "ARG",
-                    "province": "Córdoba",
-                    "timezone": "America/Argentina/Cordoba"
-                }
+                {"name": "waiting"},
+                {"name": "approved"}
             ],
             signaturePad: null
 
@@ -834,7 +801,6 @@ Vue.component('report-item', {
         let end = new Date();
         end.setDate(end.getDate() + 1);
         this.time = [date, end];
-
     },
     methods: {
         timeChanged() { },
@@ -864,12 +830,13 @@ Vue.component('report-item', {
             console.log('SAVED IMAGE', savedImage);
         },
         changeTaskStatus(task, speciality) {
-            switch (task.status) {
-                case "enabled":
-                    task.status = "disabled";
+            console.log('TASK',task)
+            switch (+task.appropriate) {
+                case 1:
+                    task.appropriate = "0";
                     break;
-                case "disabled":
-                    task.status = "enabled";
+                case 0:
+                    task.appropriate = "1";
                     break;
             }
             if(this.checkAllTasksEnabled(speciality.tasks)) {
@@ -879,9 +846,14 @@ Vue.component('report-item', {
         },
         checkAllTasksEnabled(specialityTasks) {
             const result =  specialityTasks.filter(task => {
-                return task.status === 'disabled'
+                return task.appropriate === '0'
             })
             return result.length < 1
+        },
+        convertTimestampToDate(timestamp) {
+            const date = new Date(+timestamp*1000);
+            const month = ((date.getMonth()+1).length > 1) ? (date.getMonth()+1) : "0"+(date.getMonth()+1);
+            return date.getDate()+ '/' + month + '/' + date.getFullYear();
         }
     },
     mounted() {

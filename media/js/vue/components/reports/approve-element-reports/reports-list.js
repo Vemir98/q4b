@@ -133,13 +133,13 @@ Vue.component('reports-list', {
                     </tr>
                 </thead>
                 <tbody>
-                    <template v-for="report in item.reports">
-                        <tr class="parent-tr" :class="{'openParent': report.show_specialities}">
+                    <template v-for="report in items">
+                        <tr class="parent-tr" :class="{'openParent': report.showSpecialities}">
                             <td scope="row" @click="toggleReportSpecialities(report)" class="parent-td">{{ report.id }}</td>
-                            <td>{{ report.check_date }} </td>
+                            <td>{{ convertTimestampToDate(report.created_at) }} </td>
                             <td>{{ report.element_name }}</td>
                             <td>&nbsp;</td>
-                            <td class="td-floor">{{ report.floor }}</td>
+                            <td class="td-floor">{{ report.floor_name }}</td>
                             <td> {{ report.status }}</td>
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>
@@ -147,22 +147,22 @@ Vue.component('reports-list', {
                             <td>&nbsp;</td>
                             <td>
                                 <button class="open-more" @click="toggleReportOptions(report)"><img src="/media/img/more-icon.svg" alt="">
-                                    <div  class="td-options-wrap" v-if="report.show_options">
-                                        <a @click="$emit('toReportDetails', report.id)"><i class="q4bikon-preview1"></i>View[*]</a>
+                                    <div  class="td-options-wrap" v-if="report.showOptions">
+                                        <a @click="$emit('toReportDetails', report)"><i class="q4bikon-preview1"></i>View[*]</a>
                                         <a href=""><i class="q4bikon-uncheked"></i>{{ trans.qc_report }}</a>
                                     </div>
                                 </button>
                             </td>
                         </tr>
                         <template v-for="speciality in report.specialities">
-                            <tr class="child-tr" v-if="report.show_specialities">
+                            <tr class="child-tr" v-if="report.showSpecialities">
                                 <td scope="row">&nbsp;</td>
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
-                                <td>{{ speciality.name }}</td>
+                                <td>{{ speciality.craft_name }}</td>
                                 <td>&nbsp;</td>
-                                <td> {{ speciality.status }}</td>
-                                <td>{{ speciality.approval_date }}</td>
+                                <td>[STATUS]</td>
+                                <td>[APPROVAL DATE]</td>
                                 <td>{{ speciality.position }}</td>
                                 <td>{{ speciality.signer_name }}</td>
                                 <td class="td-sign"><img :src="speciality.signature"></td>
@@ -176,9 +176,10 @@ Vue.component('reports-list', {
     </section>
     `,
     props: {
-        data: {required: true},
         translations: {required: true},
-        filters: {required: false}
+        filters: {required: true},
+        project: {required: true},
+        company: {required: true}
     },
     components: {
         Multiselect: window.VueMultiselect.default,
@@ -186,10 +187,8 @@ Vue.component('reports-list', {
     },
     data() {
         return {
-            company: {},
-            project: {},
             showLoader: false,
-            item: this.data,
+            items: [],
             toggleExportButton: false,
             trans: JSON.parse(this.translations),
         }
@@ -202,48 +201,35 @@ Vue.component('reports-list', {
     },
     methods: {
         toggleReportSpecialities(report) {
-            report.show_specialities = !report.show_specialities
+            report.showSpecialities = !report.showSpecialities
 
         },
         toggleReportOptions(report) {
-            report.show_options = !report.show_options
+            report.showOptions = !report.showOptions
         },
         getFilteredReports() {
             this.showLoader = true;
+            console.log('FILTERS', this.filters)
             let url = `/el-approvals/list`;
             qfetch(url, {method: 'POST', headers: {}, body: this.filters})
                 .then((response) => {
+                    response.items.forEach(report => {
+                        report.showSpecialities = false;
+                        report.showOptions = false;
+                    })
+                    console.log('FILTERED REPORTS', response.items)
+                    this.items = response.items;
                     this.showLoader = false;
                 });
         },
-        getProject(id) {
-            this.showLoader = true;
-            let url = `/projects/${id}/entities/project?fields=id,name`;
-            qfetch(url, {method: 'GET', headers: {}})
-                .then(response => {
-                    this.project = response.item;
-                    this.showLoader = false;
-                })
-        },
-        getCompanies(){
-            this.showLoader = true;
-            let url = '/companies/entities/list';
-
-            qfetch(url, {method: 'GET', headers: {}})
-                .then(response => {
-                    this.company = response.items.filter(company => +company.id === this.filters.company_id)[0]
-                    this.showLoader = false;
-                })
-        },
         convertTimestampToDate(timestamp) {
-            let date = new Date(+timestamp*1000)
-            return date.getDate()+ '/' + (date.getMonth()+1) + '/' + date.getFullYear();
+            const date = new Date(+timestamp*1000);
+            const month = ((date.getMonth()+1).length > 1) ? (date.getMonth()+1) : "0"+(date.getMonth()+1);
+            return date.getDate()+ '/' + month + '/' + date.getFullYear();
         }
     },
     mounted() {
         this.getFilteredReports();
-        this.getProject(this.filters.project_id)
-        this.getCompanies(this.filters.company_id)
     }
 });
 

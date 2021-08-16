@@ -14,6 +14,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                 'project_id',
                 'object_id',
                 'place_id',
+                'floor_id',
                 'element_id',
                 'specialities',
                 'notify'
@@ -26,7 +27,8 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                 ->rule('company_id', 'not_empty')
                 ->rule('project_id', 'not_empty')
                 ->rule('object_id', 'not_empty')
-                ->rule('element_id', 'not_empty');
+                ->rule('element_id', 'not_empty')
+                ->rule('floor_id', 'not_empty');
 
             if (!$valid->check()) {
                 throw API_ValidationException::factory(500, 'Incorrect data');
@@ -38,6 +40,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                 'object_id' => $clientData['object_id'],
                 'place_id' => $clientData['place_id'] ?: null,
                 'element_id' => $clientData['element_id'],
+                'floor_id' => $clientData['floor_id'],
                 'created_at' => time(),
                 'created_by' => Auth::instance()->get_user()->id,
             ];
@@ -138,6 +141,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                     'project_id',
                     'object_id',
                     'place_id',
+                    'floor_id',
                     'element_id',
                     'specialities',
                     'notify'
@@ -225,7 +229,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                 $elApprovals[$elAppKey]['specialities'] = Api_DBElApprovals::getElApprovalCraftsByElAppId($elApproval['id']);
 
                 foreach ($elApprovals[$elAppKey]['specialities'] as $specialityKey => $speciality) {
-                    $elApproval[0]['specialities'][$specialityKey]['tasks'] = Api_DBElApprovals::getElApprovalCraftsTasksByCraftIds($speciality['id']);
+                    $elApprovals[$elAppKey]['specialities'][$specialityKey]['tasks'] = Api_DBElApprovals::getElApprovalCraftsTasksByCraftIds($speciality['id']);
                 }
             }
             $this->_responseData = [

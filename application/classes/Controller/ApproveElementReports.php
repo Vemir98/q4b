@@ -269,6 +269,10 @@ class Controller_ApproveElementReports extends HDVP_Controller_Template
             "check_number" => __('check_number')
         ];
 
+        foreach (Api_DBModules::getModulesForTasks() as $module) {
+            $translations['module_'.$module['id']] = $module['name'];
+        }
+
 
         $this->template->content = View::make('reports/approve-element/index', [
             'translations' => $translations,
