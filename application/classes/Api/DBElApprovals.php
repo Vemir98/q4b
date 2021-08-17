@@ -42,16 +42,19 @@ class Api_DBElApprovals
         $query = "SELECT 
         eac.id,
         eac.craft_id,
+        eac.appropriate,
         cc.name as craft_name,
-        eac.notice
+        eac.notice,
+        eac.created_at
         FROM el_approvals_crafts eac
         LEFT JOIN cmp_crafts cc ON eac.craft_id=cc.id
-        WHERE eac.el_app_id={$elApprovalId}";
+        WHERE eac.el_app_id={$elApprovalId}
+        ORDER BY eac.created_at DESC";
 
         return DB::query(Database::SELECT, $query)->execute()->as_array();
     }
 
-    public static function getElApprovalCraftsTasksByCraftIds($craft_id)
+    public static function getElApprovalCraftsTasksByCraftIds($elAppCraftId)
     {
         $query = "SELECT 
         eact.id,
@@ -61,7 +64,7 @@ class Api_DBElApprovals
         eact.appropriate
         FROM el_app_crafts_tasks eact
         LEFT JOIN pr_tasks t ON eact.task_id=t.id
-        WHERE eact.el_app_craft_id={$craft_id}";
+        WHERE eact.el_app_craft_id={$elAppCraftId}";
 
         return DB::query(Database::SELECT, $query)->execute()->as_array();
     }
@@ -71,7 +74,7 @@ class Api_DBElApprovals
         $query = "SELECT 
         ean.user_id
         FROM el_approvals_notifications ean
-        WHERE eact.ell_app_id={$elApprovalId}";
+        WHERE ean.ell_app_id={$elApprovalId}";
 
         return DB::query(Database::SELECT, $query)->execute()->as_array();
     }
@@ -96,6 +99,7 @@ class Api_DBElApprovals
         ea.status
           FROM el_approvals ea 
           LEFT JOIN el_approvals_crafts eac ON ea.id=eac.el_app_id
+          LEFT JOIN el_app_signatures eas ON eac.id=eas.el_app_craft_id
           LEFT JOIN pr_floors f ON ea.floor_id=f.id
           LEFT JOIN pr_places p ON ea.place_id=p.id
           LEFT JOIN users u ON ea.created_by=u.id
@@ -119,10 +123,13 @@ class Api_DBElApprovals
             $query .= ' AND eac.craft_id IN ('.implode(',',$filters['speciality_ids']).')';
         }
         if(isset($filters['statuses']) && !empty($filters['statuses'])){
-            $query .= ' AND ea.status IN ('.implode(',',$filters['statuses']).')';
+            $query .= ' AND ea.status IN ("' . implode('","', $filters['statuses']) . '")';
         }
         if(isset($filters['speciality_ids']) && !empty($filters['speciality_ids'])){
             $query .= ' AND eac.craft_id IN ('.implode(',',$filters['speciality_ids']).')';
+        }
+        if(isset($filters['positions']) && !empty($filters['positions'])){
+            $query .= ' AND eas.position IN ("' . implode('","', $filters['positions']) . '")';
         }
         if(isset($filters['from'])){
             $query .= ' AND ea.created_at>='.$filters['from'];
@@ -135,6 +142,31 @@ class Api_DBElApprovals
         if($paginate) {
             $query .= ' LIMIT '. $limit .' OFFSET ' . $offset;
         }
+
+        return DB::query(Database::SELECT, $query)->execute()->as_array();
+    }
+
+    public static function getElApprovalCraftsSignaturesByCraftIds($elAppCraftId) {
+        $query = "SELECT 
+        eas.*,
+        u.name as creator_name
+        FROM el_app_signatures eas
+        LEFT JOIN el_approvals_crafts eac ON eas.el_app_craft_id=eac.id
+        LEFT JOIN users u ON eas.created_by=u.id
+        WHERE eas.el_app_craft_id={$elAppCraftId}";
+
+        return DB::query(Database::SELECT, $query)->execute()->as_array();
+    }
+
+    public static function getElApprovalCraftsSignaturesPositionsListByProjectId($projectId) {
+        $query = "SELECT DISTINCT
+        eas.id,
+        eas.position
+        FROM el_app_signatures eas
+        LEFT JOIN el_approvals ea ON eas.el_app_id=ea.id
+        WHERE ea.project_id={$projectId}
+        GROUP BY eas.position
+        ORDER BY eas.created_at DESC";
 
         return DB::query(Database::SELECT, $query)->execute()->as_array();
     }

@@ -100,24 +100,49 @@ Vue.component('report-item', {
                 <template v-for="speciality in report.specialities">
                     <div class="approve-elv-report-item">
                         <div class="approve-elv-report-top flex-start">
-                            <span class="approve-elv-report-name not-appropriate">{{ speciality.craft_name }}</span>
+                            <span :class="['approve-elv-report-name', {'not-appropriate': speciality.appropriate === '0', 'appropriate': speciality.appropriate === '1' }]">{{ speciality.craft_name }}</span>
                             <span class="approve-elv-report-status flex-start">
                                 <span class="approve-elv-report-status-title">{{ trans.status }}</span>
-                                <span class="approve-elv-report-status-value">[STATUS]</span>
+                                <span class="approve-elv-report-status-value">{{ +speciality.appropriate ? 'Appropriate[*]' : 'Not Appropriate[*]' }}</span>
                             </span>
                             <span class="approve-elv-report-view"><a href="">{{ trans.view_qc }}</a></span>
                         </div>
                         <div class="approve-elv-report-sign">
-                            <div class="approve-elv-properties flex-start ">
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">{{ trans.updated_by }}</span>
-                                    <span class="approve-elv-property-value">{{ speciality.updated_by }}</span>
-                                </div>
-                                <div class=" approve-elv-property flex-start">
-                                    <span class="approve-elv-properties-name ">{{ trans.date }}</span>
-                                    <span class="approve-elv-property-value">{{ speciality.approval_date }}</span>
-                                </div>
-                            </div>
+                                <template v-if="speciality.signatures.length">
+                                    <div class="approve-elv-properties flex-start" v-for="signature in speciality.signatures">
+                                        <div class=" approve-elv-property flex-start">
+                                            <span class="approve-elv-properties-name ">{{ trans.updated_by }}</span>
+                                            <span class="approve-elv-property-value">{{ signature.creator_name }}</span>
+                                        </div>
+                                        <div class=" approve-elv-property flex-start">
+                                            <span class="approve-elv-properties-name ">{{ trans.date }}</span>
+                                            <span class="approve-elv-property-value">{{ convertTimestampToDate(signature.created_at) }}</span>
+                                        </div>
+                                        <div class=" approve-elv-property flex-start">
+                                            <span class="approve-elv-properties-name ">{{ trans.approved_by }}</span>
+                                            <span class="approve-elv-property-value">{{ signature.name }}</span>
+                                        </div>
+                                        <div class=" approve-elv-property flex-start">
+                                            <span class="approve-elv-properties-name ">{{ trans.position }}</span>
+                                            <span class="approve-elv-property-value">{{ signature.position }}</span>
+                                        </div>
+                                        <div class=" approve-elv-property flex-start sign-image">
+                                            <img :src="signature.image">
+                                        </div>
+                                    </div>
+                                </template>
+                                <template v-else>
+                                    <div class="approve-elv-properties flex-start">
+                                        <div class=" approve-elv-property flex-start">
+                                            <span class="approve-elv-properties-name">{{ trans.updated_by }}</span>
+                                            <span class="approve-elv-property-value">{{ report.creator_name }}</span>
+                                        </div>
+                                        <div class=" approve-elv-property flex-start">
+                                            <span class="approve-elv-properties-name">{{ trans.date }}</span>
+                                            <span class="approve-elv-property-value">{{ convertTimestampToDate(report.created_at) }}</span>
+                                        </div>
+                                    </div>
+                                </template>
                         </div>
                         <div class="ltest_info_certificate">
                             <div class="ltest_info_certificate_title">{{ trans.notes }}</div>
@@ -148,6 +173,12 @@ Vue.component('report-item', {
                                             </div>
                                         </div>
                                     </template>  
+                                </div>
+                                <div class="report-buttons-update flex-start">
+                                    <button v-if="checkAllTasksEnabled(speciality.tasks)" @click="togglePopup(speciality,true)" class="report-button">Add signature</button>
+                                </div>
+                                <div class="report-buttons-update flex-start">
+                                    <button class="report-button" @click="updateReport(speciality)">{{ trans.update }}</button>
                                 </div>
                             </div>
                         </div>
@@ -734,37 +765,34 @@ Vue.component('report-item', {
 <!--                </div>-->
             </div>
         </div>
-        <div class="report-buttons-update flex-center ">
-            <button class="report-button" @click="togglePopup" href="">Update</button>
-        </div>
         <div class="modul-popup-wrap approve-elv-popup" v-show="openPopup">
             <div class="modul-popup">
                 <div class="modul-popup-top">
-                    <span class="modul-popup-headline">Please sign</span>
+                    <span class="modul-popup-headline">Please sign[*]</span>
                     <span class="modul-popup-close" @click="togglePopup"><i class="q4bikon-close"></i></span>
                 </div>
                 <div class="modul-popup-main">
                     <div class="approve-elv-popup-inputs flex-between">
                         <div class="filter-item">
-                            <div class="filter-item-label">Signer Name</div>
-                            <input type="text" name="signer_name" value="Gabriel Belmont">
+                            <div class="filter-item-label">{{ trans.signer_name }}</div>
+                            <input type="text" name="signer_name" v-model="currentSignerName">
                         </div>
                         <div class="filter-item">
-                            <div class="filter-item-label">Position</div>
-                            <input type="text" name="signer_position" value="Director">
+                            <div class="filter-item-label">{{ trans.position }}</div>
+                            <input type="text" name="signer_position" v-model="currentSignerPosition">
                         </div>
                     </div>
 
                     <div class="approve-elv-popup-sign">
                         <canvas ref="signaturePad"></canvas>
-                        <span class="clear-sign" @click="clearSignaturePad">Clear sign</span>
+                        <span class="clear-sign" @click="clearSignaturePad">Clear sign[*]</span>
                         <div class="approve-elv-popup-sign-line"></div>
                     </div>
                 </div>
 
                 <div class="modul-popup-btns">
-                    <button class="modul-popup-Confirm" @click="saveSignatureImage">Sign</button>
-                    <button class="modul-popup-Cancel">Additional Signature</button>
+                    <button class="modul-popup-Confirm" @click="pushSignatures">Sign[*]</button>
+                    <button class="modul-popup-Cancel" @click="addSignature">{{ trans.additional_signature }}</button>
                 </div>
             </div>
         </div>
@@ -775,16 +803,20 @@ Vue.component('report-item', {
         company: {required: true},
         data: {required: true},
         translations: {required: true},
-        filters: {required: true}
+        filters: {required: true},
+        username: {required: true}
     },
     data() {
         return {
             openPopup: false,
             trans: JSON.parse(this.translations),
-            value: [],
             time: [],
             report: this.data,
+            newSignatures: [],
             currentSpeciality: null,
+            currentSignerName: '',
+            currentSignerPosition: '',
+            keepOtherSignatures: false,
             options: [
                 {"name": "waiting"},
                 {"name": "approved"}
@@ -812,25 +844,53 @@ Vue.component('report-item', {
 
             return arrayOfValues.join(',');
         },
-        togglePopup() {
+        togglePopup(speciality, keepOthers = false) {
             if(this.openPopup) {
                 this.openPopup = false;
                 this.clearSignaturePad();
                 this.currentSpeciality = null;
             } else {
+                this.keepOtherSignatures = keepOthers;
+                this.currentSpeciality = speciality;
+                this.currentSignerPosition = this.trans.userPosition;
+                this.currentSignerName = this.username;
                 this.openPopup = true;
             }
         },
         clearSignaturePad() {
             this.signaturePad.clear();
         },
-        saveSignatureImage() {
-            let savedImage = this.signaturePad.toDataURL();
+        addSignature() {
+            this.newSignatures.push({
+                'el_app_id': this.report.id,
+                'el_app_craft_id': this.currentSpeciality.id,
+                'name': this.currentSignerName,
+                'position': this.currentSignerPosition,
+                'image': this.signaturePad.toDataURL(),
+                'created_at': Date.now() / 1000,
+                'creator_name': this.username
+            })
 
-            console.log('SAVED IMAGE', savedImage);
+            this.currentSignerName = this.username;
+            this.currentSignerPosition = this.trans.userPosition;
+            this.clearSignaturePad();
+        },
+        pushSignatures(keepOthers = false) {
+            this.addSignature();
+
+            this.report.specialities.forEach(speciality => {
+                if(+speciality.id === +this.currentSpeciality.id) {
+                    if(this.keepOtherSignatures) {
+                        speciality.signatures = speciality.signatures.concat(this.newSignatures);
+                    } else {
+                        speciality.signatures = this.newSignatures;
+                    }
+                }
+            })
+            this.newSignatures = [];
+            this.openPopup = false;
         },
         changeTaskStatus(task, speciality) {
-            console.log('TASK',task)
             switch (+task.appropriate) {
                 case 1:
                     task.appropriate = "0";
@@ -840,8 +900,7 @@ Vue.component('report-item', {
                     break;
             }
             if(this.checkAllTasksEnabled(speciality.tasks)) {
-                this.currentSpeciality = speciality;
-                this.togglePopup();
+                this.togglePopup(speciality, false);
             }
         },
         checkAllTasksEnabled(specialityTasks) {
@@ -854,6 +913,9 @@ Vue.component('report-item', {
             const date = new Date(+timestamp*1000);
             const month = ((date.getMonth()+1).length > 1) ? (date.getMonth()+1) : "0"+(date.getMonth()+1);
             return date.getDate()+ '/' + month + '/' + date.getFullYear();
+        },
+        updateReport(speciality) {
+            console.log('SPECIALITY TO UPDATE', speciality)
         }
     },
     mounted() {

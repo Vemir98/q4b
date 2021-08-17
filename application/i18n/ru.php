@@ -887,6 +887,6 @@ return [
     'signer_name' => 'Имя подписавшего',
     'check_date' => 'Дата проверки',
     'check_number' => '№ Проверки',
-
+    'additional_signature' => 'Доп. подпись',
     ''=>'',
 ];

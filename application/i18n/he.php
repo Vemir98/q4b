@@ -914,6 +914,6 @@ return [
     'signer_name' => 'שם החותם',
     'check_date' => 'תאריך בדיקה',
     'check_number' => 'מס. בדיקה',
-
+    'additional_signature' => 'חתימה נוספת',
     ''=>'',
 ];

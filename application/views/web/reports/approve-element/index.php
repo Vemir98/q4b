@@ -2,9 +2,9 @@
 
 <div id="approve-element">
     <approve-elements-tab
-        :data='<?=json_encode($data)?>'
+        :username='<?=json_encode(Auth::instance()->get_user()->name)?>'
         translations='<?=json_encode($translations)?>'
-        :statuses='<?=json_encode(array_values(Enum_LabtestStatus::toArray()))?>'
+        :statuses='<?=json_encode(array_values(Enum_ElementApprovalReportsStatus::toArray()))?>'
     />
 </div>
 <script>

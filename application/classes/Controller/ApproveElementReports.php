@@ -28,171 +28,6 @@ class Controller_ApproveElementReports extends HDVP_Controller_Template
         VueJs::instance()->includeMultiselect();
         VueJs::instance()->includeSignaturePad();
 
-        $responseData = [
-                'company_name' => 'test__CompanyName',
-                'project_name' => 'test__ProjectName',
-                'owner' => 'test__Owner',
-                'start_date' => 'test__12/03/2020',
-                'end_date' => 'test__18/08/2021',
-                'project_id' => 'test__52',
-                'project_status' => 'test__active',
-                'address' => 'test__address',
-                'structures_quantity' => 'test__10',
-                'report_range' => 'test__01/02/2021-15/05/2021',
-                'reports' => [
-                    [
-                        'id' => 'test__10254',
-                        'check_date' => 'test__05/05/2021',
-                        'element_name' => 'test__ElementName',
-                        'floor' => 'test__2',
-                        'status' => 'test__active',
-                        'show_specialities' => false,
-                        'show_options' => false,
-                        'creator' => 'Vemir',
-                        'structure' => 'test__Structure1',
-                        'place' => 'test__place1',
-                        'specialities' => [
-                            [
-                                'id' => 'test__111',
-                                'name' => 'test__someSpecialityName1',
-                                'approval_date' => 'test__07/05/2021',
-                                'status' => 'Not appropriate',
-                                'position' => 'test__position',
-                                'signer_name' => 'test__SingerName1',
-                                'signature' => 'test__some/image/url/1',
-                                'updated_by' => 'test__ExampleName1',
-                                'description' => 'test__Some short descrpition1',
-                                'tasks' => [
-                                    ['id' => 'test__12313', 'description' => 'test__taskDescription1', 'status' => 'enabled'],
-                                    ['id' => 'test__12324', 'description' => 'test__taskDescription2', 'status' => 'disabled'],
-                                    ['id' => 'test__12312', 'description' => 'test__taskDescription3', 'status' => 'enabled'],
-                                    ['id' => 'test__12326', 'description' => 'test__taskDescription4', 'status' => 'enabled'],
-                                    ['id' => 'test__12327', 'description' => 'test__taskDescription5', 'status' => 'enabled'],
-                                ]
-                            ],
-                            [
-                                'id' => 'test__112',
-                                'name' => 'test__someSpecialityName2',
-                                'approval_date' => 'test__01/01/2021',
-                                'status' => 'Appropriate',
-                                'position' => 'test__position2',
-                                'signer_name' => 'test__SingerName2',
-                                'signature' => 'test__some/image/url/2',
-                                'updated_by' => 'test__ExampleName2',
-                                'description' => 'test__Some short descrpition2',
-                                'tasks' => [
-                                    ['id' => 'test__123123', 'description' => 'test__taskDescription1', 'status' => 'enabled'],
-                                    ['id' => 'test__123124', 'description' => 'test__taskDescription2', 'status' => 'disabled'],
-                                    ['id' => 'test__123125', 'description' => 'test__taskDescription3', 'status' => 'disabled'],
-                                    ['id' => 'test__123126', 'description' => 'test__taskDescription4', 'status' => 'enabled'],
-                                    ['id' => 'test__123127', 'description' => 'test__taskDescription5', 'status' => 'disabled'],
-                                ]
-                            ],
-                        ],
-                    ],
-                    [
-                        'id' => 'test__102521',
-                        'check_date' => 'test__05/05/2021',
-                        'element_name' => 'test__ElementName',
-                        'floor' => 'test__2',
-                        'status' => 'test__active',
-                        'show_specialities' => false,
-                        'show_options' => false,
-                        'creator' => 'Vemir2',
-                        'structure' => 'test__Structure1',
-                        'place' => 'test__place1',
-                        'specialities' => [
-                            [
-                                'id' => 'test__111',
-                                'name' => 'test__someSpecialityName1',
-                                'approval_date' => 'test__07/05/2021',
-                                'status' => 'Appropriate',
-                                'position' => 'test__position',
-                                'signer_name' => 'test__SingerName1',
-                                'signature' => 'test__some/image/url/1',
-                                'updated_by' => 'test__ExampleName1',
-                                'description' => 'test__Some short descrpition1',
-                                'tasks' => [
-                                    ['id' => 'test__12323', 'description' => 'test__taskDescription1', 'status' => 'disabled'],
-                                    ['id' => 'test__13124', 'description' => 'test__taskDescription2', 'status' => 'enabled'],
-                                    ['id' => 'test__12315', 'description' => 'test__taskDescription3', 'status' => 'enabled'],
-                                    ['id' => 'test__12326', 'description' => 'test__taskDescription4', 'status' => 'enabled'],
-                                    ['id' => 'test__12317', 'description' => 'test__taskDescription5', 'status' => 'disabled'],
-                                ]
-                            ],
-                            [
-                                'id' => 'test__112',
-                                'name' => 'test__someSpecialityName2',
-                                'approval_date' => 'test__01/01/2021',
-                                'status' => 'Appropriate',
-                                'position' => 'test__position2',
-                                'signer_name' => 'test__SingerName2',
-                                'signature' => 'test__some/image/url/2',
-                                'updated_by' => 'test__ExampleName2',
-                                'description' => 'test__Some short descrpition2',
-                                'tasks' => [
-                                    ['id' => 'test__123123', 'description' => 'test__taskDescription1', 'status' => 'enabled'],
-                                    ['id' => 'test__123124', 'description' => 'test__taskDescription2', 'status' => 'disabled'],
-                                    ['id' => 'test__123125', 'description' => 'test__taskDescription3', 'status' => 'disabled'],
-                                    ['id' => 'test__123126', 'description' => 'test__taskDescription4', 'status' => 'disabled'],
-                                    ['id' => 'test__123127', 'description' => 'test__taskDescription5', 'status' => 'disabled'],
-                                ]
-                            ],
-                        ],
-                    ],
-                    [
-                        'id' => 'test__10254',
-                        'check_date' => 'test__05/05/2021',
-                        'element_name' => 'test__ElementName',
-                        'floor' => 'test__2',
-                        'status' => 'test__active',
-                        'show_specialities' => false,
-                        'show_options' => false,
-                        'creator' => 'Vemir',
-                        'structure' => 'test__Structure1',
-                        'place' => 'test__place1',
-                        'specialities' => [
-                            [
-                                'id' => 'test__111',
-                                'name' => 'test__someSpecialityName1',
-                                'approval_date' => 'test__07/05/2021',
-                                'status' => 'Not appropriate',
-                                'position' => 'test__position',
-                                'signer_name' => 'test__SingerName1',
-                                'signature' => 'test__some/image/url/1',
-                                'updated_by' => 'test__ExampleName1',
-                                'description' => 'test__Some short descrpition1',
-                                'tasks' => [
-                                    ['id' => 'test__123123', 'description' => 'test__taskDescription1', 'status' => 'enabled'],
-                                    ['id' => 'test__123124', 'description' => 'test__taskDescription2', 'status' => 'enabled'],
-                                    ['id' => 'test__123125', 'description' => 'test__taskDescription3', 'status' => 'enabled'],
-                                    ['id' => 'test__123126', 'description' => 'test__taskDescription4', 'status' => 'enabled'],
-                                    ['id' => 'test__123127', 'description' => 'test__taskDescription5', 'status' => 'disabled'],
-                                ]
-                            ],
-                            [
-                                'id' => 'test__112',
-                                'name' => 'test__someSpecialityName2',
-                                'approval_date' => 'test__01/01/2021',
-                                'status' => 'Not appropriate',
-                                'position' => 'test__position2',
-                                'signer_name' => 'test__SingerName2',
-                                'signature' => 'test__some/image/url/2',
-                                'updated_by' => 'test__ExampleName2',
-                                'description' => 'test__Some short descrpition2',
-                                'tasks' => [
-                                    ['id' => 'test__123123', 'description' => 'test__taskDescription1', 'status' => 'enable'],
-                                    ['id' => 'test__123124', 'description' => 'test__taskDescription2', 'status' => 'disabled'],
-                                    ['id' => 'test__123125', 'description' => 'test__taskDescription3', 'status' => 'enabled'],
-                                    ['id' => 'test__123126', 'description' => 'test__taskDescription4', 'status' => 'enabled'],
-                                    ['id' => 'test__123127', 'description' => 'test__taskDescription5', 'status' => 'disabled'],
-                                ]
-                            ],
-                        ],
-                    ],
-                ],
-            ];
-
         $translations = [
             "project_name" => __('Project name'),
             "search" => __('Search'),
@@ -215,7 +50,7 @@ class Controller_ApproveElementReports extends HDVP_Controller_Template
             "status" => __('Status'),
             "more" => __('More'),
             "waiting" => __('waiting'),
-            "approve" => __('Approved'),
+            "approved" => __('Approved'),
             "non_approve" => __('Not approved'),
             "edit" => __('Edit'),
             "delete" => __('Delete'),
@@ -266,17 +101,19 @@ class Controller_ApproveElementReports extends HDVP_Controller_Template
             "approval_date" => __('approval_date'),
             "signer_name" => __('signer_name'),
             "check_date" => __('check_date'),
-            "check_number" => __('check_number')
+            "check_number" => __('check_number'),
+            "additional_signature" => __('additional_signature'),
+            "userPosition" => __($this->_user->getRelevantRole('name'))
         ];
 
-        foreach (Api_DBModules::getModulesForTasks() as $module) {
-            $translations['module_'.$module['id']] = $module['name'];
-        }
+//        echo '<pre>';print_r(__($this->_user->getRelevantRole('name')));echo "</pre>";die;
+//        foreach (Api_DBModules::getModulesForTasks() as $module) {
+//            $translations['module_'.$module['id']] = $module['name'];
+//        }
 
 
         $this->template->content = View::make('reports/approve-element/index', [
             'translations' => $translations,
-            'data' => $responseData
         ]);
     }
 }

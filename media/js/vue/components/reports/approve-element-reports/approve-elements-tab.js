@@ -22,6 +22,7 @@ Vue.component('approve-elements-tab', {
                 <report-item
                     :project="project"
                     :company="company"
+                    :username="username"
                     :data="report"
                     :filters="filters"
                     :translations='translations'
@@ -31,7 +32,7 @@ Vue.component('approve-elements-tab', {
         </div>
     `,
     props: {
-        data: {required: true},
+        username: {required: true},
         statuses: {required: true},
         translations: {required: true},
     },

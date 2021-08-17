@@ -161,11 +161,11 @@ Vue.component('reports-list', {
                                 <td>&nbsp;</td>
                                 <td>{{ speciality.craft_name }}</td>
                                 <td>&nbsp;</td>
-                                <td>[STATUS]</td>
-                                <td>[APPROVAL DATE]</td>
-                                <td>{{ speciality.position }}</td>
-                                <td>{{ speciality.signer_name }}</td>
-                                <td class="td-sign"><img :src="speciality.signature"></td>
+                                <td>{{ +speciality.appropriate ? 'Appropriate[*]' : 'Not Appropriate[*]'  }}</td>
+                                <td>{{ convertTimestampToDate(speciality.created_at) }}</td>
+                                <td>{{ speciality.signatures.length ? speciality.signatures[0]['position'] : '' }}</td>
+                                <td>{{ speciality.signatures.length ? speciality.signatures[0]['creator_name'] : '' }}</td>
+                                <td class="td-sign"><img :src="speciality.signatures.length ? speciality.signatures[0]['image'] : ''"></td>
                                 <td>&nbsp;</td>
                             </tr>
                         </template>
@@ -209,7 +209,6 @@ Vue.component('reports-list', {
         },
         getFilteredReports() {
             this.showLoader = true;
-            console.log('FILTERS', this.filters)
             let url = `/el-approvals/list`;
             qfetch(url, {method: 'POST', headers: {}, body: this.filters})
                 .then((response) => {
@@ -217,7 +216,6 @@ Vue.component('reports-list', {
                         report.showSpecialities = false;
                         report.showOptions = false;
                     })
-                    console.log('FILTERED REPORTS', response.items)
                     this.items = response.items;
                     this.showLoader = false;
                 });

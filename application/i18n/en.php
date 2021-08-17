@@ -914,6 +914,6 @@ return [
     'signer_name' => 'Signer name',
     'check_date' => 'Check date',
     'check_number' => 'Check №',
-
+    'additional_signature' => 'Additional Signature',
     ''=>'',
 ];

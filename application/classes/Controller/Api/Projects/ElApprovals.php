@@ -71,6 +71,36 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                         ->values(array_values($queryData))
                         ->execute($this->_db)[0];
 
+                    if(!empty($speciality['signatures'])) {
+                        foreach ($speciality['signatures'] as $signature) {
+                            $valid = Validation::factory($signature);
+
+                            $valid
+                                ->rule('name', 'not_empty')
+                                ->rule('position', 'not_empty')
+                                ->rule('image', 'not_empty');
+
+                            if (!$valid->check()) {
+                                throw API_ValidationException::factory(500, 'Incorrect data');
+                            }
+
+                            $queryData = [
+                              'el_app_id' => $elApprovalId,
+                              'el_app_craft_id' => $specialityId,
+                              'name' => $signature['name'],
+                              'position' => $signature['position'],
+                              'image' => $signature['image'],
+                              'created_at' => time(),
+                              'created_by' => Auth::instance()->get_user()->id
+                            ];
+
+                            DB::insert('el_app_signatures')
+                                ->columns(array_keys($queryData))
+                                ->values(array_values($queryData))
+                                ->execute($this->_db);
+                        }
+                    }
+
                     if(!empty($speciality['tasks'])) {
                         foreach ($speciality['tasks'] as $task) {
                             $valid = Validation::factory($task);
@@ -91,7 +121,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                             DB::insert('el_app_crafts_tasks')
                                 ->columns(array_keys($queryData))
                                 ->values(array_values($queryData))
-                                ->execute($this->_db)[0];
+                                ->execute($this->_db);
                         }
                     }
                 }
@@ -147,6 +177,8 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                     'notify'
                 ]);
 
+            // signatures, task_status, note,
+
             echo "<pre>";print_r($clientData);echo "</pre>";die;
 
         } catch (Exception $e){
@@ -169,6 +201,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
             }
             $elApproval[0]['specialities'] = Api_DBElApprovals::getElApprovalCraftsByElAppId($elApprovalId);
             foreach ($elApproval[0]['specialities'] as $key => $speciality) {
+                $elApproval[0]['specialities'][$key]['signatures'] = Api_DBElApprovals::getElApprovalCraftsSignaturesByCraftIds($speciality['id']);
                 $elApproval[0]['specialities'][$key]['tasks'] = Api_DBElApprovals::getElApprovalCraftsTasksByCraftIds($speciality['id']);
             }
             $this->_responseData = [
@@ -229,6 +262,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                 $elApprovals[$elAppKey]['specialities'] = Api_DBElApprovals::getElApprovalCraftsByElAppId($elApproval['id']);
 
                 foreach ($elApprovals[$elAppKey]['specialities'] as $specialityKey => $speciality) {
+                    $elApprovals[$elAppKey]['specialities'][$specialityKey]['signatures'] = Api_DBElApprovals::getElApprovalCraftsSignaturesByCraftIds($speciality['id']);
                     $elApprovals[$elAppKey]['specialities'][$specialityKey]['tasks'] = Api_DBElApprovals::getElApprovalCraftsTasksByCraftIds($speciality['id']);
                 }
             }
@@ -243,19 +277,65 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
         }
     }
 
+
+    /**
+     * returns list of positions of El Approval report signatures by Project id
+     * https://qforb.net/api/json/<appToken>/el-approvals/positions/<project-id>
+     */
+    public function action_positions_get(){
+        $projectId = $this->getUIntParamOrDie($this->request->param('id'));
+        try {
+            $responseData = [];
+            $positions = Api_DBElApprovals::getElApprovalCraftsSignaturesPositionsListByProjectId($projectId);
+
+            foreach ($positions as $positionKey => $position) {
+                $responseData[$positionKey]['id'] = $position['id'];
+                $responseData[$positionKey]['name'] = $position['position'];
+            }
+            $this->_responseData = [
+                'status' => "success",
+                'items' => $responseData
+            ];
+        }  catch (Exception $e){
+            Database::instance()->rollback();
+            throw API_Exception::factory(500,'Operation Error');
+        }
+    }
+
     /**
      * returns list of users to be informed
-     * https://qforb.net/api/json/<appToken>/el-approvals/notifications
+     * https://qforb.net/api/json/<appToken>/el-approvals/<id>/notifications
      */
     public function action_notifications_get(){
-        die('GET Get El Approvals notifications');
+        $elApprovalId = $this->getUIntParamOrDie($this->request->param('id'));
+
+        try {
+            $responseData = [];
+            $usersList = Api_DBElApprovals::getElApprovalUsersListForNotify($elApprovalId);
+
+            foreach ($usersList as $user) {
+                array_push($responseData, $user['user_id']);
+            }
+            $this->_responseData = [
+                'status' => "success",
+                'items' => $responseData
+            ];
+        } catch (Exception $e){
+            Database::instance()->rollback();
+            throw API_Exception::factory(500,'Operation Error');
+        }
     }
 
     /**
      * Updated list of users to be informed
-     * https://qforb.net/api/json/<appToken>/el-approvals/notifications
+     * https://qforb.net/api/json/<appToken>/el-approvals/<id>/notifications
      */
     public function action_notifications_put(){
-        die('PUT El Approvals notifications');
+        $elApprovalId = $this->getUIntParamOrDie($this->request->param('id'));
+
+        $userIds = Arr::get($this->put(), 'userIds');
+
+        echo '<pre>';print_r($userIds);echo '</pre>';die;
+
     }
 }
