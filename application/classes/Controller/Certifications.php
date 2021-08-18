@@ -144,7 +144,7 @@ class Controller_Certifications extends HDVP_Controller_Template {
                 $cert->desc = $item['desc'];
                 $cert->cmp_craft_id = $cmpCraft->id;
                 $cert->company_id = $company->id;
-                $cert->status = Enum_CertificationsApprovalStatus::Waiting;
+                $cert->status = Enum_ApprovalStatus::Waiting;
                 $cert->save();
             }
         }
@@ -228,7 +228,7 @@ class Controller_Certifications extends HDVP_Controller_Template {
                 $cert->cmp_craft_id = $cmpCraft->id;
                 $cert->company_id = $company->id;
                 $cert->project_id = $data['projectId'];
-                $cert->status = Enum_CertificationsApprovalStatus::Waiting;
+                $cert->status = Enum_ApprovalStatus::Waiting;
                 if($data['includeFiles'] AND !empty($item['file'])){
                     $path = explode('/',$item['file']);
                     @copy($this->certificationsPath($item['projectId']).end($path),$this->certificationsPath($data['projectId']).end($path));

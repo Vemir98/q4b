@@ -415,7 +415,7 @@ FROM pr_plans_files
                     $cert1->created_at = $file->created_at;
                     $cert1->uploaded = $file->created_at;
                     $cert1->file = $file->name;
-                    $cert1->status = Enum_CertificationsApprovalStatus::Waiting;
+                    $cert1->status = Enum_ApprovalStatus::Waiting;
                     @copy($oldPath,$this->certificationsPath($cert->project_id).$file->name);
                     $ext = strtolower($file->ext);
                     if($ext == 'pdf'){
@@ -460,7 +460,7 @@ FROM pr_plans_files
                 $cert->cmp_craft_id = $cmpCraft->id;
                 $cert->company_id = $company->id;
                 $cert->project_id = $data['projectId'];
-                $cert->status = Enum_CertificationsApprovalStatus::Waiting;
+                $cert->status = Enum_ApprovalStatus::Waiting;
                 if($data['includeFiles'] AND !empty($item['file'])){
                     $path = explode('/',$item['file']);
                     @copy($this->certificationsPath($item['projectId']).end($path),$this->certificationsPath($data['projectId']).end($path));

@@ -3004,7 +3004,7 @@ class Controller_Projects extends HDVP_Controller_Template
                         $stdArr['files'][] = $file;
                         $item->add('files', $file->pk());
                     }
-                    $item->approval_status = Enum_CertificationsApprovalStatus::Waiting;
+                    $item->approval_status = Enum_ApprovalStatus::Waiting;
                     $item->save();
                 }
                 Database::instance()->commit();

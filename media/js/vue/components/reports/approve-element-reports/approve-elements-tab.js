@@ -20,6 +20,7 @@ Vue.component('approve-elements-tab', {
             </template>
             <template v-else-if="activeTab === 'report-item'">
                 <report-item
+                    :statuses="statuses"
                     :project="project"
                     :company="company"
                     :username="username"
@@ -77,6 +78,12 @@ Vue.component('approve-elements-tab', {
                 })
         },
         goToReportDetails(report) {
+            report.updated = false;
+            report.specialities.forEach(speciality => {
+                speciality.canUpdateSignatures = false;
+                speciality.canUpdateNote = false;
+                speciality.canUpdateTaskStatuses = false;
+            })
             this.report = report;
 
             this.activeTab = 'report-item';

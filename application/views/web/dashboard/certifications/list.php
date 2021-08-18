@@ -96,7 +96,7 @@ $isSuperAdmin = $_USER->is('super_admin');
                                             <td class="rwd-td11" data-th="<?=__('Approvement Status')?>">
                                                 <div class="select-wrapper"><i class="q4bikon-arrow_bottom"></i>
                                                 <select data-url="<?=URL::site('dashboard/approve_certification/'.$i->id)?>"" name="status" class="q4-select q4-form-input q4-status-<?=$i->approval_status?> <?=$i->approval_status=='approved' && !$isSuperAdmin ? 'disabled-input' : ''?>" >
-                                                    <?foreach (Enum_CertificationsApprovalStatus::toArray() as $status) :?>
+                                                    <?foreach (Enum_ApprovalStatus::toArray() as $status) :?>
 
                                                         <?$selected = $i->approval_status == $status ? "selected='selected'" : ""; ?>
                                                            <option class="q4-status-<?=$status?>" <?=$selected?> value="<?=$status?>"><?=__($status)?></option>

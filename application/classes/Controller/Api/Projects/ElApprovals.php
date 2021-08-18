@@ -167,14 +167,10 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
 
             $clientData = Arr::extract($this->put(),
                 [
-                    'company_id',
-                    'project_id',
-                    'object_id',
-                    'place_id',
-                    'floor_id',
-                    'element_id',
-                    'specialities',
-                    'notify'
+                    'notice',
+                    'signatures',
+                    'deleted_signatures',
+                    'tasks'
                 ]);
 
             // signatures, task_status, note,

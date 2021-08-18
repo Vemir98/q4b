@@ -229,7 +229,7 @@
                             copy-btn-txt="<?=__('Copy')?>"
                             select-company-txt="<?=__('Select Company')?>"
                             select-project-txt="<?=__('Select project')?>"
-                            v-bind:status-options="[{val: '<?=Enum_CertificationsApprovalStatus::Waiting?>',label: '<?=__(Enum_CertificationsApprovalStatus::Waiting)?>'},{val: '<?=Enum_CertificationsApprovalStatus::Approved?>',label: '<?=__(Enum_CertificationsApprovalStatus::Approved)?>'}]"
+                            v-bind:status-options="[{val: '<?=Enum_ApprovalStatus::Waiting?>',label: '<?=__(Enum_ApprovalStatus::Waiting)?>'},{val: '<?=Enum_ApprovalStatus::Approved?>',label: '<?=__(Enum_ApprovalStatus::Approved)?>'}]"
 
                     />
                 </div>

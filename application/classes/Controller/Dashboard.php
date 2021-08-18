@@ -161,7 +161,7 @@ class Controller_Dashboard extends HDVP_Controller_Template
                     'lang' => Language::getCurrent()->slug,
                     'controller' => 'dashboard',
                     'action' => 'certifications_list',
-                    'status' => Enum_CertificationsApprovalStatus::Waiting,
+                    'status' => Enum_ApprovalStatus::Waiting,
                     'project' => $selectedProject->id
                 ]);
                 $certifications = Request::factory($certificationsUrl)->execute()->body();
@@ -434,13 +434,13 @@ class Controller_Dashboard extends HDVP_Controller_Template
             ->with('craft');
         $plRequest = clone ($request);
         if(!empty($status)){
-            if(!in_array($status,Enum_CertificationsApprovalStatus::toArray())){
+            if(!in_array($status,Enum_ApprovalStatus::toArray())){
                 throw new HTTP_Exception_404();
             }
             $plRequest->and_where('approval_status','=',$status);
         }
         $plans = (new ORMPaginate($plRequest))->getData();
-        $plans['statuses'] = ['all' => 'All'] + Enum_CertificationsApprovalStatus::toArray();//изменил Сергей по просьбе Давида
+        $plans['statuses'] = ['all' => 'All'] + Enum_ApprovalStatus::toArray();//изменил Сергей по просьбе Давида
         foreach ($plans['statuses'] as $key => &$val){
             $tmpUrlParams = Request::current()->param();
             $tmpRequest = clone($request);
@@ -482,14 +482,14 @@ class Controller_Dashboard extends HDVP_Controller_Template
         $id = (int)$this->request->param('id');
         $cert = ORM::factory('PrCertification',$id);
         if( ! $this->_user->is('super_admin')) {
-            if (!$cert->loaded() OR $cert->approval_status != Enum_CertificationsApprovalStatus::Waiting) {
+            if (!$cert->loaded() OR $cert->approval_status != Enum_ApprovalStatus::Waiting) {
                 throw new HTTP_Exception_404();
             }
         }
         if( ! $this->_user->is('super_admin')) {
-            $cert->approval_status = Enum_CertificationsApprovalStatus::Approved;
+            $cert->approval_status = Enum_ApprovalStatus::Approved;
         }else{
-            $cert->approval_status = $cert->approval_status != Enum_CertificationsApprovalStatus::Approved ? Enum_CertificationsApprovalStatus::Approved : Enum_CertificationsApprovalStatus::Waiting;
+            $cert->approval_status = $cert->approval_status != Enum_ApprovalStatus::Approved ? Enum_ApprovalStatus::Approved : Enum_ApprovalStatus::Waiting;
         }
 
 

@@ -6,7 +6,7 @@
  * Date: 13.06.2017
  * Time: 16:30
  */
-class Enum_CertificationsApprovalStatus extends Enum
+class Enum_ApprovalStatus extends Enum
 {
     const Waiting = 'waiting';
     const Approved = 'approved';
