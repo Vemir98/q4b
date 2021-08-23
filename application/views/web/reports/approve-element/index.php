@@ -2,12 +2,14 @@
 
 <div id="approve-element">
     <approve-elements-tab
+        user-profession="<?=$userProfession?>"
         :username='<?=json_encode(Auth::instance()->get_user()->name)?>'
         translations='<?=json_encode($translations)?>'
         :statuses='<?=json_encode(array_values(Enum_ApprovalStatus::toArray()))?>'
     />
 </div>
 <script>
+    Vue.component('pagination', Pagination);
     var app = new Vue({
         el: '#approve-element',
     })

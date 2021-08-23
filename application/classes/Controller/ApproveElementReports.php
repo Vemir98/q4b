@@ -103,10 +103,18 @@ class Controller_ApproveElementReports extends HDVP_Controller_Template
             "check_date" => __('check_date'),
             "check_number" => __('check_number'),
             "additional_signature" => __('additional_signature'),
-            "userPosition" => __($this->_user->getRelevantRole('name'))
+            "userPosition" => __($this->_user->getRelevantRole('name')),
+            'appropriate' => __('appropriate'),
+            'not_appropriate' => __('not_appropriate'),
+            'delete_all' => __('delete_all'),
+            'view' => __('view'),
+            'please_sign' => __('please_sign'),
+            'clear_sign' => __('clear_sign'),
+            'sign' => __('sign'),
+            'add_signature' => __('add_signature'),
+            'positions' => __('positions')
         ];
 
-//        echo '<pre>';print_r(__($this->_user->getRelevantRole('name')));echo "</pre>";die;
 //        foreach (Api_DBModules::getModulesForTasks() as $module) {
 //            $translations['module_'.$module['id']] = $module['name'];
 //        }
@@ -114,6 +122,7 @@ class Controller_ApproveElementReports extends HDVP_Controller_Template
 
         $this->template->content = View::make('reports/approve-element/index', [
             'translations' => $translations,
+            'userProfession' => $this->_user->professions->find()->name
         ]);
     }
 }

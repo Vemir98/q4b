@@ -19892,6 +19892,7 @@ html.rtl .lt_project_item_logo {
 /* lab test pagination */
 
 #labtests-projects .VuePagination__pagination-item.VuePagination__pagination-item-prev-chunk ,
+#approve-element .VuePagination__pagination-item.VuePagination__pagination-item-prev-chunk ,
 #pr-labtests-list .VuePagination__pagination-item.VuePagination__pagination-item-prev-chunk{
   display: none!important;
 }
@@ -21372,11 +21373,18 @@ html.rtl .ltest_attachment_icon {
   z-index: 9999;
 }
 
-#labtests-projects .VuePagination__pagination-item-prev-page.VuePagination__pagination-item-prev-chunk, #labtests-projects .VuePagination__pagination-item-next-page.VuePagination__pagination-item-next-chunk, #pr-labtests-list .VuePagination__pagination-item-prev-page.VuePagination__pagination-item-prev-chunk, #pr-labtests-list .VuePagination__pagination-item-next-page.VuePagination__pagination-item-next-chunk {
+#labtests-projects .VuePagination__pagination-item-prev-page.VuePagination__pagination-item-prev-chunk,
+#labtests-projects .VuePagination__pagination-item-next-page.VuePagination__pagination-item-next-chunk,
+#pr-labtests-list .VuePagination__pagination-item-prev-page.VuePagination__pagination-item-prev-chunk,
+#pr-labtests-list .VuePagination__pagination-item-next-page.VuePagination__pagination-item-next-chunk,
+#approve-element .VuePagination__pagination-item-prev-page.VuePagination__pagination-item-prev-chunk,
+#approve-element .VuePagination__pagination-item-next-page.VuePagination__pagination-item-next-chunk {
   display: none!important;
 }
 
-#labtests-projects .VuePagination__pagination-item-prev-page, #pr-labtests-list .VuePagination__pagination-item-prev-page {
+#labtests-projects .VuePagination__pagination-item-prev-page,
+#pr-labtests-list .VuePagination__pagination-item-prev-page,
+#approve-element .VuePagination__pagination-item-prev-page {
   width: 40px;
   height: 40px;
   background: #CEEDF5;
@@ -21388,7 +21396,9 @@ html.rtl .ltest_attachment_icon {
   align-items: center;
 }
 
-#labtests-projects .VuePagination__pagination-item-next-page, #pr-labtests-list .VuePagination__pagination-item-next-page {
+#labtests-projects .VuePagination__pagination-item-next-page,
+#pr-labtests-list .VuePagination__pagination-item-next-page,
+#approve-element .VuePagination__pagination-item-next-page {
   width: 40px;
   height: 40px;
   background: #CEEDF5;
@@ -21401,7 +21411,12 @@ html.rtl .ltest_attachment_icon {
   padding-right: 0;
 }
 
-#labtests-projects .VuePagination__pagination-item-prev-page a, #labtests-projects .VuePagination__pagination-item-next-page a, #pr-labtests-list .VuePagination__pagination-item-prev-page a, #pr-labtests-list .VuePagination__pagination-item-next-page a {
+#labtests-projects .VuePagination__pagination-item-prev-page a,
+#labtests-projects .VuePagination__pagination-item-next-page a,
+#pr-labtests-list .VuePagination__pagination-item-prev-page a,
+#pr-labtests-list .VuePagination__pagination-item-next-page a,
+#approve-element .VuePagination__pagination-item-prev-page a,
+#approve-element .VuePagination__pagination-item-next-page a {
   border-radius: 50px;
   background: transparent;
   color: rgba(0, 0, 0, 0.6);
@@ -21416,33 +21431,48 @@ html.rtl .ltest_attachment_icon {
   align-items: center;
 }
 
-#labtests-projects .VuePagination__pagination-item-prev-page:hover a, #labtests-projects .VuePagination__pagination-item-next-page:hover a, #pr-labtests-list .VuePagination__pagination-item-prev-page:hover a, #pr-labtests-list .VuePagination__pagination-item-next-page:hover a {
+#labtests-projects .VuePagination__pagination-item-prev-page:hover a,
+#labtests-projects .VuePagination__pagination-item-next-page:hover a,
+#pr-labtests-list .VuePagination__pagination-item-prev-page:hover a,
+#pr-labtests-list .VuePagination__pagination-item-next-page:hover a,
+#approve-element .VuePagination__pagination-item-prev-page:hover a,
+#approve-element .VuePagination__pagination-item-next-page:hover a {
   color: #fff;
   background: #1EBCE8;
   opacity: 1;
   font-weight: bold;
 }
 
-#labtests-projects .VuePagination__pagination-item.page-item:nth-of-type(3), #pr-labtests-list .VuePagination__pagination-item.page-item:nth-of-type(3) {
+#labtests-projects .VuePagination__pagination-item.page-item:nth-of-type(3),
+#pr-labtests-list .VuePagination__pagination-item.page-item:nth-of-type(3),
+#approve-element .VuePagination__pagination-item.page-item:nth-of-type(3) {
   border-top-left-radius: 50%;
   border-bottom-left-radius: 50%;
 }
 
-#labtests-projects .VuePagination__pagination-item.page-item:nth-last-of-type(3), #pr-labtests-list .VuePagination__pagination-item.page-item:nth-last-of-type(3) {
+#labtests-projects .VuePagination__pagination-item.page-item:nth-last-of-type(3),
+#pr-labtests-list .VuePagination__pagination-item.page-item:nth-last-of-type(3),
+#approve-element .VuePagination__pagination-item.page-item:nth-last-of-type(3) {
   border-top-right-radius: 50%;
   border-bottom-right-radius: 50%;
 }
 
-#labtests-projects .VuePagination__pagination-item.page-item:nth-last-of-type(3) a, #pr-labtests-list .VuePagination__pagination-item.page-item:nth-last-of-type(3) a {
+#labtests-projects .VuePagination__pagination-item.page-item:nth-last-of-type(3) a,
+#pr-labtests-list .VuePagination__pagination-item.page-item:nth-last-of-type(3) a,
+#approve-element .VuePagination__pagination-item.page-item:nth-last-of-type(3) a {
   margin-right: 5px;
 }
 
-html.rtl #labtests-projects .VuePagination__pagination-item.page-item:nth-last-of-type(3) a, html.rtl #pr-labtests-list .VuePagination__pagination-item.page-item:nth-last-of-type(3) a {
+html.rtl #labtests-projects .VuePagination__pagination-item.page-item:nth-last-of-type(3) a,
+html.rtl #pr-labtests-list .VuePagination__pagination-item.page-item:nth-last-of-type(3) a,
+html.rtl #approve-element .VuePagination__pagination-item.page-item:nth-last-of-type(3) a {
   margin-right: 0;
   margin-left: 0;
 }
 
-html.rtl #labtests-projects .VuePagination__pagination-item.page-item:nth-of-type(3), html.rtl #pr-labtests-list .VuePagination__pagination-item.page-item:nth-of-type(3) {
+html.rtl #labtests-projects .VuePagination__pagination-item.page-item:nth-of-type(3),
+html.rtl #pr-labtests-list .VuePagination__pagination-item.page-item:nth-of-type(3),
+html.rtl #approve-element .VuePagination__pagination-item.page-item:nth-of-type(3) {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   border-top-right-radius: 50%;
@@ -21451,7 +21481,9 @@ html.rtl #labtests-projects .VuePagination__pagination-item.page-item:nth-of-typ
   padding-right: 8px;
 }
 
-html.rtl #labtests-projects .VuePagination__pagination-item.page-item:nth-last-of-type(3), html.rtl #pr-labtests-list .VuePagination__pagination-item.page-item:nth-last-of-type(3) {
+html.rtl #labtests-projects .VuePagination__pagination-item.page-item:nth-last-of-type(3),
+html.rtl #pr-labtests-list .VuePagination__pagination-item.page-item:nth-last-of-type(3),
+html.rtl #approve-element .VuePagination__pagination-item.page-item:nth-last-of-type(3) {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
   border-top-left-radius: 50%;
@@ -21460,7 +21492,9 @@ html.rtl #labtests-projects .VuePagination__pagination-item.page-item:nth-last-o
   padding-left: 8px;
 }
 
-html.rtl #labtests-projects .VuePagination__pagination-item.page-item:nth-last-of-type(3) a, html.rtl #pr-labtests-list .VuePagination__pagination-item.page-item:nth-last-of-type(3) a {
+html.rtl #labtests-projects .VuePagination__pagination-item.page-item:nth-last-of-type(3) a,
+html.rtl #pr-labtests-list .VuePagination__pagination-item.page-item:nth-last-of-type(3) a,
+html.rtl #approve-element .VuePagination__pagination-item.page-item:nth-last-of-type(3) a {
   margin-right: 0;
   margin-left: 0;
 }
@@ -23571,6 +23605,7 @@ tr.parent-tr>td:nth-last-of-type(1) {
   border-bottom: 1px solid #C2C2C2;
   width: 100%;
   flex: 1;
+  min-height: 36px;
 }
 
 .approve-el-view .report-buttons-wraper {
@@ -23771,15 +23806,6 @@ tr.parent-tr>td:nth-last-of-type(1) {
   background-color: #DAE1EC;
 }
 
-.approve-elv-report-item .report_tasks_item::before {
-  content: '';
-  position: absolute;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  right: 9px;
-  top: 8px;
-}
 
 .approve-elv-report-item .report_tasks_item.not-appropriate:before, .approve-elv-report-name.not-appropriate:after {
   background-color: #D86767;
@@ -24012,7 +24038,17 @@ tr.parent-tr>td:nth-last-of-type(1) {
   border: 1px solid #C2C2C2;
   border-radius: 5px;
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
 }
+
+.approve-elv-popup-sign canvas{
+  position: relative;
+  z-index: 9999999;
+}
+
+
 
 .approve-elv-popup-inputs {
   width: 100%;
@@ -24222,4 +24258,38 @@ html.rtl  .approve-elv-report-item .report_tasks_wraper {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.approve-elv-filter .multiselect__single ,.approve-elv-filter .multiselect__element span{
+  text-transform: capitalize;
+}
+.text-capitalize{
+   text-transform: capitalize;
+}
+.approve-elv-property.sign-image{
+  max-width: 98px;
+  min-width: 98px;
+  min-height: 50px;
+  justify-content: center;
+  align-items: flex-end;
+  flex-direction: row;
+}
+.approve-elv-property.sign-image img{
+  max-width: 100%;
+}
+
+.approve-elv-task-status{
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    right: 9px;
+    top: 8px;
+    cursor: pointer;
+  }
+  .approve-elv-report-item .report_tasks_item.not-appropriate .approve-elv-task-status{
+    background-color: #D86767;
+  }
+  .approve-elv-report-item .report_tasks_item.appropriate .approve-elv-task-status {
+    background-color: #03D288;
 }

@@ -1,6 +1,8 @@
 Vue.component('approve-elements-tab', {
     template: `
         <div id="approve-elements-content">
+                {{ userProfession }}
+
             <template v-if="activeTab === 'generate-reports'">
                 <generate-reports
                     :statuses='statuses'
@@ -21,6 +23,7 @@ Vue.component('approve-elements-tab', {
             <template v-else-if="activeTab === 'report-item'">
                 <report-item
                     :statuses="statuses"
+                    :userProfession="userProfession"
                     :project="project"
                     :company="company"
                     :username="username"
@@ -28,6 +31,7 @@ Vue.component('approve-elements-tab', {
                     :filters="filters"
                     :translations='translations'
                     @toReportsList="activeTab = 'reports-list'"
+                    @reportDeleted="activeTab = 'reports-list'"
                 />
             </template>
         </div>
@@ -36,6 +40,7 @@ Vue.component('approve-elements-tab', {
         username: {required: true},
         statuses: {required: true},
         translations: {required: true},
+        userProfession: {required: true}
     },
     components: {
         Multiselect: window.VueMultiselect.default,

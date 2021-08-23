@@ -888,5 +888,15 @@ return [
     'check_date' => 'Дата проверки',
     'check_number' => '№ Проверки',
     'additional_signature' => 'Доп. подпись',
+    'appropriate' => 'Соответствующий',
+    'not_appropriate' => 'Не соответствующий',
+    'delete_all' => 'Удалить всё',
+    'view' => 'Просмотр',
+    'please_sign' => 'Пожалуйста подпишите',
+    'clear_sign' => 'Стереть подпись',
+    'sign' => 'Сохранить',
+    'add_signature' => 'Добавить подпись',
+    'positions' => 'Должности',
+
     ''=>'',
 ];

@@ -18,12 +18,14 @@ class Api_DBElApprovals
         o.name as object_name,
         e.name as element_name,
         f.custom_name as floor_name,
+        f.number as floor_number,
         ea.place_id,
         ea.floor_id,
         p.name as place_name,
         ea.element_id,
         ea.created_by,
         u.name as creator_name,
+        o.name as object_name,
         ea.created_at,
         ea.status
         FROM el_approvals ea 
@@ -45,10 +47,37 @@ class Api_DBElApprovals
         eac.appropriate,
         cc.name as craft_name,
         eac.notice,
-        eac.created_at
+        u.name as updator_name,
+        eac.created_at,
+        eac.created_by,
+        eac.updated_at,
+        eac.updated_by
         FROM el_approvals_crafts eac
         LEFT JOIN cmp_crafts cc ON eac.craft_id=cc.id
+        LEFT JOIN users u ON eac.updated_by=u.id
         WHERE eac.el_app_id={$elApprovalId}
+        ORDER BY eac.created_at DESC";
+
+        return DB::query(Database::SELECT, $query)->execute()->as_array();
+    }
+
+    public static function getElApprovalCraftByCraftId($craftId)
+    {
+        $query = "SELECT 
+        eac.id,
+        eac.craft_id,
+        eac.appropriate,
+        cc.name as craft_name,
+        eac.notice,
+        u.name as updator_name,
+        eac.created_at,
+        eac.created_by,
+        eac.updated_at,
+        eac.updated_by
+        FROM el_approvals_crafts eac
+        LEFT JOIN cmp_crafts cc ON eac.craft_id=cc.id
+        LEFT JOIN users u ON eac.updated_by=u.id
+        WHERE eac.id={$craftId}
         ORDER BY eac.created_at DESC";
 
         return DB::query(Database::SELECT, $query)->execute()->as_array();
@@ -82,21 +111,14 @@ class Api_DBElApprovals
     public static function getElApprovalsList($limit, $offset, $filters, $paginate = false)
     {
         $query = 'SELECT DISTINCT 
-        ea.id,
-        ea.company_id,
-        ea.project_id,
-        ea.object_id,
+        ea.*,
         o.name as object_name,
         e.name as element_name,
         f.custom_name as floor_name,
+        f.number as floor_number,
         p.name as place_name,
-        ea.place_id,
-        ea.floor_id,
-        ea.element_id,
-        ea.created_by,
         u.name as creator_name,
-        ea.created_at,
-        ea.status
+        o.name as object_name
           FROM el_approvals ea 
           LEFT JOIN el_approvals_crafts eac ON ea.id=eac.el_app_id
           LEFT JOIN el_app_signatures eas ON eac.id=eas.el_app_craft_id

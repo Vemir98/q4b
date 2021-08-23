@@ -121,6 +121,7 @@ Vue.component('reports-list', {
                     <tr>
                         <th>{{ trans.check_number }}</th>
                         <th>{{ trans.check_date }}</th>
+                        <th>{{ trans.structure }}</th>
                         <th>{{ trans.element }}</th>
                         <th>{{ trans.craft }}</th>
                         <th>{{ trans.floor }}</th>
@@ -138,9 +139,10 @@ Vue.component('reports-list', {
                             <td scope="row" @click="toggleReportSpecialities(report)" class="parent-td">{{ report.id }}</td>
                             <td>{{ convertTimestampToDate(report.created_at) }} </td>
                             <td>{{ report.element_name }}</td>
+                            <td>{{ report.object_name }}</td>
                             <td>&nbsp;</td>
-                            <td class="td-floor">{{ report.floor_name }}</td>
-                            <td> {{ report.status }}</td>
+                            <td class="td-floor">{{ report.floor_name ? report.floor_name : report.floor_number  }}</td>
+                            <td class="text-capitalize"> {{ report.status }}</td>
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>
@@ -148,7 +150,7 @@ Vue.component('reports-list', {
                             <td>
                                 <button class="open-more" @click="toggleReportOptions(report)"><img src="/media/img/more-icon.svg" alt="">
                                     <div  class="td-options-wrap" v-if="report.showOptions">
-                                        <a @click="$emit('toReportDetails', report)"><i class="q4bikon-preview1"></i>View[*]</a>
+                                        <a @click="$emit('toReportDetails', report)"><i class="q4bikon-preview1"></i>{{ trans.view }}</a>
                                         <a href=""><i class="q4bikon-uncheked"></i>{{ trans.qc_report }}</a>
                                     </div>
                                 </button>
@@ -159,13 +161,16 @@ Vue.component('reports-list', {
                                 <td scope="row">&nbsp;</td>
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
+                                <td>&nbsp;</td>
                                 <td>{{ speciality.craft_name }}</td>
                                 <td>&nbsp;</td>
-                                <td>{{ +speciality.appropriate ? 'Appropriate[*]' : 'Not Appropriate[*]'  }}</td>
-                                <td>{{ convertTimestampToDate(speciality.created_at) }}</td>
+                                <td>{{ +speciality.appropriate ? trans.appropriate : trans.not_appropriate  }}</td>
+                                <td>{{ speciality.signatures.length ? convertTimestampToDate(speciality.signatures[0]['created_at']) : convertTimestampToDate(speciality.updated_at) }}</td>
                                 <td>{{ speciality.signatures.length ? speciality.signatures[0]['position'] : '' }}</td>
                                 <td>{{ speciality.signatures.length ? speciality.signatures[0]['creator_name'] : '' }}</td>
-                                <td class="td-sign"><img :src="speciality.signatures.length ? speciality.signatures[0]['image'] : ''"></td>
+                                <td class="td-sign">
+                                <img :src="speciality.signatures.length ? '../'+speciality.signatures[0]['image'] : ''">
+                                </td>
                                 <td>&nbsp;</td>
                             </tr>
                         </template>
@@ -173,6 +178,14 @@ Vue.component('reports-list', {
                 </tbody>
             </table>
         </div>
+        <pagination 
+            v-model="page" 
+            :records="total" 
+            :per-page="limit" 
+            @paginate="paginate" 
+            :options="{chunk:5,'chunksNavigation':'fixed'}"
+        >          
+        </pagination>
     </section>
     `,
     props: {
@@ -191,6 +204,9 @@ Vue.component('reports-list', {
             items: [],
             toggleExportButton: false,
             trans: JSON.parse(this.translations),
+            page: 1,
+            total: 0,
+            limit: 0,
         }
     },
 
@@ -210,6 +226,9 @@ Vue.component('reports-list', {
         getFilteredReports() {
             this.showLoader = true;
             let url = `/el-approvals/list`;
+
+            if(this.page > 1) url += '/page/' + this.page;
+
             qfetch(url, {method: 'POST', headers: {}, body: this.filters})
                 .then((response) => {
                     response.items.forEach(report => {
@@ -217,6 +236,8 @@ Vue.component('reports-list', {
                         report.showOptions = false;
                     })
                     this.items = response.items;
+                    this.total = response.pagination.total ? parseInt(response.pagination.total) : 0;
+                    this.limit = response.pagination.limit ? parseInt(response.pagination.limit) : 0;
                     this.showLoader = false;
                 });
         },
@@ -224,6 +245,9 @@ Vue.component('reports-list', {
             const date = new Date(+timestamp*1000);
             const month = ((date.getMonth()+1).length > 1) ? (date.getMonth()+1) : "0"+(date.getMonth()+1);
             return date.getDate()+ '/' + month + '/' + date.getFullYear();
+        },
+        paginate() {
+            this.getFilteredReports();
         }
     },
     mounted() {

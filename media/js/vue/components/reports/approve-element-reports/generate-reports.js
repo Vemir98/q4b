@@ -330,7 +330,7 @@ Vue.component('generate-reports', {
                 </div>
                 <div class="filter-item">
                     <div class="filter-item-label flex-between">
-                        Positions[*]
+                        {{ trans.positions }}
                         <label class="table_label" :class="{'labtest-disabled': !positions.length}">
                             <span @click="toggleSelectAll('selectedPositions', 'positions')">
                                 <template v-if="selectedPositions.length < positions.length">
@@ -459,7 +459,7 @@ Vue.component('generate-reports', {
             return $(".header-current-lang").data("lang")
         },
         canGenerate() {
-            return (this.selectedCompany && this.selectedProject)
+            return (this.selectedCompany && this.selectedProject && this.selectedStructures.length)
         },
         getIds(selectedItem) {
             return this[selectedItem].map(item => item.id)
