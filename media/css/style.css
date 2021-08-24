@@ -19211,6 +19211,8 @@ html.rtl .qc_report_content .pagination li:nth-of-type(2) {
   border-bottom-right-radius: 50%;
 }
 
+
+
 html.rtl .qc-report-redesign .report-result .reports-property .reports-prop-desc i {
   margin-right: 0;
   margin-left: 13.5px;
@@ -23456,6 +23458,15 @@ tr.parent-tr>td:nth-last-of-type(1) {
   z-index: 99933;
 }
 
+#approve-element .report-buttons{
+  z-index: 99;
+}
+
+#approve-element .app-element-list .report-buttons{
+  z-index: 999933;
+}
+
+
 .report-buttons-wraper {
   display: flex;
   flex-direction: column;
@@ -24293,3 +24304,183 @@ html.rtl  .approve-elv-report-item .report_tasks_wraper {
   .approve-elv-report-item .report_tasks_item.appropriate .approve-elv-task-status {
     background-color: #03D288;
 }
+
+/* approve elemens list pagination */ 
+
+#approve-element.VuePagination__pagination-item.VuePagination__pagination-item-prev-chunk ,
+#approve-element .VuePagination__pagination-item.VuePagination__pagination-item-prev-chunk ,
+#pr-labtests-list .VuePagination__pagination-item.VuePagination__pagination-item-prev-chunk{
+  display: none!important;
+}
+#approve-element.q4-pagination {
+  justify-content: center;
+  align-items: center;
+}
+
+#approve-element .q4-pagination{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 40px;
+}
+
+#approve-element .pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#approve-element .prev_arrow, #approve-element .next_arrow {
+  width: 40px;
+  height: 40px;
+  display: flex!important;
+  justify-content: center;
+  align-items: center;
+  background: #CEEDF5;
+  border-radius: 50%;
+  margin-left: 5px;
+  overflow: hidden;
+}
+
+#approve-element .prev_arrow a, #approve-element  .next_arrow a ,
+#pr-labtests-list  .prev_arrow a,  #pr-labtests-list   .next_arrow a{
+  width: 40px;
+  height: 40px;
+  display: flex!important;
+  justify-content: center;
+  align-items: center;
+  background: #CEEDF5;
+  border-radius: 50%;
+  margin-left: 5px;
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+#approve-element .prev_arrow a  {
+  background-image: url('../img/pagination_prew.png')!important;
+  background-position: center;
+}
+
+#approve-element .prev_arrow a:hover  {
+  background-image: url('../img/pagination_prew_hovered.png')!important;
+}
+
+#approve-element .next_arrow a {
+  background-image: url('../img/pagination_next.png')!important;
+}
+
+#approve-element .next_arrow a:hover{
+  background-image: url('../img/pagination_next_hovered.png')!important;
+}
+
+html.rtl #approve-element .prev_arrow a  {
+  background-image: url('../img/pagination_next.png')!important;
+  background-position: center;
+}
+
+html.rtl #approve-element.prev_arrow a:hover {
+  background-image: url('../img/pagination_next_hovered.png')!important;
+}
+
+html.rtl #approve-element .next_arrow a  {
+  background-image: url('../img/pagination_prew.png')!important;
+}
+
+html.rtl #approve-element .next_arrow a:hover  {
+  background-image: url('../img/pagination_prew_hovered.png')!important;
+}
+
+#approve-element .pagination li:nth-of-type(2) {
+  border-top-left-radius: 50%;
+  border-bottom-left-radius: 50%;
+}
+
+#approve-element .pagination li:not(.prev_arrow), 
+ #approve-element .pagination li:not(.next_arrow){
+  height: 40px;
+  background: #CEEDF5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#approve-element .prev_arrow{
+  margin-right: 5px;
+}
+
+#approve-elementul .pagination li a {
+  border-radius: 50px;
+  background: transparent;
+  color: rgba(0, 0, 0, 0.6);
+  border: none;
+  cursor: pointer;
+  padding: 3px 8.5px;
+  font-size: 14px;
+}
+
+#approve-elementul .pagination li a, #approve-elementul .pagination li.active a:hover {
+  border-radius: 50px;
+  background: transparent;
+  color: rgba(0, 0, 0, 0.6);
+  border: none;
+}
+
+#approve-element ul.pagination li a:hover,  #approve-elementul.pagination li.active a:hover,  #approve-element ul.pagination li.active a {
+  color: #fff;
+  background: #1EBCE8;
+  border: none!important;
+  cursor: pointer;
+}
+
+#approve-elementul.pagination li a:hover   {
+  color: #1EBCE8;
+  background: transparent;
+  border: none!important;
+  cursor: pointer;
+}
+
+#approve-element ul.pagination li.prev_arrow a:hover, #approve-elementul .pagination li.next_arrow a:hover {
+  background: #ffffff;
+  border: 1px solid #1ebae5;
+}
+
+#approve-element.prev_arrow a, #approve-element.next_arrow a {
+  width: 100%;
+  height: 100%;
+  display: flex!important;
+  justify-content: center;
+  align-items: center;
+  min-width: 40px;
+}
+
+#approve-element .prev_arrow a:hover {
+  width: 100%;
+  height: 100%;
+  display: flex!important;
+  justify-content: center;
+  align-items: center;
+}
+
+#approve-element ul.pagination li.prev_arrow a:hover, #approve-element ul.pagination li.next_arrow a:hover{
+  background: #1EBCE8;
+  border: none;
+  overflow: hidden;
+}
+
+#approve-element.prev_arrow a svg path,  #approve-element .next_arrow a svg path {
+  stroke: rgba(1, 1, 1, 0.38);
+}
+
+#approve-element .prev_arrow:hover a svg path, #approve-element .next_arrow:hover a svg path {
+  stroke: rgb(255, 255, 255);
+}
+#approve-element .pagination>li>a, #approve-element .pagination>li>span {
+
+   background-color: transparent; 
+   border: none;
+   border-radius: 50%;
+   min-width: 33px;
+}
+/* end of pagination*/ 

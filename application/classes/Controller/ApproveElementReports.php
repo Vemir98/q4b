@@ -20,6 +20,7 @@ class Controller_ApproveElementReports extends HDVP_Controller_Template
 
     public function action_index()
     {
+        VueJs::instance()->addComponent('./confirm-modal');
         VueJs::instance()->addComponent('reports/approve-element-reports/approve-elements-tab');
         VueJs::instance()->addComponent('reports/approve-element-reports/generate-reports');
         VueJs::instance()->addComponent('reports/approve-element-reports/reports-list');
@@ -112,7 +113,7 @@ class Controller_ApproveElementReports extends HDVP_Controller_Template
             'clear_sign' => __('clear_sign'),
             'sign' => __('sign'),
             'add_signature' => __('add_signature'),
-            'positions' => __('positions')
+            'positions' => __('positions'),
         ];
 
 //        foreach (Api_DBModules::getModulesForTasks() as $module) {

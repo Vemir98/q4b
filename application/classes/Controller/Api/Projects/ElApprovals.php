@@ -341,7 +341,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
      */
     public function action_list_post(){
         try {
-            $limit = 1;
+            $limit = 2;
             $params = array_diff(Arr::merge(Request::current()->param(),['page' => '']),array(''));
             $page = isset(Request::current()->param()['page']) && Request::current()->param()['page'] ? Request::current()->param()['page'] : 1;
 

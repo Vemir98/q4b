@@ -138,8 +138,8 @@ Vue.component('reports-list', {
                         <tr class="parent-tr" :class="{'openParent': report.showSpecialities}">
                             <td scope="row" @click="toggleReportSpecialities(report)" class="parent-td">{{ report.id }}</td>
                             <td>{{ convertTimestampToDate(report.created_at) }} </td>
-                            <td>{{ report.element_name }}</td>
                             <td>{{ report.object_name }}</td>
+                            <td>{{ report.element_name }}</td>
                             <td>&nbsp;</td>
                             <td class="td-floor">{{ report.floor_name ? report.floor_name : report.floor_number  }}</td>
                             <td class="text-capitalize"> {{ report.status }}</td>

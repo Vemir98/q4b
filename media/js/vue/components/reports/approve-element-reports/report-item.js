@@ -80,7 +80,7 @@ Vue.component('report-item', {
             </div>
             <div class=" approve-elv-property flex-start">
                 <span class="approve-elv-properties-name ">{{ trans.floor_level }}</span>
-                <span class="approve-elv-property-value">{{ report.floor_name }}</span>
+                <span class="approve-elv-property-value">{{ report.floor_name ? report.floor_name : report.floor_number  }}</span>
             </div>
             <div class=" approve-elv-property flex-start">
                 <span class="approve-elv-properties-name ">{{ trans.place }}</span>
@@ -98,7 +98,8 @@ Vue.component('report-item', {
         <div class="approve-elv-reports">
             <div class="approve-elv-reports-top flex-between">
                 <div class="approve-elv-reports-top-headline">{{ trans.speciality_list }}</div>
-                <div class="approve-elv-reports-delete-all" ><button @click="deleteReport"  class="delete-all">{{ trans.delete_all }}</button>
+                <div class="approve-elv-reports-delete-all" >
+                    <button @click="confirmDeletePopupDisplay = true"  class="delete-all">{{ trans.delete_all }}</button>
                 </div>
             </div>
             <div class="approve-elv-reports-wraper">
@@ -153,7 +154,7 @@ Vue.component('report-item', {
                             <div class="ltest_info_certificate_title">{{ trans.notes }}</div>
                             <div class="ltest_info_certificate_area">
                                 <div class="labtest_edit_textarea">
-                                    <textarea cols="30" rows="10" @keyup="specialityNoteChanged($event, speciality)" name="delivery_cert">{{ speciality.notice }}</textarea>
+                                    <textarea cols="30" rows="10" @input="specialityNoteChanged($event, speciality)" name="delivery_cert">{{ speciality.notice }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -167,9 +168,8 @@ Vue.component('report-item', {
                                     <template v-for="task in speciality.tasks">
                                         <div 
                                             :class="[ 'report_tasks_item', {'not-appropriate': task.appropriate === '0', 'appropriate': task.appropriate === '1' }]"
-                                            @click="changeTaskStatus(task, speciality)"
                                         >
-                                            <div class="approve-elv-task-status"></div>
+                                            <div class="approve-elv-task-status" @click="changeTaskStatus(task, speciality)"></div>
                                             <div class="report_task_title">{{ trans.task }} {{ task.task_id }}</div>
                                             <div class="report_task_desc_wrap">
                                                 <div class="report_task_descripticon">
@@ -184,13 +184,13 @@ Vue.component('report-item', {
                             </div>
                         </div>
                         <div class="report-buttons-update flex-start">
-                            <button v-if="checkSpecialityAllTasksEnabled(speciality.tasks)" @click="togglePopup(speciality,true)" class="report-button">Add signature</button>
                             <button
                                  :class="['report-button', {'labtest-disabled': !canUpdateSpeciality[specialityIndex]}]" 
                                  @click="updateReport(speciality)"
                              >              
                                  {{ trans.update }}
                              </button>
+                             <button v-if="checkSpecialityAllTasksEnabled(speciality.tasks)" @click="togglePopup(speciality,true)" class="report-button">Add signature</button>
                         </div>
                         <span style="display: none">{{ report.updated }}</span>
                     </div>
@@ -238,6 +238,16 @@ Vue.component('report-item', {
                 </div>
             </div>
         </div>
+        <confirm-modal 
+            v-if="confirmDeletePopupDisplay"
+            :msg="trans.are_you_sure_to_delete" 
+            :trans="trans" 
+            :deletable="trans.approve_element"
+            :deletable-id="report.id"
+            :modal-data="{}"
+            @closeConfirm="confirmDeletePopupDisplay = false"
+            @deleteConfirmed="deleteReport"
+        />
     </section>
     `,
     props: {
@@ -270,6 +280,7 @@ Vue.component('report-item', {
             signatureDrawn: false,
             signaturePad: null,
             selectedStatus: {},
+            confirmDeletePopupDisplay: false
         }
     },
     components: { Multiselect: window.VueMultiselect.default },
