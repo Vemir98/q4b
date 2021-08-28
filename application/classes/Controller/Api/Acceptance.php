@@ -69,8 +69,9 @@ class Controller_Api_Acceptance extends HDVP_Controller_API
                 'parking',
                 ]);
             $report->save();
-
+            if($files['wm_pic'][0])
             $report->wm_pic = str_replace($report->stdFilePath().DS,'',Upload::save($files['wm_pic'][0],null,$report->stdFilePath()));
+            if($files['el_pic'][0])
             $report->el_pic = str_replace($report->stdFilePath().DS,'',Upload::save($files['el_pic'][0],null,$report->stdFilePath()));
             $report->signature = str_replace($report->stdFilePath().DS,'',Upload::save($files['signature'][0],null,$report->stdFilePath()));
             $report->save();

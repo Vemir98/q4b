@@ -12,6 +12,8 @@ Vue.component('approve-elements-tab', {
             </template>
             <template v-else-if="activeTab === 'reports-list'">
                 <reports-list
+                    :imageUrl="imageUrl"
+                    :siteUrl="siteUrl"
                     :project="project"
                     :company="company"
                     :filters="filters"
@@ -22,7 +24,10 @@ Vue.component('approve-elements-tab', {
             </template>
             <template v-else-if="activeTab === 'report-item'">
                 <report-item
+                    :siteUrl="siteUrl"
+                    :imageUrl="imageUrl"
                     :statuses="statuses"
+                    :userRole="userRole"
                     :userProfession="userProfession"
                     :project="project"
                     :company="company"
@@ -37,6 +42,9 @@ Vue.component('approve-elements-tab', {
         </div>
     `,
     props: {
+        userRole: {required: true},
+        siteUrl: {required: true},
+        imageUrl: {required: true},
         username: {required: true},
         statuses: {required: true},
         translations: {required: true},
@@ -78,7 +86,7 @@ Vue.component('approve-elements-tab', {
 
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
-                    this.company = response.items.filter(company => +company.id === this.filters.company_id)[0]
+                    this.company = response.items.filter(company => +company.id === +this.filters.company_id)[0]
                     this.showLoader = false;
                 })
         },

@@ -116,4 +116,13 @@ class Api_DBProjects
         return DB::query(Database::SELECT,'SELECT *
         FROM users_projects WHERE user_id= '.(int)$id)->execute()->as_array();
     }
+    public static function getProjectImages($projectId) {
+        $query = "SELECT 
+        *
+        FROM projects_images pi
+        LEFT JOIN files f ON pi.file_id=f.id
+        WHERE pi.project_id={$projectId}";
+
+        return DB::query(Database::SELECT, $query)->execute()->as_array();
+    }
 }

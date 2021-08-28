@@ -444,7 +444,8 @@ class Controller_Api_Projects extends HDVP_Controller_API
                 'plan_id',
                 'message',
                 'unique_token',
-                'del_rep_id'
+                'del_rep_id',
+                'el_approval_id'
             ]);
         $isDebug = Arr::get($_POST,'debug',false);
         $clientData['plan_id'] *=1;

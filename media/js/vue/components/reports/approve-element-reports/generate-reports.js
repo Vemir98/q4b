@@ -287,6 +287,49 @@ Vue.component('generate-reports', {
                 </div>
                 <div class="filter-item">
                     <div class="filter-item-label flex-between">
+                    {{ trans.manager_status }}
+                        <label class="table_label" :class="{'labtest-disabled': !elManagerStatuses.length}">
+                            <span @click="toggleSelectAll('selectedManagerStatuses', 'elManagerStatuses')">
+                                <template v-if="selectedManagerStatuses.length < elManagerStatuses.length">
+                                   {{ trans.select_all }}
+                            </template>
+                            <template v-else>
+                                   {{ trans.unselect_all }}
+                            </template>
+                            </span>
+                        </label>
+                    </div>
+                    <div class="multiselect-col"> 
+                        <multiselect 
+                            v-model="selectedManagerStatuses"  
+                            :placeholder="trans.set_statuses" 
+                            :disabled="!elManagerStatuses.length" 
+                            :options="elManagerStatuses" 
+                            label="name" 
+                            track-by="id"
+                            @change="getObjectFloors()" 
+                            :multiple="true" 
+                            :hide-selected="false"
+                            :close-on-select="false"
+                            :clear-on-select="false"
+                            :preserve-search="true"
+                            :internal-search="true"
+                            :taggable="false"
+                            :show-labels="false"                                       
+                            @select="onSelect($event, 'elManagerStatuses')"
+                            @remove="onRemove($event, 'elManagerStatuses')"
+                            >
+                            <span class="multiselect-checkbox-label" :class="{'checked': scope.option.checked}"  slot="option" slot-scope="scope" >
+                                <span class="multiselect-option-icon"><i class="q4bikon-tick"></i><span></span></span>
+                                <span class="multiselect-option-name">{{ trans[scope.option.name] }}</span>
+                            </span>
+                            <template slot='selection' slot-scope="{values, option, isOpen}"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ getMultiselectSelectionValue(values, true) }} </span></template>
+                            <template slot="tag">{{ '' }}</template>
+                        </multiselect>                        
+                    </div>
+                </div>
+                <div class="filter-item">
+                    <div class="filter-item-label flex-between">
                     {{ trans.status }}
                         <label class="table_label" :class="{'labtest-disabled': !elStatuses.length}">
                             <span @click="toggleSelectAll('selectedStatuses', 'elStatuses')">
@@ -400,12 +443,17 @@ Vue.component('generate-reports', {
             selectedCompany: null,
             selectedProject: null,
             selectedStructures: [],
-            elStatuses:  this.getStatuses(this.statuses),
+            elManagerStatuses:  this.getStatuses(this.statuses),
+            elStatuses: [
+                {id: 1, name: 'appropriate'},
+                {id: 0, name: 'not_appropriate'}
+            ],
             trans: JSON.parse(this.translations),
             selectedFloors: [],
             selectedPlaces: [],
             selectedElements: [],
             selectedCrafts: [],
+            selectedManagerStatuses: [],
             selectedStatuses: [],
             selectedPositions: [],
             companies: [],
@@ -663,7 +711,8 @@ Vue.component('generate-reports', {
                 'speciality_ids': this.selectedCrafts.map(craft => +craft.id),
                 'place_ids': this.selectedPlaces.map(place => +place.id),
                 'floor_ids': this.selectedFloors.map(floor => +floor.id),
-                'statuses': this.selectedStatuses.map(status => status.name.toLowerCase()),
+                'managerStatuses': this.selectedManagerStatuses.map(status => status.name.toLowerCase()),
+                'statuses': this.selectedStatuses.map(status => +status.id),
                 'positions': this.selectedPositions.map(position => position.name),
                 'from': this.time[0] ? this.time[0].toLocaleDateString("en-GB") : '',
                 'to': this.time[1] ? this.time[1].toLocaleDateString("en-GB") : ''
@@ -684,7 +733,26 @@ Vue.component('generate-reports', {
         this.getCompanies();
     },
     mounted() {
+        this.toggleSelectAll('selectedManagerStatuses', 'elManagerStatuses');
         this.toggleSelectAll('selectedStatuses', 'elStatuses');
+
+        if(window.location.search) {
+            const urlParams = new URLSearchParams(window.location.search);
+
+            this.$emit('getFiltersForReportsGenerating', {
+                'company_id': urlParams.get('company_id'),
+                'project_id': urlParams.get('project_id'),
+                'object_ids': JSON.parse(urlParams.get('object_ids')),
+                'element_ids': JSON.parse(urlParams.get('element_ids')),
+                'speciality_ids': JSON.parse(urlParams.get('speciality_ids')),
+                'place_ids': JSON.parse(urlParams.get('place_ids')),
+                'floor_ids': JSON.parse(urlParams.get('floor_ids')),
+                'statuses': JSON.parse(urlParams.get('statuses')),
+                'positions': JSON.parse(urlParams.get('positions')),
+                'from': urlParams.get('from'),
+                'to': urlParams.get('to')
+            })
+        }
     }
 });
 

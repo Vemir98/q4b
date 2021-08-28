@@ -29,7 +29,7 @@ Vue.component('report-item', {
 
                 <div class="approve-elv-top-item">
                     <span class="approve-elv-top-item-name">{{ trans.status }}</span>
-                    <span class="approve-elv-top-item-value">{{ data.status }}</span>
+                    <span class="approve-elv-top-item-value">{{ +report.appropriate === 1 ? trans.appropriate : trans.not_appropriate }}</span>
                 </div>
 
             </div>
@@ -42,7 +42,7 @@ Vue.component('report-item', {
                         v-model="selectedStatus"
                         :option-height="104" 
                         :placeholder="trans.select_status"
-                        :disabled="(elStatuses.length < 1) || !checkReportsAllTasksEnabled()" 
+                        :disabled="(elStatuses.length < 1) || !checkReportsAllTasksEnabled() || (!canUpdate && (userRole !== 'super_admin') )" 
                         :options="elStatuses" 
                         track-by="id" 
                         label="name"
@@ -52,13 +52,13 @@ Vue.component('report-item', {
                         :show-labels="false"
                     >
                         <template slot="singleLabel" slot-scope="props">
-                            {{ props.option.name }}
+                            {{ trans[props.option.name] }}
                         </template>
                         <template slot="option" slot-scope="props">
-                            <span>{{ props.option.name }}</span>
+                            <span>{{ trans[props.option.name] }}</span>
                         </template>
                         <template slot="option-selected" slot-scope="props">
-                            <span>{{ props.option.name }}</span>
+                            <span>{{ trans[props.option.name] }}</span>
                         </template>
                     </multiselect>
                 </div>
@@ -90,8 +90,8 @@ Vue.component('report-item', {
         </div>
 
         <div class="report-buttons">
-            <div class="report-buttons-wraper ">
-                <a class="report-button  " href=""><i class="q4bikon-print1"></i>{{ trans.print }}</a>
+            <div class="report-buttons-wraper" style="opacity: .5">
+                <a class="report-button" style="cursor: auto"><i class="q4bikon-print1"></i>{{ trans.print }}</a>
             </div>
         </div>
 
@@ -99,7 +99,13 @@ Vue.component('report-item', {
             <div class="approve-elv-reports-top flex-between">
                 <div class="approve-elv-reports-top-headline">{{ trans.speciality_list }}</div>
                 <div class="approve-elv-reports-delete-all" >
-                    <button @click="confirmDeletePopupDisplay = true"  class="delete-all">{{ trans.delete_all }}</button>
+                     <button
+                         @click="openConfirmDeletePopup = true"
+                         class="delete-all"
+                         v-if="canUpdate"
+                     > 
+                       {{ trans.delete_all }}
+                       </button>
                 </div>
             </div>
             <div class="approve-elv-reports-wraper">
@@ -111,7 +117,14 @@ Vue.component('report-item', {
                                 <span class="approve-elv-report-status-title">{{ trans.status }}</span>
                                 <span class="approve-elv-report-status-value">{{ +speciality.appropriate ? trans.appropriate : trans.not_appropriate }}</span>
                             </span>
-                            <span class="approve-elv-report-view"><a href="">{{ trans.view_qc }}</a></span>
+                            <span 
+                                class="approve-elv-report-view" 
+                                v-if="speciality.quality_control"
+                            >
+                                <a :href="getGenerateQcHref(speciality)">
+                                    {{ trans.view_qc }}
+                                </a>
+                            </span>
                         </div>
                         <div class="approve-elv-report-sign">
                                 <template v-if="speciality.signatures.length">
@@ -133,7 +146,7 @@ Vue.component('report-item', {
                                             <span class="approve-elv-property-value">{{ signature.position }}</span>
                                         </div>
                                         <div class=" approve-elv-property flex-start sign-image">
-                                            <img :src="signature.id ? '../'+signature.image : signature.image">
+                                            <img :src="signature.id ? imageUrl+signature.image : signature.image">
                                         </div>
                                     </div>
                                 </template>
@@ -154,7 +167,13 @@ Vue.component('report-item', {
                             <div class="ltest_info_certificate_title">{{ trans.notes }}</div>
                             <div class="ltest_info_certificate_area">
                                 <div class="labtest_edit_textarea">
-                                    <textarea cols="30" rows="10" @input="specialityNoteChanged($event, speciality)" name="delivery_cert">{{ speciality.notice }}</textarea>
+                                    <textarea 
+                                        cols="30" 
+                                        rows="10" 
+                                        @input="specialityNoteChanged($event, speciality)" 
+                                        name="delivery_cert"
+                                        :disabled="!canUpdate"
+                                    >{{ speciality.notice }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -185,19 +204,25 @@ Vue.component('report-item', {
                         </div>
                         <div class="report-buttons-update flex-start">
                             <button
-                                 :class="['report-button', {'labtest-disabled': !canUpdateSpeciality[specialityIndex]}]" 
+                                 :class="['report-button', { 'labtest-disabled': test1(specialityIndex) }]" 
                                  @click="updateReport(speciality)"
                              >              
                                  {{ trans.update }}
                              </button>
-                             <button v-if="checkSpecialityAllTasksEnabled(speciality.tasks)" @click="togglePopup(speciality,true)" class="report-button">Add signature</button>
+                             <button 
+                                v-if="checkSpecialityAllTasksEnabled(speciality.tasks)" 
+                                @click="togglePopup(speciality,true, false, 'button')" 
+                                :class="['report-button', {'labtest-disabled': !canUpdate}]"
+                             >
+                                {{ trans.add_signature }}
+                             </button>
                         </div>
                         <span style="display: none">{{ report.updated }}</span>
                     </div>
                 </template>
             </div>
         </div>
-        <div class="modul-popup-wrap approve-elv-popup" v-show="openPopup">
+        <div class="modul-popup-wrap approve-elv-popup" v-show="openSignaturePopup">
             <div class="modul-popup">
                 <div class="modul-popup-top">
                     <span class="modul-popup-headline">{{ trans.please_sign }}</span>
@@ -206,17 +231,17 @@ Vue.component('report-item', {
                 <div class="modul-popup-main">
                     <div class="approve-elv-popup-inputs flex-between">
                         <div class="filter-item">
-                            <div class="filter-item-label">{{ trans.signer_name }}</div>
+                            <div class="filter-item-label">{{ trans.signer_name }} *</div>
                             <input type="text" name="signer_name" v-model="currentSignerName">
                         </div>
                         <div class="filter-item">
-                            <div class="filter-item-label">{{ trans.position }}</div>
+                            <div class="filter-item-label">{{ trans.position }} *</div>
                             <input type="text" name="signer_position" v-model="currentSignerPosition">
                         </div>
                     </div>
 
                     <div class="approve-elv-popup-sign">
-                        <canvas ref="signaturePad"></canvas>
+                        <canvas ref="signaturePad" width="500" height="250"></canvas>
                         <span class="clear-sign" @click="clearSignaturePad">{{ trans.clear_sign }}</span>
                         <div class="approve-elv-popup-sign-line"></div>
                     </div>
@@ -224,13 +249,13 @@ Vue.component('report-item', {
 
                 <div class="modul-popup-btns">
                     <button
-                        :class="['modul-popup-Confirm', {'labtest-disabled': !canSign}]"
+                        :class="['modul-popup-Confirm', {'labtest-disabled': (canSign && canUpdate) ? false : true}]"
                         @click="pushSignatures"
                     >
                       {{ trans.sign }}
                     </button>
                     <button 
-                        :class="['modul-popup-Cancel', {'labtest-disabled': !canSign}]" 
+                        :class="['modul-popup-Cancel', {'labtest-disabled': (canSign && canUpdate) ? false : true}]" 
                         @click="addSignature"
                     >
                         {{ trans.additional_signature }}
@@ -239,31 +264,36 @@ Vue.component('report-item', {
             </div>
         </div>
         <confirm-modal 
-            v-if="confirmDeletePopupDisplay"
+            v-if="openConfirmDeletePopup"
             :msg="trans.are_you_sure_to_delete" 
             :trans="trans" 
             :deletable="trans.approve_element"
             :deletable-id="report.id"
             :modal-data="{}"
-            @closeConfirm="confirmDeletePopupDisplay = false"
+            @closeConfirm="openConfirmDeletePopup = false"
             @deleteConfirmed="deleteReport"
         />
     </section>
     `,
     props: {
+        siteUrl: {required: true},
+        imageUrl: {required: true},
         statuses: {required: true},
         project: {required: true},
-        userProfession: {required: true},
         company: {required: true},
         data: {required: true},
         translations: {required: true},
         filters: {required: true},
         username: {required: true},
+        userProfession: {required: true},
+        userRole: {required: true},
     },
     data() {
         return {
             showLoader: false,
-            openPopup: false,
+            openSignaturePopup: false,
+            openConfirmDeletePopup: false,
+            popupWasOpenFrom: '',
             trans: JSON.parse(this.translations),
             elStatuses: this.getStatuses(this.statuses),
             time: [],
@@ -280,14 +310,16 @@ Vue.component('report-item', {
             signatureDrawn: false,
             signaturePad: null,
             selectedStatus: {},
-            confirmDeletePopupDisplay: false
         }
     },
     components: { Multiselect: window.VueMultiselect.default },
     computed: {
       canSign() {
          return (this.signatureDrawn && this.currentSignerName && this.currentSignerPosition)
-      }
+      },
+      canUpdate() {
+          return (this.report.status === 'waiting')
+      },
     },
     watch: {
       report: {
@@ -319,17 +351,22 @@ Vue.component('report-item', {
 
             return arrayOfValues.join(',');
         },
-        togglePopup(speciality, keepOthers = false, closingWithoutSign = false) {
-            if(this.openPopup) {
-                if(this.currentTask && keepOthers && closingWithoutSign) {
+        togglePopup(speciality, keepOthers = false, closingWithoutSign = false, from = '') {
+            if(this.openSignaturePopup) {
+                if(closingWithoutSign) {
+                    this.newSignatures = [];
+                }
+                if(this.currentTask && keepOthers  &&  closingWithoutSign) {
                     const specialityIndex = this.initialReport.specialities.findIndex(spec => +spec.id === +this.currentSpeciality.id);
                     const taskIndex = this.initialReport.specialities[specialityIndex].tasks.findIndex(task => +task.id === +this.currentTask.id);
-                    this.report.specialities[specialityIndex].tasks[taskIndex].appropriate = "0";
-                    this.report.specialities[specialityIndex].appropriate = "0";
-                    this.report.specialities[specialityIndex].canUpdateTaskStatuses = !this.report.specialities[specialityIndex].canUpdateTaskStatuses;
-                    this.report.updated = true;
+                    if(this.popupWasOpenFrom === 'ticket') {
+                        this.report.specialities[specialityIndex].tasks[taskIndex].appropriate = "0";
+                        this.report.specialities[specialityIndex].appropriate = "0";
+                        this.report.specialities[specialityIndex].canUpdateTaskStatuses = !this.report.specialities[specialityIndex].canUpdateTaskStatuses;
+                        this.report.updated = true;
+                    }
                 }
-                this.openPopup = false;
+                this.openSignaturePopup = false;
                 this.clearSignaturePad();
                 this.currentSpeciality = null;
                 this.currentTask = null;
@@ -338,8 +375,9 @@ Vue.component('report-item', {
                 this.currentSpeciality = speciality;
                 this.currentSignerPosition = this.userProfession;
                 this.currentSignerName = this.username;
-                this.openPopup = true;
+                this.openSignaturePopup = true;
             }
+            if(from !== '') this.popupWasOpenFrom = from;
         },
         clearSignaturePad() {
             this.signaturePad.clear();
@@ -376,9 +414,10 @@ Vue.component('report-item', {
                 }
             })
             this.newSignatures = [];
-            this.openPopup = false;
+            this.openSignaturePopup = false;
         },
         changeTaskStatus(task, speciality) {
+            if(!this.canUpdate) return false;
             switch (+task.appropriate) {
                 case 1:
                     task.appropriate = "0";
@@ -399,7 +438,7 @@ Vue.component('report-item', {
                 speciality.appropriate = "1";
                 this.currentTask = task;
                 this.currentSpeciality = speciality;
-                this.togglePopup(speciality, false);
+                this.togglePopup(speciality, false, false, 'ticket');
             }
         },
         checkSpecialityAllTasksEnabled(specialityTasks) {
@@ -476,26 +515,50 @@ Vue.component('report-item', {
             let url = `/el-approvals/${this.report.id}/status`;
             qfetch(url, {method: 'PUT', headers: {}, body:{status: status.name}})
                 .then(response => {
+                    this.initialReport.status = status.name;
+                    this.report.status = status.name;
+                    this.report.updated = true;
+                    this.showLoader = false;
+                })
+                .catch(error => {
+                    this.selectedStatus = this.elStatuses.filter(elStatus => {
+                        return elStatus.name !== status.name;
+                    })[0];
                     this.showLoader = false;
                 })
         },
         deleteReport() {
-            // alert('mtav')
             this.showLoader = true;
             let url = `/el-approvals/${this.report.id}/delete`;
             qfetch(url, {method: 'DELETE', headers: {}})
                 .then(response => {
                     this.$emit('reportDeleted')
                 })
-        }
+        },
+        getGenerateQcHref(speciality) {
+            let url = `${this.siteUrl}/reports/generate`;
+            let date = this.convertTimestampToDate(speciality.quality_control.created_at);
+            let queryParams = `?from=${date}&to=${date}&crafts[]=${speciality.craft_id}&company=${this.company.id}&project=${this.project.id}&el_app_id=${this.report.id}#tab_qc_controls`;
+
+            url += queryParams;
+            return url;
+        },
+        test1(specialityIndex) {
+            if(this.canUpdateSpeciality[specialityIndex]) {
+                return !this.canUpdate;
+            } else {
+                return true;
+            }
+        },
     },
     mounted() {
         this.signaturePad = new SignaturePad(this.$refs['signaturePad'], {
+            penColor: "rgb(18,4,134)",
             onEnd: () => {
                 this.signatureDrawn = true;
             }
         })
         this.selectedStatus = this.elStatuses.find(status => status.name === this.report.status)
-    }
+    },
 });
 

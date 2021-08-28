@@ -899,7 +899,7 @@ return [
     'task_enable' => 'להפוך לפעיל',
     'Enter task description' => 'הזן תיאור הבדיקה',
     'Approve element' => 'אישור אלמנט',
-    'approve_element_uppercase' => 'אישור אלמנט',
+    'approve_element_uppercase' => 'אישור אלמנטים',
     'Modules' => 'מודולים',
     'set_structures' => 'סמן מבנים',
     'set_floor_level' => 'סמן מפלס/קומה',

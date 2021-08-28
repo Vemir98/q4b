@@ -20,4 +20,13 @@ class Api_DBCompanies
         return DB::query(Database::SELECT,"
         SELECT id, status FROM cmp_crafts WHERE TRIM(`name`)='{$craftName}' AND `company_id`={$cmpId}")->execute()->as_array();
     }
+
+    public static function getProjectCompanyByProjectId($projectId) {
+        $query = "SELECT
+            company_id
+            FROM
+            projects u WHERE id={$projectId}";
+
+        return DB::query(Database::SELECT, $query)->execute()->as_array();
+    }
 }

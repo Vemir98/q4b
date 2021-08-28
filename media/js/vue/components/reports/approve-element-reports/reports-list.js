@@ -18,7 +18,7 @@ Vue.component('reports-list', {
         </div>
         <div class="report-project-desc_wraper flex-start" v-if="Object.keys(project).length">
             <div class="report-project-desc-image">
-                <img src="/media/img/project-img.jpg" alt="project images">
+                <img :src="'/' + project.mainImage.path + '/' + project.mainImage.name" style="width: 100%;" alt="project images">
             </div>
             <div class="report-project-desc-list flex-start">
                 <ul class="flex-start">
@@ -110,8 +110,12 @@ Vue.component('reports-list', {
         <div class="report-buttons">
             <div class="report-buttons-wraper" :class="{'open': toggleExportButton}" @click="toggleExportButton = !toggleExportButton">
                 <span class="report-buttons-headline"><i class="q4bikon-share"></i>{{ trans.export }}</span>
-                <a class="report-button pdf " href=""><i class="q4bikon-file1"></i>PDF</a>
-                <a  class="report-button excel" href=""><i class="q4bikon-report"></i>Excel</a>
+<!--                <a class="report-button pdf" :href="getExportPdfHref"><i class="q4bikon-file1" download="element-approval-reports.pdf"></i>PDF</a>-->
+                <a class="report-button pdf" style="opacity: .5;cursor: auto"><i class="q4bikon-file1"></i>PDF</a>
+                <a  class="report-button excel" :href="getExportExcelHref" download="element-approval-reports.xls"><i class="q4bikon-report"></i>Excel</a>
+<!--                <a  class="report-button excel" :href="getExportExcelHref"><i class="q4bikon-report"></i>Excel</a>-->
+<!--                <a :href="getExportHref" download="lab-reports.xls">{{ trans.export }}</a>-->
+
             </div>
         </div>
 
@@ -142,7 +146,7 @@ Vue.component('reports-list', {
                             <td>{{ report.element_name }}</td>
                             <td>&nbsp;</td>
                             <td class="td-floor">{{ report.floor_name ? report.floor_name : report.floor_number  }}</td>
-                            <td class="text-capitalize"> {{ report.status }}</td>
+                            <td class="text-capitalize"> {{ +report.appropriate === 1 ? trans.appropriate : trans.not_appropriate }}</td>
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>
@@ -151,7 +155,7 @@ Vue.component('reports-list', {
                                 <button class="open-more" @click="toggleReportOptions(report)"><img src="/media/img/more-icon.svg" alt="">
                                     <div  class="td-options-wrap" v-if="report.showOptions">
                                         <a @click="$emit('toReportDetails', report)"><i class="q4bikon-preview1"></i>{{ trans.view }}</a>
-                                        <a href=""><i class="q4bikon-uncheked"></i>{{ trans.qc_report }}</a>
+                                        <a style="opacity: .5;cursor: auto"><i class="q4bikon-uncheked" ></i>{{ trans.qc_report }}</a>
                                     </div>
                                 </button>
                             </td>
@@ -169,7 +173,7 @@ Vue.component('reports-list', {
                                 <td>{{ speciality.signatures.length ? speciality.signatures[0]['position'] : '' }}</td>
                                 <td>{{ speciality.signatures.length ? speciality.signatures[0]['creator_name'] : '' }}</td>
                                 <td class="td-sign">
-                                <img :src="speciality.signatures.length ? '../'+speciality.signatures[0]['image'] : ''">
+                                <img :src="speciality.signatures.length ? imageUrl+speciality.signatures[0]['image'] : ''">
                                 </td>
                                 <td>&nbsp;</td>
                             </tr>
@@ -189,6 +193,8 @@ Vue.component('reports-list', {
     </section>
     `,
     props: {
+        siteUrl: {required: true},
+        imageUrl: {required: true},
         translations: {required: true},
         filters: {required: true},
         project: {required: true},
@@ -213,6 +219,18 @@ Vue.component('reports-list', {
     computed: {
         currentLang() {
             return $(".header-current-lang").data("lang")
+        },
+        getExportExcelHref() {
+            let url = `${this.siteUrl}${API_PATH}/projects/${this.project.id}/el-approvals/export_xls`;
+            url += this.getQueryParamsOfFiltersForUrl();
+            url += `&lang=${this.currentLang}`
+            return url;
+        },
+        getExportPdfHref() {
+            let url = `${this.siteUrl}${API_PATH}/projects/${this.project.id}/el-approvals/export_pdf`;
+            url += this.getQueryParamsOfFiltersForUrl();
+            url += `&lang=${this.currentLang}`
+            return url;
         },
     },
     methods: {
@@ -248,7 +266,20 @@ Vue.component('reports-list', {
         },
         paginate() {
             this.getFilteredReports();
-        }
+        },
+        getQueryParamsOfFiltersForUrl() {
+            let elements = encodeURIComponent(JSON.stringify(this.filters.element_ids));
+            let floors = encodeURIComponent(JSON.stringify(this.filters.floor_ids));
+            let statuses = encodeURIComponent(JSON.stringify(this.filters.statuses));
+            let positions = encodeURIComponent(JSON.stringify(this.filters.positions));
+            let objects = encodeURIComponent(JSON.stringify(this.filters.object_ids));
+            let places = encodeURIComponent(JSON.stringify(this.filters.place_ids));
+            let crafts = encodeURIComponent(JSON.stringify(this.filters.speciality_ids));
+            let from = this.filters.from ? this.filters.from : '';
+            let to = this.filters.to ? this.filters.to : '';
+
+            return `?from=${from}&to=${to}&object_ids=${objects}&floor_ids=${floors}&place_ids=${places}&speciality_ids=${crafts}&element_ids=${elements}&statuses=${statuses}&positions=${positions}&company_id=${this.company.id}&project_id=${this.project.id}`;
+        },
     },
     mounted() {
         this.getFilteredReports();

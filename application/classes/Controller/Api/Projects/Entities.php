@@ -55,6 +55,16 @@ class Controller_Api_Projects_Entities extends HDVP_Controller_API
         $projectId = $this->getUIntParamOrDie($this->request->param('projectId'));
         $project = Api_DBProjects::getProjectById($projectId);
 
+        if(!empty($project)) {
+            $imagesOfProject = Api_DBProjects::getProjectImages($projectId);
+            $project[0]['images'] = $imagesOfProject;
+            foreach ($imagesOfProject as $image) {
+                if($image['id'] === $project[0]['image_id']) {
+                    $project[0]['mainImage'] = $image;
+                }
+            }
+        }
+
         $this->_responseData['item'] = !empty($project) ? $project[0] : [];
 
     }

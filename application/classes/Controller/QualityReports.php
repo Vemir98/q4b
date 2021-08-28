@@ -283,8 +283,6 @@ class Controller_QualityReports extends HDVP_Controller_Template
 //                $this->setResponseData('url','https://qforb.net/media/data/reports/pdf/'.$reportModel->pk().'.pdf');
             }
         }
-
-
     }
 
     public function action_saved(){

@@ -2,6 +2,9 @@
 
 <div id="approve-element">
     <approve-elements-tab
+        user-role='<?=$userRole?>'
+        site-url='<?=trim(URL::site('','https'),'/')?>'
+        image-url='<?=URL::withLang('/','en')?>'
         user-profession="<?=$userProfession?>"
         :username='<?=json_encode(Auth::instance()->get_user()->name)?>'
         translations='<?=json_encode($translations)?>'

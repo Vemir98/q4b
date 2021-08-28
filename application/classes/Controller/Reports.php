@@ -90,11 +90,39 @@ class Controller_Reports extends HDVP_Controller_Template
             $this->_checkPermOrFail('read');
         }
 
-        $data = Arr::extract(Request::current()->query(),['company','project','crafts','statuses','from','to','approval_status','sort_by_crafts','del_rep_id','condition_level','condition_list']);
+        // company, project, crafts,
+
+        $data = Arr::extract(Request::current()->query(),[
+            'company',
+            'project',
+            'crafts',
+            'statuses',
+            'from',
+            'to',
+            'approval_status',
+            'sort_by_crafts',
+            'del_rep_id',
+            'condition_level',
+            'condition_list',
+            'el_app_id'
+        ]);
+
         $data['company'] = (int)$data['company'];
         $data['project'] = (int)$data['project'];
 
-        $advancedData = Arr::extract(Request::current()->query(),['object_id','floors','place_type','place_number','custom_number','space','project_stage','profession_id','advanced']);
+        $advancedData = Arr::extract(Request::current()->query(),[
+            'object_id',
+            'floors',
+            'place_type',
+            'place_number',
+            'custom_number',
+            'space',
+            'project_stage',
+            'profession_id',
+            'advanced'
+            ]);
+
+//        echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($data['el_app_id']); echo "</pre>"; exit;
 
         if(!empty($advancedData['project_stage'])){
             foreach ($advancedData['project_stage'] as $key => $ps){
@@ -150,6 +178,9 @@ class Controller_Reports extends HDVP_Controller_Template
         }
 
         $filteredCraftsListQuery = [];
+        if($data['el_app_id']) {
+            $qcs->and_where('qualitycontrol.el_approval_id', '=', $data['el_app_id']);
+        }
         if(!empty($data['statuses'])){
             if(!is_array($data['statuses'])){
                 $data['statuses'] = [$data['statuses']];
