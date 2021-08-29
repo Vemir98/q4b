@@ -298,6 +298,7 @@ Vue.component('report-item', {
             elStatuses: this.getStatuses(this.statuses),
             time: [],
             report: JSON.parse(JSON.stringify(this.data)),
+            userProf: JSON.parse(JSON.stringify(this.userProfession)),
             initialReport: null,
             newSignatures: [],
             currentSpeciality: null,
@@ -373,7 +374,7 @@ Vue.component('report-item', {
             } else {
                 this.keepOtherSignatures = keepOthers;
                 this.currentSpeciality = speciality;
-                this.currentSignerPosition = this.userProfession;
+                this.currentSignerPosition = this.userProf;
                 this.currentSignerName = this.username;
                 this.openSignaturePopup = true;
             }
@@ -395,7 +396,7 @@ Vue.component('report-item', {
             })
 
             this.currentSignerName = this.username;
-            this.currentSignerPosition = this.trans.userPosition;
+            this.currentSignerPosition = this.userProf;
             this.clearSignaturePad();
         },
         pushSignatures(keepOthers = false) {
@@ -505,6 +506,14 @@ Vue.component('report-item', {
                     this.report.specialities[specialityIndex].canUpdateSignatures = false;
                     this.report.specialities[specialityIndex].canUpdateNote = false;
                     this.report.specialities[specialityIndex].canUpdateTaskStatuses = false;
+
+                    if(this.checkReportsAllTasksEnabled()) {
+                        this.initialReport.appropriate = "1";
+                        this.report.appropriate = "1";
+                    } else {
+                        this.initialReport.appropriate = "0";
+                        this.report.appropriate = "0";
+                    }
 
                     this.report.updated = true;
                     this.showLoader = false;

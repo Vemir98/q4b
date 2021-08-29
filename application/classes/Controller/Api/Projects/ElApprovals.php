@@ -209,7 +209,6 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                     'tasks',
                 ]);
 
-
             $valid = Validation::factory($clientData);
             $valid
                 ->rule('id', 'not_empty')
@@ -352,7 +351,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
      */
     public function action_list_post(){
         try {
-            $limit = 20;
+            $limit = 12;
             $params = array_diff(Arr::merge(Request::current()->param(),['page' => '']),array(''));
             $page = isset(Request::current()->param()['page']) && Request::current()->param()['page'] ? Request::current()->param()['page'] : 1;
 
@@ -369,7 +368,6 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                     'positions',
                 ]);
 
-//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($filters); echo "</pre>"; exit;
             $filters['from'] = $_POST['from'] ? DateTime::createFromFormat('d/m/Y H:i',$_POST['from'] . ' 00:00')->getTimestamp() : null;
             $filters['to'] = $_POST['to'] ? DateTime::createFromFormat('d/m/Y H:i',$_POST['to'] . ' 23:59')->getTimestamp() : null;
 
@@ -445,7 +443,6 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
             ];
         } catch (Exception $e){
             throw API_Exception::factory(500,'Operation Error');
-//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$e->getMessage()]); echo "</pre>"; exit;
         }
     }
 
@@ -666,7 +663,6 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
 
         $elApprovals = $this->getApproveElementsExpandedData($elApprovals);
 
-//        echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($elApprovals); echo "</pre>"; exit;
 
         if (!empty($elApprovals)) {
             $ws = new Spreadsheet(array(

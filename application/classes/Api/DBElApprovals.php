@@ -168,7 +168,8 @@ class Api_DBElApprovals
         FROM el_app_signatures eas
         LEFT JOIN el_approvals_crafts eac ON eas.el_app_craft_id=eac.id
         LEFT JOIN users u ON eas.created_by=u.id
-        WHERE eas.el_app_craft_id={$elAppCraftId}";
+        WHERE eas.el_app_craft_id={$elAppCraftId}
+        ORDER BY eas.created_at DESC";
 
         return DB::query(Database::SELECT, $query)->execute()->as_array();
     }

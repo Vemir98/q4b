@@ -171,7 +171,7 @@ Vue.component('reports-list', {
                                 <td>{{ +speciality.appropriate ? trans.appropriate : trans.not_appropriate  }}</td>
                                 <td>{{ speciality.signatures.length ? convertTimestampToDate(speciality.signatures[0]['created_at']) : convertTimestampToDate(speciality.updated_at) }}</td>
                                 <td>{{ speciality.signatures.length ? speciality.signatures[0]['position'] : '' }}</td>
-                                <td>{{ speciality.signatures.length ? speciality.signatures[0]['creator_name'] : '' }}</td>
+                                <td>{{ speciality.signatures.length ? speciality.signatures[0]['name'] : '' }}</td>
                                 <td class="td-sign">
                                 <img :src="speciality.signatures.length ? imageUrl+speciality.signatures[0]['image'] : ''">
                                 </td>
