@@ -317,6 +317,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
         } catch (Exception $e){
             Database::instance()->rollback();
             throw API_Exception::factory(500,'Operation Error');
+//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($e->getMessage()); echo "</pre>"; exit;
         }
     }
 
@@ -411,7 +412,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
      */
     public function action_list_user_post() {
         try {
-
+//echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r(Auth::instance()->get_user()->id); echo "</pre>"; exit;
             $filters = Arr::extract($_POST,
                 [
                     'company_id',

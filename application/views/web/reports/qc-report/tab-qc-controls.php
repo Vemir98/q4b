@@ -8,11 +8,13 @@
 ?>
 
 <div class="report-project-desc tab_content report-result" id="tab_qc_controls" style="display: none">
-    <?foreach ($qcs as $q): ?>
+    <?foreach ($qcs as $qcKey => $q): ?>
         <?=View::make($_VIEWPATH.'list-item',
             [
                 'q' => $q,
-                'tasks' => $tasks
+                'qcKey' => $qcKey,
+                'tasks' => $tasks,
+                'qcElementNames' => $qcElementNames
             ])?>
     <?endforeach?>
     <?=$pagination?>

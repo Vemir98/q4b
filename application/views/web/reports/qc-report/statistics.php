@@ -10,7 +10,6 @@ use Helpers\ReportsHelper;
 //if($_APPROVAL_STATUS) return;
 ?>
 <?
-
 ?>
 
 <div class="report-status-results">

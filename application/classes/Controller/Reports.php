@@ -358,6 +358,14 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
             }
         $result = (new ORMPaginate($qcs,null,$paginationSettings))->getData();
         $qcs = $result['items'];
+
+        $qcElementNames = [];
+        foreach ($qcs as $qcKey => $qc) {
+            if($qc->el_approval_id) {
+                $elementName = Api_DBElApprovals::getElApprovalElementByElAppId($qc->el_approval_id)[0]['name'];
+                $qcElementNames[$qcKey] = $elementName;
+            }
+        }
         $report = [];
         $craftsList = DB::query(Database::SELECT,'SELECT cc.id, cc.name, count(craft_id) `count` FROM quality_controls qc JOIN cmp_crafts cc ON qc.craft_id = cc.id WHERE qc.project_id = '.$data['project'].' AND qc.craft_id IN ('.implode(',',$data['crafts']).') AND cc.status="'.Enum_Status::Enabled.'" AND cc.company_id='.$data['company'].$approvalStatusQuery.' GROUP BY qc.craft_id')->execute()->as_array('id');
 
@@ -508,15 +516,44 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
 
         }
 
+//        $qcs = (object)$qcs;
+
             if(Request::current()->is_initial()){
                 if( ! empty(Session::instance()->get('token')))
                     $sendReportsEmailUrl = URL::site('reports/send_reports/'.$this->project->id.'/'.Session::instance()->get('token')->token);
                 else
                     $sendReportsEmailUrl = null;
-                $this->template->content = View::make('reports/qc-report/generated',['qcs' => $qcs, 'tasks' => $tasks, 'pagination' => $result['pagination'],'crafts' => $data['crafts'],'craftsParams' => $craftsParams,'filteredCraftsParams' => $filteredCraftsParams, 'searchForm' => $this->searchForm(true),'sendReportsEmailUrl'=> $sendReportsEmailUrl,'craftsList' => $craftsList,'filteredCraftsList' => $filteredCraftsList, 'del_rep_id' => (int)$data['del_rep_id']]);
+
+                $this->template->content = View::make('reports/qc-report/generated',
+                    [
+                        'qcs' => $qcs,
+                        'tasks' => $tasks,
+                        'pagination' => $result['pagination'],
+                        'crafts' => $data['crafts'],
+                        'craftsParams' => $craftsParams,
+                        'filteredCraftsParams' => $filteredCraftsParams,
+                        'searchForm' => $this->searchForm(true),
+                        'sendReportsEmailUrl'=> $sendReportsEmailUrl,
+                        'craftsList' => $craftsList,
+                        'filteredCraftsList' => $filteredCraftsList,
+                        'del_rep_id' => (int)$data['del_rep_id'],
+                        'qcElementNames' => $qcElementNames
+                    ]);
             }
             else{
-                $this->template = View::make('reports/qc-report/guest-content',['qcs' => $qcs, 'tasks' => $tasks, 'pagination' => $result['pagination'],'crafts' => $data['crafts'],'craftsParams' => $craftsParams,'filteredCraftsParams' => $filteredCraftsParams,'craftsList' => $craftsList,'filteredCraftsList' => $filteredCraftsList, 'data' => json_decode($tparams,true)]);
+                $this->template = View::make('reports/qc-report/guest-content',
+                    [
+                        'qcs' => $qcs,
+                        'tasks' => $tasks,
+                        'pagination' => $result['pagination'],
+                        'crafts' => $data['crafts'],
+                        'craftsParams' => $craftsParams,
+                        'filteredCraftsParams' => $filteredCraftsParams,
+                        'craftsList' => $craftsList,
+                        'filteredCraftsList' => $filteredCraftsList,
+                        'data' => json_decode($tparams,true),
+                        'qcElementNames' => $qcElementNames
+                    ]);
             }
         }else{
             $qcs = $qcs->find_all();

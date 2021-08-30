@@ -184,10 +184,11 @@ Vue.component('tasks-list', {
                                     <i class=" q4bikon-plus"></i>
                                 </a>
                             </div>
+                            {{ createTaskInProgress }}
                             <div class="q4b-modules-actions-sec flex-center">
                                 <span 
                                     class="save" 
-                                    :class="{'labtest-disabled': !this.items.length || createTaskInProgress || showLoader || activeTab !== 'enabled'}" 
+                                    :class="{'labtest-disabled': !this.items.length || !createTaskInProgress || showLoader || activeTab !== 'enabled'}" 
                                     @click="handleSave"
                                 >
                                     {{ trans.save }}                    
@@ -331,26 +332,6 @@ Vue.component('tasks-list', {
                         }
                     }
                 }
-                // if (this.selectedModulesIds.length) {
-                //     if  (item.crafts) {
-                //         Object.keys(item.crafts).forEach(craftId => {
-                //             const modules = item.crafts[craftId].modules
-                //             if(modules) {
-                //                 if(!modules.length) {
-                //                     modulesCheck = true;
-                //                 } else {
-                //                     modules.forEach(m => {
-                //                         if (this.selectedModulesIds.includes(m)) {
-                //                             console.log('moduleID',m,this.selectedModulesIds,item.id,true)
-                //                             modulesCheck = true
-                //                         }
-                //                     })
-                //                 }
-                //             }
-                //         })
-                //     }
-                // }
-
                 if ( (this.activeTab === 'enabled' && item.id.includes('new_'))) {
                     return true;
                 }
@@ -397,7 +378,6 @@ Vue.component('tasks-list', {
                 this.setupFilter();
                 this.firstFilterOfCrafts = true;
             }
-
         },
         selectedModules() {
             if(!this.firstFilterOfModules) {

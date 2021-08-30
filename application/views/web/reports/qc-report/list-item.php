@@ -7,6 +7,7 @@
  * Time: 6:51
  */
 ?>
+
 <div class="qc-container">
     <div class="reports-prop-title">
         <div class="reports-prop-title_right">
@@ -19,6 +20,12 @@
                     <span class="reports-prop-title-status"><?=__('Manager status')?>: </span>
                     <span class="reports-prop-title-status-value statistic-orange"><?=__($q->approval_status)?></span>
                 </div>
+                <?if($q->el_approval_id):?>
+                    <div class="qc_status_cont">
+                        <span class="reports-prop-title-status"><?=__('Element_item')?>: </span>
+                        <span class="reports-prop-title-status-value statistic-orange"><?=$qcElementNames[$qcKey]?></span>
+                    </div>
+                <?endif;?>
             </div>
             <h3>
                 <?if(!$_USER->isGuest() AND ( $_USER->is('project_visitor') OR $_USER->is('project_adviser'))):?>

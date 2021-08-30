@@ -257,4 +257,26 @@ class Api_DBElApprovals
 
         return DB::query(Database::SELECT, $query)->execute()->as_array();
     }
+
+    public static function getElApprovalElementByElAppId($elApprovalId) {
+        $query = "SELECT 
+        ea.*,
+        o.name as object_name,
+        e.name as element_name,
+        f.custom_name as floor_name,
+        f.number as floor_number,
+        p.name as place_name,
+        u.name as creator_name,
+        o.name as object_name
+        FROM el_approvals ea 
+        LEFT JOIN elements e ON ea.element_id=e.id
+        LEFT JOIN pr_floors f ON ea.floor_id=f.id
+        LEFT JOIN users u ON ea.created_by=u.id
+        LEFT JOIN pr_places p ON ea.place_id=p.id
+        LEFT JOIN pr_objects o ON ea.object_id=o.id
+        LEFT JOIN el_approvals_notifications ean ON ean.ell_app_id=ea.id
+        WHERE ea.id={$elApprovalId}";
+
+        return DB::query(Database::SELECT, $query)->execute()->as_array();
+    }
 }

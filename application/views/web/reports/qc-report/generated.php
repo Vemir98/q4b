@@ -96,7 +96,8 @@ $range = Arr::extract($_GET,["from","to"]);
             [
                 'qcs' => $qcs,
                 'tasks' => $tasks,
-                'pagination' =>  $pagination
+                'pagination' =>  $pagination,
+                'qcElementNames' => $qcElementNames
             ])
         ?>
         <?=View::make($_VIEWPATH.'tab-info',

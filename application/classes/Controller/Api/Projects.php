@@ -447,6 +447,12 @@ class Controller_Api_Projects extends HDVP_Controller_API
                 'del_rep_id',
                 'el_approval_id'
             ]);
+        if(empty($clientData['el_approval_id']) OR !(int)$clientData['el_approval_id']){
+            unset($clientData['el_approval_id']);
+        }else{
+            $clientData['el_approval_id'] = (int) $clientData['el_approval_id'];
+        }
+
         $isDebug = Arr::get($_POST,'debug',false);
         $clientData['plan_id'] *=1;
         if(empty($clientData['del_rep_id']) OR !(int)$clientData['del_rep_id']){

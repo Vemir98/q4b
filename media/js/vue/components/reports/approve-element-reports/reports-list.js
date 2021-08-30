@@ -18,7 +18,7 @@ Vue.component('reports-list', {
         </div>
         <div class="report-project-desc_wraper flex-start" v-if="Object.keys(project).length">
             <div class="report-project-desc-image">
-                <img :src="'/' + project.mainImage.path + '/' + project.mainImage.name" style="width: 100%;" alt="project images">
+                <img :src="project.mainImage ? ('/' + project.mainImage.path + '/' + project.mainImage.name) : '/media/img/project-img.jpg'" style="width: 100%;" alt="project images">
             </div>
             <div class="report-project-desc-list flex-start">
                 <ul class="flex-start">
