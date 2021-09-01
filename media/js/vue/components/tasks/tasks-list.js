@@ -184,11 +184,10 @@ Vue.component('tasks-list', {
                                     <i class=" q4bikon-plus"></i>
                                 </a>
                             </div>
-                            {{ createTaskInProgress }}
                             <div class="q4b-modules-actions-sec flex-center">
                                 <span 
                                     class="save" 
-                                    :class="{'labtest-disabled': !this.items.length || !createTaskInProgress || showLoader || activeTab !== 'enabled'}" 
+                                    :class="{'labtest-disabled': test()}" 
                                     @click="handleSave"
                                 >
                                     {{ trans.save }}                    
@@ -707,6 +706,9 @@ Vue.component('tasks-list', {
         },
         transformTranslationsKey(name) {
             return name.toLowerCase().split(' ').join('_')
+        },
+        test() {
+            return (!this.items.length || this.createTaskInProgress || this.showLoader || (this.activeTab !== 'enabled'))
         }
     },
 });

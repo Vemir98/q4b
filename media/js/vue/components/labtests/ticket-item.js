@@ -18,10 +18,10 @@ Vue.component('ticket-item', {
                         <input type="text" v-model="item.number" :placeholder="trans.lab_certificate">
                     </div>
                     <div class="ltest_info_select">
-                        <input type="text" v-model="item.fresh_strength" :placeholder="trans.fresh_concrete_strength">
+                        <input type="text" v-model="item.freshStrength" :placeholder="trans.fresh_concrete_strength">
                     </div>
                     <div class="ltest_info_select">
-                        <input type="text" v-model="item.roll_strength" :placeholder="trans.roll_strength">
+                        <input type="text" v-model="item.rollStrength" :placeholder="trans.roll_strength">
                     </div>
                 </div>
                 <div class=" ltest_info_wraper notes">
@@ -53,7 +53,7 @@ Vue.component('ticket-item', {
                             <template v-for="ticket in tickets">
                                 <div class="ltest_info_plan_properties_wrap cursor-pointer">
                                     <div class="ltest_info_plan_property">
-                                        <div class="ltest_info_plan_property_value">{{ getDate(ticket.created_at) }}</div>
+                                        <div class="ltest_info_plan_property_value">{{ getDate(ticket.createdAt) }}</div>
                                     </div>
                                     <div class="ltest_info_plan_property">
                                         <div class="ltest_info_plan_property_value">{{ ticket.status }}</div>
@@ -63,7 +63,6 @@ Vue.component('ticket-item', {
                                     </div>
                                 </div>
                             </template>  
-
                         </div>                        
                     </div>
                 </div>
@@ -99,7 +98,6 @@ Vue.component('ticket-item', {
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
 `,

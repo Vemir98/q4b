@@ -20,8 +20,8 @@ Vue.component('labtest-update', {
                             <div class="header_top_prop_value">{{ labtest.id }}</div>
                         </div>
                         <div class="header_top_propertie">
-                            <div class="header_top_prop_name">{{ trans.lab_certificate_number }}</div>
-                            <div class="header_top_prop_value">{{ labtest.cert_number }}</div>
+                            <div class="header_top_prop_name">{{ trans.lab_certificate }}</div>
+                            <div class="header_top_prop_value">{{ labtest.certNumber }}</div>
                         </div>
                     </div>
                     <div class="epage_header_bottom">
@@ -29,38 +29,38 @@ Vue.component('labtest-update', {
                             <div class="lt_project_proprtrty_item">
                                 <div class="lt_project_proprtrty_icon"><i class="icon q4bikon-project"></i>
                                 </div>
-                                <div class="lt_project_proprtrty_name">{{ labtest.building_name }}</div>
+                                <div class="lt_project_proprtrty_name">{{ labtest.buildingName }}</div>
                             </div>
                              <div class="lt_project_proprtrty_item">
                                 <div class="lt_project_proprtrty_icon"><i class="icon q4bikon-element"></i>
                                 </div>
-                                <div class="lt_project_proprtrty_name">{{ labtest.element_name }}</div>
+                                <div class="lt_project_proprtrty_name">{{ labtest.elementName }}</div>
                             </div>
                             <div class="lt_project_proprtrty_item">
                                 <div class="lt_project_proprtrty_icon"><i class="icon q4bikon-worker"></i>
                                 </div>
-                                <div class="lt_project_proprtrty_name">{{ labtest.craft_name }}</div>
+                                <div class="lt_project_proprtrty_name">{{ labtest.craftName }}</div>
                             </div>
                             <div class="lt_project_proprtrty_item">
                                 <div class="lt_project_proprtrty_icon"><i class="icon q4bikon-baseline-stairs"></i>
                                 </div>    
                                 <div v-if="labtest.floor_custom_name" class="lt_project_proprtrty_name">
-                                    {{labtest.floor_custom_name}}<span class="bidi-override" style="font-weight: 600"> ({{ labtest.floor_number }})</span>
+                                    {{labtest.floorCustomName}}<span class="bidi-override" style="font-weight: 600"> ({{ labtest.floorNumber }})</span>
                                 </div>    
                                 <div v-else>
                                     <span  class="bidi-override" style="font-weight: 600">
-                                        {{ labtest.floor_number }}
+                                        {{ labtest.floorNumber }}
                                     </span>
                                 </div>                               
                             </div>   
-                            <div class="lt_project_proprtrty_item" v-if="labtest.place_id">
-                                <template v-if="labtest.place_type==='private'">
+                            <div class="lt_project_proprtrty_item" v-if="labtest.placeId">
+                                <template v-if="labtest.placeType==='private'">
                                     <div class="lt_project_proprtrty_icon"><i class="icon q4bikon-room-key"></i></div>
                                 </template>
                                 <template v-else>
                                     <div class="lt_project_proprtrty_icon"><i class="icon q4bikon-public"></i></div>
                                 </template>
-                                <div class="lt_project_proprtrty_name">{{ labtest.place_custom_number }}</div>
+                                <div class="lt_project_proprtrty_name">{{ labtest.placeCustomNumber }}</div>
                             </div>
                         </div>
                     </div>
@@ -71,7 +71,7 @@ Vue.component('labtest-update', {
                             <div class="ltest_info_certificate_title">{{ trans.delivery_cert }}</div>
                             <div class="ltest_info_certificate_area">
                                 <div class="labtest_edit_textarea">
-                                     <textarea cols="30" rows="10" name="delivery_cert" v-model="labtest.delivery_cert"></textarea>
+                                     <textarea cols="30" rows="10" name="delivery_cert" v-model="labtest.deliveryCert"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -86,7 +86,20 @@ Vue.component('labtest-update', {
                         </div>
                        <div class="ltest_info_select">
                             <div class="input_item_label" v-show="labtest.status">{{ trans.select_status }}</div>
-                            <multiselect v-model="labtest.status" name="status" @change="emptyErrors" v-validate="'required'" :option-height="104" :placeholder="trans.select_status" :disabled="!ltStatuses.length" :options="ltStatuses" label="name" :searchable="true" :allow-empty="false" :show-labels="false">
+                            <multiselect 
+                                v-model="labtest.status"
+                                name="status"
+                                @change="emptyErrors" 
+                                v-validate="'required'" 
+                                :option-height="104" 
+                                :placeholder="trans.select_status" 
+                                :disabled="!ltStatuses.length" 
+                                :options="ltStatuses" 
+                                label="name" 
+                                :searchable="true" 
+                                :allow-empty="false" 
+                                :show-labels="false"
+                            >
                                 <template slot="singleLabel" slot-scope="props">{{ trans[props.option] }}</template>
                                 <template slot="option" slot-scope="props">
                                 <span>{{ trans[props.option] }}</span>
@@ -141,13 +154,32 @@ Vue.component('labtest-update', {
                             <template v-if="ltCraftParamsList">
                                 <div class="ltest_main_input" v-for="(item, index) in ltCraftParamsList">
                                     <div class="input_item_label" v-show="item.value">{{ getParamName(item) }}</div>
-                                    <input type="number" autocomplete="off" :placeholder="getParamPlaceholder(item)" :name="item.name" @input="emptyErrors" v-validate="'numeric'" v-model="item.value">
+                                    <input 
+                                        type="number" 
+                                        autocomplete="off" 
+                                        :placeholder="getParamPlaceholder(item)" 
+                                        :name="item.name" 
+                                        @input="emptyErrors" 
+                                        v-validate="'numeric'" 
+                                        v-model="item.value"
+                                    >
                                     <span v-show="errors.has(item.name)" class="help is-danger">{{ errors.first(item.name) }}</span>
                                 </div>
                             </template>
                             <div class="ltest_main_input">
-                                <div class="input_item_label" v-show="labtest.strength_after">{{ trans.strength_after_result }}</div>
-                                <multiselect v-model="labtest.strength_after" :option-height="104" @change="emptyErrors" :placeholder="trans.strength_after_result" :disabled="!strengthAfterOptions.length" :options="strengthAfterOptions" label="name" :searchable="true" :allow-empty="false" :show-labels="false">
+                                <div class="input_item_label" v-show="labtest.strengthAfter">{{ trans.strength_after_result }}</div>
+                                <multiselect 
+                                    v-model="labtest.strengthAfter" 
+                                    :option-height="104" 
+                                    @change="emptyErrors" 
+                                    :placeholder="trans.strength_after_result" 
+                                    :disabled="!strengthAfterOptions.length" 
+                                    :options="strengthAfterOptions" 
+                                    label="name" 
+                                    :searchable="true" 
+                                    :allow-empty="false" 
+                                    :show-labels="false"
+                                >
                                     <template slot="singleLabel" slot-scope="props">{{ props.option }}</template>
                                     <template slot="option" slot-scope="props">
                                         <span>{{ props.option }}</span>
@@ -171,23 +203,31 @@ Vue.component('labtest-update', {
                         <div class="ltest_info_standard_title">{{ trans.description }}</div>
                         <div class="ltest_info_standard_area">
                             <div class="labtest_edit_textarea">
-                                <textarea cols="30" rows="10" v-model="ticket.description" name="description" @input="emptyErrors" v-validate="'required'" :class="{'disabled': (ticket.id && !(isSuperAdmin()))}"></textarea>
+                                <textarea 
+                                    cols="30" 
+                                    rows="10" 
+                                    v-model="ticket.description" 
+                                    name="description" 
+                                    @input="emptyErrors" 
+                                    v-validate="'required'" 
+                                    :class="{'disabled': (ticket.id && !(isSuperAdmin()))}"
+                                ></textarea>
                             </div>
                             <span v-show="errors.has('description')" class="help is-danger">{{ errors.first('description') }}</span>
                         </div>
                     </div>
                     <div class="ltest_info_select">
                         <div class="input_item_label" v-show="ticket.number">{{ trans.lab_certificate }}</div>
-                        <input type="text" v-model="ticket.number" autocomplete="off" :placeholder="trans.lab_certificate" name="ticket_number" :class="{'disabled': (ticket.id && !(isSuperAdmin()))}">
+                        <input type="text" v-model="ticket.number" autocomplete="off" :placeholder="trans.lab_certificate_number" name="ticket_number" :class="{'disabled': (ticket.id && !(isSuperAdmin()))}">
                     </div>
                     <div class="ltest_info_select">
-                        <div class="input_item_label" v-show="ticket.fresh_strength">{{ trans.fresh_concrete_strength }}</div>
-                        <input type="number" v-model="ticket.fresh_strength" autocomplete="off" :placeholder="trans.fresh_concrete_strength" @input="emptyErrors" :class="{'disabled': (ticket.id && !(isSuperAdmin()))}" name="fresh_strength" v-validate="'numeric'">
+                        <div class="input_item_label" v-show="ticket.freshStrength">{{ trans.fresh_concrete_strength }}</div>
+                        <input type="number" v-model="ticket.freshStrength" autocomplete="off" :placeholder="trans.fresh_concrete_strength" @input="emptyErrors" :class="{'disabled': (ticket.id && !(isSuperAdmin()))}" name="fresh_strength" v-validate="'numeric'">
                         <span v-show="errors.has('fresh_strength')" class="help is-danger">{{ errors.first('fresh_strength') }}</span>
                     </div>
                     <div class="ltest_info_select">
-                        <div class="input_item_label" v-show="ticket.roll_strength">{{ trans.roll_strength }}</div>
-                        <input type="number" v-model="ticket.roll_strength" autocomplete="off" :placeholder="trans.roll_strength" @input="emptyErrors" :class="{'disabled': (ticket.id && !(isSuperAdmin()))}" name="roll_strength" v-validate="'numeric'">
+                        <div class="input_item_label" v-show="ticket.rollStrength">{{ trans.roll_strength }}</div>
+                        <input type="number" v-model="ticket.rollStrength" autocomplete="off" :placeholder="trans.roll_strength" @input="emptyErrors" :class="{'disabled': (ticket.id && !(isSuperAdmin()))}" name="roll_strength" v-validate="'numeric'">
                         <span v-show="errors.has('roll_strength')" class="help is-danger">{{ errors.first('roll_strength') }}</span>
                     </div>
                 </div>
@@ -222,7 +262,7 @@ Vue.component('labtest-update', {
                             <template v-for="ticketItem in tickets">
                                 <div class="ltest_info_plan_properties_wrap cursor-pointer" :class="{'approved': ticketItem.status==='approve', 'current': ticketItem.id === ticket.id}" @click="selectTicket(ticketItem)">
                                     <div class="ltest_info_plan_property">
-                                        <div class="ltest_info_plan_property_value">{{ getDate(ticketItem.created_at) }}</div>
+                                        <div class="ltest_info_plan_property_value">{{ getDate(ticketItem.createdAt) }}</div>
                                     </div>
                                     <div class="ltest_info_plan_property">
                                         <div class="ltest_info_plan_property_value">{{ trans[ticketItem.status] }}</div>
@@ -261,20 +301,20 @@ Vue.component('labtest-update', {
                     </div>
                     <div class="labtest_editor">
                         <div class="bidi-override">
-                            <div class="labtest_editor_item" v-if="labtest['update_user']">
+                            <div class="labtest_editor_item" v-if="labtest['updateUser']">
                                 <div class="labtest_editor_by"> {{ trans.updated_by }} </div>
                                 <div class="labtest_editor_name_sec">
-                                    <span> {{ labtest['update_user'] }}</span>
+                                    <span> {{ labtest['updateUser'] }}</span>
                                     :
-                                    <span class="labtest_editor_name_sec">{{ getDate(labtest.updated_at) }}</span>
+                                    <span class="labtest_editor_name_sec">{{ getDate(labtest.updatedAt) }}</span>
                                 </div>
                             </div>
-                            <div class="labtest_editor_item" v-if="labtest['create_user']">
+                            <div class="labtest_editor_item" v-if="labtest['createUser']">
                                 <div class="labtest_editor_by"> {{ trans.created_by }} </div>
                                 <div class="labtest_editor_name_sec">
-                                    <span> {{ labtest['create_user'] }}</span>
+                                    <span> {{ labtest['createUser'] }}</span>
                                     :
-                                    <span class="labtest_editor_name_sec">{{ getDate(labtest.create_date) }}</span>
+                                    <span class="labtest_editor_name_sec">{{ getDate(labtest.createDate) }}</span>
                                 </div>
                             </div>
                         </div>
@@ -408,7 +448,7 @@ Vue.component('labtest-update', {
             return $(".header-current-lang").data("lang")
         },
         enableSave() {
-            return !this.ticket.id || (this.ticket.id && (this.ticket.id === this.labtest.ticket_id));
+            return !this.ticket.id || (this.ticket.id && (this.ticket.id === this.labtest.ticketId));
         },
     },
     created() {
@@ -461,16 +501,16 @@ Vue.component('labtest-update', {
             if (val) {
                 this.getLtCrafts();
             }
-            if(val && val.plan_id) {
+            if(val && val.planId) {
                 this.getLabtestPlan();
             }
         }
     },
     methods: {
         getParamValue(item, list) {
-            let val = item.default_value;
+            let val = item.defaultValue;
             list.forEach((p) => {
-                if (p.clp_id == item.id) {
+                if (p.clpId == item.id) {
                     val = parseInt(p.value)
                 }
             })
@@ -507,7 +547,7 @@ Vue.component('labtest-update', {
             await this.$validator.validateAll();
             if (!this.errors.any()) {
                 this.sendLabtestSaveRequest();
-                if (this.ticket.id && (this.ticket.id === this.labtest.ticket_id)) {
+                if (this.ticket.id && (this.ticket.id === this.labtest.ticketId)) {
                     this.sendLabtestTicketUpdateRequest();
                 } else {
                     this.sendLabtestTicketSaveRequest();
@@ -523,10 +563,10 @@ Vue.component('labtest-update', {
             this.getLabtestTicket(ticket.id)
         },
         getParamName(item) {
-            return item['name_'+this.currentLang]
+            return item['name'+this.capitalizeFirstLetter(this.currentLang)]
         },
         getParamPlaceholder(item) {
-            let pName = item['name_'+this.currentLang];
+            let pName = item['name'+this.capitalizeFirstLetter(this.currentLang)];
             let str = this.trans.enter_the;
             // pName = pName.toLowerCase().split(' ').join('_');
             return str + ' ' + pName;
@@ -541,14 +581,20 @@ Vue.component('labtest-update', {
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
                     this.labtest = response;
-                    this.getLabtestTicket(this.labtest.ticket_id);
+                    this.getLabtestTicket(this.labtest.ticketId);
                     this.getLabtestTickets();
                 })
         },
         getLabtestTicket(id) {
-            if (!this.labtest.ticket_id) return;
+            if (!this.labtest.ticketId) return;
             let url = `/projects/${this.projectId}/entities/labtest_ticket/${id}`;
-            qfetch(url, {method: 'GET', headers: {"Cache-directive": "no-cache", "Cache-control": "no-cache", "Pragma-directive": "no-cache", "Pragma": "no-cache", "Expires": "0"}})
+            qfetch(url, {method: 'GET', headers: {
+                "Cache-directive": "no-cache",
+                "Cache-control": "no-cache",
+                "Pragma-directive": "no-cache",
+                "Pragma": "no-cache",
+                "Expires": "0"
+            }})
                 .then(response => {
                     this.ticket = {};
                     this.ticket = response;
@@ -598,8 +644,8 @@ Vue.component('labtest-update', {
                 .then(response => {
                     this.ltCrafts = response.items;
                     this.labCraft = this.ltCrafts.find((item) => {
-                        let itemCraftName = item.craft_name;
-                        let labtestCraftName = this.labtest.craft_name;
+                        let itemCraftName = item.craftName;
+                        let labtestCraftName = this.labtest.craftName;
                         if (itemCraftName && labtestCraftName) {
                             if (itemCraftName.trim() === labtestCraftName.trim()) {
                                 return item;
@@ -671,8 +717,8 @@ Vue.component('labtest-update', {
                 this.ltCraftParamsList.forEach((cr) => {
                     if (cr.value) {
                         let d = {
-                            cl_id: cr.cl_id,
-                            clp_id: cr.id,
+                            clId: cr.clId,
+                            clpId: cr.id,
                             value: cr.value
                         }
                         params.push(d)
@@ -854,6 +900,9 @@ Vue.component('labtest-update', {
                 }
                 this.images.splice(index, 1);
             }
+        },
+        capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
         }
     },
 

@@ -28,14 +28,15 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
     public function action_elements_with_crafts_get(){
         $projectId = $this->getUIntParamOrDie($this->request->param('projectId'));
         $elements = Api_DBProjects::getProjectElements($projectId, '');
+        // [h]
         $elItems = $elIds = [];
         if(count($elements)){
             foreach ($elements as $el){
                 $elItems[$el['id']] = [
                     'id' => $el['id'],
                     'name' => $el['name'],
-                    'company_id' => $el['company_id'],
-                    'project_id' => $el['project_id'],
+                    'companyId' => $el['company_id'],
+                    'projectId' => $el['project_id'],
                     'crafts' => []
                 ];
                 $elIds[] = $el['id'];
@@ -168,7 +169,10 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
                         }
                     }
                 }
-                DB::delete('elements_cmp_crafts')->where('element_id', 'IN', $elCraftsToDelete)->execute($this->_db);
+                DB::delete('elements_cmp_crafts')
+                    ->where('element_id', 'IN', $elCraftsToDelete)
+                    ->execute($this->_db);
+
                 if (!empty($dataToInsert)) {
                     $query = DB::insert('elements_cmp_crafts', array('element_id', 'craft_id'));
                     foreach ($dataToInsert as $val) {
@@ -194,16 +198,16 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
         $projectId = $this->getUIntParamOrDie($this->request->param('projectId'));
         //post data
         $ltData = Arr::extract($_POST, [
-            'floor_id',
-            'place_id',
-            'craft_id',
-            'element_id',
-            'plan_id',
+            'floorId',
+            'placeId',
+            'craftId',
+            'elementId',
+            'planId',
             'standard',
-            'strength_after',
-            'delivery_cert',
-            'create_date',
-            'cert_number'
+            'strengthAfter',
+            'deliveryCert',
+            'createDate',
+            'certNumber'
         ]);
 
         try {
@@ -212,49 +216,72 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
             if(empty($project)){
                 throw API_Exception::factory(500,'Incorrect identifier');
             }
-            $ltData['project_id'] = $projectId;
-            $ltData['building_id'] = Arr::get($_POST, 'object_id');
-            $ltData['delivery_cert'] =  str_replace('@#$', PHP_EOL, implode("", $ltData['delivery_cert']));
+            $ltData['projectId'] = $projectId;
+            $ltData['buildingId'] = Arr::get($_POST, 'objectId');
+            $ltData['deliveryCert'] =  str_replace('@#$', PHP_EOL, implode("", $ltData['deliveryCert']));
             $ltData['status'] = 'waiting';
-            if (!$ltData['place_id']) {
-                unset($ltData['place_id']);
+            if (!$ltData['placeId']) {
+                unset($ltData['placeId']);
             }
 
-            $date = DateTime::createFromFormat('d/m/Y H:i',$ltData['create_date']);
+            $date = DateTime::createFromFormat('d/m/Y H:i',$ltData['createDate']);
             if($date == null){
-                file_put_contents(DOCROOT.'date_err.log',$ltData['create_date']);
+                file_put_contents(DOCROOT.'date_err.log',$ltData['createDate']);
                 throw API_Exception::factory(500,'Incorrect date format');
             }
-            $ltData['create_date'] = $date->getTimestamp();
-            $ltData['created_at'] = time();
-            $ltData['updated_at'] = time();
-            $ltData['created_by'] = Auth::instance()->get_user()->id;
+            $ltData['createDate'] = $date->getTimestamp();
+            $ltData['createdAt'] = time();
+            $ltData['updatedAt'] = time();
+            $ltData['createdBy'] = Auth::instance()->get_user()->id;
             $valid = Validation::factory($ltData);
             $valid
-                ->rule('project_id', 'not_empty')
-                ->rule('building_id', 'not_empty')
-                ->rule('floor_id', 'not_empty')
-                ->rule('element_id', 'not_empty')
+                ->rule('projectId', 'not_empty')
+                ->rule('buildingId', 'not_empty')
+                ->rule('floorId', 'not_empty')
+                ->rule('elementId', 'not_empty')
                 ->rule('standard', 'not_empty')
-                ->rule('strength_after', 'not_empty')
-                ->rule('created_at', 'not_empty')
-                ->rule('created_by', 'not_empty')
-                ->rule('create_date', 'not_empty');
+                ->rule('strengthAfter', 'not_empty')
+                ->rule('createdAt', 'not_empty')
+                ->rule('createdBy', 'not_empty')
+                ->rule('createDate', 'not_empty');
             if (!$valid->check()) {
                 throw API_ValidationException::factory(500, 'Incorrect data');
             }
+
+            $queryData = [
+                'floor_id' => $ltData['floorId'],
+                'place_id' => $ltData['placeId'],
+                'craft_id' => $ltData['craftId'],
+                'element_id' => $ltData['elementId'],
+                'plan_id' => $ltData['planId'],
+                'cert_number' => $ltData['certNumber'],
+                'standard' => $ltData['standard'],
+                'strength_after' => $ltData['strengthAfter'],
+                'delivery_cert' => $ltData['deliveryCert'],
+                'building_id' => $ltData['buildingId'],
+                'project_id' => $ltData['projectId'],
+                'updated_at' => $ltData['updatedAt'],
+                'updated_by' => $ltData['updatedBy'],
+                'create_date' => $ltData['createDate'],
+                'created_at' => $ltData['createdAt'],
+                'status' => $ltData['status'],
+                'created_by' => $ltData['createdBy']
+            ];
+
             $result = DB::insert('labtests')
-                ->columns(array_keys($ltData))
-                ->values(array_values($ltData))
+                ->columns(array_keys($queryData))
+                ->values(array_values($queryData))
                 ->execute($this->_db);
-            $labtest_id = $result[0];
+            //[ps]
+
+            $labtestId = $result[0];
             $slp = Arr::get($_POST, 'slp');
 
             if ($slp && !empty($slp)) {
                 $slpData = [];
                 foreach($slp as $item) {
                     $d = [
-                        'labtest_id' => $labtest_id,
+                        'labtest_id' => $labtestId,
                         'cl_id' => $item['cl_id'],
                         'clp_id' => $item['clp_id'],
                         'value' => (int) $item['value']
@@ -282,7 +309,7 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
             }
 
             Database::instance()->commit();
-            $this->_responseData['labtest_id'] = $labtest_id;
+            $this->_responseData['labtestId'] = $labtestId;
         }catch (API_ValidationException $e){
             Database::instance()->rollback();
             throw API_Exception::factory(500,'Incorrect data');
@@ -325,6 +352,7 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
 
 
     }
+
     /**
      * if passed id returns concrette labtest else returns paginated list of filtered labtests
      * need to pass filter params as GET param
@@ -347,13 +375,13 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
             $page = isset(Request::current()->param()['page']) && Request::current()->param()['page'] ? Request::current()->param()['page'] : 1;
 
             $filterParams = [
-                'project_id' => $projectId,
+                'projectId' => $projectId,
                 'status' => json_decode($_GET['status']),
-                'building_id' => json_decode($_GET['object_id']),
-                'floor_id' => json_decode($_GET['floor_id']),
-                'place_id' => json_decode($_GET['place_id']),
-                'element_id' => json_decode($_GET['element_id']),
-                'craft_id' => json_decode($_GET['craft_id']),
+                'buildingId' => json_decode($_GET['objectId']),
+                'floorId' => json_decode($_GET['floorId']),
+                'placeId' => json_decode($_GET['placeId']),
+                'elementId' => json_decode($_GET['elementId']),
+                'craftId' => json_decode($_GET['craftId']),
                 'search' => $_GET['search'] ? $_GET['search'] : null,
             ];
 
@@ -365,6 +393,7 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
             }
 
             $count = count(Api_DBLabtests::getLabtestsListWithRelations($filterParams));
+            //[pn]
             $pagination = Pagination::factory(array(
                     'total_items'    => $count,
                     'items_per_page' => $limit,
@@ -389,16 +418,16 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
         $slp = Arr::get($this->put(), 'labtestCraftParams');
 
         $ltData = Arr::extract($lt, [
-            'floor_id',
-            'place_id',
-            'craft_id',
-            'element_id',
-            'plan_id',
-            'cert_number',
+            'floorId',
+            'placeId',
+            'craftId',
+            'elementId',
+            'planId',
+            'certNumber',
             'standard',
-            'strength_after',
-            'delivery_cert',
-            'building_id',
+            'strengthAfter',
+            'deliveryCert',
+            'buildingId',
         ]);
 
         try {
@@ -409,23 +438,41 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
             if(empty($project) || empty($labtest)){
                 throw API_Exception::factory(500,'Incorrect identifier');
             }
-            $ltData['project_id'] = $projectId;
+            $ltData['projectId'] = $projectId;
 
-            $ltData['updated_at'] = time();
-            $ltData['updated_by'] = Auth::instance()->get_user()->id;
+            $ltData['updatedAt'] = time();
+            $ltData['updatedBy'] = Auth::instance()->get_user()->id;
             $valid = Validation::factory($ltData);
             $valid
                 //проверка на пустату полей
-                ->rule('project_id', 'not_empty')
-                ->rule('building_id', 'not_empty')
-                ->rule('floor_id', 'not_empty')
-                ->rule('element_id', 'not_empty')
+                ->rule('projectId', 'not_empty')
+                ->rule('buildingId', 'not_empty')
+                ->rule('floorId', 'not_empty')
+                ->rule('elementId', 'not_empty')
                 ->rule('standard', 'not_empty')
-                ->rule('strength_after', 'not_empty');
+                ->rule('strengthAfter', 'not_empty');
             if (!$valid->check()) {
                 throw API_ValidationException::factory(500, 'Incorrect data');
             }
-            DB::update('labtests')->set($ltData)->where('id', '=', $id)->execute($this->_db);
+
+            $queryData = [
+                'floor_id' => $ltData['floorId'],
+                'place_id' => $ltData['placeId'],
+                'craft_id' => $ltData['craftId'],
+                'element_id' => $ltData['elementId'],
+                'plan_id' => $ltData['planId'],
+                'cert_number' => $ltData['certNumber'],
+                'standard' => $ltData['standard'],
+                'strength_after' => $ltData['strengthAfter'],
+                'delivery_cert' => $ltData['deliveryCert'],
+                'building_id' => $ltData['buildingId'],
+                'project_id' => $ltData['projectId'],
+                'updated_at' => $ltData['updatedAt'],
+                'updated_by' => $ltData['updatedBy'],
+            ];
+
+            DB::update('labtests')->set($queryData)->where('id', '=', $id)->execute($this->_db);
+            //[ps]
 
             DB::delete('labtest_clp')->where('labtest_id', '=', $id)->execute($this->_db);
 
@@ -462,13 +509,14 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
             }
 
             Database::instance()->commit();
-            $this->_responseData['labtest_id'] = $id;
+            $this->_responseData['labtestId'] = $id;
         }catch (API_ValidationException $e){
             Database::instance()->rollback();
             throw API_Exception::factory(500,'Incorrect data');
         }catch (Exception $e){
             Database::instance()->rollback();
-            throw API_Exception::factory(500,'Operation Error');
+//            throw API_Exception::factory(500,'Operation Error');
+            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($e->getMessage()); echo "</pre>"; exit;
         }
     }
 
@@ -484,13 +532,13 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
             Language::setCurrentLang($lang);
         }
         $filterParams = [
-            'project_id' => $projectId,
+            'projectId' => $projectId,
             'status' => json_decode($_GET['status']),
-            'building_id' => json_decode($_GET['object_id']),
-            'floor_id' => json_decode($_GET['floor_id']),
-            'place_id' => json_decode($_GET['place_id']),
-            'element_id' => json_decode($_GET['element_id']),
-            'craft_id' => json_decode($_GET['craft_id']),
+            'buildingId' => json_decode($_GET['objectId']),
+            'floorId' => json_decode($_GET['floorId']),
+            'placeId' => json_decode($_GET['placeId']),
+            'elementId' => json_decode($_GET['elementId']),
+            'craftId' => json_decode($_GET['craftId']),
             'search' => $_GET['search'] ? $_GET['search'] : null,
         ];
 
@@ -509,7 +557,7 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
         $labtestParams = Api_DBLabtests::getLabtestsClp($labtestIds);
         $formattedLabtestParamValues = [];
         foreach($labtestParams as $p) {
-            $key = "{$p['labtest_id']}_{$p['clp_id']}";
+            $key = "{$p['labtestId']}_{$p['clpId']}";
             $value = $p['value'];
             $formattedLabtestParamValues[$key] = $value;
         }
@@ -612,28 +660,28 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
             }
             $ws->set_data($sh, false);
             foreach ($labtests as $item){
-                $levelsRange = $item['smaller_floor'].'-'.$item['bigger_floor'];
-                $fName = $item['floor_custom_name'];
-                $fNumb = $item['floor_number'];
+                $levelsRange = $item['smallerFloor'].'-'.$item['biggerFloor'];
+                $fName = $item['floorCustomName'];
+                $fNumb = $item['floorNumber'];
                 $floor = $fName ? $fName.' ('.$fNumb.') '  : $fNumb;
                 $row =  [
                     $project[0]['name'],
                     $item['id'],
                     $item['ticketNumber'],
-                    date('d/m/Y',$item['create_date']),
-                    date('d/m/Y',$item['updated_at']),
+                    date('d/m/Y',$item['createDate']),
+                    date('d/m/Y',$item['updatedAt']),
                     $item['craftName'],
-                    $item['building_name'],
+                    $item['buildingName'],
                     $floor,
-                    $item['element_name'],
+                    $item['elementName'],
                     __($item['status']),
-                    $item['delivery_cert'],
+                    $item['deliveryCert'],
                     $item['standard'],
                     $item['freshStrength'],
                     $item['rollStrength'],
                     $item['description'],
                     $item['notes'],
-                    $item['strength_after'],
+                    $item['strengthAfter'],
                 ];
                 foreach ($params as $p) {
                     $key = "{$item['id']}_{$p['id']}";
@@ -680,15 +728,15 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
 
         $data = Arr::extract($_POST,[
             'number',
-            'fresh_strength',
-            'roll_strength',
+            'freshStrength',
+            'rollStrength',
             'description',
             'notes',
             'status'
         ]);
         $data['status'] = $data['status'] ? $data['status'] : 'waiting';
         $imgData = isset($_POST['images']) ? $_POST['images'] : [];
-        $data['labtest_id'] = $labtestId;
+        $data['labtestId'] = $labtestId;
         try {
         $project = Api_DBProjects::getProjectById($projectId);
         $labtest = Api_DBLabtests::getLabtestById($labtestId);
@@ -698,21 +746,34 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
         }
         DB::update('labtests')->set(["status" => $data['status']])->where('id', '=', $labtestId)->execute($this->_db);
         $uploadedFiles = [];
-        $data['created_at'] = time();
-        $data['updated_at'] = time();
-        $data['created_by'] = Auth::instance()->get_user()->id;
+        $data['createdAt'] = time();
+        $data['updatedAt'] = time();
+        $data['createdBy'] = Auth::instance()->get_user()->id;
         $valid = Validation::factory($data);
-        $valid->rule('labtest_id', 'not_empty');
+        $valid->rule('labtestId', 'not_empty');
 
         if (!$valid->check()) {
             throw API_ValidationException::factory(500, 'Incorrect data');
         }
-        $result = DB::insert('labtests_tickets')
-            ->columns(array_keys($data))
-            ->values(array_values($data))
-            ->execute($this->_db);
-        $ticketId = $result[0];
 
+        $queryData = [
+            'number' => $data['number'],
+            'fresh_strength' => $data['freshStrength'],
+            'roll_strength' => $data['rollStrength'],
+            'description' => $data['description'],
+            'notes' => $data['notes'],
+            'status' => $data['status'],
+            'labtest_id' => $data['labtestId'],
+            'created_at' => $data['createdAt'],
+            'updated_at' => $data['updatedAt'],
+            'created_by' => $data['createdBy'],
+        ];
+        $result = DB::insert('labtests_tickets')
+            ->columns(array_keys($queryData))
+            ->values(array_values($queryData))
+            ->execute($this->_db);
+        //[ps]
+        $ticketId = $result[0];
 
         $ltTicketPath = DOCROOT.'media/data/projects/'.$projectId.'/labtest-tickets';
         $files = $this->_b64Arr($imgData, $ltTicketPath);
@@ -767,15 +828,15 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
         $ticketId = $this->getUIntParamOrDie($this->request->param('ticketId'));
         $data = Arr::extract($this->put(),[
             'number',
-            'fresh_strength',
-            'roll_strength',
+            'freshStrength',
+            'rollStrength',
             'description',
             'notes',
             'status'
         ]);
         $imgData = Arr::get($this->put(), 'images');
         $imagesOld = Arr::get($this->put(), 'imagesOld');
-        $data['labtest_id'] = $labtestId;
+        $data['labtestId'] = $labtestId;
 
         try {
             $project = Api_DBProjects::getProjectById($projectId);
@@ -787,11 +848,31 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
             }
 
             $uploadedFiles = [];
-            $data['updated_at'] = time();
-            $data['updated_by'] = Auth::instance()->get_user()->id;
+            $data['updatedAt'] = time();
+            $data['updatedBy'] = Auth::instance()->get_user()->id;
 
-            DB::update('labtests_tickets')->set($data)->where('id', '=', $ticketId)->execute($this->_db);
-            DB::update('labtests')->set(["status" => $data['status']])->where('id', '=', $labtestId)->execute($this->_db);
+
+            $queryData = [
+                'number' => $data['number'],
+                'fresh_strength' => $data['freshStrength'],
+                'roll_strength' => $data['rollStrength'],
+                'description' => $data['description'],
+                'notes' => $data['notes'],
+                'status' => $data['status'],
+                'labtest_id' => $data['labtestId'],
+                'updated_at' => $data['updatedAt'],
+                'updated_by' => $data['updatedBy'],
+            ];
+
+            DB::update('labtests_tickets')
+                ->set($queryData)
+                ->where('id', '=', $ticketId)
+                ->execute($this->_db);
+
+            DB::update('labtests')
+                ->set(["status" => $queryData['status']])
+                ->where('id', '=', $labtestId)
+                ->execute($this->_db);
 
             $ltTicketPath = DOCROOT.'media/data/projects/'.$projectId.'/labtest-tickets';
             $files = $this->_b64Arr($imgData, $ltTicketPath);
@@ -908,6 +989,7 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
     public function action_copy_elements_post(){
         $projectId = $this->getUIntParamOrDie($this->request->param('projectId'));
         $project = Api_DBProjects::getProjectById($projectId);
+        //[h]
         $data = $_POST;
         $elements = Api_DBProjects::getProjectElements($projectId, '');
         $cmpCrafts = Api_DBCompanies::getCompanyCrafts($project[0]['company_id'], ['name']);
@@ -1044,9 +1126,9 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
                     $obj = Arr::extract($item, $fields);
                 }
                 if (empty($fields) || in_array('name', $fields)) {
-                    $obj['name_en'] = I18n::get($obj['name'], 'en');
-                    $obj['name_he'] = I18n::get($obj['name'], 'he');
-                    $obj['name_ru'] = I18n::get($obj['name'], 'ru');
+                    $obj['nameEn'] = I18n::get($obj['name'], 'en');
+                    $obj['nameHe'] = I18n::get($obj['name'], 'he');
+                    $obj['nameRu'] = I18n::get($obj['name'], 'ru');
                 }
 
                 array_walk($obj,function(&$param){

@@ -18,7 +18,10 @@ Vue.component('reports-list', {
         </div>
         <div class="report-project-desc_wraper flex-start" v-if="Object.keys(project).length">
             <div class="report-project-desc-image">
-                <img :src="project.mainImage ? ('/' + project.mainImage.path + '/' + project.mainImage.name) : '/media/img/project-img.jpg'" style="width: 100%;" alt="project images">
+                <img 
+                    :src="project.mainImage ? ('/' + project.mainImage.path + '/' + project.mainImage.name) : '/media/img/project-img.jpg'"
+                    style="width: 100%;" alt="project images"
+                >
             </div>
             <div class="report-project-desc-list flex-start">
                 <ul class="flex-start">
@@ -93,7 +96,7 @@ Vue.component('reports-list', {
                             {{ trans.structures_quantity }}
                         </span>
                         <span class="light-blue">
-                            {{ filters.object_ids.length }}
+                            {{ filters.objectIds.length }}
                         </span>
                     </li>
                     <li>
@@ -141,11 +144,11 @@ Vue.component('reports-list', {
                     <template v-for="report in items">
                         <tr class="parent-tr" :class="{'openParent': report.showSpecialities}">
                             <td scope="row" @click="toggleReportSpecialities(report)" class="parent-td">{{ report.id }}</td>
-                            <td>{{ convertTimestampToDate(report.created_at) }} </td>
-                            <td>{{ report.object_name }}</td>
-                            <td>{{ report.element_name }}</td>
+                            <td>{{ convertTimestampToDate(report.createdAt) }} </td>
+                            <td>{{ report.objectName }}</td>
+                            <td>{{ report.elementName }}</td>
                             <td>&nbsp;</td>
-                            <td class="td-floor">{{ report.floor_name ? report.floor_name : report.floor_number  }}</td>
+                            <td class="td-floor">{{ report.floorName ? report.floorName : report.floorNumber  }}</td>
                             <td class="text-capitalize"> {{ +report.appropriate === 1 ? trans.appropriate : trans.not_appropriate }}</td>
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>
@@ -166,10 +169,10 @@ Vue.component('reports-list', {
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
-                                <td>{{ speciality.craft_name }}</td>
+                                <td>{{ speciality.craftName }}</td>
                                 <td>&nbsp;</td>
                                 <td>{{ +speciality.appropriate ? trans.appropriate : trans.not_appropriate  }}</td>
-                                <td>{{ speciality.signatures.length ? convertTimestampToDate(speciality.signatures[0]['created_at']) : convertTimestampToDate(speciality.updated_at) }}</td>
+                                <td>{{ speciality.signatures.length ? convertTimestampToDate(speciality.signatures[0]['createdAt']) : convertTimestampToDate(speciality.updatedAt) }}</td>
                                 <td>{{ speciality.signatures.length ? speciality.signatures[0]['position'] : '' }}</td>
                                 <td>{{ speciality.signatures.length ? speciality.signatures[0]['name'] : '' }}</td>
                                 <td class="td-sign">
@@ -268,17 +271,18 @@ Vue.component('reports-list', {
             this.getFilteredReports();
         },
         getQueryParamsOfFiltersForUrl() {
-            let elements = encodeURIComponent(JSON.stringify(this.filters.element_ids));
-            let floors = encodeURIComponent(JSON.stringify(this.filters.floor_ids));
+            let elements = encodeURIComponent(JSON.stringify(this.filters.elementIds));
+            let floors = encodeURIComponent(JSON.stringify(this.filters.floorIds));
             let statuses = encodeURIComponent(JSON.stringify(this.filters.statuses));
             let positions = encodeURIComponent(JSON.stringify(this.filters.positions));
-            let objects = encodeURIComponent(JSON.stringify(this.filters.object_ids));
-            let places = encodeURIComponent(JSON.stringify(this.filters.place_ids));
-            let crafts = encodeURIComponent(JSON.stringify(this.filters.speciality_ids));
+            let objects = encodeURIComponent(JSON.stringify(this.filters.objectIds));
+            let places = encodeURIComponent(JSON.stringify(this.filters.placeIds));
+            let crafts = encodeURIComponent(JSON.stringify(this.filters.specialityIds));
             let from = this.filters.from ? this.filters.from : '';
             let to = this.filters.to ? this.filters.to : '';
 
-            return `?from=${from}&to=${to}&object_ids=${objects}&floor_ids=${floors}&place_ids=${places}&speciality_ids=${crafts}&element_ids=${elements}&statuses=${statuses}&positions=${positions}&company_id=${this.company.id}&project_id=${this.project.id}`;
+            // return `?from=${from}&to=${to}&object_ids=${objects}&floor_ids=${floors}&place_ids=${places}&speciality_ids=${crafts}&element_ids=${elements}&statuses=${statuses}&positions=${positions}&company_id=${this.company.id}&project_id=${this.project.id}`;
+            return `?from=${from}&to=${to}&objectIds=${objects}&floorIds=${floors}&placeIds=${places}&specialityIds=${crafts}&elementIds=${elements}&statuses=${statuses}&positions=${positions}&companyId=${this.company.id}&projectId=${this.project.id}`;
         },
     },
     mounted() {

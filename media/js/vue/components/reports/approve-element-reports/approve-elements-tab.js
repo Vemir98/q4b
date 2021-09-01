@@ -67,8 +67,8 @@ Vue.component('approve-elements-tab', {
         async generateReports(filters) {
             this.filters = filters;
 
-            await this.getProject(this.filters.project_id)
-            await this.getCompanies(this.filters.company_id)
+            await this.getProject(this.filters.projectId)
+            await this.getCompanies(this.filters.companyId)
             this.activeTab = 'reports-list';
         },
         getProject(id) {
@@ -86,7 +86,7 @@ Vue.component('approve-elements-tab', {
 
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
-                    this.company = response.items.filter(company => +company.id === +this.filters.company_id)[0]
+                    this.company = response.items.filter(company => +company.id === +this.filters.companyId)[0]
                     this.showLoader = false;
                 })
         },

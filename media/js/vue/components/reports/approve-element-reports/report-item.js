@@ -16,15 +16,14 @@ Vue.component('report-item', {
                 </div>
                 <div class="approve-elv-top-item">
                     <span class="approve-elv-top-item-name">{{ trans.element }}</span>
-                    <span class="approve-elv-top-item-value">{{ report.element_name }}</span>
+                    <span class="approve-elv-top-item-value">{{ report.elementName }}</span>
                 </div>
             </div>
             <div class="approve-elv-top-right flex-end">
 
                 <div class="approve-elv-top-item">
-                    <span class="approve-elv-top-item-name">{{ trans.created_by }}</span>
-                    <span class="approve-elv-top-item-value">{{ report.creator_name }} ({{ convertTimestampToDate(report.created_at) }})</span>
-
+                    <span class="approve-elv-top-item-name">{{ trans.createdBy }}</span>
+                    <span class="approve-elv-top-item-value">{{ report.creatorName }} ({{ convertTimestampToDate(report.createdAt) }})</span>
                 </div>
 
                 <div class="approve-elv-top-item">
@@ -76,15 +75,15 @@ Vue.component('report-item', {
             </div>
             <div class=" approve-elv-property flex-start">
                 <span class="approve-elv-properties-name ">{{ trans.structure }}</span>
-                <span class="approve-elv-property-value">{{ report.object_name }}</span>
+                <span class="approve-elv-property-value">{{ report.objectName }}</span>
             </div>
             <div class=" approve-elv-property flex-start">
                 <span class="approve-elv-properties-name ">{{ trans.floor_level }}</span>
-                <span class="approve-elv-property-value">{{ report.floor_name ? report.floor_name : report.floor_number  }}</span>
+                <span class="approve-elv-property-value">{{ report.floorName ? report.floorName : report.floorNumber  }}</span>
             </div>
             <div class=" approve-elv-property flex-start">
                 <span class="approve-elv-properties-name ">{{ trans.place }}</span>
-                <span class="approve-elv-property-value">{{ report.place_name }}</span>
+                <span class="approve-elv-property-value">{{ report.placeName }}</span>
             </div>
 
         </div>
@@ -112,14 +111,14 @@ Vue.component('report-item', {
                 <template v-for="(speciality, specialityIndex) in report.specialities">
                     <div :key="speciality.id" class="approve-elv-report-item">
                         <div class="approve-elv-report-top flex-start">
-                            <span :class="['approve-elv-report-name', {'not-appropriate': speciality.appropriate === '0', 'appropriate': speciality.appropriate === '1' }]">{{ speciality.craft_name }}</span>
+                            <span :class="['approve-elv-report-name', {'not-appropriate': speciality.appropriate === '0', 'appropriate': speciality.appropriate === '1' }]">{{ speciality.craftName }}</span>
                             <span class="approve-elv-report-status flex-start">
                                 <span class="approve-elv-report-status-title">{{ trans.status }}</span>
                                 <span class="approve-elv-report-status-value">{{ +speciality.appropriate ? trans.appropriate : trans.not_appropriate }}</span>
                             </span>
                             <span 
                                 class="approve-elv-report-view" 
-                                v-if="speciality.quality_control"
+                                v-if="speciality.qualityControl"
                             >
                                 <a :href="getGenerateQcHref(speciality)">
                                     {{ trans.view_qc }}
@@ -131,11 +130,11 @@ Vue.component('report-item', {
                                     <div class="approve-elv-properties flex-start" v-for="signature in speciality.signatures">
                                         <div class=" approve-elv-property flex-start">
                                             <span class="approve-elv-properties-name ">{{ trans.updated_by }}</span>
-                                            <span class="approve-elv-property-value">{{ signature.creator_name }}</span>
+                                            <span class="approve-elv-property-value">{{ signature.creatorName }}</span>
                                         </div>
                                         <div class=" approve-elv-property flex-start">
                                             <span class="approve-elv-properties-name ">{{ trans.date }}</span>
-                                            <span class="approve-elv-property-value">{{ convertTimestampToDate(signature.created_at) }}</span>
+                                            <span class="approve-elv-property-value">{{ convertTimestampToDate(signature.createdAt) }}</span>
                                         </div>
                                         <div class=" approve-elv-property flex-start">
                                             <span class="approve-elv-properties-name ">{{ trans.approved_by }}</span>
@@ -154,11 +153,11 @@ Vue.component('report-item', {
                                     <div class="approve-elv-properties flex-start">
                                         <div class=" approve-elv-property flex-start">
                                             <span class="approve-elv-properties-name">{{ trans.updated_by }}</span>
-                                            <span class="approve-elv-property-value">{{ speciality.updator_name }}</span>
+                                            <span class="approve-elv-property-value">{{ speciality.updatorName }}</span>
                                         </div>
                                         <div class=" approve-elv-property flex-start">
                                             <span class="approve-elv-properties-name">{{ trans.date }}</span>
-                                            <span class="approve-elv-property-value">{{ convertTimestampToDate(speciality.updated_at) }}</span>
+                                            <span class="approve-elv-property-value">{{ convertTimestampToDate(speciality.updatedAt) }}</span>
                                         </div>
                                     </div>
                                 </template>
@@ -189,10 +188,10 @@ Vue.component('report-item', {
                                             :class="[ 'report_tasks_item', {'not-appropriate': task.appropriate === '0', 'appropriate': task.appropriate === '1' }]"
                                         >
                                             <div class="approve-elv-task-status" @click="changeTaskStatus(task, speciality)"></div>
-                                            <div class="report_task_title">{{ trans.task }} {{ task.task_id }}</div>
+                                            <div class="report_task_title">{{ trans.task }} {{ task.taskId }}</div>
                                             <div class="report_task_desc_wrap">
                                                 <div class="report_task_descripticon">
-                                                        <div>{{ task.task_name }}</div>
+                                                        <div>{{ task.taskName }}</div>
                                                 </div>
                                                 <div class="report_task_status"></div>
                                             </div>
@@ -343,15 +342,6 @@ Vue.component('report-item', {
         this.initialReport = JSON.parse(JSON.stringify(this.report));
     },
     methods: {
-        timeChanged() { },
-        arrayToStringByValue(array, value) {
-            let arrayOfValues = []
-            array.forEach(item => {
-                arrayOfValues.push(item[value]);
-            })
-
-            return arrayOfValues.join(',');
-        },
         togglePopup(speciality, keepOthers = false, closingWithoutSign = false, from = '') {
             if(this.openSignaturePopup) {
                 if(closingWithoutSign) {
@@ -386,13 +376,13 @@ Vue.component('report-item', {
         },
         addSignature() {
             this.newSignatures.push({
-                'el_app_id': this.report.id,
-                'el_app_craft_id': this.currentSpeciality.id,
+                'elAppId': this.report.id,
+                'elAppCraftId': this.currentSpeciality.id,
                 'name': this.currentSignerName,
                 'position': this.currentSignerPosition,
                 'image': this.signaturePad.toDataURL(),
-                'created_at': Date.now() / 1000,
-                'creator_name': this.username
+                'createdAt': Date.now() / 1000,
+                'creatorName': this.username
             })
 
             this.currentSignerName = this.username;
@@ -407,7 +397,6 @@ Vue.component('report-item', {
                     if(this.keepOtherSignatures) {
                         speciality.signatures = speciality.signatures.concat(this.newSignatures);
                     } else {
-                        // speciality.deleted_signatures = speciality.signatures.map(signature => signature.id)
                         speciality.signatures = this.newSignatures;
                     }
                     this.report.updated = true;
@@ -422,7 +411,7 @@ Vue.component('report-item', {
             switch (+task.appropriate) {
                 case 1:
                     task.appropriate = "0";
-                    speciality.deleted_signatures = speciality.signatures.map(signature => signature.id)
+                    speciality.deletedSignatures = speciality.signatures.map(signature => signature.id)
                     speciality.signatures = [];
                     speciality.appropriate = "0";
                     this.report.updated = true;
@@ -473,7 +462,7 @@ Vue.component('report-item', {
         updateReport(speciality) {
             this.showLoader = true;
             let url = `/el-approvals/${this.report.id}`;
-            speciality.project_id = this.project.id;
+            speciality.projectId = this.project.id;
             qfetch(url, {method: 'PUT', headers: {}, body: speciality})
                 .then(response => {
                     this.getSpeciality(speciality.id);
@@ -546,8 +535,8 @@ Vue.component('report-item', {
         },
         getGenerateQcHref(speciality) {
             let url = `${this.siteUrl}/reports/generate`;
-            let date = this.convertTimestampToDate(speciality.quality_control.created_at);
-            let queryParams = `?from=${date}&to=${date}&crafts[]=${speciality.craft_id}&company=${this.company.id}&project=${this.project.id}&el_app_id=${this.report.id}#tab_qc_controls`;
+            let date = this.convertTimestampToDate(speciality.qualityControl.createdAt);
+            let queryParams = `?from=${date}&to=${date}&crafts[]=${speciality.craftId}&company=${this.company.id}&project=${this.project.id}&el_app_id=${this.report.id}#tab_qc_controls`;
 
             url += queryParams;
             return url;

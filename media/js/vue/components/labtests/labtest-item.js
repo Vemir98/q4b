@@ -1,12 +1,12 @@
 Vue.component('labtest-item', {
     template: `
         <tr>
-            <td scope="row" class="element_name">{{ item.test_number }}</td>
+            <td scope="row" class="element_name">{{ item.testNumber }}</td>
             <td>{{ item.ticketNumber }}</td>
-            <td>{{ getDate(item.created_at) }}</td>
-            <td>{{ item.building_name }}</td>
-            <td>{{ item.floor_custom_name ? item.floor_custom_name : item.floor_number }} / <span class="bidi-override">{{ item.smallerFloor }}-{{ item.biggerFloor }}</span></td>
-            <td>{{ item.element_name }}</td>
+            <td>{{ getDate(item.createdAt) }}</td>
+            <td>{{ item.buildingName }}</td>
+            <td>{{ item.floorCustomName ? item.floorCustomName : item.floorNumber }} / <span class="bidi-override">{{ item.smallerFloor }}-{{ item.biggerFloor }}</span></td>
+            <td>{{ item.elementName }}</td>
             <td>
                 <div class="labtest_description">
                     {{ item.standard }}

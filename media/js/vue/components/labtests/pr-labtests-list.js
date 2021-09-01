@@ -656,7 +656,8 @@ Vue.component('pr-labtests-list', {
             let search = this.search ? encodeURIComponent(this.search) : '';
             let from = this.time && this.time[0] ? this.time[0].toLocaleDateString("en-GB") : '';
             let to = this.time && this.time[1] ? this.time[1].toLocaleDateString("en-GB") : '';
-            return `?from=${from}&to=${to}&object_id=${object}&floor_id=${floor}&place_id=${place}&craft_id=${craft}&element_id=${element}&status=${status}&search=${search}`;
+            // return `?from=${from}&to=${to}&object_id=${object}&floor_id=${floor}&place_id=${place}&craft_id=${craft}&element_id=${element}&status=${status}&search=${search}`;
+            return `?from=${from}&to=${to}&objectId=${object}&floorId=${floor}&placeId=${place}&craftId=${craft}&elementId=${element}&status=${status}&search=${search}`;
         },
         getLabtests(){
             this.showLoader = true;

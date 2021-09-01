@@ -592,6 +592,7 @@ Vue.component('generate-reports', {
             let url = `/projects/${id}/entities/project?fields=id,name`;
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
+                    console.log('PROJECT', response.item)
                     this.project = response.item;
                     this.showLoader = false;
                 })
@@ -704,13 +705,13 @@ Vue.component('generate-reports', {
         },
         generateReports() {
             this.$emit('getFiltersForReportsGenerating', {
-                'company_id': +this.selectedCompany.id,
-                'project_id': +this.selectedProject.id,
-                'object_ids': this.selectedStructures.map(structure => +structure.id),
-                'element_ids': this.selectedElements.map(element => +element.id),
-                'speciality_ids': this.selectedCrafts.map(craft => +craft.id),
-                'place_ids': this.selectedPlaces.map(place => +place.id),
-                'floor_ids': this.selectedFloors.map(floor => +floor.id),
+                'companyId': +this.selectedCompany.id,
+                'projectId': +this.selectedProject.id,
+                'objectIds': this.selectedStructures.map(structure => +structure.id),
+                'elementIds': this.selectedElements.map(element => +element.id),
+                'specialityIds': this.selectedCrafts.map(craft => +craft.id),
+                'placeIds': this.selectedPlaces.map(place => +place.id),
+                'floorIds': this.selectedFloors.map(floor => +floor.id),
                 'managerStatuses': this.selectedManagerStatuses.map(status => status.name.toLowerCase()),
                 'statuses': this.selectedStatuses.map(status => +status.id),
                 'positions': this.selectedPositions.map(position => position.name),
@@ -740,13 +741,13 @@ Vue.component('generate-reports', {
             const urlParams = new URLSearchParams(window.location.search);
 
             this.$emit('getFiltersForReportsGenerating', {
-                'company_id': urlParams.get('company_id'),
-                'project_id': urlParams.get('project_id'),
-                'object_ids': JSON.parse(urlParams.get('object_ids')),
-                'element_ids': JSON.parse(urlParams.get('element_ids')),
-                'speciality_ids': JSON.parse(urlParams.get('speciality_ids')),
-                'place_ids': JSON.parse(urlParams.get('place_ids')),
-                'floor_ids': JSON.parse(urlParams.get('floor_ids')),
+                'companyId': urlParams.get('companyId'),
+                'projectId': urlParams.get('projectId'),
+                'objectIds': JSON.parse(urlParams.get('objectIds')),
+                'elementIds': JSON.parse(urlParams.get('elementIds')),
+                'specialityIds': JSON.parse(urlParams.get('specialityIds')),
+                'placeIds': JSON.parse(urlParams.get('placeIds')),
+                'floorIds': JSON.parse(urlParams.get('floorIds')),
                 'statuses': JSON.parse(urlParams.get('statuses')),
                 'positions': JSON.parse(urlParams.get('positions')),
                 'from': urlParams.get('from'),

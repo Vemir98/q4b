@@ -9,7 +9,18 @@ Vue.component('projects-list', {
        <div class="form" >
             <div class="row-flex">
                 <div class="multiselect-col">
-                    <multiselect v-model="selectedCompany"  :option-height="104" :placeholder="trans.select_project" :disabled="projects.length < 1" :options="projects" track-by="id" label="name" :searchable="true" :allow-empty="false" :show-labels="false">
+                    <multiselect 
+                        v-model="selectedCompany"  
+                        :option-height="104" 
+                        :placeholder="trans.select_project" 
+                        :disabled="projects.length < 1" 
+                        :options="projects" 
+                        track-by="id" 
+                        label="name" 
+                        :searchable="true" 
+                        :allow-empty="false" 
+                        :show-labels="false"
+                    >
                         <template slot="singleLabel" slot-scope="props">{{ props.option.name }}</template>
                         <template slot="option" slot-scope="props">
                         <span>{{ props.option.name }}</span>
@@ -26,15 +37,22 @@ Vue.component('projects-list', {
                 <div class="loader"></div>
             </div>
                 <project-item 
-                v-for="item in items" 
-                :item="item" 
-                :key="item.id"
-                :image="'/media/img/project_default'+ (Math.floor(Math.random() * 4) + 1) +'.png'"
-                :trans="trans"
+                    v-for="item in items" 
+                    :item="item" 
+                    :key="item.id"
+                    :image="'/media/img/project_default'+ (Math.floor(Math.random() * 4) + 1) +'.png'"
+                    :trans="trans"
                 />
         </div>
     </div>
-    <pagination v-model="page" :records="total" :per-page="limit" @paginate="paginate" :options="{chunk:5,'chunksNavigation':'fixed'}"></pagination>
+    <pagination 
+        v-model="page" 
+        :records="total" 
+        :per-page="limit" 
+        @paginate="paginate" 
+        :options="{chunk:5,'chunksNavigation':'fixed'}"
+        >
+    </pagination>
 </section>`,
     /** Props
      * siteUrl:"https://qforb.net/"

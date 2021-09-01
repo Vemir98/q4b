@@ -878,7 +878,7 @@ return [
     'Enter delivery certificate' => 'הזן את תעודת משלוח',
     'Are you sure you want to leave Lab Control?' => 'האם אתה בטוח שאתה רוצה לצאת?',
     'Are you sure you want to delete delivery certificate?' => 'האם אתה בטוח שברצונך למחוק את התעודת משלוח?',
-    'Lab certificate number' => 'מס. תעודת בדיקה',
+    'Lab certificate number' => 'מס. ת. מעבדה/ דו"ח',
     'Attached files' => 'קבצים מצורפים',
     'Attached plan' => 'תוכנית מצורפת',
     'This field is required.' => 'זהו שדה חובה',

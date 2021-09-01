@@ -24,9 +24,9 @@ class Controller_Api_Projects_Tasks extends HDVP_Controller_API {
             throw API_Exception::factory(500,'Incorrect identifier');
         }
         if ($taskId) {
-            $res = Api_DBTasks::getProjectTaskById($taskId);
+            $res = Api_DBTasks::getTaskById($taskId);
         } else {
-            $res = Api_DBTasks::getProjectTasks($projectId, $moduleId, $craftId);
+            $res = Api_DBTasks::getTasksByProjectId($projectId, $moduleId, $craftId);
         }
         $this->_responseData['items'] = $res;
     }
@@ -44,7 +44,6 @@ class Controller_Api_Projects_Tasks extends HDVP_Controller_API {
 
         try {
             if (!empty($tasks)) {
-
                 for ($i=count($tasks)-1; $i>=0; $i--) {
                     $t = $tasks[$i];
                     $data = [
@@ -144,11 +143,18 @@ class Controller_Api_Projects_Tasks extends HDVP_Controller_API {
                 }
 
                 $crafts = Api_DBTasks::getTasksCrafts($taskIds);
+
                 foreach($crafts as $c) {
                     $taskCraftIds[] = $c['id'];
                 }
-                DB::delete('pr_tasks_crafts')->where('task_id', 'IN', $taskIds)->execute($this->_db);
-                DB::delete('modules_tasks_crafts')->where('tc_id', 'IN', $taskCraftIds)->execute($this->_db);
+                DB::delete('pr_tasks_crafts')
+                    ->where('task_id', 'IN', $taskIds)
+                    ->execute($this->_db);
+
+                DB::delete('modules_tasks_crafts')
+                    ->where('tc_id', 'IN', $taskCraftIds)
+                    ->execute($this->_db);
+
                 for ($i=count($tasks)-1; $i>=0; $i--) {
                     $t = $tasks[$i];
                     $dataModuleTaskCrafts = [];
@@ -194,7 +200,7 @@ class Controller_Api_Projects_Tasks extends HDVP_Controller_API {
 
     /**
      * returns list of crafts witch bonded to tasks
-     * if you pass in get param "fields" property list divided by "," will returned only that property list
+     * if you pass in get param "fields" property list divided by "," will return only that property list
      */
     public function action_tasks_crafts_get(){
         $projectId = $this->getUIntParamOrDie($this->request->param('projectId'));
@@ -203,7 +209,7 @@ class Controller_Api_Projects_Tasks extends HDVP_Controller_API {
             $fields = explode(',',$fields);
             $fields = Arr::decamelize($fields);
         }
-        $tasks = Api_DBTasks::getProjectTasks($projectId);
+        $tasks = Api_DBTasks::getTasksByProjectId($projectId);
         $items = $taskIds = [];
         if(count($tasks)){
             foreach ($tasks as $t){
@@ -216,7 +222,7 @@ class Controller_Api_Projects_Tasks extends HDVP_Controller_API {
 
         if(!empty($items)){
             foreach ($items as $item){
-                if( ! count($fields)){
+                if(!count($fields)){
                     $obj = $item;
                 }else{
                     $obj = Arr::extract($item, $fields);
@@ -231,7 +237,7 @@ class Controller_Api_Projects_Tasks extends HDVP_Controller_API {
     }
 
     /**
-     * updates task, crafts and modules relation with themself
+     * updates task, crafts and modules relation with them self
      */
     public function action_tasks_crafts_put(){
         $projectId = $this->getUIntParamOrDie($this->request->param('projectId'));
@@ -246,7 +252,10 @@ class Controller_Api_Projects_Tasks extends HDVP_Controller_API {
                 $taskData = [];
 
                 foreach($tasks as $task) {
-                    DB::delete('pr_tasks_crafts')->where('task_id', '=', $task['id'])->execute($this->_db);
+                    DB::delete('pr_tasks_crafts')
+                        ->where('task_id', '=', $task['id'])
+                        ->execute($this->_db);
+
                     $d = [
                         'task_id' => $task['id'],
                         'craft_id' => $task['craft_id'],
@@ -258,9 +267,11 @@ class Controller_Api_Projects_Tasks extends HDVP_Controller_API {
                         ->rule('task_id', 'not_empty')
                         ->rule('craft_id', 'not_empty')
                         ->rule('status', 'not_empty');
+
                     if (!$valid->check()) {
                         throw API_ValidationException::factory(500, 'Incorrect data');
                     }
+
                     $taskData[] = $d;
                 }
                 if (!empty($taskData)) {
@@ -282,6 +293,7 @@ class Controller_Api_Projects_Tasks extends HDVP_Controller_API {
     }
 
     public function action_test_get() {
+        //[?]
         $projectId = $this->getUIntParamOrDie($this->request->param('projectId'));
         $project = ORM::factory('Project',$projectId);
         $modTasks = $project->getTasksByModuleName('Quality Control');
@@ -315,33 +327,32 @@ class Controller_Api_Projects_Tasks extends HDVP_Controller_API {
                                 'status' => $task['status'],
                             ];
                             $taskItems[$task['id']]['crafts'] = [];
-                            $taskItems[$task['id']]['crafts'][$task['craft_id']] = [
-                                'modules' => [$task['module_id']],
-                                'craft_name' => $task['craftName']
+                            $taskItems[$task['id']]['crafts'][$task['craftId']] = [
+                                'modules' => [$task['moduleId']],
+                                'craftName' => $task['craftName']
                             ];
                         } else {
                             if (!isset($taskItems[$task['id']]['crafts'])) {
                                 $taskItems[$task['id']]['crafts'] = [];
-                                $taskItems[$task['id']]['crafts'][$task['craft_id']] = [
-                                    'modules' => [$task['module_id']],
-                                    'craft_name' => $task['craftName']
+                                $taskItems[$task['id']]['crafts'][$task['craftId']] = [
+                                    'modules' => [$task['moduleId']],
+                                    'craftName' => $task['craftName']
                                 ];
                             } else {
                                 if (!isset($taskItems[$task['id']]['crafts'][$task['craft_id']])) {
-                                    $taskItems[$task['id']]['crafts'][$task['craft_id']]['modules'] = [$task['module_id']];
-                                    $taskItems[$task['id']]['crafts'][$task['craft_id']]['craft_name'] = $task['craftName'];
-
+                                    $taskItems[$task['id']]['crafts'][$task['craftId']]['modules'] = [$task['moduleId']];
+                                    $taskItems[$task['id']]['crafts'][$task['craftId']]['craftName'] = $task['craftName'];
                                 } else {
-                                    $taskItems[$task['id']]['crafts'][$task['craft_id']]['modules'][] = $task['module_id'];
+                                    $taskItems[$task['id']]['crafts'][$task['craftId']]['modules'][] = $task['moduleId'];
                                 }
                             }
                         }
                     }
                 }
                 foreach ($taskItems as $task) {
-                    $task['project_id'] = $projectToId;
+                    $task['projectId'] = $projectToId;
                     $modulesDataToInsert = [];
-                    $taskExist = Api_DBTasks::getProjectTaskByName($projectToId, $task['name']);
+                    $taskExist = Api_DBTasks::getTaskByName($projectToId, $task['name']);
                     if (!empty($taskExist)) {
                         foreach($taskExist as $t) {
                             DB::update('pr_tasks')
@@ -349,22 +360,27 @@ class Controller_Api_Projects_Tasks extends HDVP_Controller_API {
                                 ->where('id', '=', $t['id'])->execute($this->_db);
                         }
                     }
+
                     $newTask = DB::insert('pr_tasks')
                         ->columns(['project_id', 'name', 'status'])
-                        ->values([$task['project_id'], $task['name'], Enum_Status::Enabled])
+                        ->values([$task['projectId'], $task['name'], Enum_Status::Enabled])
                         ->execute($this->_db);
+
                     foreach ($task['crafts'] as $key => $c) {
-                        $craft = Api_DBCompanies::getCompanyCraftByName($projectTo[0]['company_id'], trim($c['craft_name']));
+                        $craft = Api_DBCompanies::getCompanyCraftByName($projectTo[0]['company_id'], trim($c['craftName']));
 
                         if (empty($craft) || $craft[0]['status'] === Enum_Status::Disabled ) {
+
                             $newCraft = DB::insert('cmp_crafts')
                                 ->columns(['company_id', 'name', 'status'])
-                                ->values([$projectTo[0]['company_id'], $c['craft_name'], Enum_Status::Enabled])
+                                ->values([$projectTo[0]['company_id'], $c['craftName'], Enum_Status::Enabled])
                                 ->execute($this->_db);
+
                             $newTaskCraft = DB::insert('pr_tasks_crafts')
                                 ->columns(['task_id', 'craft_id'])
                                 ->values([$newTask[0], $newCraft[0]])
                                 ->execute($this->_db);
+
                             foreach ($c['modules'] as $mId) {
                                 $modulesDataToInsert[] = [
                                     'module_id' => $mId,
@@ -372,13 +388,11 @@ class Controller_Api_Projects_Tasks extends HDVP_Controller_API {
                                 ];
                             }
                         } else {
-
                             $newTaskCraft = DB::insert('pr_tasks_crafts')
                                 ->columns(['task_id', 'craft_id'])
                                 ->values([$newTask[0], $craft[0]['id']])
                                 ->execute($this->_db);
                             foreach ($c['modules'] as $mId) {
-
                                 $modulesDataToInsert[] = [
                                     'module_id' => $mId,
                                     'tc_id' => $newTaskCraft[0]
@@ -413,9 +427,9 @@ class Controller_Api_Projects_Tasks extends HDVP_Controller_API {
             throw API_Exception::factory(500,'Incorrect identifier');
         }
         if ($taskId) {
-            $res = Api_DBTasks::getProjectTaskById($taskId);
+            $res = Api_DBTasks::getTaskById($taskId);
         } else {
-            $res = Api_DBTasks::getProjectTasks($projectId, $moduleId, $craftId);
+            $res = Api_DBTasks::getTasksByProjectId($projectId, $moduleId, $craftId);
         }
         $taskItems = $taskIds = $taskCraftsIds = [];
         if(count($res)){
@@ -431,8 +445,8 @@ class Controller_Api_Projects_Tasks extends HDVP_Controller_API {
             $crafts = Api_DBTasks::getTasksCrafts($taskIds);
             if(count($crafts)){
                 foreach ($crafts as $craft){
-                    $taskItems[$craft['task_id']]['crafts'][$craft['craft_id']] = [
-                        'id' => $craft['craft_id'],
+                    $taskItems[$craft['taskId']]['crafts'][$craft['craftId']] = [
+                        'id' => $craft['craftId'],
                         'modules' => []
                     ];
                     $taskCraftsIds[] = $craft['id'];
@@ -444,7 +458,7 @@ class Controller_Api_Projects_Tasks extends HDVP_Controller_API {
             }
             if(count($modules)){
                 foreach ($modules as $module){
-                    array_push($taskItems[$module['task_id']]['crafts'][$module['craft_id']]['modules'], $module['module_id']);
+                    array_push($taskItems[$module['taskId']]['crafts'][$module['craftId']]['modules'], $module['moduleId']);
                 }
             }
             $taskItems = array_values($taskItems);

@@ -2,12 +2,12 @@ Vue.component('labtest-list-item', {
     template: `
         <tr>
             <td scope="row" class="element_name">{{ item.id }}</td>
-            <td>{{ item.cert_number }}</td>
-            <td>{{ getDate(item.create_date) }}</td>
-            <td>{{ item.building_name }}</td>
-            <td v-if="item.floor_custom_name">{{ item.floor_custom_name }} <span class="bidi-override">({{ item.floor_number }})</span></td>
-            <td v-else> <span class="bidi-override">{{ item.floor_number }}</span></td>
-            <td>{{ item.element_name }}</td>
+            <td>{{ item.certNumber }}</td>
+            <td>{{ getDate(item.createDate) }}</td>
+            <td>{{ item.buildingName }}</td>
+            <td v-if="item.floor_custom_name">{{ item.floorCustomName }} <span class="bidi-override">({{ item.floorNumber }})</span></td>
+            <td v-else> <span class="bidi-override">{{ item.floorNumber }}</span></td>
+            <td>{{ item.elementName }}</td>
             <td>
                 <div class="labtest_description">
                     {{ item.standard }}

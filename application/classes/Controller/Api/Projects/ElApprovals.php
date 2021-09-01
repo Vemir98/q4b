@@ -11,12 +11,12 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
     public function action_index_post(){
         $clientData = Arr::extract($_POST,
             [
-                'company_id',
-                'project_id',
-                'object_id',
-                'place_id',
-                'floor_id',
-                'element_id',
+                'companyId',
+                'projectId',
+                'objectId',
+                'placeId',
+                'floorId',
+                'elementId',
                 'specialities',
                 'notify'
             ]);
@@ -25,24 +25,24 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
             $valid = Validation::factory($clientData);
 
             $valid
-                ->rule('company_id', 'not_empty')
-                ->rule('project_id', 'not_empty')
-                ->rule('object_id', 'not_empty')
-                ->rule('element_id', 'not_empty')
-                ->rule('floor_id', 'not_empty');
+                ->rule('companyId', 'not_empty')
+                ->rule('projectId', 'not_empty')
+                ->rule('objectId', 'not_empty')
+                ->rule('elementId', 'not_empty')
+                ->rule('floorId', 'not_empty');
 
             if (!$valid->check()) {
-                throw API_ValidationException::factory(500, 'Incorrect data');
+                throw API_ValidationException::factory(500, 'missing required EAR field');
             }
 
             Database::instance()->begin();
             $queryData = [
-                'company_id' => $clientData['company_id'],
-                'project_id' => $clientData['project_id'],
-                'object_id' => $clientData['object_id'],
-                'place_id' => $clientData['place_id'] ?: null,
-                'element_id' => $clientData['element_id'],
-                'floor_id' => $clientData['floor_id'],
+                'company_id' => $clientData['companyId'],
+                'project_id' => $clientData['projectId'],
+                'object_id' => $clientData['objectId'],
+                'place_id' => $clientData['placeId'] ?: null,
+                'element_id' => $clientData['elementId'],
+                'floor_id' => $clientData['floorId'],
                 'created_at' => time(),
                 'created_by' => Auth::instance()->get_user()->id,
                 'updated_at' => time(),
@@ -60,7 +60,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
 
                     $valid->rule('id', 'not_empty');
                     if (!$valid->check()) {
-                        throw API_ValidationException::factory(500, 'Incorrect data');
+                        throw API_ValidationException::factory(500, 'Empty speciality id');
                     }
                     $queryData = [
                         'el_app_id' => $elApprovalId,
@@ -79,7 +79,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
 
                     if(!empty($speciality['signatures'])) {
 
-                        $elApprovalCraftSignatureImagesPath = DOCROOT.'media/data/projects/'.$clientData['project_id'].'/el-approvals';
+                        $elApprovalCraftSignatureImagesPath = DOCROOT.'media/data/projects/'.$clientData['projectId'].'/el-approvals';
                         if(!file_exists($elApprovalCraftSignatureImagesPath)) {
                             mkdir($elApprovalCraftSignatureImagesPath, 0777, true);
                         }
@@ -102,7 +102,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                             $file = $this->_b64Arr([$imageData], $elApprovalCraftSignatureImagesPath);
 
                             if (!$valid->check()) {
-                                throw API_ValidationException::factory(500, 'Incorrect data');
+                                throw API_ValidationException::factory(500, 'Empty speciality data');
                             }
 
                             $queryData = [
@@ -129,8 +129,9 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                             $valid
                                 ->rule('id', 'not_empty')
                                 ->rule('status', 'not_empty');
+
                             if (!$valid->check()) {
-                                throw API_ValidationException::factory(500, 'Incorrect data');
+                                throw API_ValidationException::factory(500, 'Empty task data');
                             }
 
                             $queryData = [
@@ -145,11 +146,11 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                                 ->execute($this->_db);
                         }
                     } else {
-                        throw API_ValidationException::factory(500, 'Incorrect data');
+                        throw API_ValidationException::factory(500, 'Empty tasks in some speciality');
                     }
                 }
             } else {
-                throw API_ValidationException::factory(500, 'Incorrect data');
+                throw API_ValidationException::factory(500, 'Empty specialities');
             }
             if(!empty($clientData['notify'])) {
                 foreach ($clientData['notify'] as $userId) {
@@ -192,30 +193,30 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
             $elApproval = Api_DBElApprovals::getElApprovalById($elApprovalId);
 
             if(!$elApproval) {
-                throw API_ValidationException::factory(500, 'Incorrect data1');
+                throw API_ValidationException::factory(500, 'Incorrect EAR id');
             }
 
             if($elApproval[0]['status'] === 'approved') {
-                throw API_ValidationException::factory(500, 'Cant modify readable data');
+                throw API_ValidationException::factory(500, 'Can\'t modify readable EAR');
             }
 
             $clientData = Arr::extract($this->put(),
                 [
                     'id',
-                    'project_id',
+                    'projectId',
                     'notice',
                     'signatures',
-                    'deleted_signatures',
+                    'deletedSignatures',
                     'tasks',
                 ]);
 
             $valid = Validation::factory($clientData);
             $valid
                 ->rule('id', 'not_empty')
-                ->rule('project_id', 'not_empty');
+                ->rule('projectId', 'not_empty');
 
             if (!$valid->check()) {
-                throw API_ValidationException::factory(500, 'Incorrect data22');
+                throw API_ValidationException::factory(500, 'missing required field projectId or id');
             }
 
             $elApprovalCraftId = $clientData['id'];
@@ -230,8 +231,8 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                 ->where('id', '=', $elApprovalCraftId)
                 ->execute($this->_db);
 
-            if(!empty($clientData['deleted_signatures'])) {
-                foreach ($clientData['deleted_signatures'] as $signatureId) {
+            if(!empty($clientData['deletedSignatures'])) {
+                foreach ($clientData['deletedSignatures'] as $signatureId) {
                     DB::delete('el_app_signatures')
                         ->where('id', '=', $signatureId)
                         ->execute($this->_db);
@@ -239,7 +240,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
             }
 
             if(!empty($clientData['signatures'])) {
-                $elApprovalCraftSignatureImagesPath = DOCROOT.'media/data/projects/'.$clientData['project_id'].'/el-approvals';
+                $elApprovalCraftSignatureImagesPath = DOCROOT.'media/data/projects/'.$clientData['projectId'].'/el-approvals';
                 if(!file_exists($elApprovalCraftSignatureImagesPath)) {
                     mkdir($elApprovalCraftSignatureImagesPath, 0777, true);
                 }
@@ -253,7 +254,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                         ->rule('image', 'not_empty');
 
                     if (!$valid->check()) {
-                        throw API_ValidationException::factory(500, 'Incorrect data3');
+                        throw API_ValidationException::factory(500, 'missing required field in signatures');
                     }
 
                     if(!$signature['id']) {
@@ -293,7 +294,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                         ->rule('appropriate', 'not_empty');
 
                     if (!$valid->check()) {
-                        throw API_ValidationException::factory(500, 'Incorrect data4');
+                        throw API_ValidationException::factory(500, 'missing required field in tasks');
                     }
 
                     $queryData = [
@@ -317,7 +318,6 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
         } catch (Exception $e){
             Database::instance()->rollback();
             throw API_Exception::factory(500,'Operation Error');
-//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($e->getMessage()); echo "</pre>"; exit;
         }
     }
 
@@ -331,7 +331,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
             $elApproval = Api_DBElApprovals::getElApprovalById($elApprovalId);
 
             if(empty($elApproval)) {
-                throw API_Exception::factory(500,'Incorrect identifier');
+                throw API_Exception::factory(500,'Incorrect EAR id');
             }
 
             $elApproval = $this->getApproveElementsExpandedData($elApproval);
@@ -358,12 +358,12 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
 
             $filters = Arr::extract($_POST,
                 [
-                    'company_id',
-                    'project_id',
-                    'object_ids',
-                    'place_ids',
-                    'element_ids',
-                    'speciality_ids',
+                    'companyId',
+                    'projectId',
+                    'objectIds',
+                    'placeIds',
+                    'elementIds',
+                    'specialityIds',
                     'managerStatuses',
                     'statuses',
                     'positions',
@@ -375,11 +375,11 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
             $valid = Validation::factory($filters);
 
             $valid
-                ->rule('company_id', 'not_empty')
-                ->rule('project_id', 'not_empty');
+                ->rule('companyId', 'not_empty')
+                ->rule('projectId', 'not_empty');
 
             if (!$valid->check()) {
-                throw API_ValidationException::factory(500, 'Incorrect data');
+                throw API_ValidationException::factory(500, 'missing required field companyId or projectId');
             }
 
             $count = count(Api_DBElApprovals::getElApprovalsList(null,null, $filters));
@@ -390,6 +390,8 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                 )
             )
                 ->route_params($params);
+
+//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$pagination->items_per_page,$pagination->offset]); echo "</pre>"; exit;
             $elApprovals = Api_DBElApprovals::getElApprovalsList($pagination->items_per_page, $pagination->offset, $filters, true);
 
             $elApprovals = $this->getApproveElementsExpandedData($elApprovals);
@@ -400,7 +402,8 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                 'pagination' => ['total' => $count, 'offset' => $pagination->offset, 'limit' => $limit],
             ];
         }  catch (Exception $e) {
-            throw API_Exception::factory(500,'Operation Error');
+//            throw API_Exception::factory(500,'Operation Error');
+            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($e->getMessage()); echo "</pre>"; exit;
         }
     }
 
@@ -412,15 +415,14 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
      */
     public function action_list_user_post() {
         try {
-//echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r(Auth::instance()->get_user()->id); echo "</pre>"; exit;
             $filters = Arr::extract($_POST,
                 [
-                    'company_id',
-                    'project_id',
-                    'object_ids',
-                    'place_ids',
-                    'element_ids',
-                    'speciality_ids',
+                    'companyId',
+                    'projectId',
+                    'objectIds',
+                    'placeIds',
+                    'elementIds',
+                    'specialityIds',
                     'statuses',
                     'positions',
                 ]);
@@ -428,14 +430,14 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
             $valid = Validation::factory($filters);
 
             $valid
-                ->rule('company_id', 'not_empty')
-                ->rule('project_id', 'not_empty');
+                ->rule('companyId', 'not_empty')
+                ->rule('projectId', 'not_empty');
 
             if (!$valid->check()) {
-                throw API_ValidationException::factory(500, 'Incorrect data');
+                throw API_ValidationException::factory(500, 'missing required field companyId or projectId');
             }
 
-            $elApprovals = Api_DBElApprovals::getUserElementApprovals($filters);
+            $elApprovals = Api_DBElApprovals::getElApprovalsByUserId($filters, Auth::instance()->get_user()->id);
             $elApprovals = $this->getApproveElementsExpandedData($elApprovals);
 
             $this->_responseData = [
@@ -452,27 +454,29 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
      * https://qforb.net/api/json/<appToken>/el-approvals/<el_app_id>/specialities/<craft_id>
      *
      */
+
+//    [hasa ste]
     public function action_speciality_get(){
-        $elApprovalId = $this->getUIntParamOrDie($this->request->param('el_app_id'));
-        $elApprovalSpecialityId = $this->getUIntParamOrDie($this->request->param('craft_id'));
+        $elApprovalId = $this->getUIntParamOrDie($this->request->param('elAppId'));
+        $elApprovalSpecialityId = $this->getUIntParamOrDie($this->request->param('craftId'));
 
         try {
             $elApprovalCraft = Api_DBElApprovals::getElApprovalCraftByCraftId($elApprovalSpecialityId);
-            $qualityControls = Api_DBElApprovals::getQualityControlsListByElAppId($elApprovalId);
+            $qualityControls = Api_DBElApprovals::getElApprovalQCListById($elApprovalId);
 
 
             $elApprovalCraft[0]['signatures'] = Api_DBElApprovals::getElApprovalCraftsSignaturesByCraftIds($elApprovalSpecialityId);
             $elApprovalCraft[0]['tasks'] = Api_DBElApprovals::getElApprovalCraftsTasksByCraftIds($elApprovalSpecialityId);
 
-            $qcKeys = array_keys(array_column($qualityControls, 'craft_id'), $elApprovalCraft[0]['craft_id']);
+            $qcKeys = array_keys(array_column($qualityControls, 'craftId'), $elApprovalCraft[0]['craftId']);
             if(!empty($qcKeys)) {
-                $elApprovalCraft[0]['quality_controls'] = [];
+                $elApprovalCraft[0]['qualityControl'] = [];
                 foreach ($qcKeys as $qcKey) {
                     $qualityControls[$qcKey]['images'] = Api_DBElApprovals::getQualityControlImages($qualityControls[$qcKey]['id']);
-                    $elApprovalCraft[0]['quality_controls'] = $qualityControls[$qcKey];
+                    $elApprovalCraft[0]['qualityControl'] = $qualityControls[$qcKey];
                 }
             } else {
-                $elApprovalCraft[0]['quality_controls'] = null;
+                $elApprovalCraft[0]['qualityControl'] = null;
             }
 
             $this->_responseData = [
@@ -519,7 +523,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
             $status = Arr::get($this->put(), 'status');
 
             if(!in_array($status,Enum_ApprovalStatus::toArray(),true)) {
-                throw API_ValidationException::factory(500, 'Incorrect data');
+                throw API_ValidationException::factory(500, 'Invalid status');
             }
 
             if(($this->_user->getRelevantRole('name') !== 'super_admin') && ($status === 'waiting')) {
@@ -527,8 +531,8 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
             }
             $queryData = [
                 'status' => $status,
-                'updated_at' => time(),
-                'updated_by' => Auth::instance()->get_user()->id,
+                'updatedAt' => time(),
+                'updatedBy' => Auth::instance()->get_user()->id,
             ];
 
             DB::update('el_approvals')
@@ -575,7 +579,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
             $usersList = Api_DBElApprovals::getElApprovalUsersListForNotify($elApprovalId);
 
             foreach ($usersList as $user) {
-                array_push($responseData, $user['user_id']);
+                array_push($responseData, $user['userId']);
             }
             $this->_responseData = [
                 'status' => "success",
@@ -604,7 +608,10 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
             if(!empty($uniqueUserIds)) {
                 Database::instance()->begin();
 
-                DB::delete('el_approvals_notifications')->where('ell_app_id', '=', $elApprovalId)->execute($this->_db);
+                DB::delete('el_approvals_notifications')
+                    ->where('ell_app_id', '=', $elApprovalId)
+                    ->execute($this->_db);
+
                 foreach ($uniqueUserIds as $userId) {
                     $queryData = [
                         'ell_app_id' => $elApprovalId,
@@ -638,7 +645,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
      * https://qforb.net/api/json/<appToken>/projects/<project_id>/el-approvals/export_xls
      */
     public function action_export_xls_get(){
-        $projectId = $this->getUIntParamOrDie($this->request->param('project_id'));
+        $projectId = $this->getUIntParamOrDie($this->request->param('projectId'));
 
         if ($lang = Arr::get($_GET, 'lang')) {
             I18n::lang($lang);
@@ -646,14 +653,14 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
         }
 
         $filters = [
-            'project_id' => $projectId,
+            'projectId' => $projectId,
             'statuses' => json_decode($_GET['statuses']),
-            'object_ids' => json_decode($_GET['object_ids']),
-            'floor_ids' => json_decode($_GET['floor_ids']),
-            'place_ids' => json_decode($_GET['place_ids']),
-            'element_ids' => json_decode($_GET['element_ids']),
-            'speciality_ids' => json_decode($_GET['speciality_ids']),
-            'company_id' => json_decode($_GET['company_id']),
+            'objectIds' => json_decode($_GET['objectIds']),
+            'floorIds' => json_decode($_GET['floorIds']),
+            'placeIds' => json_decode($_GET['placeIds']),
+            'elementIds' => json_decode($_GET['elementIds']),
+            'specialityIds' => json_decode($_GET['specialityIds']),
+            'companyId' => json_decode($_GET['companyId']),
             'positions' => json_decode($_GET['positions']),
         ];
 
@@ -741,11 +748,11 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
             foreach ($elApprovals as $elApproval){
                 $excelRows[] = [
                     $elApproval['id'],
-                    date('d/m/Y', $elApproval['created_at']),
-                    $elApproval['object_name'],
-                    $elApproval['element_name'],
+                    date('d/m/Y', $elApproval['createdAt']),
+                    $elApproval['objectName'],
+                    $elApproval['elementName'],
                     '',
-                    $elApproval['floor_name'] ?: $elApproval['floor_number'],
+                    $elApproval['floorName'] ?: $elApproval['floorNumber'],
                     $elApproval['status'],
                     '',
                     '',
@@ -758,12 +765,12 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                         '',
                         '',
                         '',
-                        $speciality['craft_name'],
+                        $speciality['craftName'],
                         '',
                         $speciality['appropriate'] ? __('appropriate') : __('not_appropriate'),
-                        !empty($speciality['signatures']) ? date('d/m/Y', $speciality['signatures'][0]['created_at']) : date('d/m/Y', $speciality['updated_at']),
+                        !empty($speciality['signatures']) ? date('d/m/Y', $speciality['signatures'][0]['createdAt']) : date('d/m/Y', $speciality['updatedAt']),
                         !empty($speciality['signatures']) ? $speciality['signatures'][0]['position'] : '',
-                        !empty($speciality['signatures']) ? $speciality['signatures'][0]['creator_name'] : '',
+                        !empty($speciality['signatures']) ? $speciality['signatures'][0]['creatorName'] : '',
                     ];
 
                     if(!empty($speciality['signatures'])) {
@@ -812,14 +819,14 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
     public function action_export_pdf_get(){
 
         $filters = Arr::extract($_GET, [
-            'project_id',
+            'projectId',
             'statuses',
-            'object_ids',
-            'floor_ids',
-            'place_ids',
-            'element_ids',
-            'speciality_ids',
-            'company_id',
+            'objectIds',
+            'floorIds',
+            'placeIds',
+            'elementIds',
+            'specialityIds',
+            'companyId',
             'positions'
         ]);
 
@@ -828,8 +835,8 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
         $valid = Validation::factory($filters);
 
         $valid
-            ->rule('company_id', 'not_empty')
-            ->rule('project_id', 'not_empty');
+            ->rule('companyId', 'not_empty')
+            ->rule('projectId', 'not_empty');
 
         if (!$valid->check()) {
             throw API_ValidationException::factory(500, 'Incorrect data');
@@ -884,21 +891,21 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
     {
         foreach ($elApprovals as $elAppKey => $elApproval) {
             $elApprovals[$elAppKey]['specialities'] = Api_DBElApprovals::getElApprovalCraftsByElAppId($elApproval['id']);
-            $qualityControls = Api_DBElApprovals::getQualityControlsListByElAppId($elApproval['id']);
+            $qualityControls = Api_DBElApprovals::getElApprovalQCListById($elApproval['id']);
 
             foreach ($elApprovals[$elAppKey]['specialities'] as $specialityKey => $speciality) {
                 $elApprovals[$elAppKey]['specialities'][$specialityKey]['signatures'] = Api_DBElApprovals::getElApprovalCraftsSignaturesByCraftIds($speciality['id']);
                 $elApprovals[$elAppKey]['specialities'][$specialityKey]['tasks'] = Api_DBElApprovals::getElApprovalCraftsTasksByCraftIds($speciality['id']);
 
-                $qcKeys = array_keys(array_column($qualityControls, 'craft_id'), $speciality['craft_id']);
+                $qcKeys = array_keys(array_column($qualityControls, 'craftId'), $speciality['craftId']);
                 if (!empty($qcKeys)) {
-                    $elApprovals[$elAppKey]['specialities'][$specialityKey]['quality_control'] = [];
+                    $elApprovals[$elAppKey]['specialities'][$specialityKey]['qualityControl'] = [];
                     foreach ($qcKeys as $qcKey) {
                         $qualityControls[$qcKey]['images'] = Api_DBElApprovals::getQualityControlImages($qualityControls[$qcKey]['id']);
-                        $elApprovals[$elAppKey]['specialities'][$specialityKey]['quality_control'] = $qualityControls[$qcKey];
+                        $elApprovals[$elAppKey]['specialities'][$specialityKey]['qualityControl'] = $qualityControls[$qcKey];
                     }
                 } else {
-                    $elApprovals[$elAppKey]['specialities'][$specialityKey]['quality_control'] = null;
+                    $elApprovals[$elAppKey]['specialities'][$specialityKey]['qualityControl'] = null;
                 }
             }
         }
@@ -907,8 +914,8 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
 
     private function updateElementApproval($elApprovalId) {
         $queryData = [
-            'updated_at' => time(),
-            'updated_by' => Auth::instance()->get_user()->id
+            'updatedAt' => time(),
+            'updatedBy' => Auth::instance()->get_user()->id
         ];
 
         DB::update('el_approvals')
@@ -919,8 +926,8 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
 
     private function updateElementApprovalCraft($elApprovalCraftId) {
         $queryData = [
-            'updated_at' => time(),
-            'updated_by' => Auth::instance()->get_user()->id
+            'updatedAt' => time(),
+            'updatedBy' => Auth::instance()->get_user()->id
         ];
 
         DB::update('el_approvals_crafts')

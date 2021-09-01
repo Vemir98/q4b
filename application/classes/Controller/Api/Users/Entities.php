@@ -55,7 +55,7 @@ class Controller_Api_Users_Entities extends HDVP_Controller_API
         }
 
         try {
-            $usersList = Api_DBUsers::getCompanyUsersList($companyId);
+            $usersList = Api_DBUsers::getUsersByCompanyId($companyId);
             $usersList = $this->getUsersExpandedData($usersList, $fields);
 
             $this->_responseData = [
@@ -84,9 +84,9 @@ class Controller_Api_Users_Entities extends HDVP_Controller_API
         }
 
         try {
-            $pUsersList = Api_DBUsers::getProjectUsersList($projectId);
+            $pUsersList = Api_DBUsers::getUsersByProjectId($projectId);
             $companyId = Api_DBCompanies::getProjectCompanyByProjectId($projectId)[0]['company_id'];
-            $cUsersList = Api_DBUsers::getCompanyUsersList($companyId);
+            $cUsersList = Api_DBUsers::getUsersByCompanyId($companyId);
             $cUsersResult = [];
 
             foreach ($cUsersList as $cUser) {
@@ -95,7 +95,7 @@ class Controller_Api_Users_Entities extends HDVP_Controller_API
                     $cUsersResult[] = $cUser;
                 }
             }
-            $gUsersList = Api_DBUsers::getUsersWithRoleOutspread('general');
+            $gUsersList = Api_DBUsers::getUsersByRoleOutspread('general');
 
             $result = array_unique(array_merge($pUsersList, $gUsersList, $cUsersResult), SORT_REGULAR);
 
@@ -128,7 +128,7 @@ class Controller_Api_Users_Entities extends HDVP_Controller_API
         }
 
         try {
-            $usersList = Api_DBUsers::getRoleUsersList($roleId);
+            $usersList = Api_DBUsers::getUsersByRoletId($roleId);
             $usersList = $this->getUsersExpandedData($usersList, $fields);
 
             $this->_responseData = [

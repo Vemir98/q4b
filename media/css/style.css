@@ -21138,12 +21138,17 @@ html.rtl .labtest_filters1 .labtest_filter_input:nth-last-of-type(1), .labtest_f
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  margin-bottom: 16px;
 }
 
 .ltest_attachment_icon {
   margin-right: 9.55px;
   color: #1EBCE8;
 }
+.ltest_attachment_icon i {
+  font-size: 45px;
+}
+
 .ltest_attachment_icon:hover{
   cursor: pointer;
   transform: scale(1.1);
@@ -21187,11 +21192,11 @@ html.rtl .labtest_filters1 .labtest_filter_input:nth-last-of-type(1), .labtest_f
 }
 
 .ltest_attachment_wraper {
-  max-height: 160px;
   overflow-y: auto;
   padding-right: 10px;
   width: 100%;
-  max-width: 400px;
+  max-width: 420px;
+  min-height: 50px;
 }
 .labtest_attachment #fileInput{
   height: 0!important;
@@ -21685,7 +21690,7 @@ html.rtl #elements-type .multiselect__option, html.rtl #labtests-projects .multi
   align-items: center;
   cursor: pointer;
   margin-top: 16px;
-  margin-bottom: 16px;
+  margin-bottom: 32px;
   transition: 0.3s ease-in;
 }
 .attach_file:hover{
