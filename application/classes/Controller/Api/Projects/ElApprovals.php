@@ -382,7 +382,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                 throw API_ValidationException::factory(500, 'missing required field companyId or projectId');
             }
 
-            $count = count(Api_DBElApprovals::getElApprovalsList(null,null, $filters));
+            $count = Api_DBElApprovals::getElApprovalsListCount($filters)[0]['reportsCount'];
 
             $pagination = Pagination::factory(array(
                     'total_items'    => $count,
@@ -391,7 +391,6 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
             )
                 ->route_params($params);
 
-//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$pagination->items_per_page,$pagination->offset]); echo "</pre>"; exit;
             $elApprovals = Api_DBElApprovals::getElApprovalsList($pagination->items_per_page, $pagination->offset, $filters, true);
 
             $elApprovals = $this->getApproveElementsExpandedData($elApprovals);
@@ -402,8 +401,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                 'pagination' => ['total' => $count, 'offset' => $pagination->offset, 'limit' => $limit],
             ];
         }  catch (Exception $e) {
-//            throw API_Exception::factory(500,'Operation Error');
-            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($e->getMessage()); echo "</pre>"; exit;
+            throw API_Exception::factory(500,'Operation Error');
         }
     }
 

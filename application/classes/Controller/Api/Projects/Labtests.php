@@ -62,6 +62,8 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
         $elements = $_POST;
         try {
             if (!empty($elements)) {
+                Database::instance()->begin();
+
                 for ($i=count($elements)-1; $i>=0; $i--) {
                     $el = $elements[$i];
                     $data = [
@@ -84,6 +86,7 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
                         ->values(array_values($data))
                         ->execute($this->_db);
                 }
+                Database::instance()->commit();
             }
         $elements = Api_DBProjects::getProjectElements($projectId, '');
         $this->_responseData['items'] = $elements;
@@ -118,10 +121,8 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
             }
             DB::update('elements')->set(["name" => $name])->where('id', '=', $id)->execute($this->_db);
         } catch (API_ValidationException $e){
-            Database::instance()->rollback();
             throw API_Exception::factory(500,'Incorrect data');
         } catch (Exception $e){
-            Database::instance()->rollback();
             throw API_Exception::factory(500,'Operation Error');
         }
     }
@@ -169,6 +170,8 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
                         }
                     }
                 }
+                Database::instance()->begin();
+
                 DB::delete('elements_cmp_crafts')
                     ->where('element_id', 'IN', $elCraftsToDelete)
                     ->execute($this->_db);
@@ -180,6 +183,7 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
                     }
                     $query->execute($this->_db);
                 }
+                Database::instance()->commit();
             } catch (API_ValidationException $e){
                 Database::instance()->rollback();
                 throw API_Exception::factory(500,'Incorrect data');
@@ -744,6 +748,9 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
         if(empty($project) || empty($labtest)){
             throw API_Exception::factory(500,'Incorrect identifier');
         }
+
+        Database::instance()->begin();
+
         DB::update('labtests')->set(["status" => $data['status']])->where('id', '=', $labtestId)->execute($this->_db);
         $uploadedFiles = [];
         $data['createdAt'] = time();
@@ -810,6 +817,8 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
             $fs->sendLazyTasks();
         }
 
+            Database::instance()->commit();
+
         } catch (API_ValidationException $e){
             Database::instance()->rollback();
             throw API_Exception::factory(500,'Incorrect data');
@@ -864,6 +873,8 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
                 'updated_by' => $data['updatedBy'],
             ];
 
+            Database::instance()->begin();
+
             DB::update('labtests_tickets')
                 ->set($queryData)
                 ->where('id', '=', $ticketId)
@@ -914,6 +925,8 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
                 DB::delete('files')->where('id', 'IN', $imagesOld)->execute($this->_db);
                 DB::delete('labtests_tickets_files')->where('file_id', 'IN', $imagesOld)->execute($this->_db);
             }
+
+            Database::instance()->commit();
 
         } catch (API_ValidationException $e){
             Database::instance()->rollback();

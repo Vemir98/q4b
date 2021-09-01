@@ -185,6 +185,56 @@ class Api_DBElApprovals
         return DB::query(Database::SELECT, $query)->execute()->as_array();
     }
 
+    public static function getElApprovalsListCount($filters)
+    {
+        $query = 'SELECT 
+            COUNT(DISTINCT ea.id) as reportsCount
+            FROM el_approvals ea 
+            LEFT JOIN el_approvals_crafts eac ON ea.id=eac.el_app_id
+            LEFT JOIN el_app_signatures eas ON eac.id=eas.el_app_craft_id
+            LEFT JOIN pr_floors f ON ea.floor_id=f.id
+            LEFT JOIN pr_places p ON ea.place_id=p.id
+            LEFT JOIN users u ON ea.created_by=u.id
+            LEFT JOIN pr_objects o ON ea.object_id=o.id
+            LEFT JOIN elements e ON ea.element_id=e.id
+            LEFT JOIN el_approvals_notifications ean ON ean.ell_app_id=ea.id';
+
+        $query .= ' WHERE ea.company_id='.$filters['companyId'].' AND ea.project_id='.$filters['projectId'];
+        if(isset($filters['objectIds']) && !empty($filters['objectIds'])){
+            $query .= ' AND ea.object_id IN ('.implode(',',$filters['objectIds']).')';
+        }
+        if(isset($filters['placeIds']) && !empty($filters['placeIds'])){
+            $query .= ' AND ea.place_id IN ('.implode(',',$filters['placeIds']).')';
+        }
+        if(isset($filters['elementIds']) && !empty($filters['elementIds'])){
+            $query .= ' AND ea.element_id IN ('.implode(',',$filters['elementIds']).')';
+        }
+        if(isset($filters['floorIds']) && !empty($filters['floorIds'])){
+            $query .= ' AND ea.floor_id IN ('.implode(',',$filters['floorIds']).')';
+        }
+        if(isset($filters['specialityIds']) && !empty($filters['specialityIds'])){
+            $query .= ' AND eac.craft_id IN ('.implode(',',$filters['specialityIds']).')';
+        }
+        if(isset($filters['managerStatuses']) && !empty($filters['managerStatuses'])){
+            $query .= ' AND ea.status IN ("' . implode('","', $filters['managerStatuses']) . '")';
+        }
+        if(isset($filters['statuses']) && !empty($filters['statuses'])){
+            $query .= ' AND ea.appropriate IN ('.implode(',',$filters['statuses']).')';
+        }
+        if(isset($filters['positions']) && !empty($filters['positions'])){
+            $query .= ' AND eas.position IN ("' . implode('","', $filters['positions']) . '")';
+        }
+        if(isset($filters['from'])){
+            $query .= ' AND ea.created_at>='.$filters['from'];
+        }
+        if(isset($filters['to'])){
+            $query .= ' AND ea.created_at<='.$filters['to'];
+        }
+        $query .= ' ORDER BY ea.created_at DESC';
+
+        return DB::query(Database::SELECT, $query)->execute()->as_array();
+    }
+
     public static function getElApprovalCraftsSignaturesByCraftIds($elAppCraftId)
     {
         $query = "SELECT 

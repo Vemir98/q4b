@@ -44,6 +44,8 @@ class Controller_Api_Projects_Tasks extends HDVP_Controller_API {
 
         try {
             if (!empty($tasks)) {
+                Database::instance()->begin();
+
                 for ($i=count($tasks)-1; $i>=0; $i--) {
                     $t = $tasks[$i];
                     $data = [
@@ -60,6 +62,8 @@ class Controller_Api_Projects_Tasks extends HDVP_Controller_API {
                     if (!$valid->check()) {
                         throw API_ValidationException::factory(500, 'Incorrect data');
                     }
+
+
                     $task = DB::insert('pr_tasks')
                         ->columns(array_keys($data))
                         ->values(array_values($data))
@@ -95,6 +99,7 @@ class Controller_Api_Projects_Tasks extends HDVP_Controller_API {
                         $query->execute($this->_db);
                     }
                 }
+                Database::instance()->commit();
             }
 //            $tasks = Api_DBTasks::getProjectTasks($projectId);
             $this->_responseData = 'success';
@@ -102,6 +107,7 @@ class Controller_Api_Projects_Tasks extends HDVP_Controller_API {
             Database::instance()->rollback();
             throw API_Exception::factory(500,'Incorrect data');
         } catch (Exception $e){
+            Database::instance()->rollback();
             throw API_Exception::factory(500,'Operation Error');
         }
     }
@@ -118,6 +124,9 @@ class Controller_Api_Projects_Tasks extends HDVP_Controller_API {
         }
         try {
             if (!empty($tasks)) {
+                Database::instance()->begin();
+
+
                 $taskIds = $taskCraftIds = [];
                 foreach($tasks as $task) {
                     $taskIds[] = $task['id'];
@@ -187,7 +196,7 @@ class Controller_Api_Projects_Tasks extends HDVP_Controller_API {
                         $query->execute($this->_db);
                     }
                 }
-
+                Database::instance()->commit();
             }
         } catch (API_ValidationException $e){
             Database::instance()->rollback();
@@ -249,6 +258,7 @@ class Controller_Api_Projects_Tasks extends HDVP_Controller_API {
         }
         try {
             if (!empty($tasks)) {
+                Database::instance()->begin();
                 $taskData = [];
 
                 foreach($tasks as $task) {
@@ -282,6 +292,7 @@ class Controller_Api_Projects_Tasks extends HDVP_Controller_API {
                     }
                     $query->execute($this->_db);
                 }
+                Database::instance()->commit();
             }
         } catch (API_ValidationException $e){
             Database::instance()->rollback();
@@ -349,6 +360,8 @@ class Controller_Api_Projects_Tasks extends HDVP_Controller_API {
                         }
                     }
                 }
+                Database::instance()->begin();
+
                 foreach ($taskItems as $task) {
                     $task['projectId'] = $projectToId;
                     $modulesDataToInsert = [];
@@ -409,6 +422,8 @@ class Controller_Api_Projects_Tasks extends HDVP_Controller_API {
                         }
                     }
                 }
+                Database::instance()->commit();
+
             } catch (Exception $e){
                 Database::instance()->rollback();
                 throw API_Exception::factory(500,'Operation Error');
