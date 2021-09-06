@@ -3,7 +3,7 @@ Vue.component('projects-list', {
 
 
     <section class='lt_projects'>
-    <div class="lt_page_title">{{ trans.lab_control }}</div>
+    <div class="lt_page_title">{{ trans.lab_control_menu }}</div>
 
     <div class="lt_projects_select">
        <div class="form" >

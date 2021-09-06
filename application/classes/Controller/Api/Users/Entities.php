@@ -128,7 +128,7 @@ class Controller_Api_Users_Entities extends HDVP_Controller_API
         }
 
         try {
-            $usersList = Api_DBUsers::getUsersByRoletId($roleId);
+            $usersList = Api_DBUsers::getUsersByRoleId($roleId);
             $usersList = $this->getUsersExpandedData($usersList, $fields);
 
             $this->_responseData = [
@@ -172,7 +172,6 @@ class Controller_Api_Users_Entities extends HDVP_Controller_API
                 }
                 $result = $usersList;
             }
-
 
             return $result;
     }

@@ -45,6 +45,7 @@ class Controller_LabTests extends HDVP_Controller_Template
             "select_specialty" => __('Select_specialty'),
             "lab_control" => __('Lab control'),
             "lab_certificate" => __('Lab certificate'),
+            "lab_certificate_number" => __('Lab certificate number'),
             "date" => __('Date'),
             "create_date" => __('Create Date'),
             "structure" => __('Structure'),
@@ -77,6 +78,7 @@ class Controller_LabTests extends HDVP_Controller_Template
     {
         $translations = [
             "lab_control" => __('Lab control'),
+            "lab_control_menu" => __('Lab control menu'),
             "select_project" => __('Select project'),
             "company" => __('Company'),
             "status" => __('Status'),
@@ -141,7 +143,6 @@ class Controller_LabTests extends HDVP_Controller_Template
     public function action_edit()
     {
         $id = $this->getUIntParamOrDie($this->request->param('projectId'));
-        $labtestId = $this->getUIntParamOrDie($this->request->param('id'));
         $labtestId = $this->getUIntParamOrDie($this->request->param('id'));
         $project = ORM::factory('Project',$id);
         $labtest = ORM::factory('LabTest',$labtestId);

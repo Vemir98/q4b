@@ -13,6 +13,7 @@ Vue.component('labtest-list-item', {
                     {{ item.standard }}
                 </div>
             </td>
+            <td>{{ item.ticketNumber }}</td>
             <td>{{ trans[item.status] }}</td>
             <td class='elements_more'>
               <div class="elements_moreS">
@@ -65,9 +66,11 @@ Vue.component('labtest-list-item', {
 
     methods: {
         toggleMore() {
+            //[nuynna]
             this.$emit('toggleMore', { item: this.item, index: this.index })
         },
         getDate(timestamp){
+            //[nuynna]
             if (timestamp) {
                 return moment.unix(timestamp).tz("Asia/Jerusalem").format('DD/MM/YYYY')
             }
@@ -79,9 +82,11 @@ Vue.component('labtest-list-item', {
             }, 100)
         },
         toggleMore() {
+            //[nuynna]
             this.$emit('toggleMore', { item: this.item, index: this.index })
         },
         getDate(timestamp){
+            //[nuynna]
             if (timestamp) {
                 return moment.unix(timestamp).tz("Asia/Jerusalem").format('DD/MM/YYYY')
             }

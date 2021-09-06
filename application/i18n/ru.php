@@ -816,6 +816,7 @@ return [
     'approve'=>'Утвержден',
     'non_approve'=>'Не утвержден',
     'Lab control' => 'ЛПК',
+    'Lab control menu' => 'ЛПК',
     'Elements Type' => 'Типы элементов',
     'Elements List' => 'Список элементов',
     'LC Ready for Transfer' => 'ЛПК готовые к отправке',

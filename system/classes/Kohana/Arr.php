@@ -635,4 +635,14 @@ class Kohana_Arr {
         },$fields);
     }
 
+    public static function decamelizeKeys($array)
+    {
+        $result = [];
+
+        foreach ($array as $key => $value) {
+            $result[Inflector::underscore(Inflector::decamelize($key))] = $value;
+        }
+        return $result;
+    }
+
 }

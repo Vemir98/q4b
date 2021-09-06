@@ -10,8 +10,12 @@ class Api_DBTasks
                 pt.name as taskName,
                 pt.status as taskStatus
                 FROM pr_tasks pt
-                WHERE pt.project_id={$id}
+                WHERE pt.project_id=:id
                 ORDER BY pt.id DESC";
+
+            $query = DB::query(Database::SELECT, $query);
+            $query->param(':id', $id);
+
         } else {
             $query = "SELECT DISTINCT 
                 pt.id as taskId, 
@@ -20,20 +24,32 @@ class Api_DBTasks
                 FROM pr_tasks pt 
                 LEFT JOIN pr_tasks_crafts tc ON pt.id=tc.task_id
                 LEFT JOIN modules_tasks_crafts mtc ON tc.id=mtc.tc_id 
-                WHERE pt.project_id={$id}";
+                WHERE pt.project_id=:id";
 
             if ($craftId) {
-                $query .= " AND tc.craft_id={$craftId}";
+                $query .= " AND tc.craft_id=:craftId";
             }
             if ($moduleId) {
-                $query .= " AND mtc.module_id={$moduleId}";
+                $query .= " AND mtc.module_id=:moduleId";
             }
             $query .= " ORDER BY pt.id DESC";
+
+            $query = DB::query(Database::SELECT, $query);
+
+            $query->param(':id', $id);
+            if ($craftId) {
+                $query->param(':craftId', $craftId);
+            }
+            if ($moduleId) {
+                $query->param(':moduleId', $moduleId);
+            }
         }
-        return DB::query(Database::SELECT, $query)->execute()->as_array();
+
+
+        return $query->execute()->as_array();
     }
 
-    public static function getProjectTasksByIds($taskIds)
+    public static function getTasksWithCraftByIds($taskIds)
     {
         $query = 'SELECT 
             pt.id, 
@@ -46,9 +62,14 @@ class Api_DBTasks
             INNER JOIN pr_tasks_crafts tc ON pt.id=tc.task_id
             LEFT JOIN cmp_crafts cr ON tc.craft_id=cr.id
             LEFT JOIN modules_tasks_crafts mtc ON tc.id=mtc.tc_id 
-            WHERE pt.id IN ('.implode(',',$taskIds).')';
+            WHERE pt.id IN (:taskIds)';
 
-        return DB::query(Database::SELECT, $query)->execute()->as_array();
+        $taskIds =  DB::expr(implode(',',$taskIds));
+
+        $query = DB::query(Database::SELECT, $query);
+        $query->param(':id', $taskIds);
+
+        return $query->execute()->as_array();
     }
 
     public static function getTaskById($taskId)
@@ -58,9 +79,11 @@ class Api_DBTasks
             t.name AS taskName,
             pt.status AS taskStatus
             FROM pr_tasks pt
-            WHERE pt.id={$taskId}";
+            WHERE pt.id=:taskId";
 
-        return DB::query(Database::SELECT, $query)->execute()->as_array();
+        return DB::query(Database::SELECT, $query)
+            ->bind(':taskId', $taskId)
+            ->execute()->as_array();
     }
 
     public static function getTaskByName($projectId, $name)
@@ -70,13 +93,18 @@ class Api_DBTasks
             name,
             status
             FROM pr_tasks
-            WHERE TRIM(`name`)='{$name}' AND `project_id`={$projectId}";
+            WHERE TRIM(`name`)=:taskName AND `project_id`=:projectId";
 
-        return DB::query(Database::SELECT, $query)->execute()->as_array();
+        $query = DB::query(Database::SELECT, $query);
+        $query->param(':taskName', $name);
+        $query->param(':projectId', $projectId);
+
+        return $query->execute()->as_array();
     }
 
     public static function getTaskCrafts($taskIds, $fields=null)
     {
+        //[nuynna]
         $query = 'SELECT DISTINCT 
             ptc.craft_id as craftId,
             ptc.task_id as taskId,
@@ -85,13 +113,20 @@ class Api_DBTasks
             FROM pr_tasks_crafts ptc 
             INNER JOIN pr_tasks pt ON ptc.task_id=pt.id 
             LEFT JOIN cmp_crafts cr ON ptc.craft_id=cr.id
-            WHERE pt.status = "enabled" AND ptc.task_id IN ('.implode(',',$taskIds).')';
+            WHERE pt.status =:status AND ptc.task_id IN (:taskIds)';
 
-        return DB::query(Database::SELECT, $query)->execute()->as_array();
+        $taskIds =  DB::expr(implode(',', $taskIds));
+
+        $query = DB::query(Database::SELECT, $query);
+        $query->param(':status', "enabled");
+        $query->param(':taskIds', $taskIds);
+
+        return $query->execute()->as_array();
     }
 
     public static function getTaskCraftsModules($taskIds, $fields=null)
     {
+        //[nuynna]
         $query = 'SELECT
             ptc.craft_id as craftId,
             ptc.task_id as taskId,
@@ -100,9 +135,15 @@ class Api_DBTasks
             FROM pr_tasks_crafts ptc 
             INNER JOIN pr_tasks pt ON ptc.task_id=pt.id 
             LEFT JOIN cmp_crafts cr ON ptc.craft_id=cr.id
-            WHERE pt.status = "enabled" AND ptc.task_id IN ('.implode(',',$taskIds).')';
+            WHERE pt.status =:status AND ptc.task_id IN (:taskIds)';
 
-        return DB::query(Database::SELECT, $query)->execute()->as_array();
+        $taskIds =  DB::expr(implode(',', $taskIds));
+
+        $query = DB::query(Database::SELECT, $query);
+        $query->param(':status', "enabled");
+        $query->param(':taskIds', $taskIds);
+
+        return $query->execute()->as_array();
     }
 
     public static function getTasksByIds($taskIds)
@@ -113,9 +154,14 @@ class Api_DBTasks
             name,
             status
             FROM pr_tasks
-            WHERE id IN ('.implode(',',$taskIds).')';
+            WHERE id IN (:taskIds)';
 
-        return DB::query(Database::SELECT, $query)->execute()->as_array();
+        $taskIds =  DB::expr(implode(',', $taskIds));
+
+        $query = DB::query(Database::SELECT, $query);
+        $query->param(':taskIds', $taskIds);
+
+        return $query->execute()->as_array();
     }
 
     public static function getTasksCrafts($taskIds)
@@ -126,9 +172,14 @@ class Api_DBTasks
             craft_id as craftId,
             status
             FROM pr_tasks_crafts ptc
-            WHERE ptc.task_id IN ('.implode(',',$taskIds).')';
+            WHERE ptc.task_id IN (:taskIds)';
 
-        return DB::query(Database::SELECT, $query)->execute()->as_array();
+        $taskIds =  DB::expr(implode(',', $taskIds));
+
+        $query = DB::query(Database::SELECT, $query);
+        $query->param(':taskIds', $taskIds);
+
+        return $query->execute()->as_array();
     }
 
     public static function getTasksModules($taskCraftsIds)
@@ -140,9 +191,14 @@ class Api_DBTasks
             ptc.craft_id as craftId
             FROM modules_tasks_crafts mtc
             INNER JOIN pr_tasks_crafts ptc ON ptc.id=mtc.tc_id
-            WHERE mtc.tc_id IN ('.implode(',',$taskCraftsIds).')';
+            WHERE mtc.tc_id IN (:taskCraftsIds)';
 
-        return DB::query(Database::SELECT, $query)->execute()->as_array();
+        $taskCraftsIds =  DB::expr(implode(',', $taskCraftsIds));
+
+        $query = DB::query(Database::SELECT, $query);
+        $query->param(':taskCraftsIds', $taskCraftsIds);
+
+        return $query->execute()->as_array();
     }
 
     public static function getCompanyCraftsByIds($cmpId, $craftIds)
@@ -154,8 +210,14 @@ class Api_DBTasks
             catalog_number as catalogNumber,
             status
             FROM cmp_crafts
-            WHERE company_id='.$cmpId.' AND id IN ('.implode(',',$craftIds).')';
+            WHERE company_id=:cmpId AND id IN (:craftIds)';
 
-        return DB::query(Database::SELECT, $query)->execute()->as_array();
+        $craftIds =  DB::expr(implode(',', $craftIds));
+
+        $query = DB::query(Database::SELECT, $query);
+        $query->param(':cmpId', $cmpId);
+        $query->param(':craftIds', $craftIds);
+
+        return $query->execute()->as_array();
     }
 }

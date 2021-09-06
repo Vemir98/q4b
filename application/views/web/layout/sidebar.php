@@ -20,7 +20,7 @@ $items = [
     ],
     [
         'slug' => 'labtests',
-        'text' => 'Lab control',
+        'text' => 'Lab control menu',
         'icon' => 'q4bikon-lab',
         'resource' => 'Controller_LabTests',
         'priority' => Enum_UserPriorityLevel::Project,

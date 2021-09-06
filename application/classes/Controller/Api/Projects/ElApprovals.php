@@ -187,6 +187,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
      * https://qforb.net/api/json/<appToken>/el-approvals/<id>
      */
     public function action_index_put(){
+
         $elApprovalId = $this->getUIntParamOrDie($this->request->param('id'));
 
         try {
@@ -308,6 +309,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                 }
             }
 
+
             $this->updateElementApproval($elApprovalId);
             $this->updateElementApprovalCraft($clientData['id']);
 
@@ -406,9 +408,8 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
     }
 
     /**
-     * returns element approvals filtered list
-     * returned data will be as rows[{}],pages: {total,offset,limit}
-     * https://qforb.net/api/json/<appToken>/el-approvals/list
+     * returns element approvals filtered list (return only EAR's which available to current user)
+     * returned data will be as rows[{}]
      * https://qforb.net/api/json/<appToken>/el-approvals/list/user
      */
     public function action_list_user_post() {
@@ -449,32 +450,31 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
 
     /**
      * returns specific speciality of element approval
-     * https://qforb.net/api/json/<appToken>/el-approvals/<el_app_id>/specialities/<craft_id>
-     *
+     * https://qforb.net/api/json/<appToken>/el-approvals/<el_app_id>/specialities/<craftId>
      */
-
-//    [hasa ste]
     public function action_speciality_get(){
         $elApprovalId = $this->getUIntParamOrDie($this->request->param('elAppId'));
         $elApprovalSpecialityId = $this->getUIntParamOrDie($this->request->param('craftId'));
 
         try {
-            $elApprovalCraft = Api_DBElApprovals::getElApprovalCraftByCraftId($elApprovalSpecialityId);
-            $qualityControls = Api_DBElApprovals::getElApprovalQCListById($elApprovalId);
+            $elApproval = Api_DBElApprovals::getElApprovalById($elApprovalId);
 
+            if(empty($elApproval)) {
+                throw API_Exception::factory(500,'Incorrect ear id');
+            }
 
-            $elApprovalCraft[0]['signatures'] = Api_DBElApprovals::getElApprovalCraftsSignaturesByCraftIds($elApprovalSpecialityId);
-            $elApprovalCraft[0]['tasks'] = Api_DBElApprovals::getElApprovalCraftsTasksByCraftIds($elApprovalSpecialityId);
+            $elApproval = $this->getApproveElementsExpandedData($elApproval);
 
-            $qcKeys = array_keys(array_column($qualityControls, 'craftId'), $elApprovalCraft[0]['craftId']);
-            if(!empty($qcKeys)) {
-                $elApprovalCraft[0]['qualityControl'] = [];
-                foreach ($qcKeys as $qcKey) {
-                    $qualityControls[$qcKey]['images'] = Api_DBElApprovals::getQualityControlImages($qualityControls[$qcKey]['id']);
-                    $elApprovalCraft[0]['qualityControl'] = $qualityControls[$qcKey];
+            $elApprovalCraft = null;
+
+            foreach ($elApproval[0]['specialities'] as $speciality) {
+                if((int)$speciality['id'] === $elApprovalSpecialityId) {
+                    $elApprovalCraft = $speciality;
                 }
-            } else {
-                $elApprovalCraft[0]['qualityControl'] = null;
+            }
+
+            if(!$elApprovalCraft) {
+                throw API_Exception::factory(500,'Incorrect craft id');
             }
 
             $this->_responseData = [
@@ -487,10 +487,97 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
         }
     }
 
+    /**
+     * returns specific speciality of element approval
+     * https://qforb.net/api/json/<appToken>/el-approvals/<el_app_id>/add_signature(/<craftId>)
+     */
+    public function action_add_signature_post()
+    {
+        $elAppId = $this->getUIntParamOrDie($this->request->param('elAppId'));
+        $elAppCraftId = $_GET['craftId'] ?: null;
+
+        try {
+            $elApproval = Api_DBElApprovals::getElApprovalById($elAppId)[0];
+
+            if(!$elApproval) {
+                throw API_ValidationException::factory(500, 'Incorrect EAR id');
+            }
+
+            //piti poxvi enumov
+            if($elApproval['status'] === 'approved') {
+                throw API_ValidationException::factory(500, 'Can\'t add signature to already approved EAR');
+            }
+
+            $clientData = Arr::extract($_POST,
+                [
+                    'name',
+                    'position',
+                    'image'
+                ]);
+
+            $valid = Validation::factory($clientData);
+
+            $valid
+                ->rule('name', 'not_empty')
+                ->rule('position', 'not_empty')
+                ->rule('image', 'not_empty');
+
+            if (!$valid->check()) {
+                throw API_ValidationException::factory(500, 'missing required field in signatures');
+            }
+
+            $elApprovalCraftSignatureImagePath = DOCROOT.'media/data/projects/'.$elApproval['projectId'].'/el-approvals';
+
+            if(!file_exists($elApprovalCraftSignatureImagePath)) {
+                mkdir($elApprovalCraftSignatureImagePath, 0777, true);
+            }
+
+            $imageData = [
+                'fileName' => $elAppId.'_'.uniqid().'.png',
+                'fileOriginalName' => $elAppId.'_'.time().'.png',
+                'filePath' => null,
+                'src' => $clientData['image'],
+                'ext' => 'png'
+            ];
+            $file = $this->_b64Arr([$imageData], $elApprovalCraftSignatureImagePath);
+
+            $queryData = [
+                'el_app_id' => $elAppId,
+                'el_app_craft_id' => $elAppCraftId,
+                'name' => $clientData['name'],
+                'position' => $clientData['position'],
+                'image' => str_replace(DOCROOT,'',$elApprovalCraftSignatureImagePath.'/'.$file[0]['name']),
+                'created_at' => time(),
+                'created_by' => Auth::instance()->get_user()->id
+            ];
+
+            Database::instance()->begin();
+
+            DB::insert('el_app_signatures')
+                ->columns(array_keys($queryData))
+                ->values(array_values($queryData))
+                ->execute($this->_db);
+
+            $this->updateElementApproval($elAppId);
+
+            if($elAppCraftId) {
+                $this->updateElementApprovalCraft($clientData['id']);
+            }
+
+            Database::instance()->commit();
+
+            $this->_responseData = [
+                'status' => "success",
+            ];
+        } catch (Exception $e) {
+            Database::instance()->rollback();
+            throw API_Exception::factory(500,'Operation Error');
+        }
+    }
 
     /**
-     * returns list of positions of element approval report signatures by Project id
-     * https://qforb.net/api/json/<appToken>/el-approvals/positions/<project-id>
+     * returns list of positions of EAR signatures by Project id
+     * https://qforb.net/api/json/<appToken>/el-approvals/positions/<id>
      */
     public function action_positions_get(){
         $projectId = $this->getUIntParamOrDie($this->request->param('id'));
@@ -512,7 +599,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
     }
 
     /**
-     * Update manager status of element approval report
+     * Update manager status of EAR
      * https://qforb.net/api/json/<appToken>/el-approvals/<id>/status
      */
     public function action_status_put(){
@@ -529,8 +616,8 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
             }
             $queryData = [
                 'status' => $status,
-                'updatedAt' => time(),
-                'updatedBy' => Auth::instance()->get_user()->id,
+                'updated_at' => time(),
+                'updated_by' => Auth::instance()->get_user()->id,
             ];
 
             DB::update('el_approvals')
@@ -548,7 +635,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
     }
 
     /**
-     * delete element approval report
+     * delete EAR
      * https://qforb.net/api/json/<appToken>/el-approvals/<id>/delete
      */
     public function action_remove_delete(){
@@ -589,7 +676,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
     }
 
     /**
-     * Updated list of users to be informed
+     * Update list of users to be informed
      * https://qforb.net/api/json/<appToken>/el-approvals/<id>/notifications
      */
     public function action_notifications_put(){
@@ -639,7 +726,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
     }
 
     /**
-     * exports element approval report as xls
+     * exports EAR as xls
      * https://qforb.net/api/json/<appToken>/projects/<project_id>/el-approvals/export_xls
      */
     public function action_export_xls_get(){
@@ -814,6 +901,10 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
         }
     }
 
+    /**
+     * exports EAR as pdf
+     * https://qforb.net/api/json/<appToken>/projects/<project_id>/el-approvals/export_pdf
+     */
     public function action_export_pdf_get(){
 
         $filters = Arr::extract($_GET, [
@@ -885,36 +976,63 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
     /**
      * returns element approvals with expanded data (specialities,tasks,signatures,qc)
      * */
-    private function getApproveElementsExpandedData($elApprovals)
+    private function getApproveElementsExpandedData($elApprovals) :array
     {
-        foreach ($elApprovals as $elAppKey => $elApproval) {
-            $elApprovals[$elAppKey]['specialities'] = Api_DBElApprovals::getElApprovalCraftsByElAppId($elApproval['id']);
-            $qualityControls = Api_DBElApprovals::getElApprovalQCListById($elApproval['id']);
+        $elApprovalIds = array_column($elApprovals, 'id');
 
-            foreach ($elApprovals[$elAppKey]['specialities'] as $specialityKey => $speciality) {
-                $elApprovals[$elAppKey]['specialities'][$specialityKey]['signatures'] = Api_DBElApprovals::getElApprovalCraftsSignaturesByCraftIds($speciality['id']);
-                $elApprovals[$elAppKey]['specialities'][$specialityKey]['tasks'] = Api_DBElApprovals::getElApprovalCraftsTasksByCraftIds($speciality['id']);
+        if(!empty($elApprovalIds)) {
+            $qualityControls = Api_DBElApprovals::getElApprovalQCListByIds($elApprovalIds);
+            $specialities = Api_DBElApprovals::getElApprovalCraftsByElAppIds($elApprovalIds);
+            $specialityIds = array_column($specialities, 'id');
+            $tasks = Api_DBElApprovals::getElApprovalCraftsTasksByCraftIds($specialityIds);
+            $signatures = Api_DBElApprovals::getElApprovalCraftsSignaturesByCraftIds($specialityIds);
 
-                $qcKeys = array_keys(array_column($qualityControls, 'craftId'), $speciality['craftId']);
-                if (!empty($qcKeys)) {
-                    $elApprovals[$elAppKey]['specialities'][$specialityKey]['qualityControl'] = [];
-                    foreach ($qcKeys as $qcKey) {
-                        $qualityControls[$qcKey]['images'] = Api_DBElApprovals::getQualityControlImages($qualityControls[$qcKey]['id']);
-                        $elApprovals[$elAppKey]['specialities'][$specialityKey]['qualityControl'] = $qualityControls[$qcKey];
+            foreach ($elApprovals as $elAppKey => $elApproval) {
+                $elApprovals[$elAppKey]['specialities'] = [];
+
+                foreach ($specialities as $speciality) {
+                    if($speciality['elAppId'] === $elApproval['id']) {
+                        array_push($elApprovals[$elAppKey]['specialities'], $speciality);
+                        $currentSpecialityKey = count($elApprovals[$elAppKey]['specialities']) - 1;
+
+                        $elApprovals[$elAppKey]['specialities'][$currentSpecialityKey]['qualityControl'] = null;
+                        $elApprovals[$elAppKey]['specialities'][$currentSpecialityKey]['tasks'] = [];
+                        $elApprovals[$elAppKey]['specialities'][$currentSpecialityKey]['signatures'] = [];
+
+                        foreach ($qualityControls as $qc) {
+                            if(($qc['craftId'] === $speciality['craftId']) && ($qc['elApprovalId'] === $elApproval['id'])) {
+                                $elApprovals[$elAppKey]['specialities'][$currentSpecialityKey]['qualityControl'] = $qc['id'];
+                            }
+                        }
+                        foreach ($tasks as $task) {
+                            if($task['ellAppCraftId'] === $speciality['id']) {
+                                array_push($elApprovals[$elAppKey]['specialities'][$currentSpecialityKey]['tasks'], $task);
+                            }
+                        }
+                        foreach ($signatures as $signature) {
+                            if(($signature['elAppCraftId'] === $speciality['id']) && ($signature['elAppId'] === $elApproval['id'])) {
+                                array_push($elApprovals[$elAppKey]['specialities'][$currentSpecialityKey]['signatures'], $signature);
+                            }
+                        }
                     }
-                } else {
-                    $elApprovals[$elAppKey]['specialities'][$specialityKey]['qualityControl'] = null;
                 }
+                $elApprovals[$elAppKey]['managerSignature'] = Api_DBElApprovals::getElApprovalManagerSignatureByElAppId($elApproval['id'])[0];
             }
+            return $elApprovals;
+        } else {
+            return [];
         }
-        return $elApprovals;
     }
 
+    /**
+     * update EAR (updated_at, updated_by)
+     * */
     private function updateElementApproval($elApprovalId) {
         $queryData = [
-            'updatedAt' => time(),
-            'updatedBy' => Auth::instance()->get_user()->id
+            'updated_at' => time(),
+            'updated_by' => Auth::instance()->get_user()->id
         ];
+
 
         DB::update('el_approvals')
             ->set($queryData)
@@ -922,10 +1040,13 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
             ->execute($this->_db);
     }
 
+    /**
+     * update craft of EAR (updated_at, updated_by)
+     * */
     private function updateElementApprovalCraft($elApprovalCraftId) {
         $queryData = [
-            'updatedAt' => time(),
-            'updatedBy' => Auth::instance()->get_user()->id
+            'updated_at' => time(),
+            'updated_by' => Auth::instance()->get_user()->id
         ];
 
         DB::update('el_approvals_crafts')

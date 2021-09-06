@@ -119,7 +119,16 @@ class Controller_Api_Companies_Entities extends HDVP_Controller_API
     }
     public function action_modules_get(){
 //        $modules = Api_DBModules::getModules();
-        $modules = Api_DBModules::getModulesForTasks();
-        $this->_responseData['items'] = $modules;
+        try {
+            $modules = Api_DBModules::getModulesForTasks();
+            $this->_responseData = [
+                'status' => 'success',
+                'items' => $modules
+            ];
+        } catch (Exception $e) {
+//            throw API_Exception::factory(500,'Operation Error');
+            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($e->getMessage()); echo "</pre>"; exit;
+        }
+
     }
 }

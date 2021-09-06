@@ -396,8 +396,10 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
                 throw new HTTP_Exception_404();
             }
 
-            $count = count(Api_DBLabtests::getLabtestsListWithRelations($filterParams));
-            //[pn]
+//          $count = count(Api_DBLabtests::getLabtestsListWithRelations($filterParams));
+
+            $count = Api_DBLabtests::getLabtestsListCountWithRelations($filterParams)[0]['labtestsCount'];
+
             $pagination = Pagination::factory(array(
                     'total_items'    => $count,
                     'items_per_page' => $limit,
@@ -1102,14 +1104,17 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
         }
 
         $items = Api_DBLabtests::getLabTestCrafts($fields);
+
+//        echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($items); echo "</pre>"; exit;
         if(!empty($items)){
             foreach ($items as $item){
-                if( ! count($fields)){
+//                if( ! count($fields)){
                     $obj = $item;
-                }else{
-                    $obj = Arr::extract($item, $fields);
-                }
+//                }else{
+//                    $obj = Arr::extract($item, $fields);
+//                }
                 array_walk($obj,function(&$param){
+//                    echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($param); echo "</pre>"; exit;
                     $param = html_entity_decode($param);
                 });
                 $response['items'][] = $obj;
@@ -1124,6 +1129,7 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
      */
     public function action_bound_craft_params_get(){
         $id = $this->getUIntParamOrDie($this->request->param('id'));
+//        die('mtav');
         $fields = Arr::get($_GET,'fields');
         if(!empty($fields)){
             $fields = explode(',',$fields);
@@ -1133,11 +1139,11 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
         $items  = Api_DBLabtests::getLabTestCraftParams($id, $fields);
         if(!empty($items)){
             foreach ($items as $item){
-                if( ! count($fields)){
+//                if( ! count($fields)){
                     $obj = $item;
-                }else{
-                    $obj = Arr::extract($item, $fields);
-                }
+//                }else{
+//                    $obj = Arr::extract($item, $fields);
+//                }
                 if (empty($fields) || in_array('name', $fields)) {
                     $obj['nameEn'] = I18n::get($obj['name'], 'en');
                     $obj['nameHe'] = I18n::get($obj['name'], 'he');

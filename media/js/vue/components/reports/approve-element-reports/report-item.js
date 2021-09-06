@@ -41,7 +41,7 @@ Vue.component('report-item', {
                         v-model="selectedStatus"
                         :option-height="104" 
                         :placeholder="trans.select_status"
-                        :disabled="(elStatuses.length < 1) || !checkReportsAllTasksEnabled() || (!canUpdate && (userRole !== 'super_admin') )" 
+                        :disabled="(elStatuses.length < 1) || !checkReportAllTasksEnabled() || (!canUpdate && (userRole !== 'super_admin') )" 
                         :options="elStatuses" 
                         track-by="id" 
                         label="name"
@@ -120,7 +120,10 @@ Vue.component('report-item', {
                                 class="approve-elv-report-view" 
                                 v-if="speciality.qualityControl"
                             >
-                                <a :href="getGenerateQcHref(speciality)">
+<!--                                <a :href="getGenerateQcHref(speciality)">-->
+<!--                                    {{ trans.view_qc }}-->
+<!--                                </a>-->
+                                <a style="opacity: .5">
                                     {{ trans.view_qc }}
                                 </a>
                             </span>
@@ -437,11 +440,17 @@ Vue.component('report-item', {
             })
             return result.length < 1
         },
-        checkReportsAllTasksEnabled() {
+        checkInitialReportAllTasksEnabled() {
             const result = this.initialReport.specialities.filter(speciality => {
                 return this.checkSpecialityAllTasksEnabled(speciality.tasks)
             })
             return (result.length === this.initialReport.specialities.length)
+        },
+        checkReportAllTasksEnabled() {
+            const result = this.report.specialities.filter(speciality => {
+                return this.checkSpecialityAllTasksEnabled(speciality.tasks)
+            })
+            return (result.length === this.report.specialities.length)
         },
         checkTaskStatusesUpdated(speciality) {
             let updated = false;
@@ -490,13 +499,13 @@ Vue.component('report-item', {
                 .then(response => {
                     const specialityIndex = this.report.specialities.findIndex(spec => +spec.id === +specialityId);
 
-                    this.report.specialities[specialityIndex] = response.item[0];
-                    this.initialReport.specialities[specialityIndex] = JSON.parse(JSON.stringify(response.item[0]));
+                    this.report.specialities[specialityIndex] = response.item;
+                    this.initialReport.specialities[specialityIndex] = JSON.parse(JSON.stringify(response.item));
                     this.report.specialities[specialityIndex].canUpdateSignatures = false;
                     this.report.specialities[specialityIndex].canUpdateNote = false;
                     this.report.specialities[specialityIndex].canUpdateTaskStatuses = false;
 
-                    if(this.checkReportsAllTasksEnabled()) {
+                    if(this.checkInitialReportAllTasksEnabled()) {
                         this.initialReport.appropriate = "1";
                         this.report.appropriate = "1";
                     } else {

@@ -24489,3 +24489,10 @@ html.rtl #approve-element .next_arrow a:hover  {
    min-width: 33px;
 }
 /* end of pagination*/ 
+
+#pr-labtests-list .element_name{
+  display: table-cell;
+}
+#property-rooms-add-new-modal .btn-group.bootstrap-select{
+  width: 100%;
+}

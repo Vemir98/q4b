@@ -282,15 +282,15 @@ Vue.component('pr-labtests-list', {
                     <thead>
                         <tr>
                             <th>{{ trans.lab_control }}</th>
-                            <th>{{ trans.lab_certificate }}</th>
+                            <th>{{ trans.lab_certificate_number }}</th>
                             <th>{{ trans.create_date }}</th>
                             <th>{{ trans.structure }}</th>
                             <th>{{ trans.floor_level }}</th>
                             <th>{{ trans.element }}</th>
                             <th>{{ trans.standard }}</th>
+                            <th>{{ trans.lab_certificate }}</th>
                             <th>{{ trans.status }}</th>
                             <th>{{ trans.more }}</th>
-
                         </tr>
                     </thead>
                     <tbody v-if="!showLoader">

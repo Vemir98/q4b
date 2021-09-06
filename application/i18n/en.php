@@ -850,6 +850,7 @@ return [
     'approve'=>'Approved',
     'non_approve'=>'Not approved',
     'Lab control' => 'Lab control',
+    'Lab control menu' => 'Lab control',
     'Elements Type' => 'Elements Type',
     'Elements List' => 'Elements List',
     'LC Ready for Transfer' => 'LC Ready for Transfer',

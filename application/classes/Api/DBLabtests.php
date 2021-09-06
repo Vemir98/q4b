@@ -24,9 +24,11 @@ class Api_DBLabtests
             create_date as createDate,
             status
             FROM labtests
-            WHERE id={$labtestId}";
+            WHERE id=:labtestId";
 
-        return DB::query(Database::SELECT, $query)->execute()->as_array();
+        return DB::query(Database::SELECT, $query)
+            ->bind(':labtestId', $labtestId)
+            ->execute()->as_array();
     }
 
     public static function getTicketLabtest($labtestId)
@@ -45,9 +47,11 @@ class Api_DBLabtests
             updated_by as updatedBy,
             status
             FROM labtests_tickets
-            WHERE labtest_id={$labtestId}";
+            WHERE labtest_id=:labtestId";
 
-        return DB::query(Database::SELECT, $query)->execute()->as_array();
+        return DB::query(Database::SELECT, $query)
+            ->bind(':labtestId', $labtestId)
+            ->execute()->as_array();
     }
 
     public static function getLabtestsByElementId($elementId)
@@ -72,9 +76,11 @@ class Api_DBLabtests
             create_date as createDate,
             status
             FROM labtests
-            WHERE element_id={$elementId}";
+            WHERE element_id=:elementId";
 
-        return DB::query(Database::SELECT, $query)->execute()->as_array();
+        return DB::query(Database::SELECT, $query)
+            ->bind(':elementId', $elementId)
+            ->execute()->as_array();
     }
 
     public static function getLabtestTicketsById($labtestId)
@@ -93,10 +99,12 @@ class Api_DBLabtests
             updated_by as updatedBy,
             status
             FROM labtests_tickets
-            WHERE labtest_id={$labtestId}
+            WHERE labtest_id=:labtestId
             ORDER BY created_at DESC";
 
-        return DB::query(Database::SELECT, $query)->execute()->as_array();
+        return DB::query(Database::SELECT, $query)
+            ->bind(':labtestId', $labtestId)
+            ->execute()->as_array();
     }
 
     public static function getLabtestTicket($labtestId, $ticketId)
@@ -115,9 +123,16 @@ class Api_DBLabtests
             updated_by as updatedBy,
             status
             FROM labtests_tickets
-            WHERE labtest_id={$labtestId} AND id={$ticketId}";
+            WHERE labtest_id=:labtestId AND id=:ticketId";
 
-        return DB::query(Database::SELECT, $query)->execute()->as_array();
+        $query = DB::query(Database::SELECT, $query);
+
+        $query->parameters(array(
+            ':labtestId' => $labtestId,
+            ':ticketId' => $ticketId,
+        ));
+
+        return $query->execute()->as_array();
     }
 
     public static function getLabtestsListPaginate($limit, $offset, $params)
@@ -154,48 +169,145 @@ class Api_DBLabtests
             LEFT JOIN elements el ON lt.element_id=el.id 
             LEFT JOIN pr_floors fl ON lt.floor_id=fl.id';
 
-        $query .= ' WHERE lt.project_id='.$params["projectId"];
+        $query .= ' WHERE lt.project_id=:projectId';
 
         if(isset($params['status']) && !empty($params['status'])){
-            $status = $params['status'];
-            $query .= ' AND lt.status IN ("' . implode('","', $status) . '")';
+            $status = DB::expr(implode('","', $params['status']));
+            $query .= ' AND lt.status IN (":status")';
         }
         if(isset($params['search'])){
-            $search = $params['search'];
-            $query .= " AND (lt.id='$search' OR lt.cert_number='$search' OR lbt.number='$search')";
+            $search = trim($params['search']);
+            $query .= ' AND (lt.id=:search OR lt.cert_number=:search OR lbt.number=:search)';
         }
         if(isset($params['elementId']) && !empty($params['elementId'])){
-            $query .= ' AND element_id IN (' . implode(",", $params["elementId"]) . ')';
+            $elementId = DB::expr(implode(",", $params["elementId"]));
+            $query .= ' AND element_id IN (:elementId)';
         }
         if(isset($params['floorId']) && !empty($params['floorId'])){
-            $query .= ' AND floor_id IN (' . implode(",", $params["floorId"]) . ')';
+            $floorId = DB::expr(implode(",", $params["floorId"]));
+            $query .= ' AND floor_id IN (:floorId)';
         }
         if(isset($params['placeId']) && !empty($params['placeId'])){
-            $query .= ' AND place_id IN (' . implode(",", $params["placeId"]) . ')';
+            $placeId = DB::expr(implode(",", $params["placeId"]));
+            $query .= ' AND place_id IN (:placeId)';
         }
         if(isset($params['buildingId']) && !empty($params['buildingId'])){
-            $query .= ' AND building_id IN (' . implode(",", $params["buildingId"]) . ')';
+            $buildingId = DB::expr(implode(",", $params["buildingId"]));
+            $query .= ' AND building_id IN (:buildingId)';
         }
         if(isset($params['craftId']) && !empty($params['craftId'])){
-            $query .= ' AND craft_id IN (' . implode(",", $params["craftId"]) . ')';
+            $craftId = DB::expr(implode(",", $params["craftId"]));
+            $query .= ' AND craft_id IN (:craftId)';
         }
         if(isset($params['from'])){
-            $query .= ' AND lt.create_date>='.$params['from'];
+            $from = $params['from'];
+            $query .= ' AND lt.create_date>=:from';
         }
         if(isset($params['to'])){
-            $query .= ' AND lt.create_date<='.$params['to'];
+            $to = $params['to'];
+            $query .= ' AND lt.create_date<=:to';
         }
         $query .= ' ORDER BY lt.create_date DESC';
+        $query .= ' LIMIT :limit OFFSET :offset';
 
-        $query .= ' LIMIT '. $limit .' OFFSET ' . $offset;
+        $query = DB::query(Database::SELECT, $query);
 
-        return DB::query(Database::SELECT, $query)->execute()->as_array();
+        if(isset($status)) $query->param(':status', $status);
+        if(isset($search)) $query->param(':search', $search);
+        if(isset($elementId)) $query->param(':elementId', $elementId);
+        if(isset($floorId)) $query->param(':floorId', $floorId);
+        if(isset($placeId)) $query->param(':placeId', $placeId);
+        if(isset($buildingId)) $query->param(':buildingId', $buildingId);
+        if(isset($craftId)) $query->param(':craftId', $craftId);
+        if(isset($from)) $query->param(':from', $from);
+        if(isset($to)) $query->param(':to', $to);
+
+
+        $query->parameters(array(
+            ':projectId' => $params['projectId'],
+            ':limit' => $limit,
+            ':offset' => $offset,
+        ));
+
+        return $query->execute()->as_array();
+    }
+
+    public static function getLabtestsListCountWithRelations($params)
+    {
+        $query = 'SELECT
+            COUNT(DISTINCT lt.id) as labtestsCount
+            FROM labtests lt 
+            LEFT JOIN (SELECT id, number,labtest_id FROM labtests_tickets) AS lbt ON labtest_id=lt.id
+            INNER JOIN users u ON lt.created_by = u.id 
+            LEFT JOIN users u1 ON lt.updated_by = u1.id
+            LEFT JOIN pr_objects po ON lt.building_id=po.id 
+            LEFT JOIN elements el ON lt.element_id=el.id 
+            LEFT JOIN cmp_crafts cr ON lt.craft_id=cr.id 
+            LEFT JOIN pr_floors fl ON lt.floor_id=fl.id';
+
+        $query .= ' WHERE lt.project_id=:projectId';
+
+        if(isset($params['status']) && !empty($params['status'])){
+            $status = DB::expr(implode('","', $params['status']));
+            $query .= ' AND lt.status IN (":status")';
+        }
+        if(isset($params['search'])){
+            $search = trim($params['search']);
+            $query .= ' AND (lt.id=:search OR lt.cert_number=:search OR lbt.number=:search)';
+        }
+        if(isset($params['elementId']) && !empty($params['elementId'])){
+            $elementId = DB::expr(implode(",", $params["elementId"]));
+            $query .= ' AND element_id IN (:elementId)';
+        }
+        if(isset($params['floorId']) && !empty($params['floorId'])){
+            $floorId = DB::expr(implode(",", $params["floorId"]));
+            $query .= ' AND floor_id IN (:floorId)';
+        }
+        if(isset($params['placeId']) && !empty($params['placeId'])){
+            $placeId = DB::expr(implode(",", $params["placeId"]));
+            $query .= ' AND place_id IN (:placeId)';
+        }
+        if(isset($params['buildingId']) && !empty($params['buildingId'])){
+            $buildingId = DB::expr(implode(",", $params["buildingId"]));
+            $query .= ' AND building_id IN (:buildingId)';
+        }
+        if(isset($params['craftId']) && !empty($params['craftId'])){
+            $craftId = DB::expr(implode(",", $params["craftId"]));
+            $query .= ' AND craft_id IN (:craftId)';
+        }
+        if(isset($params['from'])){
+            $from = $params['from'];
+            $query .= ' AND lt.create_date>=:from';
+        }
+        if(isset($params['to'])){
+            $to = $params['to'];
+            $query .= ' AND lt.create_date<=:to';
+        }
+
+        $query .= ' ORDER BY lt.create_date DESC';
+
+        $query = DB::query(Database::SELECT, $query);
+
+
+        if(isset($status)) $query->param(':status', $status);
+        if(isset($search)) $query->param(':search', $search);
+        if(isset($elementId)) $query->param(':elementId', $elementId);
+        if(isset($floorId)) $query->param(':floorId', $floorId);
+        if(isset($placeId)) $query->param(':placeId', $placeId);
+        if(isset($buildingId)) $query->param(':buildingId', $buildingId);
+        if(isset($craftId)) $query->param(':craftId', $craftId);
+        if(isset($from)) $query->param(':from', $from);
+        if(isset($to)) $query->param(':to', $to);
+
+        $query->param(':projectId', $params['projectId']);
+
+        return $query->execute()->as_array();
     }
 
     public static function getLabtestsListWithRelations($params)
     {
 
-        $query = 'SELECT DISTINCT 
+        $query = 'SELECT DISTINCT
             lt.id,
             lt.project_id as projectId,
             lt.building_id as buildingId,
@@ -214,7 +326,7 @@ class Api_DBLabtests
             lt.updated_by as updatedBy,
             lt.create_date as createDate,
             lt.status,
-            u.name AS createdByName, 
+            u.name AS createdByName,
             u.id AS createdUserId,
             u1.id AS updatedUserId,
             u1.name AS updatedByName,
@@ -234,49 +346,73 @@ class Api_DBLabtests
             (SELECT created_by FROM labtests_tickets WHERE labtests_tickets.labtest_id = lt.id ORDER BY created_at DESC LIMIT 1) AS ticketCreatedBy,
             (SELECT updated_by FROM labtests_tickets WHERE labtests_tickets.labtest_id = lt.id ORDER BY created_at DESC LIMIT 1) AS ticketUpdatedBy,
             fl.custom_name AS floorCustomName,
-            fl.number AS floorNumber 
-            FROM labtests lt 
+            fl.number AS floorNumber
+            FROM labtests lt
             LEFT JOIN (SELECT id, number,labtest_id FROM labtests_tickets) AS lbt ON labtest_id=lt.id
-            INNER JOIN users u ON lt.created_by = u.id 
+            INNER JOIN users u ON lt.created_by = u.id
             LEFT JOIN users u1 ON lt.updated_by = u1.id
-            LEFT JOIN pr_objects po ON lt.building_id=po.id 
-            LEFT JOIN elements el ON lt.element_id=el.id 
-            LEFT JOIN cmp_crafts cr ON lt.craft_id=cr.id 
+            LEFT JOIN pr_objects po ON lt.building_id=po.id
+            LEFT JOIN elements el ON lt.element_id=el.id
+            LEFT JOIN cmp_crafts cr ON lt.craft_id=cr.id
             LEFT JOIN pr_floors fl ON lt.floor_id=fl.id';
 
-        $query .= ' WHERE lt.project_id='.$params["projectId"];
+        $query .= ' WHERE lt.project_id=:projectId';
+
         if(isset($params['status']) && !empty($params['status'])){
-            $status = $params['status'];
-            $query .= ' AND lt.status IN ("' . implode('","', $status) . '")';
+            $status = DB::expr(implode('","', $params['status']));
+            $query .= ' AND lt.status IN (":status")';
         }
         if(isset($params['search'])){
-            $search = $params['search'];
-            $query .= " AND (lt.id='$search' OR lt.cert_number='$search' OR lbt.number='$search')";
+            $search = trim($params['search']);
+            $query .= ' AND (lt.id=:search OR lt.cert_number=:search OR lbt.number=:search)';
         }
         if(isset($params['elementId']) && !empty($params['elementId'])){
-            $query .= ' AND element_id IN (' . implode(",", $params["elementId"]) . ')';
+            $elementId = DB::expr(implode(",", $params["elementId"]));
+            $query .= ' AND element_id IN (:elementId)';
         }
         if(isset($params['floorId']) && !empty($params['floorId'])){
-            $query .= ' AND floor_id IN (' . implode(",", $params["floorId"]) . ')';
+            $floorId = DB::expr(implode(",", $params["floorId"]));
+            $query .= ' AND floor_id IN (:floorId)';
         }
         if(isset($params['placeId']) && !empty($params['placeId'])){
-            $query .= ' AND place_id IN (' . implode(",", $params["placeId"]) . ')';
+            $placeId = DB::expr(implode(",", $params["placeId"]));
+            $query .= ' AND place_id IN (:placeId)';
         }
         if(isset($params['buildingId']) && !empty($params['buildingId'])){
-            $query .= ' AND building_id IN (' . implode(",", $params["buildingId"]) . ')';
+            $buildingId = DB::expr(implode(",", $params["buildingId"]));
+            $query .= ' AND building_id IN (:buildingId)';
         }
         if(isset($params['craftId']) && !empty($params['craftId'])){
-            $query .= ' AND craft_id IN (' . implode(",", $params["craftId"]) . ')';
+            $craftId = DB::expr(implode(",", $params["craftId"]));
+            $query .= ' AND craft_id IN (:craftId)';
         }
         if(isset($params['from'])){
-            $query .= ' AND lt.create_date>='.$params['from'];
+            $from = $params['from'];
+            $query .= ' AND lt.create_date>=:from';
         }
         if(isset($params['to'])){
-            $query .= ' AND lt.create_date<='.$params['to'];
+            $to = $params['to'];
+            $query .= ' AND lt.create_date<=:to';
         }
+
+
         $query .= ' ORDER BY lt.create_date DESC';
 
-        return DB::query(Database::SELECT, $query)->execute()->as_array();
+        $query = DB::query(Database::SELECT, $query);
+
+        if(isset($status)) $query->param(':status', $status);
+        if(isset($search)) $query->param(':search', $search);
+        if(isset($elementId)) $query->param(':elementId', $elementId);
+        if(isset($floorId)) $query->param(':floorId', $floorId);
+        if(isset($placeId)) $query->param(':placeId', $placeId);
+        if(isset($buildingId)) $query->param(':buildingId', $buildingId);
+        if(isset($craftId)) $query->param(':craftId', $craftId);
+        if(isset($from)) $query->param(':from', $from);
+        if(isset($to)) $query->param(':to', $to);
+
+        $query->param(':projectId', $params['projectId']);
+
+        return $query->execute()->as_array();
     }
 
     public static function getLabTestCraftsWithParams()
@@ -298,6 +434,9 @@ class Api_DBLabtests
     public static function getLabTestCrafts($fields=null)
     {
         $query = '';
+        foreach ($fields as $key => $field) {
+            $fields[$key].= ' as '.Api_DBLabtests::toCamelCase($field);
+        }
 
         if (!empty($fields)){
             $query .= 'SELECT ' . implode(",",$fields) .' FROM craft_labtest';
@@ -309,12 +448,16 @@ class Api_DBLabtests
                 FROM craft_labtest';
         }
         return DB::query(Database::SELECT, $query)->execute()->as_array();
-
     }
 
     public static function getLabTestCraftParams($id=null, $fields=null)
     {
         $query = '';
+
+        foreach ($fields as $key => $field) {
+            $fields[$key].= ' as '.Api_DBLabtests::toCamelCase($field);
+        }
+
         if (!empty($fields)) {
             $query .= 'SELECT '. implode(",",$fields) .' FROM craft_labtest_params';
         } else {
@@ -322,13 +465,20 @@ class Api_DBLabtests
                 id,
                 cl_id as clId,
                 name,
-                default_value as defaultValue
+                default_value as defaultValue,
+                value_type as valueType
                 FROM craft_labtest_params';
         }
+
         if ($id) {
-            $query .= ' WHERE cl_id = '.$id;
+            $query .= ' WHERE cl_id = :id';
+            $query = DB::query(Database::SELECT, $query);
+            $query->param(':id', $id);
+        } else {
+            $query = DB::query(Database::SELECT, $query);
         }
-        return DB::query(Database::SELECT, $query)->execute()->as_array();
+
+        return $query->execute()->as_array();
     }
 
     public static function getLabtestWithRelations($id)
@@ -374,9 +524,11 @@ class Api_DBLabtests
             LEFT JOIN pr_places pl ON lt.place_id=pl.id
             INNER JOIN users u ON lt.created_by = u.id 
             LEFT JOIN users u1 ON lt.updated_by = u1.id
-            WHERE lt.id={$id}";
+            WHERE lt.id=:id";
 
-        return DB::query(Database::SELECT, $query)->execute()->as_array();
+        return DB::query(Database::SELECT, $query)
+            ->bind(':id', $id)
+            ->execute()->as_array();
     }
 
     public static function getLabtestPlan($id)
@@ -413,9 +565,11 @@ class Api_DBLabtests
             LEFT JOIN files f ON ppf.file_id = f.id
             LEFT JOIN files_custom_names fcn ON fcn.file_id = f.id
             LEFT JOIN pr_plans_file_aliases_files pfa ON f.id = pfa.file_id
-            WHERE pp.id={$id}";
+            WHERE pp.id=:id";
 
-        return DB::query(Database::SELECT, $query)->execute()->as_array();
+        return DB::query(Database::SELECT, $query)
+            ->bind(':id', $id)
+            ->execute()->as_array();
     }
 
     public static function getLabCraftParams($id)
@@ -434,9 +588,11 @@ class Api_DBLabtests
             FROM labtest_clp lclp 
             LEFT JOIN craft_labtest cl ON cl.id = lclp.cl_id
             LEFT JOIN craft_labtest_params clp ON clp.id = lclp.clp_id
-            WHERE lclp.labtest_id={$id}";
+            WHERE lclp.labtest_id=:id";
 
-        return DB::query(Database::SELECT, $query)->execute()->as_array();
+        return DB::query(Database::SELECT, $query)
+            ->bind(':id', $id)
+            ->execute()->as_array();
     }
 
     public static function getLabtestsClp($labtestIds)
@@ -448,8 +604,16 @@ class Api_DBLabtests
             clp_id as clpId,
             value
             FROM labtest_clp
-            WHERE labtest_id IN ('. implode(',', $labtestIds) .')';
+            WHERE labtest_id IN (:labtestIds)';
 
-        return DB::query(Database::SELECT, $query)->execute()->as_array();
+        $labtestIds = DB::expr(implode(',',$labtestIds));
+        $query =  DB::query(Database::SELECT, $query);
+        $query->param(':labtestIds', $labtestIds);
+
+        return $query->execute()->as_array();
+    }
+
+    private static function toCamelCase($string) {
+        return lcfirst(implode('', array_map('ucfirst', explode('_', $string))));
     }
 }

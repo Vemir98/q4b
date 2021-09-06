@@ -38,9 +38,12 @@ class Api_DBUsers
             r.priority,
             r.outspread
             FROM roles_users ru
-            LEFT JOIN roles r ON r.id=ru.role_id  WHERE ru.user_id={$userId}";
+            LEFT JOIN roles r ON r.id=ru.role_id
+            WHERE ru.user_id=:userId";
 
-        return DB::query(Database::SELECT, $query)->execute()->as_array();
+        return DB::query(Database::SELECT, $query)
+            ->bind(':userId', $userId)
+            ->execute()->as_array();
     }
 
     public static function getUsersByCompanyId($companyId)
@@ -60,9 +63,11 @@ class Api_DBUsers
             u.client_id as clientId,
             u.company_id as companyId
             FROM users u 
-            WHERE company_id={$companyId}";
+            WHERE company_id=:companyId";
 
-        return DB::query(Database::SELECT, $query)->execute()->as_array();
+        return DB::query(Database::SELECT, $query)
+            ->bind(':companyId', $companyId)
+            ->execute()->as_array();
     }
 
     public static function getUsersByProjectId($projectId)
@@ -83,12 +88,14 @@ class Api_DBUsers
             u.company_id as companyId
             FROM users u
             LEFT JOIN users_projects up ON up.user_id=u.id
-            WHERE up.project_id={$projectId}";
+            WHERE up.project_id=:projectId";
 
-        return DB::query(Database::SELECT, $query)->execute()->as_array();
+        return DB::query(Database::SELECT, $query)
+            ->bind(':projectId', $projectId)
+            ->execute()->as_array();
     }
 
-    public static function getUsersByRoletId($roleId)
+    public static function getUsersByRoleId($roleId)
     {
         $query = "SELECT
             u.id,
@@ -107,12 +114,15 @@ class Api_DBUsers
             FROM users u
             LEFT JOIN roles_users ru ON ru.user_id=u.id
             LEFT JOIN roles r ON ru.role_id=r.id
-            WHERE r.id={$roleId}";
+            WHERE r.id=:roleId";
 
-        return DB::query(Database::SELECT, $query)->execute()->as_array();
+        return DB::query(Database::SELECT, $query)
+            ->bind(':roleId', $roleId)
+            ->execute()->as_array();
     }
 
-    public static function getUsersByRoleOutspread($outspread) {
+    public static function getUsersByRoleOutspread($outspread)
+    {
         $query = 'SELECT
             u.id,
             u.name,
@@ -130,8 +140,10 @@ class Api_DBUsers
             FROM users u
             LEFT JOIN roles_users ru ON ru.user_id=u.id
             LEFT JOIN roles r ON ru.role_id=r.id
-            WHERE r.outspread="'.$outspread.'"';
+            WHERE r.outspread=:outspread';
 
-        return DB::query(Database::SELECT, $query)->execute()->as_array();
+        return DB::query(Database::SELECT, $query)
+            ->bind(':outspread', $outspread)
+            ->execute()->as_array();
     }
 }

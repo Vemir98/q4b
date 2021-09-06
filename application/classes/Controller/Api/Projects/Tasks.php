@@ -326,7 +326,7 @@ class Controller_Api_Projects_Tasks extends HDVP_Controller_API {
 
         if (!empty($taskIds)) {
             try {
-                $tasksToCopy = Api_DBTasks::getProjectTasksByIds($taskIds);
+                $tasksToCopy = Api_DBTasks::getTasksWithCraftByIds($taskIds);
                 if(count($tasksToCopy)){
                     $taskItems = $taskCraftsIds = [];
                     foreach ($tasksToCopy as $task){
