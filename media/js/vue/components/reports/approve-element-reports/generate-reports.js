@@ -692,7 +692,7 @@ Vue.component('generate-reports', {
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
                     this.positions = response.items;
-                    this.toggleSelectAll('selectedPositions', 'positions');
+                    // this.toggleSelectAll('selectedPositions', 'positions');
                     this.showLoader = false;
                 })
         },

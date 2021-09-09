@@ -925,5 +925,6 @@ return [
     'sign' => 'שמור',
     'add_signature' => 'הוסף חתימה',
     'positions' => 'תפקידים',
+    'manager_signature' => 'חתימת מנהל',
     ''=>'',
 ];

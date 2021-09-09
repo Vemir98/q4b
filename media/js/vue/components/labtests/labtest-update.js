@@ -20,7 +20,7 @@ Vue.component('labtest-update', {
                             <div class="header_top_prop_value">{{ labtest.id }}</div>
                         </div>
                         <div class="header_top_propertie">
-                            <div class="header_top_prop_name">{{ trans.lab_certificate }}</div>
+                            <div class="header_top_prop_name">{{ trans.lab_certificate_number }}</div>
                             <div class="header_top_prop_value">{{ labtest.certNumber }}</div>
                         </div>
                     </div>
@@ -218,7 +218,7 @@ Vue.component('labtest-update', {
                     </div>
                     <div class="ltest_info_select">
                         <div class="input_item_label" v-show="ticket.number">{{ trans.lab_certificate }}</div>
-                        <input type="text" v-model="ticket.number" autocomplete="off" :placeholder="trans.lab_certificate_number" name="ticket_number" :class="{'disabled': (ticket.id && !(isSuperAdmin()))}">
+                        <input type="text" v-model="ticket.number" autocomplete="off" :placeholder="trans.lab_certificate" name="ticket_number" :class="{'disabled': (ticket.id && !(isSuperAdmin()))}">
                     </div>
                     <div class="ltest_info_select">
                         <div class="input_item_label" v-show="ticket.freshStrength">{{ trans.fresh_concrete_strength }}</div>

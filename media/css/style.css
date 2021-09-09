@@ -24299,10 +24299,18 @@ html.rtl  .approve-elv-report-item .report_tasks_wraper {
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    right: 9px;
     top: 8px;
     cursor: pointer;
   }
+
+html.ltr .approve-elv-task-status {
+  right: 9px;
+
+}
+
+html.rtl .approve-elv-task-status {
+  left: 9px;
+}
   .approve-elv-report-item .report_tasks_item.not-appropriate .approve-elv-task-status{
     background-color: #D86767;
   }
@@ -24488,7 +24496,32 @@ html.rtl #approve-element .next_arrow a:hover  {
    border-radius: 50%;
    min-width: 33px;
 }
-/* end of pagination*/ 
+/* end of pagination*/
+
+#approve-element .sign-section {
+  min-width: 150px;
+}
+
+html.rtl #approve-element .sign-section {
+  margin-left: 40px;
+}
+
+html.ltr #approve-element .sign-section {
+  margin-right: 40px;
+}
+
+#approve-element .sign-content {
+  max-width: 170px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+#approve-element .sign-content img {
+  min-height: 40px;
+  max-height: 40px;
+}
 
 #pr-labtests-list .element_name{
   display: table-cell;

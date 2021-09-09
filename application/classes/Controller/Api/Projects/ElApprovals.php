@@ -504,71 +504,83 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
             }
 
             //piti poxvi enumov
+            $this->_responseData = [];
             if($elApproval['status'] === 'approved') {
-                throw API_ValidationException::factory(500, 'Can\'t add signature to already approved EAR');
+                DB::delete('el_app_signatures')
+                    ->where('el_app_id', '=', $elAppId)
+                    ->and_where('el_app_craft_id', 'IS', NULL)
+                    ->execute($this->_db);
+
+                $this->_responseData = [
+                    'status' => 'success'
+                ];
+
+            } else {
+                $clientData = Arr::extract($_POST,
+                    [
+                        'name',
+                        'position',
+                        'image'
+                    ]);
+
+                $valid = Validation::factory($clientData);
+
+                $valid
+                    ->rule('name', 'not_empty')
+                    ->rule('position', 'not_empty')
+                    ->rule('image', 'not_empty');
+
+                if (!$valid->check()) {
+                    throw API_ValidationException::factory(500, 'missing required field in signatures');
+                }
+
+                $elApprovalCraftSignatureImagePath = DOCROOT.'media/data/projects/'.$elApproval['projectId'].'/el-approvals';
+
+                if(!file_exists($elApprovalCraftSignatureImagePath)) {
+                    mkdir($elApprovalCraftSignatureImagePath, 0777, true);
+                }
+
+                $imageData = [
+                    'fileName' => $elAppId.'_'.uniqid().'.png',
+                    'fileOriginalName' => $elAppId.'_'.time().'.png',
+                    'filePath' => null,
+                    'src' => $clientData['image'],
+                    'ext' => 'png'
+                ];
+                $file = $this->_b64Arr([$imageData], $elApprovalCraftSignatureImagePath);
+
+                $queryData = [
+                    'el_app_id' => $elAppId,
+                    'el_app_craft_id' => $elAppCraftId,
+                    'name' => $clientData['name'],
+                    'position' => $clientData['position'],
+                    'image' => str_replace(DOCROOT,'',$elApprovalCraftSignatureImagePath.'/'.$file[0]['name']),
+                    'created_at' => time(),
+                    'created_by' => Auth::instance()->get_user()->id
+                ];
+
+                Database::instance()->begin();
+
+                DB::insert('el_app_signatures')
+                    ->columns(array_keys($queryData))
+                    ->values(array_values($queryData))
+                    ->execute($this->_db);
+
+                $this->updateElementApproval($elAppId);
+
+                if($elAppCraftId) {
+                    $this->updateElementApprovalCraft($clientData['id']);
+                }
+
+                Database::instance()->commit();
+
+                $managerSignature = Api_DBElApprovals::getElApprovalManagerSignatureByElAppId($elAppId)[0];
+
+                $this->_responseData = [
+                    'status' => 'success',
+                    'item' => $managerSignature
+                ];
             }
-
-            $clientData = Arr::extract($_POST,
-                [
-                    'name',
-                    'position',
-                    'image'
-                ]);
-
-            $valid = Validation::factory($clientData);
-
-            $valid
-                ->rule('name', 'not_empty')
-                ->rule('position', 'not_empty')
-                ->rule('image', 'not_empty');
-
-            if (!$valid->check()) {
-                throw API_ValidationException::factory(500, 'missing required field in signatures');
-            }
-
-            $elApprovalCraftSignatureImagePath = DOCROOT.'media/data/projects/'.$elApproval['projectId'].'/el-approvals';
-
-            if(!file_exists($elApprovalCraftSignatureImagePath)) {
-                mkdir($elApprovalCraftSignatureImagePath, 0777, true);
-            }
-
-            $imageData = [
-                'fileName' => $elAppId.'_'.uniqid().'.png',
-                'fileOriginalName' => $elAppId.'_'.time().'.png',
-                'filePath' => null,
-                'src' => $clientData['image'],
-                'ext' => 'png'
-            ];
-            $file = $this->_b64Arr([$imageData], $elApprovalCraftSignatureImagePath);
-
-            $queryData = [
-                'el_app_id' => $elAppId,
-                'el_app_craft_id' => $elAppCraftId,
-                'name' => $clientData['name'],
-                'position' => $clientData['position'],
-                'image' => str_replace(DOCROOT,'',$elApprovalCraftSignatureImagePath.'/'.$file[0]['name']),
-                'created_at' => time(),
-                'created_by' => Auth::instance()->get_user()->id
-            ];
-
-            Database::instance()->begin();
-
-            DB::insert('el_app_signatures')
-                ->columns(array_keys($queryData))
-                ->values(array_values($queryData))
-                ->execute($this->_db);
-
-            $this->updateElementApproval($elAppId);
-
-            if($elAppCraftId) {
-                $this->updateElementApprovalCraft($clientData['id']);
-            }
-
-            Database::instance()->commit();
-
-            $this->_responseData = [
-                'status' => "success",
-            ];
         } catch (Exception $e) {
             Database::instance()->rollback();
             throw API_Exception::factory(500,'Operation Error');
@@ -831,7 +843,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
             $ws->set_data($excelRows, false);
 
             foreach ($elApprovals as $elApproval){
-                $excelRows[] = [
+                $elAppRow =  [
                     $elApproval['id'],
                     date('d/m/Y', $elApproval['createdAt']),
                     $elApproval['objectName'],
@@ -839,13 +851,39 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                     '',
                     $elApproval['floorName'] ?: $elApproval['floorNumber'],
                     $elApproval['status'],
-                    '',
-                    '',
-                    '',
+                    !empty($elApproval['managerSignature']) ? date('d/m/Y', $elApproval['managerSignature']['createdAt']) : '',
+                    !empty($elApproval['managerSignature']) ? $elApproval['managerSignature']['position'] : '',
+                    !empty($elApproval['managerSignature']) ? $elApproval['managerSignature']['name'] : '',
                     ''
                 ];
+
+                if(!empty($elApproval['managerSignature'])) {
+                    $imagePath = null;
+
+                    if(file_exists(DOCROOT.$elApproval['managerSignature']['image'])) {
+                        $imagePath = DOCROOT.$elApproval['managerSignature']['image'];
+                    }
+                    if($imagePath) {
+                        $objDrawing = new PHPExcel_Worksheet_Drawing();
+                        $objDrawing->setName('managerSignature');
+                        $objDrawing->setDescription('managerSignature');
+                        $objDrawing->setPath($imagePath);
+                        $objDrawing->setResizeProportional(true);
+                        $objDrawing->setWidth(60);
+                        $objDrawing->setHeight(60);
+                        $objDrawing->setCoordinates('K'.(count($excelRows)+2));
+                        $objDrawing->setOffsetX(10);
+                        $objDrawing->setWorksheet($as);
+                    }
+                } else {
+                    $elAppRow[] = '';
+                }
+
+                $excelRows[] = $elAppRow;
+
+
                 foreach ($elApproval['specialities'] as $speciality) {
-                    $row = [
+                    $elAppCraftRow = [
                         '',
                         '',
                         '',
@@ -879,16 +917,15 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                             $objDrawing->setWorksheet($as);
                         }
                     } else {
-                        $row[] = '';
+                        $elAppCraftRow[] = '';
                     }
-                    $excelRows[] = $row;
+                    $excelRows[] = $elAppCraftRow;
                 }
              }
 
             for($i = 0;$i <= count($excelRows); $i++) {
                 $as->getRowDimension((string)($i+2))->setRowHeight(60);
             }
-
             $ws->set_data($excelRows, false);
             $first_letter = PHPExcel_Cell::stringFromColumnIndex(0);
             $last_letter = PHPExcel_Cell::stringFromColumnIndex(count($excelRows[2])-1);

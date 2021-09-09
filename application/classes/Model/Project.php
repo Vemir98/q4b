@@ -89,11 +89,21 @@ class Model_Project extends MORM
             'model' => 'TransferableItems',
             'foreign_key' => 'project_id'
         ],
-        'floors' => [
-            'model' => 'PrFloor',
-            'foreign_key' => 'project_id'
-        ],
     ];
+
+
+
+    public function getTasksByModuleName($moduleName)
+    {
+        $moduleId = DB::query(Database::SELECT,"SELECT id FROM modules WHERE `name`='{$moduleName}'")->execute()->as_array()[0]['id'];
+
+        $result = $this->tasks->join('pr_tasks_crafts')
+            ->on('prtask.id', '=', 'pr_tasks_crafts.task_id')
+                ->join('modules_tasks_crafts')
+                ->on('pr_tasks_crafts.id', '=', 'modules_tasks_crafts.tc_id')
+            ->where('modules_tasks_crafts.module_id', '=', $moduleId)->group_by('prtask.id');
+        return $result;
+    }
 
     /**
      * Переопределение метода инициализации
@@ -178,16 +188,6 @@ class Model_Project extends MORM
                 ['not_empty']
             ]
         ];
-    }
-
-    public function floorNumbersWithNames(){
-        $floors = $this->floors->find_all();
-        $numbers = [];
-        foreach($floors as $floor){
-            $numbers [$floor->number]= $floor->custom_name ? $floor->custom_name . ' ('. $floor->number.')' : $floor->number;
-        }
-
-        return $numbers;
     }
 
     public function filters()

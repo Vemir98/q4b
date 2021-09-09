@@ -115,8 +115,8 @@ Vue.component('reports-list', {
                 <span class="report-buttons-headline"><i class="q4bikon-share"></i>{{ trans.export }}</span>
 <!--                <a class="report-button pdf" :href="getExportPdfHref"><i class="q4bikon-file1" download="element-approval-reports.pdf"></i>PDF</a>-->
                 <a class="report-button pdf" style="opacity: .5;cursor: auto"><i class="q4bikon-file1"></i>PDF</a>
-                <a  class="report-button excel" :href="getExportExcelHref" download="element-approval-reports.xls"><i class="q4bikon-report"></i>Excel</a>
-<!--                <a  class="report-button excel" :href="getExportExcelHref"><i class="q4bikon-report"></i>Excel</a>-->
+<!--                <a  class="report-button excel" :href="getExportExcelHref" download="element-approval-reports.xls"><i class="q4bikon-report"></i>Excel</a>-->
+                <a  class="report-button excel" :href="getExportExcelHref"><i class="q4bikon-report"></i>Excel</a>
 <!--                <a :href="getExportHref" download="lab-reports.xls">{{ trans.export }}</a>-->
 
             </div>
@@ -142,7 +142,7 @@ Vue.component('reports-list', {
                 </thead>
                 <tbody>
                     <template v-for="report in items">
-                        <tr class="parent-tr" :class="{'openParent': report.showSpecialities}">
+                        <tr class="parent-tr" :class="{'openParent': report.showSpecialities}" :key="report.id">
                             <td scope="row" @click="toggleReportSpecialities(report)" class="parent-td">{{ report.id }}</td>
                             <td>{{ convertTimestampToDate(report.createdAt) }} </td>
                             <td>{{ report.objectName }}</td>
@@ -150,10 +150,12 @@ Vue.component('reports-list', {
                             <td>&nbsp;</td>
                             <td class="td-floor">{{ report.floorName ? report.floorName : report.floorNumber  }}</td>
                             <td class="text-capitalize"> {{ +report.appropriate === 1 ? trans.appropriate : trans.not_appropriate }}</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
+                            <td>{{ report.managerSignature ? convertTimestampToDate(report.managerSignature.createdAt) : '&nbsp;' }}</td>
+                            <td>{{ report.managerSignature ? report.managerSignature.position : '&nbsp;' }}</td>
+                            <td>{{ report.managerSignature ? report.managerSignature.name : '&nbsp;' }}</td>
+                            <td class="td-sign">
+                                <img :src="report.managerSignature ? imageUrl+report.managerSignature.image : ''">
+                            </td>
                             <td>
                                 <button class="open-more" @click="toggleReportOptions(report)"><img src="/media/img/more-icon.svg" alt="">
                                     <div  class="td-options-wrap" v-if="report.showOptions">
@@ -281,7 +283,6 @@ Vue.component('reports-list', {
             let from = this.filters.from ? this.filters.from : '';
             let to = this.filters.to ? this.filters.to : '';
 
-            // return `?from=${from}&to=${to}&object_ids=${objects}&floor_ids=${floors}&place_ids=${places}&speciality_ids=${crafts}&element_ids=${elements}&statuses=${statuses}&positions=${positions}&company_id=${this.company.id}&project_id=${this.project.id}`;
             return `?from=${from}&to=${to}&objectIds=${objects}&floorIds=${floors}&placeIds=${places}&specialityIds=${crafts}&elementIds=${elements}&statuses=${statuses}&positions=${positions}&companyId=${this.company.id}&projectId=${this.project.id}`;
         },
     },

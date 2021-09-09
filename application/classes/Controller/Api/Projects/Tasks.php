@@ -350,7 +350,7 @@ class Controller_Api_Projects_Tasks extends HDVP_Controller_API {
                                     'craftName' => $task['craftName']
                                 ];
                             } else {
-                                if (!isset($taskItems[$task['id']]['crafts'][$task['craft_id']])) {
+                                if (!isset($taskItems[$task['id']]['crafts'][$task['craftId']])) {
                                     $taskItems[$task['id']]['crafts'][$task['craftId']]['modules'] = [$task['moduleId']];
                                     $taskItems[$task['id']]['crafts'][$task['craftId']]['craftName'] = $task['craftName'];
                                 } else {

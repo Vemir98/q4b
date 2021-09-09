@@ -413,7 +413,7 @@ class Api_DBElApprovals
             LEFT JOIN el_approvals_notifications ean ON ean.ell_app_id=ea.id';
 
         $query .= ' WHERE (ean.user_id=:userId OR ea.created_by=:userId)';
-        $query .= ' AND ea.company_id=:companyId AND ea.project_id=:projectId';
+        $query .= ' AND ea.company_id=:companyId AND ea.project_id=:projectId AND ea.status != :elAppStatus ';
         if(isset($filters['objectIds']) && !empty($filters['objectIds'])){
             $objectIds = DB::expr(implode(',',$filters['objectIds']));
             $query .= ' AND ea.object_id IN (:objectIds)';
@@ -462,7 +462,8 @@ class Api_DBElApprovals
         $query->parameters(array(
             ':companyId' => $filters['companyId'],
             ':projectId' => $filters['projectId'],
-            ':userId' => $userId
+            ':userId' => $userId,
+            ':elAppStatus' => 'approved'
         ));
 
         return $query->execute()->as_array();
@@ -473,7 +474,8 @@ class Api_DBElApprovals
         $query = "SELECT 
             e.id,
             e.company_id as companyId,
-            e.project_id as projectId
+            e.project_id as projectId,
+            e.name
             FROM el_approvals ea 
             LEFT JOIN elements e ON ea.element_id=e.id
             WHERE ea.id=:elApprovalId";

@@ -214,6 +214,8 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
             'certNumber'
         ]);
 
+        Kohana::$log->add(Log::ERROR, 'ARAJ: ' . json_encode([$ltData['deliveryCert']], JSON_PRETTY_PRINT));
+
         try {
             Database::instance()->begin();
             $project = Api_DBProjects::getProjectById($projectId);
@@ -223,6 +225,9 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
             $ltData['projectId'] = $projectId;
             $ltData['buildingId'] = Arr::get($_POST, 'objectId');
             $ltData['deliveryCert'] =  str_replace('@#$', PHP_EOL, implode("", $ltData['deliveryCert']));
+
+            Kohana::$log->add(Log::ERROR, 'HETO: ' . json_encode([$ltData['deliveryCert']], JSON_PRETTY_PRINT));
+
             $ltData['status'] = 'waiting';
             if (!$ltData['placeId']) {
                 unset($ltData['placeId']);
@@ -286,8 +291,8 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
                 foreach($slp as $item) {
                     $d = [
                         'labtest_id' => $labtestId,
-                        'cl_id' => $item['cl_id'],
-                        'clp_id' => $item['clp_id'],
+                        'cl_id' => $item['clId'],
+                        'clp_id' => $item['clpId'],
                         'value' => (int) $item['value']
                     ];
                     $valid = Validation::factory($d);
@@ -304,6 +309,8 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
 
                 }
                 if (!empty($slpData)) {
+//                    Kohana::$log->add(Log::ERROR, 'labtest_clp QUERY DATA: ' . json_encode([$slpData], JSON_PRETTY_PRINT));
+
                     $query = DB::insert('labtest_clp')->columns(['labtest_id', 'cl_id', 'clp_id', 'value']);
                     foreach ($slpData as $d) {
                         $query->values(array_values($d));
@@ -728,7 +735,7 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
     /**
      * create labtest ticket
      */
-        public function action_tickets_post(){
+    public function action_tickets_post(){
         $projectId = $this->getUIntParamOrDie($this->request->param('projectId'));
         $labtestId = $this->getUIntParamOrDie($this->request->param('id'));
 
@@ -777,6 +784,11 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
             'updated_at' => $data['updatedAt'],
             'created_by' => $data['createdBy'],
         ];
+
+//        echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r(json_encode([$queryData, $imgData])); echo "</pre>"; exit;
+
+//            Kohana::$log->add(Log::ERROR, 'labtests_tickets: ' . json_encode([$queryData, $imgData], JSON_PRETTY_PRINT));
+
         $result = DB::insert('labtests_tickets')
             ->columns(array_keys($queryData))
             ->values(array_values($queryData))
@@ -810,6 +822,8 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
                     ->execute($this->_db);
                 $imgId = $res[0];
 
+//                Kohana::$log->add(Log::ERROR, 'labtests_tickets_files: ' . json_encode([$imgId, $ticketId], JSON_PRETTY_PRINT));
+
                 DB::insert('labtests_tickets_files')
                     ->columns(['file_id', 'ticket_id' ])
                     ->values([$imgId, $ticketId])
@@ -823,10 +837,13 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
 
         } catch (API_ValidationException $e){
             Database::instance()->rollback();
-            throw API_Exception::factory(500,'Incorrect data');
+//            throw API_Exception::factory(500,'Incorrect data');
+            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($e->getMessage()); echo "</pre>"; exit;
         }catch (Exception $e){
             Database::instance()->rollback();
-            throw API_Exception::factory(500,$e->getMessage());
+//            throw API_Exception::factory(500,$e->getMessage());
+            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($e->getMessage()); echo "</pre>"; exit;
+
         }
     }
 

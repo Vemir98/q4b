@@ -67,7 +67,7 @@ class Api_DBTasks
         $taskIds =  DB::expr(implode(',',$taskIds));
 
         $query = DB::query(Database::SELECT, $query);
-        $query->param(':id', $taskIds);
+        $query->param(':taskIds', $taskIds);
 
         return $query->execute()->as_array();
     }

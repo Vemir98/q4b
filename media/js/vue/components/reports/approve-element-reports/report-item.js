@@ -34,6 +34,14 @@ Vue.component('report-item', {
             </div>
         </div>
         <div class="approve-elv-filter flex-end">
+            <div v-if="report.managerSignature" class="sign-section">
+                <div class="filter-item-label">{{ trans.manager_signature }}</div>
+                <div class="sign-content">
+                    <img 
+                        :src="report.managerSignature ? imageUrl+report.managerSignature.image : ''"
+                    > 
+               </div>
+            </div>
             <div class="filter-item">
                 <div class="filter-item-label">{{ trans.manager_status }}</div>
                 <div class="multiselect-col">
@@ -41,11 +49,11 @@ Vue.component('report-item', {
                         v-model="selectedStatus"
                         :option-height="104" 
                         :placeholder="trans.select_status"
-                        :disabled="(elStatuses.length < 1) || !checkReportAllTasksEnabled() || (!canUpdate && (userRole !== 'super_admin') )" 
+                        :disabled="(elStatuses.length < 1) || !checkInitialReportAllTasksEnabled() || this.nothingToUpdate() || (!canUpdate && (userRole !== 'super_admin') )" 
                         :options="elStatuses" 
                         track-by="id" 
                         label="name"
-                        @select="changeReportStatus($event)"
+                        @select="ReportStatusChanged($event)"
                         :searchable="true" 
                         :allow-empty="false"
                         :show-labels="false"
@@ -120,10 +128,7 @@ Vue.component('report-item', {
                                 class="approve-elv-report-view" 
                                 v-if="speciality.qualityControl"
                             >
-<!--                                <a :href="getGenerateQcHref(speciality)">-->
-<!--                                    {{ trans.view_qc }}-->
-<!--                                </a>-->
-                                <a style="opacity: .5">
+                                <a @click="getGenerateQcHref(speciality)">
                                     {{ trans.view_qc }}
                                 </a>
                             </span>
@@ -256,7 +261,8 @@ Vue.component('report-item', {
                     >
                       {{ trans.sign }}
                     </button>
-                    <button 
+                    <button
+                        v-if="popupWasOpenFrom !== 'managerSignature'" 
                         :class="['modul-popup-Cancel', {'labtest-disabled': (canSign && canUpdate) ? false : true}]" 
                         @click="addSignature"
                     >
@@ -303,6 +309,7 @@ Vue.component('report-item', {
             userProf: JSON.parse(JSON.stringify(this.userProfession)),
             initialReport: null,
             newSignatures: [],
+            managerSignature: null,
             currentSpeciality: null,
             currentTask: null,
             currentSignerName: '',
@@ -342,28 +349,44 @@ Vue.component('report-item', {
         let end = new Date();
         end.setDate(end.getDate() + 1);
         this.time = [date, end];
+
+        this.getQcs();
         this.initialReport = JSON.parse(JSON.stringify(this.report));
     },
     methods: {
         togglePopup(speciality, keepOthers = false, closingWithoutSign = false, from = '') {
             if(this.openSignaturePopup) {
-                if(closingWithoutSign) {
-                    this.newSignatures = [];
+                switch(this.popupWasOpenFrom) {
+                    case 'managerSignature':
+                        if(closingWithoutSign) {
+                            this.selectedStatus = this.elStatuses[0]
+                        }
+                        break;
+                    case 'button':
+                        break;
+                    case 'ticket':
+                        if(this.popupWasOpenFrom === 'ticket') {
+                            if(this.currentTask && keepOthers  &&  closingWithoutSign) {
+                                const specialityIndex = this.initialReport.specialities.findIndex(spec => +spec.id === +this.currentSpeciality.id);
+                                const taskIndex = this.initialReport.specialities[specialityIndex].tasks.findIndex(task => +task.id === +this.currentTask.id);
+                                this.report.specialities[specialityIndex].tasks[taskIndex].appropriate = "0";
+                                this.report.specialities[specialityIndex].appropriate = "0";
+                                this.report.specialities[specialityIndex].canUpdateTaskStatuses = !this.report.specialities[specialityIndex].canUpdateTaskStatuses;
+                                this.report.updated = true;
+                            }
+                        }
+                        break;
+                    default:
+                        break;
                 }
-                if(this.currentTask && keepOthers  &&  closingWithoutSign) {
-                    const specialityIndex = this.initialReport.specialities.findIndex(spec => +spec.id === +this.currentSpeciality.id);
-                    const taskIndex = this.initialReport.specialities[specialityIndex].tasks.findIndex(task => +task.id === +this.currentTask.id);
-                    if(this.popupWasOpenFrom === 'ticket') {
-                        this.report.specialities[specialityIndex].tasks[taskIndex].appropriate = "0";
-                        this.report.specialities[specialityIndex].appropriate = "0";
-                        this.report.specialities[specialityIndex].canUpdateTaskStatuses = !this.report.specialities[specialityIndex].canUpdateTaskStatuses;
-                        this.report.updated = true;
-                    }
-                }
+
                 this.openSignaturePopup = false;
                 this.clearSignaturePad();
                 this.currentSpeciality = null;
                 this.currentTask = null;
+                this.managerSignature = null;
+                this.newSignatures = [];
+
             } else {
                 this.keepOtherSignatures = keepOthers;
                 this.currentSpeciality = speciality;
@@ -378,35 +401,54 @@ Vue.component('report-item', {
             this.signatureDrawn = false;
         },
         addSignature() {
-            this.newSignatures.push({
-                'elAppId': this.report.id,
-                'elAppCraftId': this.currentSpeciality.id,
-                'name': this.currentSignerName,
-                'position': this.currentSignerPosition,
-                'image': this.signaturePad.toDataURL(),
-                'createdAt': Date.now() / 1000,
-                'creatorName': this.username
-            })
+            switch (this.popupWasOpenFrom) {
+                case "managerSignature":
+                    this.managerSignature = {
+                        'name': this.currentSignerName,
+                        'position': this.currentSignerPosition,
+                        'image': this.signaturePad.toDataURL(),
+                    }
+                break;
+
+                default:
+                    this.newSignatures.push({
+                        'elAppId': this.report.id,
+                        'elAppCraftId': this.currentSpeciality.id,
+                        'name': this.currentSignerName,
+                        'position': this.currentSignerPosition,
+                        'image': this.signaturePad.toDataURL(),
+                        'createdAt': Date.now() / 1000,
+                        'creatorName': this.username
+                    })
+                break;
+            }
 
             this.currentSignerName = this.username;
             this.currentSignerPosition = this.userProf;
             this.clearSignaturePad();
         },
-        pushSignatures(keepOthers = false) {
+        pushSignatures() {
             this.addSignature();
 
-            this.report.specialities.forEach(speciality => {
-                if(+speciality.id === +this.currentSpeciality.id) {
-                    if(this.keepOtherSignatures) {
-                        speciality.signatures = speciality.signatures.concat(this.newSignatures);
-                    } else {
-                        speciality.signatures = this.newSignatures;
-                    }
-                    this.report.updated = true;
-                    speciality.canUpdateSignatures = true;
-                }
-            })
-            this.newSignatures = [];
+            switch(this.popupWasOpenFrom) {
+                case "managerSignature":
+                    this.updateManagerSignature()
+                break;
+                default:
+                    this.report.specialities.forEach(speciality => {
+                        if(+speciality.id === +this.currentSpeciality.id) {
+                            if(this.keepOtherSignatures) {
+                                speciality.signatures = speciality.signatures.concat(this.newSignatures);
+                            } else {
+                                speciality.signatures = this.newSignatures;
+                            }
+                            this.report.updated = true;
+                            speciality.canUpdateSignatures = true;
+                        }
+                    })
+                    this.newSignatures = [];
+                break;
+            }
             this.openSignaturePopup = false;
         },
         changeTaskStatus(task, speciality) {
@@ -517,6 +559,34 @@ Vue.component('report-item', {
                     this.showLoader = false;
                 })
         },
+        ReportStatusChanged(status) {
+          switch (status.name) {
+              case "approved":
+                  this.togglePopup(null, true, false, 'managerSignature')
+                  break;
+              case "waiting":
+                  this.updateManagerSignature();
+                  break;
+          }
+        },
+        updateManagerSignature() {
+            this.showLoader = true;
+            let url = `/el-approvals/${this.report.id}/add_signature`;
+            qfetch(url, {method: 'POST', headers: {}, body:this.managerSignature})
+                .then(response => {
+                    console.log('RESPONSE',response)
+                    this.report.managerSignature = response.item;
+                    this.initialReport.managerSignature = response.item;
+                    this.changeReportStatus(this.selectedStatus)
+                    this.showLoader = false;
+                })
+                .catch(error => {
+                    this.selectedStatus = this.elStatuses.filter(elStatus => {
+                        return elStatus.name !== status.name;
+                    })[0];
+                    this.showLoader = false;
+                })
+        },
         changeReportStatus(status) {
             this.showLoader = true;
             let url = `/el-approvals/${this.report.id}/status`;
@@ -524,6 +594,9 @@ Vue.component('report-item', {
                 .then(response => {
                     this.initialReport.status = status.name;
                     this.report.status = status.name;
+                    if(this.report.status === 'waiting') {
+                        this.report.managerSignature = null;
+                    }
                     this.report.updated = true;
                     this.showLoader = false;
                 })
@@ -544,11 +617,10 @@ Vue.component('report-item', {
         },
         getGenerateQcHref(speciality) {
             let url = `${this.siteUrl}/reports/generate`;
-            let date = this.convertTimestampToDate(speciality.qualityControl.createdAt);
+            let date = this.convertTimestampToDate(speciality.qcCreatedAt);
             let queryParams = `?from=${date}&to=${date}&crafts[]=${speciality.craftId}&company=${this.company.id}&project=${this.project.id}&el_app_id=${this.report.id}#tab_qc_controls`;
-
             url += queryParams;
-            return url;
+            window.open(url);
         },
         test1(specialityIndex) {
             if(this.canUpdateSpeciality[specialityIndex]) {
@@ -557,6 +629,30 @@ Vue.component('report-item', {
                 return true;
             }
         },
+        nothingToUpdate() {
+           let array = this.report.specialities.filter((speciality,index ) => {
+               return !this.test1(index)
+           })
+
+            return (array.length === this.report.specialities.length)
+        },
+        getQcs() {
+            this.report.specialities.forEach(speciality => {
+
+                if(speciality.qualityControl) {
+                    this.showLoader = true;
+
+                    let url = '/quality-controls/get/'+speciality.qualityControl+'?fields=createdAt';
+
+                    qfetch(url, {method: 'GET', headers: {}})
+                        .then(response => {
+                            console.log('RESPONSE', response)
+                            speciality.qcCreatedAt = response.item.createdAt
+                            this.showLoader = false;
+                        })
+                }
+            })
+        }
     },
     mounted() {
         this.signaturePad = new SignaturePad(this.$refs['signaturePad'], {

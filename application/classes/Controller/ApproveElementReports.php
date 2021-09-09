@@ -114,6 +114,7 @@ class Controller_ApproveElementReports extends HDVP_Controller_Template
             'sign' => __('sign'),
             'add_signature' => __('add_signature'),
             'positions' => __('positions'),
+            'manager_signature' => __('manager_signature')
         ];
 
 //        foreach (Api_DBModules::getModulesForTasks() as $module) {

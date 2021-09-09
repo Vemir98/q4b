@@ -136,7 +136,7 @@ class Controller_Reports extends HDVP_Controller_Template
         }
 
         $this->project = ORM::factory('Project',$data['project']);
-        $tasks = $this->project->getTasksByModuleName('Quality Control')->where('prtask.status','=',Enum_Status::Enabled)->find_all();
+
         if(empty($data['project'])){
             throw new HTTP_Exception_404();
 
@@ -178,8 +178,13 @@ class Controller_Reports extends HDVP_Controller_Template
         }
 
         $filteredCraftsListQuery = [];
+        $tasks = [];
+
         if($data['el_app_id']) {
+            $tasks = $this->project->getTasksByModuleName('Approve Element')->where('prtask.status','=',Enum_Status::Enabled)->find_all();
             $qcs->and_where('qualitycontrol.el_approval_id', '=', $data['el_app_id']);
+        } else {
+            $tasks = $this->project->getTasksByModuleName('Quality Control')->where('prtask.status','=',Enum_Status::Enabled)->find_all();
         }
         if(!empty($data['statuses'])){
             if(!is_array($data['statuses'])){

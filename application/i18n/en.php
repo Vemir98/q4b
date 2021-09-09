@@ -925,5 +925,6 @@ return [
     'sign' => 'Save',
     'add_signature' => 'Add signature',
     'positions' => 'Positions',
+    'manager_signature' => 'Manager Signature',
     ''=>'',
 ];

@@ -146,4 +146,8 @@ class Api_DBUsers
             ->bind(':outspread', $outspread)
             ->execute()->as_array();
     }
+
+    private static function toCamelCase($string) {
+        return lcfirst(implode('', array_map('ucfirst', explode('_', $string))));
+    }
 }

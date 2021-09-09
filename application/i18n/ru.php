@@ -898,6 +898,6 @@ return [
     'sign' => 'Сохранить',
     'add_signature' => 'Добавить подпись',
     'positions' => 'Должности',
-
+    'manager_signature' => 'Подпись менеджера',
     ''=>'',
 ];

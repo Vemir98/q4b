@@ -22,27 +22,27 @@ class Controller_Api_QualityControl_Entities extends HDVP_Controller_API
                 $fields = Arr::decamelize(explode(',',$fields));
             }
 
-            $qc = Api_DBQualityControl::getQcById($qcId, $fields);
+            $qc = Api_DBQualityControl::getQcById($qcId, $fields)[0];
 
-            if(!$qc[0]) {
+            if(!$qc) {
                 throw API_Exception::factory(500,'Incorrect QC id');
             }
 
             if(empty($fields)) {
-                $qc[0]['files'] = $this->getQcImages($qcId);
-                $qc[0]['tasks'] = $this->getQcTasks($qcId);
+                $qc['files'] = $this->getQcImages($qcId);
+                $qc['tasks'] = $this->getQcTasks($qcId);
             } else {
                 if(in_array('files', $fields)) {
-                    $qc[0]['files'] = $this->getQcImages($qcId);
+                    $qc['files'] = $this->getQcImages($qcId);
                 }
                 if(in_array('tasks', $fields)) {
-                    $qc[0]['tasks'] = $this->getQcTasks($qcId);
+                    $qc['tasks'] = $this->getQcTasks($qcId);
                 }
             }
 
             $this->_responseData = [
                 'status' => "success",
-                'items' => $qc
+                'item' => $qc
             ];
 
         } catch (Exception $e){
