@@ -159,7 +159,7 @@ Vue.component('reports-list', {
                             <td>
                                 <button class="open-more" @click="toggleReportOptions(report)"><img src="/media/img/more-icon.svg" alt="">
                                     <div  class="td-options-wrap" v-if="report.showOptions">
-                                        <a @click="$emit('toReportDetails', report)"><i class="q4bikon-preview1"></i>{{ trans.view }}</a>
+                                        <a @click="goToReportDetails(report)"><i class="q4bikon-preview1"></i>{{ trans.view }}</a>
                                         <a style="opacity: .5;cursor: auto"><i class="q4bikon-uncheked" ></i>{{ trans.qc_report }}</a>
                                     </div>
                                 </button>
@@ -188,7 +188,7 @@ Vue.component('reports-list', {
             </table>
         </div>
         <pagination 
-            v-model="page" 
+            v-model="currentPage" 
             :records="total" 
             :per-page="limit" 
             @paginate="paginate" 
@@ -203,7 +203,8 @@ Vue.component('reports-list', {
         translations: {required: true},
         filters: {required: true},
         project: {required: true},
-        company: {required: true}
+        company: {required: true},
+        page: {required: true}
     },
     components: {
         Multiselect: window.VueMultiselect.default,
@@ -215,7 +216,7 @@ Vue.component('reports-list', {
             items: [],
             toggleExportButton: false,
             trans: JSON.parse(this.translations),
-            page: 1,
+            currentPage: this.page,
             total: 0,
             limit: 0,
         }
@@ -250,7 +251,7 @@ Vue.component('reports-list', {
             this.showLoader = true;
             let url = `/el-approvals/list`;
 
-            if(this.page > 1) url += '/page/' + this.page;
+            if(this.currentPage > 1) url += '/page/' + this.currentPage;
 
             qfetch(url, {method: 'POST', headers: {}, body: this.filters})
                 .then((response) => {
@@ -285,6 +286,12 @@ Vue.component('reports-list', {
 
             return `?from=${from}&to=${to}&objectIds=${objects}&floorIds=${floors}&placeIds=${places}&specialityIds=${crafts}&elementIds=${elements}&statuses=${statuses}&positions=${positions}&companyId=${this.company.id}&projectId=${this.project.id}`;
         },
+        goToReportDetails(report) {
+            this.$emit('toReportDetails', {
+                report: report,
+                page: this.currentPage
+            })
+        }
     },
     mounted() {
         this.getFilteredReports();

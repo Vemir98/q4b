@@ -429,6 +429,7 @@ Vue.component('generate-reports', {
     props: {
         statuses: {required: true},
         translations: {required: true},
+        filters: {required: true}
     },
     components: {
         Multiselect: window.VueMultiselect.default,
@@ -518,7 +519,7 @@ Vue.component('generate-reports', {
             if (val) {
                 this.getCmpProjects()
             } else {
-                this.selectedCompany = null
+                this.selectedCompany = null;
             }
             this.selectedProject = null;
         },
@@ -553,10 +554,10 @@ Vue.component('generate-reports', {
                 if (val.length === 1) {
                     this.getFloorPlaces()
                 } else {
-                    this.emptyFilter('selectedPlace', 'places')
+                    this.emptyFilter('selectedPlaces', 'places')
                 }
             } else {
-                this.emptyFilter('selectedPlace', 'places')
+                this.emptyFilter('selectedPlaces', 'places')
             }
         },
     },
@@ -584,6 +585,10 @@ Vue.component('generate-reports', {
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
                     this.cmpProjects = response.items ? response.items : [];
+                    if(this.filters?.selectedProject) {
+                        this.selectedProject = this.filters.selectedProject
+                        this.filters.selectedProject = null;
+                    }
                     this.showLoader = false;
                 })
         },
@@ -603,7 +608,15 @@ Vue.component('generate-reports', {
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
                     this.structures = response.items;
-                    this.toggleSelectAll('selectedStructures', 'structures');
+                    if(this.filters?.selectedStructures) {
+                        this.selectedStructures = this.filters.selectedStructures;
+                        this.selectedStructures.forEach(structure => {
+                            this.onSelect(structure, 'structures')
+                        })
+                        this.filters.selectedStructures = null;
+                    } else {
+                        this.toggleSelectAll('selectedStructures', 'structures');
+                    }
                     this.showLoader = false;
                 })
         },
@@ -613,6 +626,13 @@ Vue.component('generate-reports', {
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
                     this.floors = response.items;
+                    if(this.filters?.selectedFloors) {
+                        this.selectedFloors = this.filters.selectedFloors;
+                        this.selectedFloors.forEach(floor => {
+                            this.onSelect(floor, 'floors')
+                        })
+                        this.filters.selectedFloors = null;
+                    }
                     this.showLoader = false;
                 })
         },
@@ -633,11 +653,11 @@ Vue.component('generate-reports', {
             }
         },
         onSelect(option, objName) {
-            let index = this[objName].findIndex(item => item.id==option.id);
+            let index = this[objName].findIndex(item => +item.id === +option.id);
             this[objName][index].checked = true;
         },
         onRemove(option, objName) {
-            let index = this[objName].findIndex(item => item.id==option.id);
+            let index = this[objName].findIndex(item => +item.id === +option.id);
             this[objName][index].checked = false;
         },
         getFloorsMultiselectSelectionValue(values) {
@@ -653,6 +673,13 @@ Vue.component('generate-reports', {
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
                     this.places = response.items;
+                    if(this.filters?.selectedPlaces) {
+                        this.selectedPlaces = this.filters.selectedPlaces;
+                        this.selectedPlaces.forEach(place => {
+                            this.onSelect(place, 'places')
+                        })
+                        this.filters.selectedPlaces = null;
+                    }
                     this.showLoader = false;
                 })
         },
@@ -664,7 +691,15 @@ Vue.component('generate-reports', {
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
                     this.elements = response.items;
-                    this.toggleSelectAll('selectedElements', 'elements');
+                    if(this.filters?.selectedElements) {
+                        this.selectedElements = this.filters.selectedElements;
+                        this.selectedElements.forEach(element => {
+                            this.onSelect(element, 'elements')
+                        })
+                        this.filters.selectedElements = null;
+                    } else {
+                        this.toggleSelectAll('selectedElements', 'elements');
+                    }
                     this.showLoader = false;
                 })
         },
@@ -675,7 +710,15 @@ Vue.component('generate-reports', {
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
                     this.crafts = response.items;
-                    this.toggleSelectAll('selectedCrafts', 'crafts');
+                    if(this.filters?.selectedCrafts) {
+                        this.selectedCrafts = this.filters.selectedCrafts;
+                        this.selectedCrafts.forEach(craft => {
+                            this.onSelect(craft, 'crafts')
+                        })
+                        this.filters.selectedCrafts = null;
+                    } else {
+                        this.toggleSelectAll('selectedCrafts', 'crafts');
+                    }
                     this.showLoader = false;
                 })
         },
@@ -684,7 +727,7 @@ Vue.component('generate-reports', {
             statusesArr.forEach((item, ind) => {
                 statuses.push({ id: ind, name: item })
             })
-            return statuses
+            return statuses;
         },
         getPositions() {
             this.showLoader = true;
@@ -692,6 +735,13 @@ Vue.component('generate-reports', {
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
                     this.positions = response.items;
+                    if(this.filters?.selectedPositions) {
+                        this.selectedPositions = this.filters.selectedPositions;
+                        this.selectedPositions.forEach(position => {
+                            this.onSelect(position, 'positions')
+                        })
+                        this.filters.selectedPositions = null;
+                    }
                     // this.toggleSelectAll('selectedPositions', 'positions');
                     this.showLoader = false;
                 })
@@ -703,21 +753,40 @@ Vue.component('generate-reports', {
             });
             return vals.join(', ');
         },
+        getFilters() {
+           return {
+               selectedCompany:  this.selectedCompany,
+               selectedProject: this.selectedProject,
+               selectedStructures: this.selectedStructures,
+               selectedElements: this.selectedElements,
+               selectedCrafts: this.selectedCrafts,
+               selectedPlaces: this.selectedPlaces,
+               selectedFloors: this.selectedFloors,
+               selectedManagerStatuses: this.selectedManagerStatuses,
+               selectedStatuses: this.selectedStatuses,
+               selectedPositions: this.selectedPositions,
+               time: this.time
+           }
+        },
+        getFiltersFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+
+            return {
+                companyId: urlParams.get('companyId'),
+                projectId: urlParams.get('projectId'),
+                objectIds: JSON.parse(urlParams.get('objectIds')),
+                elementIds: JSON.parse(urlParams.get('elementIds')),
+                specialityIds: JSON.parse(urlParams.get('specialityIds')),
+                placeIds: JSON.parse(urlParams.get('placeIds')),
+                floorIds: JSON.parse(urlParams.get('floorIds')),
+                statuses: JSON.parse(urlParams.get('statuses')),
+                positions: JSON.parse(urlParams.get('positions')),
+                from: urlParams.get('from'),
+                to: urlParams.get('to')
+            }
+        },
         generateReports() {
-            this.$emit('getFiltersForReportsGenerating', {
-                'companyId': +this.selectedCompany.id,
-                'projectId': +this.selectedProject.id,
-                'objectIds': this.selectedStructures.map(structure => +structure.id),
-                'elementIds': this.selectedElements.map(element => +element.id),
-                'specialityIds': this.selectedCrafts.map(craft => +craft.id),
-                'placeIds': this.selectedPlaces.map(place => +place.id),
-                'floorIds': this.selectedFloors.map(floor => +floor.id),
-                'managerStatuses': this.selectedManagerStatuses.map(status => status.name.toLowerCase()),
-                'statuses': this.selectedStatuses.map(status => +status.id),
-                'positions': this.selectedPositions.map(position => position.name),
-                'from': this.time[0] ? this.time[0].toLocaleDateString("en-GB") : '',
-                'to': this.time[1] ? this.time[1].toLocaleDateString("en-GB") : ''
-            })
+            this.$emit('getFiltersForReportsGenerating', this.getFilters())
         }
     },
     created() {
@@ -734,26 +803,36 @@ Vue.component('generate-reports', {
         this.getCompanies();
     },
     mounted() {
-        this.toggleSelectAll('selectedManagerStatuses', 'elManagerStatuses');
-        this.toggleSelectAll('selectedStatuses', 'elStatuses');
-
         if(window.location.search) {
-            const urlParams = new URLSearchParams(window.location.search);
-
-            this.$emit('getFiltersForReportsGenerating', {
-                'companyId': urlParams.get('companyId'),
-                'projectId': urlParams.get('projectId'),
-                'objectIds': JSON.parse(urlParams.get('objectIds')),
-                'elementIds': JSON.parse(urlParams.get('elementIds')),
-                'specialityIds': JSON.parse(urlParams.get('specialityIds')),
-                'placeIds': JSON.parse(urlParams.get('placeIds')),
-                'floorIds': JSON.parse(urlParams.get('floorIds')),
-                'statuses': JSON.parse(urlParams.get('statuses')),
-                'positions': JSON.parse(urlParams.get('positions')),
-                'from': urlParams.get('from'),
-                'to': urlParams.get('to')
-            })
+            this.$emit('getFiltersForReportsGenerating', this.getFiltersFromUrl())
         }
+
+        if(this.filters) {
+            console.log('FILTERS', this.filters)
+            this.selectedCompany = this.filters.selectedCompany
+            this.selectedProject = this.filters.selectedProject
+            this.selectedStructures = this.filters.selectedStructures
+            this.selectedElements = this.filters.selectedElements
+            this.selectedCrafts = this.filters.selectedCrafts
+            this.selectedPlaces = this.filters.selectedPlaces
+            this.selectedFloors = this.filters.selectedFloors
+            this.selectedManagerStatuses = this.filters.selectedManagerStatuses
+            this.selectedStatuses = this.filters.selectedStatuses
+
+            this.selectedPositions = this.filters.selectedPositions
+            this.time = this.filters.time
+
+            this.selectedStatuses.forEach(elStatus => {
+                this.onSelect(elStatus, 'elStatuses')
+            })
+            this.selectedManagerStatuses.forEach(managerStatus => {
+                this.onSelect(managerStatus, 'elManagerStatuses')
+            })
+        } else {
+            this.toggleSelectAll('selectedManagerStatuses', 'elManagerStatuses');
+            this.toggleSelectAll('selectedStatuses', 'elStatuses');
+        }
+
     }
 });
 

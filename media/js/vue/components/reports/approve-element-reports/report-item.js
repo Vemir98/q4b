@@ -294,7 +294,7 @@ Vue.component('report-item', {
         filters: {required: true},
         username: {required: true},
         userProfession: {required: true},
-        userRole: {required: true},
+        userRole: {required: true}
     },
     data() {
         return {

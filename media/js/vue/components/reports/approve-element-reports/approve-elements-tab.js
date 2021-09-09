@@ -1,12 +1,11 @@
 Vue.component('approve-elements-tab', {
     template: `
         <div id="approve-elements-content">
-                {{ userProfession }}
-
             <template v-if="activeTab === 'generate-reports'">
                 <generate-reports
                     :statuses='statuses'
                     :translations='translations'
+                    :filters="filters"
                     @getFiltersForReportsGenerating="generateReports"
                 />
             </template>
@@ -16,8 +15,9 @@ Vue.component('approve-elements-tab', {
                     :siteUrl="siteUrl"
                     :project="project"
                     :company="company"
-                    :filters="filters"
+                    :filters="transformedFilters"
                     :translations='translations'
+                    :page="page"
                     @tabChanged="activeTab = 'generate-reports'"
                     @toReportDetails="goToReportDetails"
                 />
@@ -60,15 +60,32 @@ Vue.component('approve-elements-tab', {
             report: {},
             project: {},
             company: {},
-            filters: {}
+            filters: null,
+            transformedFilters: {},
+            page: 1
         }
     },
     methods: {
         async generateReports(filters) {
             this.filters = filters;
 
-            await this.getProject(this.filters.projectId)
-            await this.getCompanies(this.filters.companyId)
+            this.transformedFilters = {
+                'companyId': +this.filters.selectedCompany.id,
+                'projectId': +this.filters.selectedProject.id,
+                'objectIds': this.filters.selectedStructures.map(structure => +structure.id),
+                'elementIds': this.filters.selectedElements.map(element => +element.id),
+                'specialityIds': this.filters.selectedCrafts.map(craft => +craft.id),
+                'placeIds': this.filters.selectedPlaces.map(place => +place.id),
+                'floorIds': this.filters.selectedFloors.map(floor => +floor.id),
+                'managerStatuses': this.filters.selectedManagerStatuses.map(status => status.name.toLowerCase()),
+                'statuses': this.filters.selectedStatuses.map(status => +status.id),
+                'positions': this.filters.selectedPositions.map(position => position.name),
+                'from': this.filters.time[0] ? this.filters.time[0].toLocaleDateString("en-GB") : '',
+                'to': this.filters.time[1] ? this.filters.time[1].toLocaleDateString("en-GB") : ''
+            };
+
+            await this.getProject(this.transformedFilters.projectId)
+            await this.getCompanies(this.transformedFilters.companyId)
             this.activeTab = 'reports-list';
         },
         getProject(id) {
@@ -86,19 +103,20 @@ Vue.component('approve-elements-tab', {
 
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
-                    this.company = response.items.filter(company => +company.id === +this.filters.companyId)[0]
+                    this.company = response.items.filter(company => +company.id === +this.transformedFilters.companyId)[0]
                     this.showLoader = false;
                 })
         },
-        goToReportDetails(report) {
-            report.updated = false;
-            report.specialities.forEach(speciality => {
+        goToReportDetails(data) {
+            data.report.updated = false;
+            data.report.specialities.forEach(speciality => {
                 speciality.canUpdateSignatures = false;
                 speciality.canUpdateNote = false;
                 speciality.canUpdateTaskStatuses = false;
             })
-            this.report = report;
+            this.report = data.report;
 
+            this.page = data.page;
             this.activeTab = 'report-item';
         }
     }
