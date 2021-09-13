@@ -8,7 +8,7 @@ array (
     'resource' => 'Controller_QualityControl',
     'priority' => 219,
     'disabled' => false,
-    'active' => false,
+    'active' => true,
   ),
   1 => 
   array (

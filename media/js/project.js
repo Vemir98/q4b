@@ -635,6 +635,7 @@ $(document).ready(function() {
     });
 
     $(document).on('keydown paste', '.floor-name-input', function(e) { //Prevent on paste as well
+        e.stopImmediatePropagation();
         var maxLength = $(this).data('maxlength');
         if($(this).text().length >= maxLength) {
             switch(e.which) {

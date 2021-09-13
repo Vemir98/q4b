@@ -380,6 +380,29 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
             }
         }
 
+        $craftsIds = array_column($craftsList, 'id');
+
+
+        $craftsCertifications = DB::query(Database::SELECT,'SELECT * FROM certifications c WHERE c.cmp_craft_id IN ('.implode(',', $craftsIds).') AND c.project_id = '.$this->project->id)->execute()->as_array();
+
+        foreach ($craftsList as $craftKey => $craftListItem) {
+            $craftCerts = [];
+            $craftApprovedCerts = [];
+            foreach ($craftsCertifications as $cert) {
+                if((int)$cert['cmp_craft_id'] === (int)$craftListItem['id']) {
+                    $craftCerts[] = $cert;
+                    if($cert['status'] === 'approved') {
+                        $craftApprovedCerts[] = $cert;
+                    }
+                }
+            }
+            $craftsList[$craftKey]['certs'] = $craftCerts;
+            $craftsList[$craftKey]['approvedCerts'] = $craftApprovedCerts;
+        }
+
+//        echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($craftsList); echo "</pre>"; exit;
+//        echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($craftsCertifications); echo "</pre>"; exit;
+
 //        $this->setResponseData('reportHtml',View::make('reports/generated',['qcs' => $qcs, 'crafts' => $data['crafts']])->render());
 //        $this->setResponseData('triggerEvent','reportGenerated');
 

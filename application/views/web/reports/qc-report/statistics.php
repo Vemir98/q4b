@@ -113,6 +113,15 @@ use Helpers\ReportsHelper;
                         <th><?=__('Crafts List')?></th>
                         <th>
                             <div class="double-cpt">
+                                <div class="double-sub-cpt1 fs-14"><?=__('Certifications')?></div>
+                                <div class="double-sub-cpt2">
+                                    <span class="omission-points"><?=__('Total')?></span>
+                                    <span class="omission-points"><?=__('Approved')?></span>
+                                </div>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="double-cpt">
                                 <div class="double-sub-cpt1 fs-14"><?=__('Quantity')?></div>
                                 <div class="double-sub-cpt2">
                                     <span class="omission-points"><?=__('Total')?></span>
@@ -133,19 +142,58 @@ use Helpers\ReportsHelper;
                             <td data-th="<?=__('Quantity')?>" class="enlarged">
                                 <div class="double-cell-cpt">
                                     <div class="double-cell-cpt1">
+                                        <span class="report-status-quantity"><?=count($craft['certs'])?></span>
+                                    </div>
+                                    <div class="double-cell-cpt2">
+                                        <span class="report-status-quantity"><?=count($craft['approvedCerts'])?></span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td data-th="<?=__('Quantity')?>" class="enlarged">
+                                <div class="double-cell-cpt">
+                                    <div class="double-cell-cpt1">
                                         <span class="report-status-quantity"><?=isset($craft['count']) ? $craft['count'] : 0?></span>
                                     </div>
                                     <div class="double-cell-cpt2">
                                         <span class="report-status-quantity"><?=isset($filteredCraftsList[$id]['count']) ? $filteredCraftsList[$id]['count'] : 0?></span>
                                     </div>
                                 </div>
-
                             </td>
                         </tr>
                     <?endforeach;?>
-                        <tr class="dark-row">
+                    <tr class="dark-row">
                             <td data-th="<?=__('Status List')?>"><span class="report-status-link total"><?=__("Total_sum")?></span></td>
-                            <td data-th="<?=__('Quantity')?>" class="enlarged">
+                        <td data-th="<?=__('Quantity')?>" class="enlarged">
+                            <div class="double-cell-cpt">
+                                <div class="double-cell-cpt1">
+                                        <span class="report-status-quantity">
+                                            <?php
+                                            $sum = 0;
+                                            foreach ($craftsList as $id=>$craft) {
+                                                if (!empty($craft['certs'])) {
+                                                    $sum += count($craft['certs']);
+                                                }
+                                            }
+                                            echo $sum;
+                                            ?>
+                                        </span>
+                                </div>
+                                <div class="double-cell-cpt2">
+                                        <span class="report-status-quantity">
+                                            <?php
+                                            $sum = 0;
+                                            foreach ($craftsList as $id=>$craft) {
+                                                if (!empty($craft['approvedCerts'])) {
+                                                    $sum += count($craft['approvedCerts']);
+                                                }
+                                            }
+                                            echo $sum;
+                                            ?>
+                                        </span>
+                                </div>
+                            </div>
+                        </td>
+                        <td data-th="<?=__('Quantity')?>" class="enlarged">
                                 <div class="double-cell-cpt">
                                     <div class="double-cell-cpt1">
                                         <span class="report-status-quantity">

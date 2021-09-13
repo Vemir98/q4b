@@ -574,7 +574,6 @@ Vue.component('report-item', {
             let url = `/el-approvals/${this.report.id}/add_signature`;
             qfetch(url, {method: 'POST', headers: {}, body:this.managerSignature})
                 .then(response => {
-                    console.log('RESPONSE',response)
                     this.report.managerSignature = response.item;
                     this.initialReport.managerSignature = response.item;
                     this.changeReportStatus(this.selectedStatus)
@@ -646,7 +645,6 @@ Vue.component('report-item', {
 
                     qfetch(url, {method: 'GET', headers: {}})
                         .then(response => {
-                            console.log('RESPONSE', response)
                             speciality.qcCreatedAt = response.item.createdAt
                             this.showLoader = false;
                         })

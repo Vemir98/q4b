@@ -485,7 +485,6 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
             ];
 
             DB::update('labtests')->set($queryData)->where('id', '=', $id)->execute($this->_db);
-            //[ps]
 
             DB::delete('labtest_clp')->where('labtest_id', '=', $id)->execute($this->_db);
 
@@ -494,10 +493,11 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
                 foreach($slp as $item) {
                     $d = [
                         'labtest_id' => $id,
-                        'cl_id' => $item['cl_id'],
-                        'clp_id' => $item['clp_id'],
+                        'cl_id' => $item['clId'],
+                        'clp_id' => $item['clpId'],
                         'value' => $item['value']
                     ];
+
                     $valid = Validation::factory($d);
                     $valid
                         ->rule('labtest_id', 'not_empty')
@@ -528,8 +528,7 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
             throw API_Exception::factory(500,'Incorrect data');
         }catch (Exception $e){
             Database::instance()->rollback();
-//            throw API_Exception::factory(500,'Operation Error');
-            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($e->getMessage()); echo "</pre>"; exit;
+            throw API_Exception::factory(500,'Operation Error');
         }
     }
 
@@ -785,10 +784,6 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
             'created_by' => $data['createdBy'],
         ];
 
-//        echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r(json_encode([$queryData, $imgData])); echo "</pre>"; exit;
-
-//            Kohana::$log->add(Log::ERROR, 'labtests_tickets: ' . json_encode([$queryData, $imgData], JSON_PRETTY_PRINT));
-
         $result = DB::insert('labtests_tickets')
             ->columns(array_keys($queryData))
             ->values(array_values($queryData))
@@ -837,13 +832,10 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
 
         } catch (API_ValidationException $e){
             Database::instance()->rollback();
-//            throw API_Exception::factory(500,'Incorrect data');
-            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($e->getMessage()); echo "</pre>"; exit;
+            throw API_Exception::factory(500,'Incorrect data');
         }catch (Exception $e){
             Database::instance()->rollback();
-//            throw API_Exception::factory(500,$e->getMessage());
-            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($e->getMessage()); echo "</pre>"; exit;
-
+            throw API_Exception::factory(500,$e->getMessage());
         }
     }
 
@@ -851,6 +843,7 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
      * update labtest ticket
      */
     public function action_tickets_put(){
+
         $projectId = $this->getUIntParamOrDie($this->request->param('projectId'));
         $labtestId = $this->getUIntParamOrDie($this->request->param('id'));
         $ticketId = $this->getUIntParamOrDie($this->request->param('ticketId'));
@@ -862,6 +855,7 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
             'notes',
             'status'
         ]);
+
         $imgData = Arr::get($this->put(), 'images');
         $imagesOld = Arr::get($this->put(), 'imagesOld');
         $data['labtestId'] = $labtestId;
@@ -1122,7 +1116,6 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
 
         $items = Api_DBLabtests::getLabTestCrafts($fields);
 
-//        echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($items); echo "</pre>"; exit;
         if(!empty($items)){
             foreach ($items as $item){
 //                if( ! count($fields)){
@@ -1131,7 +1124,6 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
 //                    $obj = Arr::extract($item, $fields);
 //                }
                 array_walk($obj,function(&$param){
-//                    echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($param); echo "</pre>"; exit;
                     $param = html_entity_decode($param);
                 });
                 $response['items'][] = $obj;

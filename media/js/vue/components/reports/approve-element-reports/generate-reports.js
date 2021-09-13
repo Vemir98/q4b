@@ -597,7 +597,6 @@ Vue.component('generate-reports', {
             let url = `/projects/${id}/entities/project?fields=id,name`;
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
-                    console.log('PROJECT', response.item)
                     this.project = response.item;
                     this.showLoader = false;
                 })
@@ -808,7 +807,6 @@ Vue.component('generate-reports', {
         }
 
         if(this.filters) {
-            console.log('FILTERS', this.filters)
             this.selectedCompany = this.filters.selectedCompany
             this.selectedProject = this.filters.selectedProject
             this.selectedStructures = this.filters.selectedStructures

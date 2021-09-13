@@ -20,7 +20,7 @@ $token = !$_USER->isGuest() ? $_USER->getAuthToken() : null;
     <meta name="base-uri" content="<?=URL::base()?>">
     <meta name="current-uri" content="<?=Request::current()->uri()?>">
     <meta name="u_token" content="<?=$token?>">
-    <meta name="site_url" content="<?=trim(URL::site('','http'),'/')?>">
+    <meta name="site_url" content="<?=trim(URL::site('','https'),'/')?>">
     <meta name="api_path" content="/api/json/v2">
     <link rel="stylesheet" href="/media/css/styles.min.css">
     <link rel="stylesheet" href="/media/css/select2.min.css">
