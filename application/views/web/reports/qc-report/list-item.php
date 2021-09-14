@@ -136,8 +136,8 @@
         }
     ?>
     <div class="report_tasks">
-        <h4 class="reports-tasks-box-title" style="color: rgba(0, 0, 0, 0.7);"><?=__('Tasks')?></h4>
-        <div class="report_tasks_wraper">
+        <h4 class="reports-tasks-box-title" style="color: rgba(0, 0, 0, 0.7);-webkit-touch-callout: none;-webkit-user-select: none;-khtml-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;"> <i class="plus-minus q4bikon-plus" style="cursor: pointer"></i> <?=__('Tasks')?></h4>
+        <div class="report_tasks_wraper" style="display: none;">
             <?foreach($tasks as $task):?>
                 <?
                     $crafts = $task->crafts->where('cmpcraft.status','=',Enum_Status::Enabled)->find_all();

@@ -347,6 +347,7 @@ return [
     'project_supervisor' => 'מהנדס/מפקח הפרויקט',
     'project_adviser' => 'יועץ/מתכנן הפרויקט',
     'project_visitor' => 'מבקר בפרויקט',
+    'project_aircondition' => 'ק.מ מיזוג אויר',
     'Home' => 'דף הבית',
     'Not found' => 'אין תוצאות',
     'New project' => 'פרויקט חדש',
@@ -880,7 +881,7 @@ return [
     'Are you sure you want to leave Lab Control?' => 'האם אתה בטוח שאתה רוצה לצאת?',
     'Are you sure you want to delete delivery certificate?' => 'האם אתה בטוח שברצונך למחוק את התעודת משלוח?',
     'Lab certificate number' => 'ת.נטילה/ ת. שדה',
-    'Attached files' => 'קבצים מצורפים',
+    'Attached files' => 'לצרף קבצים',
     'Attached plan' => 'תוכנית מצורפת',
     'This field is required.' => 'זהו שדה חובה',
     'This field should be numeric.' => 'שדה זה צריך לכלול רק מספרים',
@@ -926,5 +927,6 @@ return [
     'add_signature' => 'הוסף חתימה',
     'positions' => 'תפקידים',
     'manager_signature' => 'חתימת מנהל',
+    'list_of_files' => 'רשימת קבצים',
     ''=>'',
 ];

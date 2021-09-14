@@ -17,6 +17,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                 'placeId',
                 'floorId',
                 'elementId',
+                'note',
                 'specialities',
                 'notify'
             ]);
@@ -42,6 +43,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                 'object_id' => $clientData['objectId'],
                 'place_id' => $clientData['placeId'] ?: null,
                 'element_id' => $clientData['elementId'],
+                'notice' => $clientData['note'],
                 'floor_id' => $clientData['floorId'],
                 'created_at' => time(),
                 'created_by' => Auth::instance()->get_user()->id,

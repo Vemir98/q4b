@@ -96,6 +96,23 @@ Vue.component('report-item', {
 
         </div>
 
+
+
+        <div class="approve-elv-properties">
+            <div class="ltest_info_certificate_title">{{ trans.notes }}</div>
+            <div class="ltest_info_certificate_area">
+                <div class="labtest_edit_textarea">
+                    <textarea 
+                        cols="30" 
+                        rows="10" 
+                        name="delivery_cert"
+                        :disabled="true"
+                    >{{ report.notice }}</textarea>
+                </div>
+            </div>
+        </div>
+
+
         <div class="report-buttons">
             <div class="report-buttons-wraper" style="opacity: .5">
                 <a class="report-button" style="cursor: auto"><i class="q4bikon-print1"></i>{{ trans.print }}</a>

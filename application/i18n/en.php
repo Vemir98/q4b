@@ -371,6 +371,7 @@ return [
     'project_supervisor' => 'Project supervisor',
     'project_adviser' => 'Project adviser',
     'project_visitor' => 'Project visitor',
+    'project_aircondition' => 'S.C. air condition',
     'New project' => 'New project',
     'Crafts List' => 'Specialities list',
     'I have read and agree to the' => 'I have read and agree to the',
@@ -926,5 +927,6 @@ return [
     'add_signature' => 'Add signature',
     'positions' => 'Positions',
     'manager_signature' => 'Manager Signature',
+    'list_of_files' => 'List of files',
     ''=>'',
 ];

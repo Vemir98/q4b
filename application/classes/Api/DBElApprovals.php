@@ -19,6 +19,7 @@ class Api_DBElApprovals
             ea.element_id as elementId,
             ea.floor_id as floorId,
             ea.appropriate,
+            ea.notice,
             ea.status,
             ea.created_at as createdAt,
             ea.created_by as createdBy,
@@ -42,18 +43,6 @@ class Api_DBElApprovals
         return DB::query(Database::SELECT, $query)
             ->bind(':elAppId', $elApprovalId)
             ->execute()->as_array();
-
-//        $elApproval = DB::query(Database::SELECT, $query)->execute()->as_array();
-//
-//        $elApproval[0]['qualityControls'] = [];
-//
-//        $qualityControls = Api_DBElApprovals::getElApprovalQCListById($elApprovalId);
-//
-//        foreach ($qualityControls as $qc) {
-//            $elApproval[0]['qualityControls'][] = $qc['id'];
-//        }
-//
-//        return $elApproval;
     }
 
     public static function getElApprovalCraftsByElAppIds($elApprovalIds)
@@ -147,6 +136,7 @@ class Api_DBElApprovals
             ea.element_id as elementId,
             ea.floor_id as floorId,
             ea.appropriate,
+            ea.notice,
             ea.status,
             ea.created_at as createdAt,
             ea.created_by as createdBy,
@@ -390,6 +380,7 @@ class Api_DBElApprovals
             ea.element_id as elementId,
             ea.floor_id as floorId,
             ea.appropriate,
+            ea.notice,
             ea.status,
             ea.created_at as createdAt,
             ea.created_by as createdBy,

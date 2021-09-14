@@ -342,6 +342,7 @@ return [
     'project_supervisor' => 'Менеджер проекта',
     'project_adviser' => 'Консультант проекта',
     'project_visitor' => 'Визитор проекта',
+    'project_aircondition' => 'С.П. кондиционеры',
     'New project' => 'Новый проект',
     'Crafts List' => 'Список специальностей',
     'Not found'=>'Нет результатов в списке',
@@ -899,5 +900,6 @@ return [
     'add_signature' => 'Добавить подпись',
     'positions' => 'Должности',
     'manager_signature' => 'Подпись менеджера',
+    'list_of_files' => 'Список файлов',
     ''=>'',
 ];

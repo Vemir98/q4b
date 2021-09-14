@@ -21,7 +21,8 @@ Vue.component('labtest-update', {
                         </div>
                         <div class="header_top_propertie">
                             <div class="header_top_prop_name">{{ trans.lab_certificate_number }}</div>
-                            <div class="header_top_prop_value">{{ labtest.certNumber }}</div>
+                            <div class="header_top_prop_value">
+                            <textarea style="border: 1px solid #bbc2c7!important;height: 29px;padding: 4px 5px 0 5px;" v-model.number="labtest.certNumber" type="text" /></div>
                         </div>
                     </div>
                     <div class="epage_header_bottom">
@@ -282,6 +283,7 @@ Vue.component('labtest-update', {
                         <div class="attach_file" :class="{'labtest-disabled': !enableSave }" @click="handleAttachFileClick()"></div>
                         <input type="file" id="fileInput" @change="fileChange($event)" style="opacity: 0" />
                         <div class="ltest_attachment_wraper">
+                            <div v-if="images.length" class="ltest_attachment_title">{{ trans.list_of_files }}</div>
                             <template v-for="(image, index) in images">
                                 <div class="ltest_attachment_item" v-if="!image.planId" :key="index">
                                     <div v-if="fileIsImage(image.fileName)" class="ltest_attachment_icon"><i class="icon q4bikon-file" @click="openModal(index)"></i></div>

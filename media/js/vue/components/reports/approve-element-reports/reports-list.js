@@ -180,7 +180,10 @@ Vue.component('reports-list', {
                                 <td class="td-sign">
                                 <img :src="speciality.signatures.length ? imageUrl+speciality.signatures[0]['image'] : ''">
                                 </td>
-                                <td>&nbsp;</td>
+                                <td class="td-view-qc">
+                                    <i v-if="speciality.qualityControl" @click="getGenerateQcHref(report, speciality)" class="q4bikon-uncheked" style="cursor: pointer"></i>
+                                    &nbsp;
+                                </td>
                             </tr>
                         </template>
                     </template>
@@ -291,7 +294,34 @@ Vue.component('reports-list', {
                 report: report,
                 page: this.currentPage
             })
-        }
+        },
+        async getQcs(qcId) {
+            this.showLoader = true;
+
+            let url = '/quality-controls/get/'+qcId+'?fields=createdAt';
+            try {
+                let result = await qfetch(url, {method: 'GET', headers: {}});
+                this.showLoader = false;
+                return result.item.createdAt;
+            } catch (e) {
+                this.showLoader = false;
+                console.log(e)
+            }
+        },
+        async getGenerateQcHref(report, speciality) {
+            let url = `${this.siteUrl}/reports/generate`;
+
+            if(speciality) {
+                this.showLoader = true;
+                let result = await qfetch('/quality-controls/get/'+speciality.qualityControl+'?fields=createdAt', {method: 'GET', headers: {}});
+                this.showLoader = false;
+
+                let date = this.convertTimestampToDate(result.item.createdAt);
+                let queryParams = `?from=${date}&to=${date}&crafts[]=${speciality.craftId}&company=${this.company.id}&project=${this.project.id}&el_app_id=${report.id}#tab_qc_controls`;
+                url += queryParams;
+                window.open(url);
+            }
+        },
     },
     mounted() {
         this.getFilteredReports();

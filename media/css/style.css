@@ -23427,7 +23427,7 @@ tr.parent-tr>td:nth-last-of-type(1) {
   color: #7985A5;
 }
 
-.td-options-wrap a i {
+.td-options-wrap a i, .td-view-qc i {
   font-size: 18px;
   color: #F99C19;
   display: inline-block;
@@ -24521,6 +24521,11 @@ html.ltr #approve-element .sign-section {
 #approve-element .sign-content img {
   min-height: 40px;
   max-height: 40px;
+}
+
+#approve-element .el-app-disabled{
+  opacity: .5;
+  cursor: auto;
 }
 
 #pr-labtests-list .element_name{

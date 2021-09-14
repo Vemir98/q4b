@@ -202,6 +202,7 @@ class Controller_LabTests extends HDVP_Controller_Template
             "cancel" => __('Cancel'),
             "element" => __('Element_item'),
             "are_you_sure_to_delete" => __('Are you sure, you want delete this'),
+            "list_of_files" => __('list_of_files'),
         ];
         VueJs::instance()->addComponent('./confirm-modal');
         VueJs::instance()->addComponent('labtests/labtest-update');
