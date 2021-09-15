@@ -10,7 +10,7 @@ class Job_Notification_SendPushNotification
         try {
             $time = $this->args['time'];
             $dt = \Carbon\Carbon::parse($time);
-            $dt->addMinute();
+            $dt->addHour();
             $ids = DB::select('id')
                 ->from('users')
                 ->where('device_token','IS NOT', NULL)
