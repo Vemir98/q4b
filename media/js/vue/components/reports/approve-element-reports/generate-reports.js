@@ -517,21 +517,41 @@ Vue.component('generate-reports', {
     watch: {
         selectedCompany(val) {
             if (val) {
-                this.getCmpProjects()
+                let a = Object.values(val.projects)
+                this.cmpProjects = a;
+                if(this.filters?.selectedProject) {
+                    this.selectedProject = this.filters.selectedProject
+                    this.filters.selectedProject = null;
+                } else {
+                    this.selectedProject = null;
+                }
             } else {
                 this.selectedCompany = null;
+                this.selectedProject = null;
             }
-            this.selectedProject = null;
         },
         selectedProject(val) {
             if (val) {
                 this.getProject(this.selectedProject.id)
             } else {
                 this.selectedProject = null
+                this.project = [];
+                this.structures = [];
+                this.floors = [];
+                this.places = [];
+                this.elements = [];
+                this.crafts = [];
+                this.positions = [];
+                this.selectedStructures = [];
+                this.selectedFloors = [];
+                this.selectedPlaces = [];
+                this.selectedElements = [];
+                this.selectedCrafts = [];
+                this.selectedPositions = [];
             }
         },
         project(val) {
-            if(val) {
+            if(Object.keys(val).length) {
                 this.getStructures();
                 this.getElements();
                 this.getCompanyCrafts();
@@ -569,7 +589,7 @@ Vue.component('generate-reports', {
         },
         getCompanies(){
             this.showLoader = true;
-            let url = '/companies/entities/list';
+            let url = '/companies/entities/for_current_user';
 
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
@@ -592,6 +612,25 @@ Vue.component('generate-reports', {
                     this.showLoader = false;
                 })
         },
+        // async getProjectsbyIds(ids) {
+        //     console.log('3')
+        //     if (!this.selectedCompany) return;
+        //     this.showLoader = true;
+        //     let projects = [];
+        //     for(let id of ids) {
+        //         let url = `/projects/${id}/entities/project?fields=id,name`;
+        //         let result = await qfetch(url, {method: 'GET', headers: {}})
+        //         projects.push(result.item)
+        //     }
+        //     this.showLoader = false;
+        //     // console.log('projects', projects)
+        //     this.cmpProjects = projects;
+        //     console.log('4')
+        //     if(this.filters?.selectedProject) {
+        //         this.selectedProject = this.filters.selectedProject
+        //         this.filters.selectedProject = null;
+        //     }
+        // },
         getProject(id) {
             this.showLoader = true;
             let url = `/projects/${id}/entities/project?fields=id,name`;
@@ -731,9 +770,13 @@ Vue.component('generate-reports', {
         getPositions() {
             this.showLoader = true;
             let url = `/el-approvals/positions/${this.project.id}`;
+
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
                     this.positions = response.items;
+                    if(!this.positions.length) {
+                        this.selectedPositions = [];
+                    }
                     if(this.filters?.selectedPositions) {
                         this.selectedPositions = this.filters.selectedPositions;
                         this.selectedPositions.forEach(position => {
@@ -805,7 +848,6 @@ Vue.component('generate-reports', {
         if(window.location.search) {
             this.$emit('getFiltersForReportsGenerating', this.getFiltersFromUrl())
         }
-
         if(this.filters) {
             this.selectedCompany = this.filters.selectedCompany
             this.selectedProject = this.filters.selectedProject

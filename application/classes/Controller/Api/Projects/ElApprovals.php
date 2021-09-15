@@ -649,6 +649,41 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
     }
 
     /**
+     * Update note of EAR
+     * https://qforb.net/api/json/<appToken>/el-approvals/<id>/note
+     */
+    public function action_note_put(){
+        try {
+            $elApprovalId = $this->getUIntParamOrDie($this->request->param('id'));
+            $note = Arr::get($this->put(), 'note');
+
+            $elApproval = Api_DBElApprovals::getElApprovalById($elApprovalId);
+
+            if(!$elApproval) {
+                throw API_ValidationException::factory(500, 'Incorrect EAR id');
+            }
+
+            $queryData = [
+                'notice' => $note,
+                'updated_at' => time(),
+                'updated_by' => Auth::instance()->get_user()->id,
+            ];
+
+            DB::update('el_approvals')
+                ->set($queryData)
+                ->where('id', '=', $elApprovalId)
+                ->execute($this->_db);
+
+            $this->_responseData = [
+                'status' => "success"
+            ];
+        } catch (Exception $e){
+            Database::instance()->rollback();
+            throw API_Exception::factory(500,'Operation Error');
+        }
+    }
+
+    /**
      * delete EAR
      * https://qforb.net/api/json/<appToken>/el-approvals/<id>/delete
      */

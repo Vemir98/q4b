@@ -15,7 +15,7 @@ class Controller_Api_Notification extends HDVP_Controller_API {
         try {
             $time = $this->request->query('time');
             $dt = \Carbon\Carbon::parse($time);
-            $dt->addDay();
+            $dt->addMinute();
             $ids = DB::select('id')
                 ->from('users')
                 ->where('device_token','IS NOT', NULL)

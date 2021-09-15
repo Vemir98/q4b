@@ -21,7 +21,7 @@ class Controller_Api_Companies_Entities extends HDVP_Controller_API
      * @response Пусто
      */
     public function action_list_get(){
-        $this->_setUsrMinimalPriorityLvl(Enum_UserPriorityLevel::Company);
+//        $this->_setUsrMinimalPriorityLvl(Enum_UserPriorityLevel::Company);
 
         $clientData = $this->getOrPost('items');
         $clientItems = [];
@@ -86,6 +86,76 @@ class Controller_Api_Companies_Entities extends HDVP_Controller_API
     }
 
     /**
+     * @title List of companies for current user
+     * @url http://constructmngr/api/json/v1/{token}/companies
+     * @throws API_Exception 500
+     * @method GET
+     * @response Пусто
+     */
+    public function action_for_current_user_get(){
+        try {
+//            $userCompanies = Api_DBCompanies::getUserCompaniesByProjects($this->_user->id);
+
+            $companies = $this->_user->availableCompanies();
+            $items = [];
+            foreach($companies as $comp){
+                $items[$comp->id] = [
+                    'id' => $comp->id,
+                    'name' => $comp->name,
+                    'projects' => [],
+                    'crafts' => [],
+                    'status' => $comp->status
+                ];
+
+                if($this->_user->getRelevantRole('outspread') == Enum_UserOutspread::Project){
+                    $usrProjects = $this->_user->projects->find_all();
+                    $usrProjectsArr = [];
+                    foreach($usrProjects as $pr){
+                        $usrProjectsArr [] = $pr->id;
+                    }
+
+                    foreach ($comp->projects->find_all() as $proj){
+                        if(!in_array($proj->id,$usrProjectsArr)) continue;
+                        $items[$comp->id]['projects'][$proj->id] = [
+                            'id' => $proj->id,
+                            'name' => $proj->name,
+                            'status' => $proj->status,
+                        ];
+                    }
+                }else{
+                    foreach ($comp->projects->find_all() as $proj){
+                        $items[$comp->id]['projects'][$proj->id] = [
+                            'id' => $proj->id,
+                            'name' => $proj->name,
+                            'status' => $proj->status,
+                        ];
+                    }
+                }
+
+                foreach($comp->crafts->where('status','=',Enum_Status::Enabled)->getFilteredCrafts()->find_all() as $craft){
+                    $items[$comp->id]['crafts'][$craft->id] = [
+                        'id' => $craft->id,
+                        'name' => $craft->name
+                    ];
+                }
+
+                if(empty($items[$comp->id]['projects']) OR empty($items[$comp->id]['crafts'])){
+                    unset($items[$comp->id]);
+                }
+            }
+
+
+            $this->_responseData = [
+                'status' => 'success',
+                'items' => $items
+            ];
+        } catch (Exception $e){
+            throw API_Exception::factory(500,'Operation Error');
+        }
+    }
+
+
+    /**
      * Get crafts list for company
      * if you pass in get param "fields" property list devided by "," will returned only that property list
      * https://qforb.net/api/json/v1/<appToken>/companies/<companyId>/entities/crafts?fields=name,projectId,typeId...
@@ -126,8 +196,8 @@ class Controller_Api_Companies_Entities extends HDVP_Controller_API
                 'items' => $modules
             ];
         } catch (Exception $e) {
-//            throw API_Exception::factory(500,'Operation Error');
-            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($e->getMessage()); echo "</pre>"; exit;
+            throw API_Exception::factory(500,'Operation Error');
+//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($e->getMessage()); echo "</pre>"; exit;
         }
 
     }

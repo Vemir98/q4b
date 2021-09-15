@@ -21,6 +21,27 @@ class Api_DBCompanies
         SELECT id, status FROM cmp_crafts WHERE TRIM(`name`)='{$craftName}' AND `company_id`={$cmpId}")->execute()->as_array();
     }
 
+    public static function getUserCompaniesByProjects($id) {
+        $query = 'SELECT
+        c.id AS id,
+        c.name,
+        c.address,
+        c.description,
+        c.status,
+        CONCAT("'.URL::base('https').'",c.logo) AS logo,
+        c.company_id AS companyId,
+        c.created_at AS createdAt,
+        IF(ISNULL(c.updated_at),c.created_at,c.updated_at) AS updatedAt
+        FROM companies c
+        LEFT JOIN projects p ON c.id=p.company_id
+        LEFT JOIN users_projects up ON up.project_id=p.id
+        WHERE up.user_id=:id GROUP BY  c.id';
+
+        return DB::query(Database::SELECT, $query)
+            ->bind(':id', $id)
+            ->execute()->as_array();
+    }
+
     public static function getProjectCompanyByProjectId($projectId) {
         $query = "SELECT
             company_id

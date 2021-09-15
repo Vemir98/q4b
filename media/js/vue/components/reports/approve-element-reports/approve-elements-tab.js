@@ -69,6 +69,7 @@ Vue.component('approve-elements-tab', {
         async generateReports(filters) {
             this.filters = filters;
 
+
             this.transformedFilters = {
                 'companyId': +this.filters.selectedCompany.id,
                 'projectId': +this.filters.selectedProject.id,
@@ -99,7 +100,7 @@ Vue.component('approve-elements-tab', {
         },
         getCompanies(){
             this.showLoader = true;
-            let url = '/companies/entities/list';
+            let url = '/companies/entities/for_current_user';
 
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
