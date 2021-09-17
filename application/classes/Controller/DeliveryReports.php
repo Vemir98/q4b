@@ -36,12 +36,21 @@ class Controller_DeliveryReports extends HDVP_Controller_Template
         VueJs::instance()->addComponent('ui/modal');
         VueJs::instance()->includeDateTimePiker();
         VueJs::instance()->includeMultiselect();
-        $this->template->content = View::make('reports/delivery/main');
+
+
+        $translations = [
+            'type' => __('Type'),
+            'delivery' => __('Delivery'),
+            'select_type' => __('Select type'),
+            'pre_delivery' => __('pre_delivery')
+        ];
+
+        $this->template->content = View::make('reports/delivery/main', ['translations' => $translations]);
     }
 
     public function action_show(){
         $this->auto_render = false;
-        $data = Arr::extract($this->post(),['company_id','project_id','object_id','floor_id','place_id','from','to']);
+        $data = Arr::extract($this->post(),['company_id','project_id','object_id','floor_id','place_id','from','to','types']);
         if(empty($data['company_id']) OR empty($data['project_id']) OR empty($data['object_id'])){
             throw new HTTP_Exception_404();
         }
@@ -65,6 +74,12 @@ class Controller_DeliveryReports extends HDVP_Controller_Template
         if(!empty($data['place_id'])){
             $query->and_where('place_id','=',$data['place_id']);
         }
+
+        if(!empty($data['types'])) {
+            $query->and_where('is_pre_delivery', 'IN', DB::expr('('.implode(',',$data['types']).')'));
+        }
+        $query->order_by('created_at','DESC');
+
 
         $delReports = $query->find_all();
 
@@ -107,6 +122,7 @@ class Controller_DeliveryReports extends HDVP_Controller_Template
                 'qcReport'=> URL::site('reports/delivery/go_to_qc_report/'.$r->id),
                 'print'=> URL::site('reports/delivery/print/'.$r->id),
                 'edited' => false,
+                'isPreDelivery' => $r->is_pre_delivery
             );
             if($places->type == 'public'){
                 $simpleStat['protocols']['public']++;
@@ -176,13 +192,15 @@ class Controller_DeliveryReports extends HDVP_Controller_Template
         $this->auto_render = false;
         $report = ORM::factory('DeliveryReport',$this->request->param('id'));
         if( file_exists((DOCROOT.'media/data/delivery-reports/'.$report->pk().'/file.pdf'))){
-            header("Location: https://qforb.net/media/data/delivery-reports/".$report->pk()."/file.pdf");die;
+//            header("Location: https://qforb.net/media/data/delivery-reports/".$report->pk()."/file.pdf");die;
+            header("Location: https://qforb.sunrisedvp.systems//media/data/delivery-reports/".$report->pk()."/file.pdf");die;
         }
         $this->_makePdf($report);
         if( ! file_exists((DOCROOT.'media/data/delivery-reports/'.$report->pk().'/file.pdf'))){
             header("Refresh:0");die;
         }
-        header("Location: https://qforb.net/media/data/delivery-reports/".$report->pk()."/file.pdf");die;
+//        header("Location: https://qforb.net/media/data/delivery-reports/".$report->pk()."/file.pdf");die;
+        header("Location: https://qforb.sunrisedvp.systems/media/data/delivery-reports/".$report->pk()."/file.pdf");die;
     }
 
     private function _makePdf($report){

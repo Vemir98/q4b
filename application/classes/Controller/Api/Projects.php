@@ -562,7 +562,8 @@ class Controller_Api_Projects extends HDVP_Controller_API
             throw API_Exception::factory(500,'Incorrect data');
         }catch (Exception $e){
             Database::instance()->rollback();
-            throw API_Exception::factory(500,'Operation Error');
+//            throw API_Exception::factory(500,'Operation Error');
+            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($e->getMessage()); echo "</pre>"; exit;
         }
     }
 

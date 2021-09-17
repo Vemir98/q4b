@@ -40,6 +40,35 @@ Vue.component('report-delivery', {
                     </template>
                     </multiselect>
                 </div>
+                <div class="multiselect-col">
+                    <label class="multiselect-label">type</label>
+                    <multiselect 
+                        v-model="selectedTypes"  
+                        :placeholder="trans.select_type" 
+                        :disabled="false" 
+                        :options="types" 
+                        label="name" 
+                        track-by="id"
+                        :multiple="true" 
+                        :hide-selected="false"
+                        :close-on-select="false"
+                        :clear-on-select="false"
+                        :preserve-search="true"
+                        :internal-search="true"
+                        :taggable="false"
+                        :show-labels="false"  
+                        @change=""                                     
+                        @select="onSelect($event, 'types')"
+                        @remove="onRemove($event, 'types')"
+                        >
+                        <span class="multiselect-checkbox-label" :class="{'checked': scope.option.checked}"  slot="option" slot-scope="scope" >
+                            <span class="multiselect-option-icon"><i class="q4bikon-tick"></i><span></span></span>
+                            <span class="multiselect-option-name">{{ scope.option.name }}</span>
+                        </span>
+                        <template slot='selection' slot-scope="{values, option, isOpen}"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ getMultiselectSelectionValue(values) }} </span></template>
+                        <template slot="tag">{{ '' }}</template>
+                    </multiselect> 
+                </div>         
                 <div class="multiselect-col w-10">
                     <label class="multiselect-label">{{floorTxt}}</label>
                     <multiselect v-model="selectedFloor" @select="floorSelected" :placeholder="selectFloorTxt" :disabled="floors.length < 1" :options="floors" track-by="id" label="number" :searchable="true" :allow-empty="false" :show-labels="false">
@@ -93,6 +122,7 @@ Vue.component('report-delivery', {
                     <th>{{structureTxt}}</th>
                     <th>{{dateTxt}}</th>
                     <th>{{qualityMarkTxt}}</th>
+                    <th>{{ trans.type }}</th>
                     <th>{{protocolTxt}}</th>
                     <th>{{moreTxt}}</th>
                 </tr>
@@ -122,6 +152,7 @@ Vue.component('report-delivery', {
                                 <img src="/media/img/new-images/quality.png" alt="Quality">
                             </div>
                         </td>
+                        <td>{{ item.isPreDelivery === '1' ? trans.pre_delivery : trans.delivery }}</td>
                         <td>
                             <a :href="item.protocol" target="_blank">
                                 <div class="img">
@@ -177,6 +208,7 @@ Vue.component('report-delivery', {
         saveTxt: {required: true},
         noItemsText: {required: true},
         moreTxt: {required: true},
+        translations: {required:true}
     },
     components: {
         Multiselect: window.VueMultiselect.default,
@@ -193,11 +225,17 @@ Vue.component('report-delivery', {
             selectedObject: null,
             selectedFloor: null,
             selectedPlace: null,
+            selectedTypes: [],
             companies: [],
             projects: [],
             objects: [],
             floors: [],
             places: [],
+            types: [
+                {id: 0, name: 'Delivery'},
+                {id: 1, name: 'Pre-delivery'}
+            ],
+            trans: JSON.parse(this.translations),
             txtPrivateResult : "",
             txtPublicResult : "",
             txtTotalResult : "",
@@ -335,7 +373,6 @@ Vue.component('report-delivery', {
                 });
         },
         timeChanged(){
-           // console.log(this.time[0]);
         },
         canShow(){
             return this.selectedCompany != null && this.selectedProject != null && this.selectedObject != null && this.time[0] != null;
@@ -355,6 +392,10 @@ Vue.component('report-delivery', {
 
             if(this.selectedPlace != null){
                 data['place_id'] = this.selectedPlace.id;
+            }
+
+            if(this.selectedTypes.length){
+                data['types'] = this.selectedTypes.map(type => type.id);
             }
             this.requested = false;
             this.items = [];
@@ -407,13 +448,29 @@ Vue.component('report-delivery', {
             var checked = [];
             this.items.filter(x => x.checked === true).forEach(item => checked.push(item.id));
             window.eventBus.$emit('deliveryReportChecked', checked);
-        }
+        },
+        onSelect(option, objName) {
+            let index = this[objName].findIndex(item => +item.id === +option.id);
+            this[objName][index].checked = true;
+        },
+        onRemove(option, objName) {
+            let index = this[objName].findIndex(item => +item.id === +option.id);
+            this[objName][index].checked = false;
+        },
+        getMultiselectSelectionValue(values, trans) {
+            let vals = [];
+            values.forEach(val => {
+                vals.push(!trans ? val.name : this.trans[val.name])
+            });
+            return vals.join(', ');
+        },
     },
     mounted() {
         axios.get(this.siteUrl + 'entities/companies?fields=id,name')
             .then(response => {
                 this.companies = response.data.items;
             });
+        console.log(this.trans)
     }
 });
 

@@ -161,10 +161,13 @@ Vue.component('reports-list', {
                                     <div  class="td-options-wrap" v-if="report.showOptions">
                                         <a @click="goToReportDetails(report)"><i class="q4bikon-preview1"></i>{{ trans.view }}</a>
                                         <a 
-                                            style="opacity: .5;cursor: auto"
+                                            v-if="hasQc(report)"
+                                            @click="getGenerateQcHref(report)"
                                         >
-<!--                                             @click="getGenerateQcHref(report)"
-  -->
+                                            <i class="q4bikon-uncheked" ></i>
+                                            {{ trans.qc_report }}
+                                        </a>
+                                        <a v-else class="el-app-disabled">
                                             <i class="q4bikon-uncheked" ></i>
                                             {{ trans.qc_report }}
                                         </a>
@@ -315,8 +318,19 @@ Vue.component('reports-list', {
                 console.log(e)
             }
         },
+        hasQc(report) {
+           let result = report.specialities.filter(spec => {
+               return spec.qualityControl;
+           })
+
+            return result.length > 0
+        },
         async getGenerateQcHref(report, speciality) {
             let url = `${this.siteUrl}/reports/generate`;
+
+            if(!this.hasQc(report)) {
+                return false;
+            }
 
             if(speciality) {
                 this.showLoader = true;
@@ -326,32 +340,36 @@ Vue.component('reports-list', {
                 let date = this.convertTimestampToDate(result.item.createdAt);
                 let queryParams = `?from=${date}&to=${date}&crafts[]=${speciality.craftId}&company=${this.company.id}&project=${this.project.id}&el_app_id=${report.id}#tab_qc_controls`;
                 url += queryParams;
-            }
 
-            // else {
-            //
-            //     let range = [];
-            //     this.showLoader = true;
-            //
-            //     for(spec of report.specialities) {
-            //         let url = '/quality-controls/get/'+spec.qualityControl+'?fields=createdAt';
-            //         let result = await qfetch(url, {method: 'GET', headers: {}});
-            //         range.push(+result.item.createdAt)
-            //     }
-            //     this.showLoader = false;
-            //
-            //     let from = this.convertTimestampToDate(''+Math.max(...range));
-            //     let to = Math.min(...range);
-            //
-            //
-            //     console.log(range);
-            //     console.log('from', from);
-            //     console.log('to', to);
-            //     return false;
-            //
                 window.open(url);
-            //
-            // }
+            } else {
+
+                let range = [];
+                this.showLoader = true;
+
+                for(spec of report.specialities) {
+                    if(spec.qualityControl) {
+                        let url = '/quality-controls/get/'+spec.qualityControl+'?fields=createdAt';
+                        let result = await qfetch(url, {method: 'GET', headers: {}});
+                        range.push(+result.item.createdAt)
+                    }
+                }
+                this.showLoader = false;
+
+                let from = this.convertTimestampToDate(''+Math.max(...range));
+                let to = this.convertTimestampToDate(Math.min(...range));
+
+                let specIds = report.specialities.map(spec => 'crafts[]=' +spec.craftId)
+
+                if(!specIds.length) {
+                    return false;
+                }
+
+                let queryParams = `?from=${from}&to=${to}&${specIds.join('&')}&company=${this.company.id}&project=${this.project.id}&el_app_id=${report.id}#tab_qc_controls`;
+                url += queryParams;
+
+                window.open(url);
+            }
         },
     },
     mounted() {

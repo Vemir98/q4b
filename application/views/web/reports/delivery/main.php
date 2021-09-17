@@ -32,6 +32,7 @@
     save-txt="<?=__('Save')?>"
     no-items-text="<?=__('No items to show')?>"
     more-txt="<?=__('More')?>"
+    translations='<?=json_encode($translations)?>'
     />
 </div>
 <div id="send-reports-modal">

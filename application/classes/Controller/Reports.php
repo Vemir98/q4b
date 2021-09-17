@@ -346,10 +346,10 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         if($data['sort_by_crafts']) {
             $qcs->order_by('cmp_crafts.name', 'ASC');//--1
         }
-        $qcs->order_by('qualitycontrol.project_id','ASC');
-        $qcs->order_by('qualitycontrol.object_id','ASC');
-        $qcs->order_by('pr_floors.number','ASC');
-        $qcs->order_by('pr_places.number','ASC');
+//        $qcs->order_by('qualitycontrol.project_id','ASC');
+//        $qcs->order_by('qualitycontrol.object_id','ASC');
+//        $qcs->order_by('pr_floors.number','ASC');
+//        $qcs->order_by('pr_places.number','ASC');
         $qcs->order_by('qualitycontrol.created_at','DESC');
 
        // $qcs->order_by('qualitycontrol.place_id','ASC');

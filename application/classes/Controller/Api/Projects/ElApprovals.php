@@ -244,9 +244,6 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
 
             if(!empty($clientData['signatures'])) {
                 $elApprovalCraftSignatureImagesPath = DOCROOT.'media/data/projects/'.$clientData['projectId'].'/el-approvals';
-                if(!file_exists($elApprovalCraftSignatureImagesPath)) {
-                    mkdir($elApprovalCraftSignatureImagesPath, 0777, true);
-                }
 
                 foreach ($clientData['signatures'] as $signature) {
                     $valid = Validation::factory($signature);

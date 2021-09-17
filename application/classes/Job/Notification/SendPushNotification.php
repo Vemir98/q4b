@@ -6,30 +6,35 @@ use Helpers\PushHelper;
 class Job_Notification_SendPushNotification
 {
     public function perform(){
+        $timestamp = (int)strtotime($this->args['time']) + 3600;
 
+        $time = date('H:i',$timestamp);
         try {
-            $time = $this->args['time'];
-            $dt = \Carbon\Carbon::parse($time);
-            $dt->addHour();
-            $ids = DB::select('id')
-                ->from('users')
-                ->where('device_token','IS NOT', NULL)
-                ->and_where('device_token','!=', "")
-                ->and_where('os_type','IS NOT', NULL)
-                ->execute('persistent')
-                ->as_array();
-            $idsArr = [];
-            foreach($ids as $x => $value) {
-                $idsArr[] = $value['id'];
+//            $ids = DB::select('id')
+//                ->from('users')
+//                ->where('device_token','IS NOT', NULL)
+//                ->and_where('device_token','!=', "")
+//                ->and_where('os_type','IS NOT', NULL)
+//                ->execute('persistent')
+//                ->as_array();
+//            $idsArr = [];
+//            foreach($ids as $x => $value) {
+//                $idsArr[] = $value['id'];
+//            }
+//            if (!count($idsArr)) {
+//                return;
+//            }
+//            $users = ORM::factory('User')->where('id','IN', $idsArr)->find_all()->as_array();
+//            foreach ($users as $user){
+//                PushHelper::send($user);
+//            }
+            $f = fopen(DOCROOT.'testNotification.txt', 'a');
+
+            if($f) {
+                fputs($f, date('H:i:s')."\n");
             }
-            if (!count($idsArr)) {
-                return;
-            }
-            $users = ORM::factory('User')->where('id','IN', $idsArr)->find_all()->as_array();
-            foreach ($users as $user){
-                PushHelper::send($user);
-            }
-            PushHelper::queueIfNotExists($time, \Language::getCurrent()->iso2, 'Job_Notification_SendPushNotification', $dt->timestamp, 'waiting');
+            fclose($f);
+            PushHelper::queueIfNotExists($time, \Language::getCurrent()->iso2, 'Job_Notification_SendPushNotification', $timestamp, 'waiting');
 
             \Kohana::$log->add(\Log::WARNING, json_encode([
                 'name' => 'PushNotification_Job_Warning',
@@ -38,7 +43,7 @@ class Job_Notification_SendPushNotification
             ]));
 
         } catch (Exception $exception) {
-            PushHelper::queueIfNotExists($time, \Language::getCurrent()->iso2, 'Job_Notification_SendPushNotification', $dt->timestamp, 'waiting');
+            PushHelper::queueIfNotExists($time, \Language::getCurrent()->iso2, 'Job_Notification_SendPushNotification', $timestamp, 'waiting');
 
             \Kohana::$log->add(\Log::ERROR, json_encode([
                 'name' => 'PushNotification_Job_Error',
