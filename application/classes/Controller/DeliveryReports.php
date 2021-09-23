@@ -40,9 +40,9 @@ class Controller_DeliveryReports extends HDVP_Controller_Template
 
         $translations = [
             'type' => __('Type'),
-            'delivery' => __('Delivery'),
+            'Delivery' => __('Delivery'),
             'select_type' => __('Select type'),
-            'pre_delivery' => __('pre_delivery')
+            'Pre-delivery' => __('pre_delivery')
         ];
 
         $this->template->content = View::make('reports/delivery/main', ['translations' => $translations]);
@@ -184,23 +184,24 @@ class Controller_DeliveryReports extends HDVP_Controller_Template
         $this->auto_render = false;
         $report = ORM::factory('DeliveryReport',$this->request->param('id'));
 
-
-        echo View::make('reports/delivery/print',['report' => $report]);
+        if($report->is_pre_delivery) {
+            echo View::make('reports/delivery/pre_delivery_print',['report' => $report]);
+        } else {
+            echo View::make('reports/delivery/print',['report' => $report]);
+        }
     }
 
     public function action_get_pdf(){
         $this->auto_render = false;
         $report = ORM::factory('DeliveryReport',$this->request->param('id'));
         if( file_exists((DOCROOT.'media/data/delivery-reports/'.$report->pk().'/file.pdf'))){
-//            header("Location: https://qforb.net/media/data/delivery-reports/".$report->pk()."/file.pdf");die;
-            header("Location: https://qforb.sunrisedvp.systems//media/data/delivery-reports/".$report->pk()."/file.pdf");die;
+            header("Location: https://qforb.net/media/data/delivery-reports/".$report->pk()."/file.pdf");die;
         }
         $this->_makePdf($report);
         if( ! file_exists((DOCROOT.'media/data/delivery-reports/'.$report->pk().'/file.pdf'))){
             header("Refresh:0");die;
         }
-//        header("Location: https://qforb.net/media/data/delivery-reports/".$report->pk()."/file.pdf");die;
-        header("Location: https://qforb.sunrisedvp.systems/media/data/delivery-reports/".$report->pk()."/file.pdf");die;
+        header("Location: https://qforb.net/media/data/delivery-reports/".$report->pk()."/file.pdf");die;
     }
 
     private function _makePdf($report){

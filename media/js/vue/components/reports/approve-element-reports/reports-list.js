@@ -130,11 +130,12 @@ Vue.component('reports-list', {
                         <th>{{ trans.check_date }}</th>
                         <th>{{ trans.structure }}</th>
                         <th>{{ trans.element }}</th>
+                        <th>{{ trans.notes_description }}</th>
                         <th>{{ trans.craft }}</th>
                         <th>{{ trans.floor }}</th>
                         <th>{{ trans.status }}</th>
                         <th>{{ trans.approval_date }}</th>
-                        <th>{{ trans.position }}</th>
+<!--                        <th>{{ trans.position }}</th>-->
                         <th>{{ trans.signer_name }}</th>
                         <th>{{ trans.signature }}</th>
                         <th>{{ trans.more }}</th>
@@ -147,13 +148,14 @@ Vue.component('reports-list', {
                             <td>{{ convertTimestampToDate(report.createdAt) }} </td>
                             <td>{{ report.objectName }}</td>
                             <td>{{ report.elementName }}</td>
+                            <td class="tab-description">{{ report.notice }}</td>
                             <td>&nbsp;</td>
                             <td class="td-floor">{{ report.floorName ? report.floorName : report.floorNumber  }}</td>
                             <td class="text-capitalize"> {{ +report.appropriate === 1 ? trans.appropriate : trans.not_appropriate }}</td>
                             <td>{{ report.managerSignature ? convertTimestampToDate(report.managerSignature.createdAt) : '&nbsp;' }}</td>
-                            <td>{{ report.managerSignature ? report.managerSignature.position : '&nbsp;' }}</td>
-                            <td>{{ report.managerSignature ? report.managerSignature.name : '&nbsp;' }}</td>
-                            <td class="td-sign">
+<!--                            <td>{{ report.managerSignature ? report.managerSignature.position : '&nbsp;' }}</td>-->
+                            <td>{{ report.managerSignature ? report.managerSignature.name : '&nbsp;' }} {{ report.managerSignature ? report.managerSignature.position : '&nbsp;' }}</td>
+                            <td class="td-sign tab-signature">
                                 <img :src="report.managerSignature ? imageUrl+report.managerSignature.image : ''">
                             </td>
                             <td>
@@ -181,12 +183,13 @@ Vue.component('reports-list', {
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
+                                <td>&nbsp;</td>
                                 <td>{{ speciality.craftName }}</td>
                                 <td>&nbsp;</td>
                                 <td>{{ +speciality.appropriate ? trans.appropriate : trans.not_appropriate  }}</td>
                                 <td>{{ speciality.signatures.length ? convertTimestampToDate(speciality.signatures[0]['createdAt']) : convertTimestampToDate(speciality.updatedAt) }}</td>
-                                <td>{{ speciality.signatures.length ? speciality.signatures[0]['position'] : '' }}</td>
-                                <td>{{ speciality.signatures.length ? speciality.signatures[0]['name'] : '' }}</td>
+<!--                                <td>{{ speciality.signatures.length ? speciality.signatures[0]['position'] : '' }}</td>-->
+                                <td>{{ speciality.signatures.length ? speciality.signatures[0]['name'] : '' }} {{ speciality.signatures.length ? speciality.signatures[0]['position'] : '' }}</td>
                                 <td class="td-sign">
                                 <img :src="speciality.signatures.length ? imageUrl+speciality.signatures[0]['image'] : ''">
                                 </td>

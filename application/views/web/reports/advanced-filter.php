@@ -188,7 +188,8 @@ $selectedSpace = $selectedArray["space"] ? $selectedArray["space"] : '';
             </label>
             <div class="multi-select-box pr-stage">
                 <div class="select-imitation">
-                    <span class="select-imitation-title" style="width: 92%;" data-text="<?=__('Please select')?>">
+<!--                    <span class="select-imitation-title" style="width: 92%;" data-text="--><?//=__('Please select')?><!--">-->
+                    <span class="select-imitation-title" data-text="<?=__('Please select')?>">
                         <span class="select-def-text">
                                 <?foreach($qcStages as $qcs){
                                     if(in_array($qcs, $selectedStages) OR empty($selectedStages)){

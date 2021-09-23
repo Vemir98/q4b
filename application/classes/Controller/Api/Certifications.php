@@ -43,9 +43,9 @@ class Controller_Api_Certifications extends HDVP_Controller_API
             $instructions = $craft->instructions->where('project_id','IS',null)->find_all();
             foreach ($instructions as $r){
                 $images = [];
-                foreach ($r->images->find_all() as $img){
-                    $images []= $img->path . '/' . $img->name;
-                }
+//                foreach ($r->images->find_all() as $img){
+//                    $images []= $img->path . '/' . $img->name;
+//                }
                 $regData[] = [
                     'id' => $r->id,
                     'craftId' => $craft->id,
@@ -74,9 +74,9 @@ class Controller_Api_Certifications extends HDVP_Controller_API
             $certifications = $craft->instructions->where('project_id','=',$id2)->find_all();
             foreach ($certifications as $r){
                 $images = [];
-                foreach ($r->images->find_all() as $img){
-                    $images []= $img->path . '/' . $img->name;
-                }
+//                foreach ($r->images->find_all() as $img){
+//                    $images []= $img->path . '/' . $img->name;
+//                }
                 $regData[] = [
                     'id' => $r->id,
                     'craftId' => $craft->id,

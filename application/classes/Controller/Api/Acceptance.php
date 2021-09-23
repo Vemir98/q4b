@@ -54,6 +54,7 @@ class Controller_Api_Acceptance extends HDVP_Controller_API
             $data['s_text_type_1'] = $project->s_texts->where('type','=','s_text_type_1')->find()->text;
             $data['s_text_type_2'] = $project->s_texts->where('type','=','s_text_type_2')->find()->text;
             $data['s_text_type_3'] = $project->s_texts->where('type','=','s_text_type_3')->find()->text;
+            $data['s_text_type_4'] = $project->s_texts->where('type','=','s_text_type_4')->find()->text;
             $report = ORM::factory('DeliveryReport');
             $report->values($data, [
                 'company_id',
@@ -151,6 +152,7 @@ class Controller_Api_Acceptance extends HDVP_Controller_API
             throw API_Exception::factory(500,$e->getMessage());
         }catch (Exception $e){
             Database::instance()->rollback();
+            Kohana::$log->add(Log::ERROR, 'delivery log: ' . json_encode([$e->getMessage()], JSON_PRETTY_PRINT));
             //throw API_Exception::factory(500,'Operation Error');
             throw API_Exception::factory(500,$e->getMessage());
         }
@@ -194,7 +196,7 @@ class Controller_Api_Acceptance extends HDVP_Controller_API
 //                throw API_Exception::factory(500,'Incorrect data');
 //            }
             if( ! count($files['signature'])){
-                throw API_Exception::factory(500,'Incorrect data');
+                throw API_Exception::factory(500,'Incorrect data1');
             }
 //            if(empty($files['dev_app_files'])){
 //                throw API_Exception::factory(500,'Incorrect data');
@@ -203,6 +205,7 @@ class Controller_Api_Acceptance extends HDVP_Controller_API
             $data['s_text_type_1'] = $project->s_texts->where('type','=','s_text_type_1')->find()->text;
             $data['s_text_type_2'] = $project->s_texts->where('type','=','s_text_type_2')->find()->text;
             $data['s_text_type_3'] = $project->s_texts->where('type','=','s_text_type_3')->find()->text;
+            $data['s_text_type_4'] = $project->s_texts->where('type','=','s_text_type_4')->find()->text;
             $data['is_pre_delivery'] = 1;
             $report = ORM::factory('DeliveryReport');
             $report->values($data, [
@@ -215,6 +218,7 @@ class Controller_Api_Acceptance extends HDVP_Controller_API
                 's_text_type_1',
                 's_text_type_2',
                 's_text_type_3',
+                's_text_type_4',
                 'larder',
                 'parking',
                 'is_pre_delivery'
@@ -301,12 +305,17 @@ class Controller_Api_Acceptance extends HDVP_Controller_API
             ],\Carbon\Carbon::now()->addSeconds(30)->timestamp);
         }catch (ORM_Validation_Exception $e){
             Database::instance()->rollback();
-            //throw API_Exception::factory(500,'Incorrect data');
-            throw API_Exception::factory(500,$e->errors('validation'));
+            Kohana::$log->add(Log::ERROR, 'pre-delivery log: ' . json_encode([$e->getMessage()], JSON_PRETTY_PRINT));
+
+            throw API_Exception::factory(500,'Incorrect data');
+
+//            throw API_Exception::factory(500,$e->errors('validation'));
         }catch (HDVP_Exception $e){
             Database::instance()->rollback();
-            //throw API_Exception::factory(500,'Incorrect data');
-            throw API_Exception::factory(500,$e->getMessage());
+            Kohana::$log->add(Log::ERROR, 'pre-delivery log: ' . json_encode([$e->getMessage()], JSON_PRETTY_PRINT));
+            throw API_Exception::factory(500,'Incorrect data');
+
+//            throw API_Exception::factory(500,$e->getMessage());
         }catch (Exception $e){
             Database::instance()->rollback();
             //throw API_Exception::factory(500,'Operation Error');

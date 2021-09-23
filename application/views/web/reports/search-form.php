@@ -6,7 +6,7 @@
  * Date: 04.04.2017
  * Time: 11:48
  */
-$selectedArray = Arr::extract($_GET,["company","project","crafts","statuses","from","to",'approval_status','condition_level','condition_list']);
+$selectedArray = Arr::extract($_GET,["company","project","crafts","elements","statuses","from","to",'approval_status','condition_level','condition_list']);
 $selectedAdvancedArray = Arr::extract($_GET,["object_id","floors","place_type","place_number","profession_id","project_stage","space"]);
 // $selectedCrafts = $_GET["crafts"];
 // $selectedStatuses = $_GET["statuses"];
@@ -195,8 +195,24 @@ if (array_key_exists($roleName, $subcontractorsArr)) {
                                     </select>
                                 </div>
                             </div>
-                            <div class="report-form-group col-md-6 col-sm-12 rtl-float-right">
-                                <label class="pretty-checkbox" for="sort_by_crafts" style="margin: 27px 10px 0 0;"><input type="checkbox" name="sort_by_crafts" id="sort_by_crafts" value="1"><?=__('sort_by_crafts')?></label>
+                            <div class="report-form-group col-md-6 col-sm-12 rtl-float-right multi-select-col">
+                                <label class="table_label">
+                                    <span class="check-all-elements check-all-links" data-seltxt="<?=__('select all')?>" data-unseltxt="<?=__('unselect all')?>">
+                                        <?=__('unselect all')?>
+
+                                    </span>Elements
+                                </label>
+                                <div class="multi-select-box rpt-elements">
+                                    <div class="select-imitation">
+                                        <span class="select-imitation-title"></span>
+                                        <div class="over-select" id="reports-filter-elements"></div>
+                                        <i class="arrow-down q4bikon-arrow_bottom"></i>
+                                    </div>
+                                    <div class="checkbox-list">
+                                    </div><!--.checkbox-list-->
+                                    <select class="hidden-select" name="elements[]" multiple>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div class="row cond-level">
@@ -254,6 +270,9 @@ if (array_key_exists($roleName, $subcontractorsArr)) {
                                         </div>
                                     </div>
                                 </div>
+                                <div class="report-form-group col-md-6 col-sm-12 rtl-float-right">
+                                    <label class="pretty-checkbox" for="sort_by_crafts" style="margin: 27px 10px 0 0;"><input type="checkbox" name="sort_by_crafts" id="sort_by_crafts" value="1"><?=__('sort_by_crafts')?></label>
+                                </div>
                             </div>
 
                         </div>
@@ -268,9 +287,7 @@ if (array_key_exists($roleName, $subcontractorsArr)) {
                     </div>
                 </div>
                 <div id="advanced-reports" class="advanced-reports">
-
                 </div>
-
             </div>
 
             <div class="generate-reports-footer">

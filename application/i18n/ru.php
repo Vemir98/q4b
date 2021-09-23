@@ -801,6 +801,7 @@ return [
     'project_construction'=>'С.П. Строительство',
     'project_general_subcontractor'=>'Главный субподрядчик',
     'Notes' => 'Комментарии',
+    'notes_description' => 'Комментарии / Описание',
     'Employer review' => 'Диалог',
     'Add review' => 'Добавить отзыв',
     'Attached images' => 'Прикрепленные изображения',
@@ -905,5 +906,6 @@ return [
     'positions' => 'Должности',
     'manager_signature' => 'Подпись менеджера',
     'list_of_files' => 'Список файлов',
+    'without_elements' => 'Без элементов',
     ''=>'',
 ];

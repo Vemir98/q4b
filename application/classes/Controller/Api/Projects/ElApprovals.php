@@ -244,6 +244,9 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
 
             if(!empty($clientData['signatures'])) {
                 $elApprovalCraftSignatureImagesPath = DOCROOT.'media/data/projects/'.$clientData['projectId'].'/el-approvals';
+                if(!file_exists($elApprovalCraftSignatureImagesPath)) {
+                    mkdir($elApprovalCraftSignatureImagesPath, 0777, true);
+                }
 
                 foreach ($clientData['signatures'] as $signature) {
                     $valid = Validation::factory($signature);
@@ -676,6 +679,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
             ];
         } catch (Exception $e){
             Database::instance()->rollback();
+            Kohana::$log->add(Log::ERROR, 'el app note update log: ' . json_encode([$e->getMessage()], JSON_PRETTY_PRINT));
             throw API_Exception::factory(500,'Operation Error');
         }
     }
@@ -813,13 +817,17 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
 
             $ws->set_active_sheet(0);
             $as = $ws->get_active_sheet();
-            $cols = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'];
+            $cols = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
 
             $as->setTitle('Element approval reports');
 
             $as->getDefaultStyle()->getFont()->setSize(10);
             foreach ($cols as $col) {
-                $as->getColumnDimension("$col")->setWidth(20);
+                if($col === 'E') {
+                    $as->getColumnDimension("$col")->setWidth(40);
+                } else {
+                    $as->getColumnDimension("$col")->setWidth(20);
+                }
             }
             $as->getRowDimension('1')->setRowHeight(80);
             $as->getRowDimension('2')->setRowHeight(25);
@@ -852,6 +860,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                     __('check_date'),
                     __('Structure'),
                     __('Element_item'),
+                    __('notes_description'),
                     __('Craft'),
                     __('Floor'),
                     __('Status'),
@@ -882,9 +891,10 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                     date('d/m/Y', $elApproval['createdAt']),
                     $elApproval['objectName'],
                     $elApproval['elementName'],
+                    $elApproval['notice'],
                     '',
                     $elApproval['floorName'] ?: $elApproval['floorNumber'],
-                    $elApproval['status'],
+                    $elApproval['appropriate'] ? __('appropriate') : __('not_appropriate'),
                     !empty($elApproval['managerSignature']) ? date('d/m/Y', $elApproval['managerSignature']['createdAt']) : '',
                     !empty($elApproval['managerSignature']) ? $elApproval['managerSignature']['position'] : '',
                     !empty($elApproval['managerSignature']) ? $elApproval['managerSignature']['name'] : '',
@@ -905,7 +915,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                         $objDrawing->setResizeProportional(true);
                         $objDrawing->setWidth(60);
                         $objDrawing->setHeight(60);
-                        $objDrawing->setCoordinates('K'.(count($excelRows)+2));
+                        $objDrawing->setCoordinates('L'.(count($excelRows)+2));
                         $objDrawing->setOffsetX(10);
                         $objDrawing->setWorksheet($as);
                     }
@@ -918,6 +928,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
 
                 foreach ($elApproval['specialities'] as $speciality) {
                     $elAppCraftRow = [
+                        '',
                         '',
                         '',
                         '',
@@ -946,7 +957,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                             $objDrawing->setResizeProportional(true);
                             $objDrawing->setWidth(60);
                             $objDrawing->setHeight(60);
-                            $objDrawing->setCoordinates('K'.(count($excelRows)+2));
+                            $objDrawing->setCoordinates('L'.(count($excelRows)+2));
                             $objDrawing->setOffsetX(10);
                             $objDrawing->setWorksheet($as);
                         }
@@ -966,6 +977,10 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
             $header_range = "{$first_letter}2:{$last_letter}2";
             $ws->get_active_sheet()->getStyle($header_range)->getFont()->setSize(14)->setBold(true);
             $ws->get_active_sheet()->getStyle('K1:K999')
+                ->getAlignment()->setWrapText(true);
+            $ws->get_active_sheet()->getStyle('E1:E999')
+                ->getAlignment()->setWrapText(true);
+            $ws->get_active_sheet()->getStyle('A1:A999')
                 ->getAlignment()->setWrapText(true);
             $ws->rtl(Language::getCurrent()->direction === 'rtl');
             $ws->send(['name'=>'element-approval-reports', 'format'=>'Excel5']);

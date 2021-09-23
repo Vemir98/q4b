@@ -828,6 +828,7 @@ return [
     'project_construction'=>'ק.מ. בנייה',
     'project_general_subcontractor'=>'קבלן ראשי',
     'Notes' => 'הערות',
+    'notes_description' => 'הערות / תיאור',
     'Employer review' => 'דו שיח',
     'Add review' => 'הוסף תגובה',
     'Attached images' => 'תמונות מצורפות',
@@ -932,5 +933,6 @@ return [
     'positions' => 'תפקידים',
     'manager_signature' => 'חתימת מנהל',
     'list_of_files' => 'רשימת קבצים',
+    'without_elements' => 'ללא אלמנטים',
     ''=>'',
 ];

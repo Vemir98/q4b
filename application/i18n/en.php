@@ -509,7 +509,7 @@ return [
     'tracking'=>'tracking',
     'Signature'=>'Signature',
     'Powered by'=>'Powered by',
-    'All right reserved'=>'All right reserved',
+    'All right reserved'=>'All rights reserved',
     'settings-update-process'=> 'Settings update process',
     "Start to write email" => "Please, start to write email",
     "select all on page" => "Select all on page",
@@ -835,6 +835,7 @@ return [
     'project_construction'=>'S.C. Construction',
     'project_general_subcontractor'=>'General subcontractor',
     'Notes' => 'Notes',
+    'notes_description' => 'Notes / Description',
     'Employer review' => 'Employer review',
     'Add review' => 'Add review',
     'Attached images' => 'Attached images',
@@ -932,5 +933,6 @@ return [
     'positions' => 'Positions',
     'manager_signature' => 'Manager Signature',
     'list_of_files' => 'List of files',
+    'without_elements' => 'Without elements',
     ''=>'',
 ];

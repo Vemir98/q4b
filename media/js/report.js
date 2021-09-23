@@ -102,30 +102,31 @@ $(document).ready(function() {
             if (jsonReportItems[val].crafts) {
                 if(!selectedCrafts.length){
 
-                    var checked = "checked";
+                    var craftsChecked = "checked";
 
                 }
                 for (var idx1 in jsonReportItems[val].crafts) {
                     var crft = jsonReportItems[val].crafts[idx1];
                     if(selectedCrafts.length){
-
-                       var checked = selectedCrafts.indexOf(crft.id) != -1 ? "checked" : "";
+                       var craftsChecked = selectedCrafts.indexOf(crft.id) != -1 ? "checked" : "";
                     }
 
-                    var selected = checked ? ' selected' : "";
-                    selectedCraftText += checked ?  __(crft.name) + ',':'';
+                    var selectedCraft = craftsChecked ? ' selected' : "";
+                    selectedCraftText += craftsChecked ?  __(crft.name) + ',':'';
+
                     craftHtml +=
                         '<div class="checkbox-list-row">'+
                             '<span class="checkbox-text">' +
-                                '<label class="checkbox-wrapper-multiple ' + checked +'" data-val="' + crft.id + '">' +
+                                '<label class="checkbox-wrapper-multiple ' + craftsChecked +'" data-val="' + crft.id + '">' +
                                     '<span class="checkbox-replace"></span>' +
                                     '<i class="checkbox-list-tick q4bikon-tick"></i>'+
                                 '</label>' + __(crft.name) +
                             '</span>'+
                         '</div>';
-                    craftOptionsHtml += '<option value="' + crft.id + '" '+selected+'>' + __(crft.name) + '</option>';
+                    craftOptionsHtml += '<option value="' + crft.id + '" '+selectedCraft+'>' + __(crft.name) + '</option>';
                 }
             }
+
         }
 
 /***TO DO ****/
@@ -156,7 +157,77 @@ $(document).ready(function() {
             '<div class="over-select" id="reports-filter-crafts"></div>'+
             '<i class="arrow-down q4bikon-arrow_bottom"></i>');
 
+        projectSelected();
+    }
 
+    function projectSelected() {
+
+        let companyId = $(document).find('.rpt-company').val();
+        let projectId = $(document).find('.rpt-project').val();
+
+        var elementsHtml = '';
+        var elementOptionsHtml = '';
+        var selectedElementsText = '';
+        var selectedElements = selectedReportItems?.project?.elements  ? selectedReportItems?.project?.elements : [];
+
+        if(jsonReportItems[companyId]?.projects[projectId]?.elements?.length) {
+            if(!selectedElements.length){
+                var elementsChecked = "checked";
+            }
+
+
+            elementsHtml += '<div class="checkbox-list-row">'+
+                '<span class="checkbox-text">' +
+                '<label class="checkbox-wrapper-multiple ' + 'checked' +'" data-val="' + 0 + '">' +
+                '<span class="checkbox-replace"></span>' +
+                '<i class="checkbox-list-tick q4bikon-tick"></i>'+
+                '</label>' + __('without_elements') +
+                '</span>'+
+                '</div>';
+            elementOptionsHtml += '<option value="' + 0 + '" '+ 'selected' + '>' + __('without_elements') + '</option>';
+
+
+            for (var idx in jsonReportItems[companyId].projects[projectId].elements) {
+                var el = jsonReportItems[companyId].projects[projectId].elements[idx];
+                if(selectedElements.length){
+                    var elementsChecked = selectedElements.indexOf(el.id) != -1 ? "checked" : "";
+                }
+                var elementsSelected = elementsChecked ? ' selected' : "";
+
+                selectedElementsText += elementsChecked ?  __(el.name) + ',':'';
+
+
+                elementsHtml +=
+                    '<div class="checkbox-list-row">'+
+                    '<span class="checkbox-text">' +
+                    '<label class="checkbox-wrapper-multiple ' + elementsChecked +'" data-val="' + el.id + '">' +
+                    '<span class="checkbox-replace"></span>' +
+                    '<i class="checkbox-list-tick q4bikon-tick"></i>'+
+                    '</label>' + __(el.name) +
+                    '</span>'+
+                    '</div>';
+                elementOptionsHtml += '<option value="' + el.id + '" '+elementsSelected+'>' + __(el.name) + '</option>';
+            }
+
+            if ($(document).find('.rpt-elements .checkbox-list .mCSB_container').length > 0) {
+                $(document).find('.rpt-elements .checkbox-list .mCSB_container').html(elementsHtml);
+
+            } else {
+                $(document).find('.rpt-elements .checkbox-list').html(elementsHtml)
+            }
+
+            $(document).find('.check-all-elements').html($(document).find('.check-all-elements').data('unseltxt'));
+            $(document).find('.rpt-elements  .default-text').html($(document).find('.rpt-elements  .default-text').data('text'));
+
+            $(document).find('.rpt-elements select').html(elementOptionsHtml);
+
+            $(document).find($(document).find('.rpt-elements .checkbox-wrapper-multiple')[0]).trigger('click').trigger('click');
+
+        } else {
+            $(document).find('.rpt-elements .checkbox-list').html('')
+            $(document).find('.rpt-elements select').html('');
+            $(document).find('.rpt-elements .select-imitation-title').html('');
+        }
     }
 
     if (typeof jsonReportItems != 'undefined') {
@@ -185,6 +256,8 @@ $(document).ready(function() {
             }
 
         });
+
+        $(document).on('change', '.rpt-project', projectSelected);
 
 
         $(document).on('click', '.show-advanced-reports', function(e) {
@@ -235,12 +308,10 @@ $(document).ready(function() {
         })
 
         $(document).on('click', '.pr-object .checkbox-list-row', function() {
-            console.log('@@@')
             var select = $(this).closest('.pr-object').find('select');
 
             setTimeout(function() {
                 var selected = select.val();
-                console.log('selected', selected);
                 var floorsHtml = '';
                 var floorsSelectOptions = '';
                 var floorsArr = [];
@@ -251,7 +322,6 @@ $(document).ready(function() {
                         $(document).find('[name=place_number]').removeClass('disabled-input').removeAttr('disabled');
                     for (var idx in selected) {
                         floorNames = select.find('option[value=' + selected[idx] + ']').data('floornames');
-                        console.log('floorNames', floorNames);
                         var from = select.find('option[value=' + selected[idx] + ']').data('floor-from');
                         var to = select.find('option[value=' + selected[idx] + ']').data('floor-to');
                         for (var i = from; i <= to; i++) {
@@ -263,7 +333,6 @@ $(document).ready(function() {
                     floorsArr.sort(function(a, b) {
                         return a - b;
                     });
-                    console.log("floorsArr", floorsArr);
                     var parentSelector = $(document).find('.floors-list');
 
                     if (floorsArr.length) {
@@ -837,7 +906,6 @@ $(document).ready(function() {
             let result = "<i class='q4bikon-baseline-stairs active'></i>";
 
             if (lastChecked.length <= 0) {
-                console.log(55);
                 // result = "<span class='select-def-text'>" + __('Please select') + "</span>";
                 result = "<i class='q4bikon-baseline-stairs'></i>";
             }

@@ -102,6 +102,7 @@ class Controller_Reports extends HDVP_Controller_Template
             'approval_status',
             'sort_by_crafts',
             'del_rep_id',
+            'elements',
             'condition_level',
             'condition_list',
             'el_app_id'
@@ -122,7 +123,6 @@ class Controller_Reports extends HDVP_Controller_Template
             'advanced'
             ]);
 
-//        echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($data['el_app_id']); echo "</pre>"; exit;
 
         if(!empty($advancedData['project_stage'])){
             foreach ($advancedData['project_stage'] as $key => $ps){
@@ -181,11 +181,15 @@ class Controller_Reports extends HDVP_Controller_Template
         $tasks = [];
 
         if($data['el_app_id']) {
-            $tasks = $this->project->getTasksByModuleName('Approve Element')->where('prtask.status','=',Enum_Status::Enabled)->find_all();
+//            $tasks = $this->project->getTasksByModuleName('Approve Element')->where('prtask.status','=',Enum_Status::Enabled)->find_all();
             $qcs->and_where('qualitycontrol.el_approval_id', '=', $data['el_app_id']);
-        } else {
-            $tasks = $this->project->getTasksByModuleName('Quality Control')->where('prtask.status','=',Enum_Status::Enabled)->find_all();
         }
+//        elseif ($data['del_rep_id']) {
+//            $tasks = $this->project->getTasksByModuleName('Delivery Report')->where('prtask.status','=',Enum_Status::Enabled)->find_all();
+//        } else {
+        $tasks = $this->project->getTasksByModuleName('Quality Control')->where('prtask.status','=',Enum_Status::Enabled)->find_all();
+//        }
+
         if(!empty($data['statuses'])){
             if(!is_array($data['statuses'])){
                 $data['statuses'] = [$data['statuses']];
@@ -231,6 +235,18 @@ class Controller_Reports extends HDVP_Controller_Template
             $data['to'] = DateTime::createFromFormat('d/m/Y H:i',$data['to'].' 23:59')->getTimestamp();
         }catch(Exception $e){
             throw new HTTP_Exception_404();
+        }
+
+        if(!empty($data['elements'])) {
+            $qcs->join('el_approvals','LEFT');
+            $qcs->on('qualitycontrol.el_approval_id','=','el_approvals.id');
+            $qcs->and_where_open();
+            $qcs->where('el_approvals.element_id','IN',DB::expr('('.implode(',',$data['elements']).')'));
+            if(in_array(0,$data['elements'])) {
+                $qcs->or_where('qualitycontrol.el_approval_id','IS',null);
+            }
+            $qcs->and_where_close();
+
         }
 //craft
         if(!empty($advancedData['advanced'])) {
@@ -364,11 +380,13 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         $result = (new ORMPaginate($qcs,null,$paginationSettings))->getData();
         $qcs = $result['items'];
 
+//        echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$qcs]); echo "</pre>"; exit;
+
         $qcElementNames = [];
         foreach ($qcs as $qcKey => $qc) {
             if($qc->el_approval_id) {
-                $elementName = Api_DBElApprovals::getElApprovalElementByElAppId($qc->el_approval_id)[0]['name'];
-                $qcElementNames[$qcKey] = $elementName;
+                $element = Api_DBElApprovals::getElApprovalElementByElAppId($qc->el_approval_id);
+                $qcElementNames[$qcKey] = $element[0]['name'];
             }
         }
         $report = [];
@@ -400,8 +418,6 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
             $craftsList[$craftKey]['approvedCerts'] = $craftApprovedCerts;
         }
 
-//        echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($craftsList); echo "</pre>"; exit;
-//        echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($craftsCertifications); echo "</pre>"; exit;
 
 //        $this->setResponseData('reportHtml',View::make('reports/generated',['qcs' => $qcs, 'crafts' => $data['crafts']])->render());
 //        $this->setResponseData('triggerEvent','reportGenerated');
@@ -607,7 +623,6 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         $replacement = 'reports/guest_access/'.$token;
         $pattern = '~\<a\shref\=\".*(reports\/generate[^"]+)~';
         preg_match_all($pattern,$content,$matches);
-        //echo "<pre>";
         if(!empty($matches)){
             foreach ($matches[1] as $m){
                 preg_match('~page=([0-9]+)~',$m,$matches1);
@@ -1060,6 +1075,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                         'id' => $proj->id,
                         'name' => $proj->name,
                         'status' => $proj->status,
+                        'elements' => Api_DBProjects::getProjectElements($proj->id, '')
                     ];
                 }
             }else{
@@ -1068,6 +1084,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                         'id' => $proj->id,
                         'name' => $proj->name,
                         'status' => $proj->status,
+                        'elements' => Api_DBProjects::getProjectElements($proj->id, '')
                     ];
                 }
             }

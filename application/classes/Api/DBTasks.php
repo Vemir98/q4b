@@ -49,6 +49,24 @@ class Api_DBTasks
         return $query->execute()->as_array();
     }
 
+//    public static function getEnabledTasksByProjectId($id)
+//    {
+//
+//            $query = "SELECT
+//                pt.id as taskId,
+//                pt.name as taskName,
+//                pt.status as taskStatus
+//                FROM pr_tasks pt
+//                WHERE pt.project_id=:id AND pt.status=:status
+//                ORDER BY pt.id DESC";
+//
+//            $query = DB::query(Database::SELECT, $query);
+//            $query->param(':id', $id);
+//            $query->param(':status', Enum_Status::Enabled);
+//
+//        return $query->execute()->as_array();
+//    }
+
     public static function getTasksWithCraftByIds($taskIds)
     {
         $query = 'SELECT 

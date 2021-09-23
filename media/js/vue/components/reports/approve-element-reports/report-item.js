@@ -99,7 +99,7 @@ Vue.component('report-item', {
 
 
         <div class="approve-elv-properties">
-            <div class="ltest_info_certificate_title">{{ trans.notes }}</div>
+            <div class="ltest_info_certificate_title">{{ trans.notes_description }}</div>
             <div class="ltest_info_certificate_area">
                 <div class="labtest_edit_textarea">
                     <textarea 

@@ -14520,7 +14520,7 @@ header .header_bottom .header_create_company .header_add_company {
 }
 
 .generate-reports .generate-reports-body #advanced-reports .multi-select-box .select-imitation-title {
-  width: 350px;
+  width: 310px;
 }
 
 .generate-reports .generate-reports-footer {
@@ -24533,4 +24533,65 @@ html.ltr #approve-element .sign-section {
 }
 #property-rooms-add-new-modal .btn-group.bootstrap-select{
   width: 100%;
+}
+#approve-elements-content .parent-td {
+  display: table-cell;
+  min-width: 115px;
+}
+#approve-elements-content .report-list-wraper table tr td {
+  padding: 25px 10px;
+}
+#approve-elements-content .report-list-wraper table tr th {
+  padding: 14px 10px!important;
+}
+
+#approve-elements-content .report-list-wraper .tab-signature {
+max-width: 80px!important;
+padding-left: 0!important;
+padding-right: 0!important;
+}
+#approve-elements-content .td-view-qc {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#approve-elements-content .td-view-qc i {
+
+  margin-right: 0;
+}
+#approve-elements-content .tab-description {
+  max-width: 220px!important;
+}
+html.rtl #approve-elements-content .parent-tr td.td-floor{
+  unicode-bidi: embed;
+  direction: ltr;
+  text-align: right;
+}
+#approve-elements-content .td-sign img {
+  max-height: 40px;
+  min-height: 40px;
+  max-width: 80px;
+}
+@media screen and (max-width:1440px){
+  #approve-elements-content .table>tbody>tr>td {
+    word-break: break-all; 
+    padding: 14px;
+    font-size: 13px;
+  }
+ #approve-elements-content  .table th {
+    padding: 12px 8px!important;
+  }
+  #approve-elements-content table tr:last-child th:first-child {
+   white-space: nowrap;
+}
+#approve-elements-content .parent-td:before {
+  margin-bottom: -2px;
+}
+#approve-elements-content .report-list-wraper table tr td:nth-of-type(1) {
+  padding-left: 8px;
+}
+#approve-elements-content .parent-td {
+  display: table-cell;
+  min-width: 84px;
+}
 }

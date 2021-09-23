@@ -41,7 +41,7 @@ Vue.component('report-delivery', {
                     </multiselect>
                 </div>
                 <div class="multiselect-col">
-                    <label class="multiselect-label">type</label>
+                    <label class="multiselect-label">{{ trans.type }}</label>
                     <multiselect 
                         v-model="selectedTypes"  
                         :placeholder="trans.select_type" 
@@ -63,9 +63,9 @@ Vue.component('report-delivery', {
                         >
                         <span class="multiselect-checkbox-label" :class="{'checked': scope.option.checked}"  slot="option" slot-scope="scope" >
                             <span class="multiselect-option-icon"><i class="q4bikon-tick"></i><span></span></span>
-                            <span class="multiselect-option-name">{{ scope.option.name }}</span>
+                            <span class="multiselect-option-name">{{ trans[scope.option.name] }}</span>
                         </span>
-                        <template slot='selection' slot-scope="{values, option, isOpen}"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ getMultiselectSelectionValue(values) }} </span></template>
+                        <template slot='selection' slot-scope="{values, option, isOpen}"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ getMultiselectSelectionValue(values, true) }} </span></template>
                         <template slot="tag">{{ '' }}</template>
                     </multiselect> 
                 </div>         
@@ -152,7 +152,7 @@ Vue.component('report-delivery', {
                                 <img src="/media/img/new-images/quality.png" alt="Quality">
                             </div>
                         </td>
-                        <td>{{ item.isPreDelivery === '1' ? trans.pre_delivery : trans.delivery }}</td>
+                        <td>{{ item.isPreDelivery === '1' ? trans['Pre-delivery'] : trans.Delivery }}</td>
                         <td>
                             <a :href="item.protocol" target="_blank">
                                 <div class="img">
@@ -470,7 +470,6 @@ Vue.component('report-delivery', {
             .then(response => {
                 this.companies = response.data.items;
             });
-        console.log(this.trans)
     }
 });
 
