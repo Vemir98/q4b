@@ -69,7 +69,7 @@
                         <?foreach ($items as $item):?>
                             <tr>
                                 <td data-th="<?=__('Name')?>">
-                                    <input type="text" class="q4-form-input q4_required" name="space_<?=$item->id?>_name" value="<?=$item->name?>">
+                                    <input type="text" class="q4-form-input q4_required" name="space_<?=$item->id?>_name" value="<?=str_replace('"', '&quot;', $item->name)?>">
                                 </td>
                                 <?if($item->id != 1):?>
                                     <td data-th="<?=__('Delete')?>" class="td-max-100">
