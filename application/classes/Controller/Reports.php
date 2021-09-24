@@ -173,7 +173,7 @@ class Controller_Reports extends HDVP_Controller_Template
         $qcs = ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id);
         if(in_array($data['approval_status'],Enum_QualityControlApproveStatus::toArray())){
             $qcs->and_where('qualitycontrol.approval_status', '=', $data['approval_status']);
-            $approvalStatusQuery = ' AND qc.approval_status = "'.$data['approval_status'].'" ';
+            $approvalStatusQuery = ' AND qualitycontrol.approval_status = "'.$data['approval_status'].'" ';
             View::set_global('_APPROVAL_STATUS',true);
         }
 
@@ -198,10 +198,10 @@ class Controller_Reports extends HDVP_Controller_Template
             $statusQuery = 'AND (';
             for ($i = 0; $i < count($data['statuses']);$i++){
                 if(!$i){
-                    $statusQuery .= 'qc.status="'.$data['statuses'][$i].'" ';
+                    $statusQuery .= 'qualitycontrol.status="'.$data['statuses'][$i].'" ';
                     $qcs->where('qualitycontrol.status', '=', $data['statuses'][$i]);
                 }else{
-                    $statusQuery .= 'OR qc.status="'.$data['statuses'][$i].'" ';
+                    $statusQuery .= 'OR qualitycontrol.status="'.$data['statuses'][$i].'" ';
                     $qcs->or_where('qualitycontrol.status', '=', $data['statuses'][$i]);
                 }
             }
@@ -240,15 +240,23 @@ class Controller_Reports extends HDVP_Controller_Template
         if(!empty($data['elements'])) {
             $qcs->join('el_approvals','LEFT');
             $qcs->on('qualitycontrol.el_approval_id','=','el_approvals.id');
+            $filteredCraftsListQuery['join'][] = 'LEFT JOIN el_approvals ON qualitycontrol.el_approval_id = el_approvals.id';
             $qcs->and_where_open();
+            $elementsQuery = 'AND (';
             $qcs->where('el_approvals.element_id','IN',DB::expr('('.implode(',',$data['elements']).')'));
+            $elementsQuery .= 'el_approvals.element_id IN ('.implode(',',$data['elements']).') ';
             if(in_array(0,$data['elements'])) {
                 $qcs->or_where('qualitycontrol.el_approval_id','IS',null);
+                $elementsQuery .= 'OR qualitycontrol.el_approval_id IS NULL';
             }
+            $elementsQuery .= ')';
             $qcs->and_where_close();
-
+            $filteredCraftsListQuery['and'][] = $elementsQuery;
+            unset($elementsQuery);
         }
 //craft
+
+
         if(!empty($advancedData['advanced'])) {
 
             if (!empty($advancedData['object_id'])) {
@@ -259,12 +267,12 @@ class Controller_Reports extends HDVP_Controller_Template
                     $item = (int)$item;
                 });
                 $qcs->and_where('qualitycontrol.object_id', 'IN', DB::expr('('.implode(',',$advancedData['object_id']).')'));
-                $filteredCraftsListQuery['and'][] = 'AND qc.object_id IN ('.implode(',',$advancedData['object_id']).')';
+                $filteredCraftsListQuery['and'][] = 'AND qualitycontrol.object_id IN ('.implode(',',$advancedData['object_id']).')';
             }
 
             if($advancedData['place_type'] != 'all'){
                 $qcs->and_where('qualitycontrol.place_type', '=', $advancedData['place_type']);
-                $filteredCraftsListQuery['and'][] = 'AND qc.place_type ="'.$advancedData['place_type'].'"';
+                $filteredCraftsListQuery['and'][] = 'AND qualitycontrol.place_type ="'.$advancedData['place_type'].'"';
             }
 
             if(empty($advancedData['place_number']) AND empty($advancedData['custom_number'])){
@@ -280,27 +288,27 @@ class Controller_Reports extends HDVP_Controller_Template
                     $qcs->on('qualitycontrol.floor_id','=','pr_floors.id');
                     $qcs->and_where('pr_floors.number','IN',DB::expr('('.implode(',',$advancedData['floors']).')'));
 
-                    $filteredCraftsListQuery['join'][] = 'INNER JOIN pr_floors pf ON qc.floor_id = pf.id';
+                    $filteredCraftsListQuery['join'][] = 'INNER JOIN pr_floors pf ON qualitycontrol.floor_id = pf.id';
                     $filteredCraftsListQuery['and'][] = 'AND pf.number IN ('.implode(',',$advancedData['floors']).')';
                 }
             }else{
                 $advancedData['space'] = (int)$advancedData['space'];
                 $qcs->and_where('qualitycontrol.space_id','=',$advancedData['space']);
-                $filteredCraftsListQuery['and'][] = 'AND qc.space_id ="'.$advancedData['space'].'"';
+                $filteredCraftsListQuery['and'][] = 'AND qualitycontrol.space_id ="'.$advancedData['space'].'"';
             }
 
 
             if(!empty($advancedData['project_stage'])){
                 if(count($advancedData['project_stage']) != count(Enum_ProjectStage::toArray()) AND count($advancedData['project_stage'])){
                     $qcs->and_where('project_stage', 'IN', DB::expr('('.implode(',',$advancedData['project_stage']).')'));
-                    $filteredCraftsListQuery['and'][] = 'AND qc.project_stage IN ('.implode(',',$advancedData['project_stage']).')';
+                    $filteredCraftsListQuery['and'][] = 'AND qualitycontrol.project_stage IN ('.implode(',',$advancedData['project_stage']).')';
                 }
             }
 
 
                 if($advancedData['profession_id'] != 'all'){
                     $qcs->and_where('profession_id', '=', (int)$advancedData['profession_id']);
-                    $filteredCraftsListQuery['and'][] = 'AND qc.profession_id ="'.$advancedData['profession_id'].'"';
+                    $filteredCraftsListQuery['and'][] = 'AND qualitycontrol.profession_id ="'.$advancedData['profession_id'].'"';
                 }
 
             if(!empty($filteredCraftsListQuery['join'])){
@@ -310,32 +318,53 @@ class Controller_Reports extends HDVP_Controller_Template
                 $filteredCraftsListQuery['and'] = implode(' ',$filteredCraftsListQuery['and']);
             }
 
-            $filteredCraftsList = DB::query(Database::SELECT,'
-SELECT cc.id, cc.name, count(craft_id) `count`
-FROM quality_controls qc
-JOIN cmp_crafts cc ON qc.craft_id = cc.id '.($filteredCraftsListQuery['join'] ?: null).'
-WHERE qc.project_id = '.$data['project'].' AND qc.craft_id IN ('.implode(',',$data['crafts']).')
-AND (qc.due_date BETWEEN '.$data['from'].' AND '.$data['to'].') AND cc.status="'.Enum_Status::Enabled.'"
-AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: null).' GROUP BY qc.craft_id
-')->execute()->as_array('id');
+            $query = 'SELECT 
+                cc.id, cc.name, count(craft_id) `count`
+                FROM quality_controls qualitycontrol
+                JOIN cmp_crafts cc ON qualitycontrol.craft_id = cc.id
+                '.($filteredCraftsListQuery['join'] ?: null).'
+                WHERE qualitycontrol.project_id = '.$data['project'].'
+                AND qualitycontrol.craft_id IN ('.implode(',',$data['crafts']).')
+AND (qualitycontrol.due_date BETWEEN '.$data['from'].' AND '.$data['to'].') AND cc.status="'.Enum_Status::Enabled.'"
+AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: null).' GROUP BY qualitycontrol.craft_id
+';
+
+//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$query]); echo "</pre>"; exit;
+
+
+            $filteredCraftsList = DB::query(Database::SELECT, $query)->execute()->as_array('id');
         }else{
             if(!empty($data['del_rep_id'])){
                 $qcs->and_where('qualitycontrol.del_rep_id','=',(int)$data['del_rep_id']);
-                $filteredCraftsListQuery['and'][] = 'AND qc.del_rep_id ="'.(int)$data['del_rep_id'].'"';
+                $filteredCraftsListQuery['and'][] = 'AND qualitycontrol.del_rep_id ="'.(int)$data['del_rep_id'].'"';
             }
 
             if(!empty($data['condition_level']) AND $data['condition_level'] != 'all'){
-                $filteredCraftsListQuery['and'][] = 'AND qc.severity_level ="'.$data['condition_level'].'"';
+                $filteredCraftsListQuery['and'][] = 'AND qualitycontrol.severity_level ="'.$data['condition_level'].'"';
             }
 
             if(!empty($data['condition_list']) AND $data['condition_list'] != 'all'){
-                $filteredCraftsListQuery['and'][] = 'AND qc.condition_list ="'.$data['condition_list'].'"';
+                $filteredCraftsListQuery['and'][] = 'AND qualitycontrol.condition_list ="'.$data['condition_list'].'"';
             }
 
             if(!empty($filteredCraftsListQuery['and'])){
                 $filteredCraftsListQuery['and'] = implode(' ',$filteredCraftsListQuery['and']);
             }
-            $filteredCraftsList = DB::query(Database::SELECT,'SELECT cc.id, cc.name, count(craft_id) `count` FROM quality_controls qc JOIN cmp_crafts cc ON qc.craft_id = cc.id WHERE qc.project_id = '.$data['project'].' AND qc.craft_id IN ('.implode(',',$data['crafts']).') AND (qc.due_date BETWEEN '.$data['from'].' AND '.$data['to'].') AND cc.status="'.Enum_Status::Enabled.'" AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: null).$approvalStatusQuery.' GROUP BY qc.craft_id')->execute()->as_array('id');
+
+//            echo "line: ".__LINE__." ".__FILE__."<pre>"; echo($filteredCraftsListQuery['join']); echo "</pre>"; exit;
+
+            $query = '
+                SELECT cc.id, cc.name, count(craft_id) `count`
+                FROM quality_controls qualitycontrol
+                JOIN cmp_crafts cc ON qualitycontrol.craft_id = cc.id 
+                '. implode(' ',$filteredCraftsListQuery['join']) .'
+                WHERE 
+                qualitycontrol.project_id = '.$data['project'].' AND qualitycontrol.craft_id IN ('.implode(',',$data['crafts']).') AND (qualitycontrol.due_date BETWEEN '.$data['from'].' AND '.$data['to'].') AND cc.status="'.Enum_Status::Enabled.'" AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: null).$approvalStatusQuery.' GROUP BY qualitycontrol.craft_id';
+
+
+//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$query]); echo "</pre>"; exit;
+
+            $filteredCraftsList = DB::query(Database::SELECT, $query)->execute()->as_array('id');
         }
         if($floorsNeedJoin){
             $qcs->join('pr_floors','INNER');
@@ -378,19 +407,18 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                 return;
             }
         $result = (new ORMPaginate($qcs,null,$paginationSettings))->getData();
-        $qcs = $result['items'];
+        $qcsTotal = $result['items'];
 
-//        echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$qcs]); echo "</pre>"; exit;
 
         $qcElementNames = [];
-        foreach ($qcs as $qcKey => $qc) {
+        foreach ($qcsTotal as $qcKey => $qc) {
             if($qc->el_approval_id) {
                 $element = Api_DBElApprovals::getElApprovalElementByElAppId($qc->el_approval_id);
                 $qcElementNames[$qcKey] = $element[0]['name'];
             }
         }
         $report = [];
-        $craftsList = DB::query(Database::SELECT,'SELECT cc.id, cc.name, count(craft_id) `count` FROM quality_controls qc JOIN cmp_crafts cc ON qc.craft_id = cc.id WHERE qc.project_id = '.$data['project'].' AND qc.craft_id IN ('.implode(',',$data['crafts']).') AND cc.status="'.Enum_Status::Enabled.'" AND cc.company_id='.$data['company'].$approvalStatusQuery.' GROUP BY qc.craft_id')->execute()->as_array('id');
+        $craftsList = DB::query(Database::SELECT,'SELECT cc.id, cc.name, count(craft_id) `count` FROM quality_controls qualitycontrol JOIN cmp_crafts cc ON qualitycontrol.craft_id = cc.id WHERE qualitycontrol.project_id = '.$data['project'].' AND qualitycontrol.craft_id IN ('.implode(',',$data['crafts']).') AND cc.status="'.Enum_Status::Enabled.'" AND cc.company_id='.$data['company'].$approvalStatusQuery.' GROUP BY qualitycontrol.craft_id')->execute()->as_array('id');
 
         foreach($this->company->crafts->where('status','=',Enum_Status::Enabled)->find_all() as $c){
             if( ! isset($craftsList[$c->id])){
@@ -422,7 +450,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
 //        $this->setResponseData('reportHtml',View::make('reports/generated',['qcs' => $qcs, 'crafts' => $data['crafts']])->render());
 //        $this->setResponseData('triggerEvent','reportGenerated');
 
-        if(count($qcs)){
+        if(count($qcsTotal)){
             if(count($data['crafts']) > 1){
                 $craftsParams['mngrApprovalStatuses'] = [
                     Enum_QualityControlApproveStatus::Waiting => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('approval_status','=',Enum_QualityControlApproveStatus::Waiting)->count_all(),
@@ -438,16 +466,16 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                 ];
 
                 $filteredCraftsParams['mngrApprovalStatuses'] = [
-                    Enum_QualityControlApproveStatus::Waiting => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('approval_status','=',Enum_QualityControlApproveStatus::Waiting)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->and_where('qualitycontrol.craft_id', 'IN', DB::expr('('.implode(',',$data['crafts']).')')),
-                    Enum_QualityControlApproveStatus::ForRepair => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('approval_status','=',Enum_QualityControlApproveStatus::ForRepair)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->and_where('qualitycontrol.craft_id', 'IN', DB::expr('('.implode(',',$data['crafts']).')')),
-                    Enum_QualityControlApproveStatus::Approved => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('approval_status','=',Enum_QualityControlApproveStatus::Approved)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->and_where('qualitycontrol.craft_id', 'IN', DB::expr('('.implode(',',$data['crafts']).')')),
+                    Enum_QualityControlApproveStatus::Waiting => (clone $qcs)->and_where('qualitycontrol.approval_status','=',Enum_QualityControlApproveStatus::Waiting)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->and_where('qualitycontrol.craft_id', 'IN', DB::expr('('.implode(',',$data['crafts']).')'))->count_all(),
+                    Enum_QualityControlApproveStatus::ForRepair => (clone $qcs)->and_where('qualitycontrol.approval_status','=',Enum_QualityControlApproveStatus::ForRepair)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->and_where('qualitycontrol.craft_id', 'IN', DB::expr('('.implode(',',$data['crafts']).')'))->count_all(),
+                    Enum_QualityControlApproveStatus::Approved => (clone $qcs)->and_where('qualitycontrol.approval_status','=',Enum_QualityControlApproveStatus::Approved)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->and_where('qualitycontrol.craft_id', 'IN', DB::expr('('.implode(',',$data['crafts']).')'))->count_all(),
                 ];
                 $filteredCraftsParams['statuses'] = [
-                    Enum_QualityControlStatus::Existing => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('status','=',Enum_QualityControlStatus::Existing)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->and_where('qualitycontrol.craft_id', 'IN', DB::expr('('.implode(',',$data['crafts']).')')),
-                    self::STATUS_EXISTING_AND_FOR_REPAIR => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('status','=',Enum_QualityControlStatus::Existing)->and_where('approval_status','=',Enum_QualityControlApproveStatus::ForRepair)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->and_where('qualitycontrol.craft_id', 'IN', DB::expr('('.implode(',',$data['crafts']).')')),
-                    Enum_QualityControlStatus::Normal => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('status','=',Enum_QualityControlStatus::Normal)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->and_where('qualitycontrol.craft_id', 'IN', DB::expr('('.implode(',',$data['crafts']).')')),
-                    Enum_QualityControlStatus::Repaired => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('status','=',Enum_QualityControlStatus::Repaired)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->and_where('qualitycontrol.craft_id', 'IN', DB::expr('('.implode(',',$data['crafts']).')')),
-                    Enum_QualityControlStatus::Invalid => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('status','=',Enum_QualityControlStatus::Invalid)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->and_where('qualitycontrol.craft_id', 'IN', DB::expr('('.implode(',',$data['crafts']).')')),
+                    Enum_QualityControlStatus::Existing => (clone $qcs)->and_where('qualitycontrol.status','=',Enum_QualityControlStatus::Existing)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->and_where('qualitycontrol.craft_id', 'IN', DB::expr('('.implode(',',$data['crafts']).')'))->count_all(),
+                    self::STATUS_EXISTING_AND_FOR_REPAIR => (clone $qcs)->and_where('qualitycontrol.status','=',Enum_QualityControlStatus::Existing)->and_where('qualitycontrol.approval_status','=',Enum_QualityControlApproveStatus::ForRepair)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->and_where('qualitycontrol.craft_id', 'IN', DB::expr('('.implode(',',$data['crafts']).')'))->count_all(),
+                    Enum_QualityControlStatus::Normal => (clone $qcs)->and_where('qualitycontrol.status','=',Enum_QualityControlStatus::Normal)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->and_where('qualitycontrol.craft_id', 'IN', DB::expr('('.implode(',',$data['crafts']).')'))->count_all(),
+                    Enum_QualityControlStatus::Repaired => (clone $qcs)->and_where('qualitycontrol.status','=',Enum_QualityControlStatus::Repaired)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->and_where('qualitycontrol.craft_id', 'IN', DB::expr('('.implode(',',$data['crafts']).')'))->count_all(),
+                    Enum_QualityControlStatus::Invalid => (clone $qcs)->and_where('qualitycontrol.status','=',Enum_QualityControlStatus::Invalid)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->and_where('qualitycontrol.craft_id', 'IN', DB::expr('('.implode(',',$data['crafts']).')'))->count_all(),
                 ];
 
             }else{
@@ -465,63 +493,63 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                 ];
 
                 $filteredCraftsParams['mngrApprovalStatuses'] = [
-                    Enum_QualityControlApproveStatus::Waiting => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('craft_id','=',(int)$data['crafts'][0])->and_where('approval_status','=',Enum_QualityControlApproveStatus::Waiting)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to'])),
-                    Enum_QualityControlApproveStatus::ForRepair => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('craft_id','=',(int)$data['crafts'][0])->and_where('approval_status','=',Enum_QualityControlApproveStatus::ForRepair)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to'])),
-                    Enum_QualityControlApproveStatus::Approved => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('craft_id','=',(int)$data['crafts'][0])->and_where('approval_status','=',Enum_QualityControlApproveStatus::Approved)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to'])),
+                    Enum_QualityControlApproveStatus::Waiting => (clone $qcs)->and_where('qualitycontrol.craft_id','=',(int)$data['crafts'][0])->and_where('qualitycontrol.approval_status','=',Enum_QualityControlApproveStatus::Waiting)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->count_all(),
+                    Enum_QualityControlApproveStatus::ForRepair => (clone $qcs)->and_where('qualitycontrol.craft_id','=',(int)$data['crafts'][0])->and_where('qualitycontrol.approval_status','=',Enum_QualityControlApproveStatus::ForRepair)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->count_all(),
+                    Enum_QualityControlApproveStatus::Approved => (clone $qcs)->and_where('qualitycontrol.craft_id','=',(int)$data['crafts'][0])->and_where('qualitycontrol.approval_status','=',Enum_QualityControlApproveStatus::Approved)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->count_all(),
                 ];
                 $filteredCraftsParams['statuses'] = [
-                    Enum_QualityControlStatus::Existing => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('craft_id','=',(int)$data['crafts'][0])->and_where('status','=',Enum_QualityControlStatus::Existing)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to'])),
-                    self::STATUS_EXISTING_AND_FOR_REPAIR => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('craft_id','=',(int)$data['crafts'][0])->and_where('status','=',Enum_QualityControlStatus::Existing)->and_where('approval_status','=',Enum_QualityControlApproveStatus::ForRepair)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to'])),
-                    Enum_QualityControlStatus::Normal =>  ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('craft_id','=',(int)$data['crafts'][0])->and_where('status','=',Enum_QualityControlStatus::Normal)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to'])),
-                    Enum_QualityControlStatus::Repaired => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('craft_id','=',(int)$data['crafts'][0])->and_where('status','=',Enum_QualityControlStatus::Repaired)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to'])),
-                    Enum_QualityControlStatus::Invalid => ORM::factory('QualityControl')->where('qualitycontrol.project_id','=',$this->project->id)->and_where('craft_id','=',(int)$data['crafts'][0])->and_where('status','=',Enum_QualityControlStatus::Invalid)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to'])),
+                    Enum_QualityControlStatus::Existing => (clone $qcs)->and_where('qualitycontrol.craft_id','=',(int)$data['crafts'][0])->and_where('qualitycontrol.status','=',Enum_QualityControlStatus::Existing)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->count_all(),
+                    self::STATUS_EXISTING_AND_FOR_REPAIR => (clone $qcs)->and_where('qualitycontrol.craft_id','=',(int)$data['crafts'][0])->and_where('qualitycontrol.status','=',Enum_QualityControlStatus::Existing)->and_where('qualitycontrol.approval_status','=',Enum_QualityControlApproveStatus::ForRepair)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->count_all(),
+                    Enum_QualityControlStatus::Normal =>  (clone $qcs)->and_where('qualitycontrol.craft_id','=',(int)$data['crafts'][0])->and_where('qualitycontrol.status','=',Enum_QualityControlStatus::Normal)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->count_all(),
+                    Enum_QualityControlStatus::Repaired => (clone $qcs)->and_where('qualitycontrol.craft_id','=',(int)$data['crafts'][0])->and_where('qualitycontrol.status','=',Enum_QualityControlStatus::Repaired)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->count_all(),
+                    Enum_QualityControlStatus::Invalid => (clone $qcs)->and_where('qualitycontrol.craft_id','=',(int)$data['crafts'][0])->and_where('qualitycontrol.status','=',Enum_QualityControlStatus::Invalid)->and_where('qualitycontrol.due_date','BETWEEN',DB::expr($data['from'].' AND '.$data['to']))->count_all(),
                 ];
             }
 
-            foreach ($filteredCraftsParams as $k => $vArr){
-                foreach ($vArr as $k1 => $q){
-                    if(!empty($advancedData['advanced'])) {
-                        if (!empty($advancedData['object_id'])) {
-                            $filteredCraftsParams[$k][$k1]->and_where('qualitycontrol.object_id', 'IN', DB::expr('('.implode(',',$advancedData['object_id']).')'));
-                        }
-                        if($advancedData['place_type'] != 'all') {
-                            $filteredCraftsParams[$k][$k1]->and_where('qualitycontrol.place_type', '=', $advancedData['place_type']);
-                        }
-                        if(empty($advancedData['place_number']) AND empty($advancedData['custom_number'])){
-                            if(!empty($advancedData['floors'])){
-                                $filteredCraftsParams[$k][$k1]->join('pr_floors','INNER');
-                                $filteredCraftsParams[$k][$k1]->on('qualitycontrol.floor_id','=','pr_floors.id');
-                                $filteredCraftsParams[$k][$k1]->and_where('pr_floors.number','IN',DB::expr('('.implode(',',$advancedData['floors']).')'));
-                            }
-                        }else{
-                            $filteredCraftsParams[$k][$k1]->and_where('qualitycontrol.space_id','=',$advancedData['space']);
-                        }
-                        if(!empty($advancedData['project_stage'])){
-                            if(count($advancedData['project_stage']) != count(Enum_ProjectStage::toArray()) AND count($advancedData['project_stage'])){
-                                $filteredCraftsParams[$k][$k1]->and_where('project_stage', 'IN', DB::expr('('.implode(',',$advancedData['project_stage']).')'));
-                            }
-                        }
-                        if($advancedData['profession_id'] != 'all'){
-                            $filteredCraftsParams[$k][$k1]->and_where('profession_id', '=', (int)$advancedData['profession_id']);
-                        }
-                    }
-                    if(!empty($data['condition_level']) AND $data['condition_level'] != 'all'){
-                        $filteredCraftsParams[$k][$k1]->and_where('qualitycontrol.severity_level', '=', $data['condition_level']);
-                    }
-
-                    if(!empty($data['condition_list']) AND $data['condition_list'] != 'all'){
-                        $filteredCraftsParams[$k][$k1]->and_where('qualitycontrol.condition_list', '=', $data['condition_list']);
-                    }
-
-                    if($floorsNeedJoin){
-                        $filteredCraftsParams[$k][$k1]->join('pr_floors','INNER');
-                        $filteredCraftsParams[$k][$k1]->on('qualitycontrol.floor_id','=','pr_floors.id');
-                    }
-                    $filteredCraftsParams[$k][$k1]->join('pr_places','INNER');
-                    $filteredCraftsParams[$k][$k1]->on('qualitycontrol.place_id','=','pr_places.id');
-                    $filteredCraftsParams[$k][$k1] = $filteredCraftsParams[$k][$k1]->count_all();
-                }
-            }
+//            foreach ($filteredCraftsParams as $k => $vArr){
+//                foreach ($vArr as $k1 => $q){
+//                    if(!empty($advancedData['advanced'])) {
+//                        if (!empty($advancedData['object_id'])) {
+//                            $filteredCraftsParams[$k][$k1]->and_where('qualitycontrol.object_id', 'IN', DB::expr('('.implode(',',$advancedData['object_id']).')'));
+//                        }
+//                        if($advancedData['place_type'] != 'all') {
+//                            $filteredCraftsParams[$k][$k1]->and_where('qualitycontrol.place_type', '=', $advancedData['place_type']);
+//                        }
+//                        if(empty($advancedData['place_number']) AND empty($advancedData['custom_number'])){
+//                            if(!empty($advancedData['floors'])){
+//                                $filteredCraftsParams[$k][$k1]->join('pr_floors','INNER');
+//                                $filteredCraftsParams[$k][$k1]->on('qualitycontrol.floor_id','=','pr_floors.id');
+//                                $filteredCraftsParams[$k][$k1]->and_where('pr_floors.number','IN',DB::expr('('.implode(',',$advancedData['floors']).')'));
+//                            }
+//                        }else{
+//                            $filteredCraftsParams[$k][$k1]->and_where('qualitycontrol.space_id','=',$advancedData['space']);
+//                        }
+//                        if(!empty($advancedData['project_stage'])){
+//                            if(count($advancedData['project_stage']) != count(Enum_ProjectStage::toArray()) AND count($advancedData['project_stage'])){
+//                                $filteredCraftsParams[$k][$k1]->and_where('project_stage', 'IN', DB::expr('('.implode(',',$advancedData['project_stage']).')'));
+//                            }
+//                        }
+//                        if($advancedData['profession_id'] != 'all'){
+//                            $filteredCraftsParams[$k][$k1]->and_where('profession_id', '=', (int)$advancedData['profession_id']);
+//                        }
+//                    }
+//                    if(!empty($data['condition_level']) AND $data['condition_level'] != 'all'){
+//                        $filteredCraftsParams[$k][$k1]->and_where('qualitycontrol.severity_level', '=', $data['condition_level']);
+//                    }
+//
+//                    if(!empty($data['condition_list']) AND $data['condition_list'] != 'all'){
+//                        $filteredCraftsParams[$k][$k1]->and_where('qualitycontrol.condition_list', '=', $data['condition_list']);
+//                    }
+//
+//                    if($floorsNeedJoin){
+//                        $filteredCraftsParams[$k][$k1]->join('pr_floors','INNER');
+//                        $filteredCraftsParams[$k][$k1]->on('qualitycontrol.floor_id','=','pr_floors.id');
+//                    }
+//                    $filteredCraftsParams[$k][$k1]->join('pr_places','INNER');
+//                    $filteredCraftsParams[$k][$k1]->on('qualitycontrol.place_id','=','pr_places.id');
+//                    $filteredCraftsParams[$k][$k1] = $filteredCraftsParams[$k][$k1]->count_all();
+//                }
+//            }
 
             $totalStatuses = array_sum($craftsParams['statuses']);
             $craftsParams['percents'] = [
@@ -570,7 +598,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
 
                 $this->template->content = View::make('reports/qc-report/generated',
                     [
-                        'qcs' => $qcs,
+                        'qcs' => $qcsTotal,
                         'tasks' => $tasks,
                         'pagination' => $result['pagination'],
                         'crafts' => $data['crafts'],
@@ -587,7 +615,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
             else{
                 $this->template = View::make('reports/qc-report/guest-content',
                     [
-                        'qcs' => $qcs,
+                        'qcs' => $qcsTotal,
                         'tasks' => $tasks,
                         'pagination' => $result['pagination'],
                         'crafts' => $data['crafts'],
