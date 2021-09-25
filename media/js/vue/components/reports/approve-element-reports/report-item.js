@@ -99,14 +99,25 @@ Vue.component('report-item', {
 
 
         <div class="approve-elv-properties">
-            <div class="ltest_info_certificate_title">{{ trans.notes_description }}</div>
+            <div class="ltest_info_certificate_title approve-elv-property-title">
+                <div class="approve-elv-property-title-text">
+                    {{ trans.notes_description }}
+                </div>
+                <div
+                    :class="['approve-elv-property-title-btn', {'labtest-disabled': (!canUpdateReportNote || !canUpdate )}]"
+                    @click="updateReportNote"
+                 >
+                    {{ trans.update }}
+                </div>
+            </div>
             <div class="ltest_info_certificate_area">
                 <div class="labtest_edit_textarea">
                     <textarea 
                         cols="30" 
                         rows="10" 
                         name="delivery_cert"
-                        :disabled="true"
+                        @input="reportNoteChanged($event)"
+                        :disabled="!canUpdate"
                     >{{ report.notice }}</textarea>
                 </div>
             </div>
@@ -347,6 +358,9 @@ Vue.component('report-item', {
       canUpdate() {
           return (this.report.status === 'waiting')
       },
+        canUpdateReportNote() {
+          return this.initialReport.notice !== this.report.notice
+        }
     },
     watch: {
       report: {
@@ -544,6 +558,11 @@ Vue.component('report-item', {
             this.report.specialities[specialityIndex].notice = event.target.value;
             this.report.updated = true;
         },
+        reportNoteChanged(event) {
+            this.report.notice = event.target.value;
+            this.report.updated = true;
+            console.log(event.target.value)
+        },
         getStatuses(statusesArr) {
             let statuses = [];
             statusesArr.forEach((item, ind) => {
@@ -600,6 +619,19 @@ Vue.component('report-item', {
                     this.selectedStatus = this.elStatuses.filter(elStatus => {
                         return elStatus.name !== status.name;
                     })[0];
+                    this.showLoader = false;
+                })
+        },
+        updateReportNote() {
+            this.showLoader = true;
+            let url = `/el-approvals/${this.report.id}/note`;
+            qfetch(url, {method: 'PUT', headers: {}, body:{note: this.report.notice}})
+                .then(response => {
+                    this.initialReport.notice = this.report.notice;
+                    this.showLoader = false;
+                })
+                .catch(error => {
+                    this.report.notice = this.initialReport.notice;
                     this.showLoader = false;
                 })
         },

@@ -200,7 +200,7 @@ if (array_key_exists($roleName, $subcontractorsArr)) {
                                     <span class="check-all-elements check-all-links" data-seltxt="<?=__('select all')?>" data-unseltxt="<?=__('unselect all')?>">
                                         <?=__('unselect all')?>
 
-                                    </span>Elements
+                                    </span><?=__('elements')?>
                                 </label>
                                 <div class="multi-select-box rpt-elements">
                                     <div class="select-imitation">

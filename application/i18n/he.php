@@ -217,6 +217,7 @@ return [
     'Object Type'=>'סוג המבנה',
     'Floors (from-to)'=>'קומות (מ-עד)',
     'Elements'=>'מרחבים',
+    'elements' => 'אלמנטים',
     'Group'=>'קבוצה',
     'Structure'=>'מבנה',
     'Back to list of properties'=>'חזרה לרשימת מבנים',

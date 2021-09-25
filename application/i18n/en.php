@@ -218,6 +218,7 @@ return [
     'Object Type'=>'Object Type',
     'Floors (from-to)'=>'Floors (from-to)',
     'Elements'=>'Places',
+    'elements' => 'Elements',
     'Group'=>'Group',
     'Structure'=>'Structure',
     'Back to list of properties'=>'Back to structures list',

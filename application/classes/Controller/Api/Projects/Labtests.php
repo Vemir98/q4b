@@ -214,7 +214,6 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
             'certNumber'
         ]);
 
-        Kohana::$log->add(Log::ERROR, 'ARAJ: ' . json_encode([$ltData['deliveryCert']], JSON_PRETTY_PRINT));
 
         try {
             Database::instance()->begin();
@@ -226,7 +225,6 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
             $ltData['buildingId'] = Arr::get($_POST, 'objectId');
             $ltData['deliveryCert'] =  str_replace('@#$', PHP_EOL, implode("", $ltData['deliveryCert']));
 
-            Kohana::$log->add(Log::ERROR, 'HETO: ' . json_encode([$ltData['deliveryCert']], JSON_PRETTY_PRINT));
 
             $ltData['status'] = 'waiting';
             if (!$ltData['placeId']) {
@@ -309,7 +307,6 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
 
                 }
                 if (!empty($slpData)) {
-//                    Kohana::$log->add(Log::ERROR, 'labtest_clp QUERY DATA: ' . json_encode([$slpData], JSON_PRETTY_PRINT));
 
                     $query = DB::insert('labtest_clp')->columns(['labtest_id', 'cl_id', 'clp_id', 'value']);
                     foreach ($slpData as $d) {
@@ -817,7 +814,6 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
                     ->execute($this->_db);
                 $imgId = $res[0];
 
-//                Kohana::$log->add(Log::ERROR, 'labtests_tickets_files: ' . json_encode([$imgId, $ticketId], JSON_PRETTY_PRINT));
 
                 DB::insert('labtests_tickets_files')
                     ->columns(['file_id', 'ticket_id' ])

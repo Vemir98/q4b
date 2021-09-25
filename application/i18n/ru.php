@@ -214,6 +214,7 @@ return [
     'Object Type'=>'Тип объекта',
     'Floors (from-to)'=>'Этажы (с-до)',
     'Elements'=>'Помещения',
+    'elements' => 'Элементы',
     'Group'=>'Группа',
     'Structure'=>'Структура',
     'Back to list of properties'=>'Назад',
