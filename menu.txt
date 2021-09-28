@@ -1,80 +1,113 @@
 array (
   0 => 
   array (
-    'slug' => 'quality_control/create',
-    'text' => 'Create Quality Control',
-    'tooltip' => 'Create Quality Control',
-    'icon' => 'q4bikon-tick',
-    'resource' => 'Controller_QualityControl',
+    'slug' => 'dashboard',
+    'href' => 'dashboard',
+    'text' => 'Dashboard1',
+    'tooltip' => 'Dashboard1',
+    'icon' => 'q4bikon-uncheked',
+    'resource' => 'Controller_Dashboard',
     'priority' => 219,
+    'showIn' => 
+    array (
+      0 => 'dashboard',
+    ),
     'disabled' => false,
     'active' => false,
   ),
   1 => 
   array (
-    'slug' => 'labtests',
-    'text' => 'Lab control menu',
-    'icon' => 'q4bikon-lab',
-    'resource' => 'Controller_LabTests',
-    'priority' => 219,
+    'slug' => 'companies',
+    'href' => 'companies',
+    'text' => 'Companies',
+    'tooltip' => 'Companies',
+    'icon' => 'q4bikon-companies',
+    'resource' => 'Controller_Companies',
+    'priority' => 129,
     'children' => 
     array (
       0 => 
       array (
         'slug' => '#',
-        'text' => 'Lab control list',
-        'resource' => 'Controller_LabTests',
+        'href' => '#',
+        'text' => 'Info',
+        'resource' => 'Controller_Companies',
         'priority' => 219,
+        'showIn' => 
+        array (
+          0 => 'companies/update/:id',
+        ),
         'disabled' => true,
         'active' => false,
       ),
       1 => 
       array (
         'slug' => '#',
-        'text' => 'Elements Type',
-        'resource' => 'Controller_LabTests',
+        'href' => '#',
+        'text' => 'Crafts',
+        'resource' => 'Controller_Companies',
         'priority' => 219,
+        'showIn' => 
+        array (
+          0 => 'companies/update/:id',
+        ),
         'disabled' => true,
         'active' => false,
       ),
       2 => 
       array (
         'slug' => '#',
-        'text' => 'Elements List',
-        'resource' => 'Controller_LabTests',
+        'href' => '#',
+        'text' => 'Professions',
+        'resource' => 'Controller_Companies',
         'priority' => 219,
+        'showIn' => 
+        array (
+          0 => 'companies/update/:id',
+        ),
         'disabled' => true,
         'active' => false,
       ),
+      3 => 
+      array (
+        'slug' => '#',
+        'href' => '#',
+        'text' => 'Instructions',
+        'resource' => 'Controller_Companies',
+        'priority' => 219,
+        'showIn' => 
+        array (
+          0 => 'companies/update/:id',
+        ),
+        'disabled' => true,
+        'active' => false,
+      ),
+      4 => 
+      array (
+        'slug' => '#',
+        'href' => '#',
+        'text' => 'Users',
+        'resource' => 'Controller_Companies',
+        'priority' => 219,
+        'showIn' => 
+        array (
+          0 => 'companies/update/:id',
+        ),
+        'disabled' => true,
+        'active' => false,
+      ),
+    ),
+    'showIn' => 
+    array (
+      0 => 'companies',
     ),
     'disabled' => false,
     'active' => false,
   ),
   2 => 
   array (
-    'slug' => 'dashboard',
-    'text' => 'Dashboard',
-    'tooltip' => 'Dashboard',
-    'icon' => 'q4bikon-uncheked',
-    'resource' => 'Controller_Dashboard',
-    'priority' => 219,
-    'disabled' => false,
-    'active' => false,
-  ),
-  3 => 
-  array (
-    'slug' => 'companies',
-    'text' => 'Companies',
-    'tooltip' => 'Companies',
-    'icon' => 'q4bikon-companies',
-    'resource' => 'Controller_Companies',
-    'priority' => 129,
-    'disabled' => false,
-    'active' => false,
-  ),
-  4 => 
-  array (
     'slug' => 'projects',
+    'href' => 'projects',
     'text' => 'Menu _Projects',
     'tooltip' => 'Tooltip _Projects',
     'icon' => 'q4bikon-project',
@@ -85,67 +118,318 @@ array (
       0 => 
       array (
         'slug' => '#',
-        'text' => 'Tasks',
+        'href' => '#',
+        'text' => 'Info',
         'resource' => 'Controller_Projects',
         'priority' => 219,
+        'showIn' => 
+        array (
+          0 => 'projects/update/:projectId',
+          1 => 'projects/update/:projectId/tasks',
+          2 => 'labtests/project/:projectId',
+          3 => 'plans/update/:projectId',
+          4 => 'labtests/project/:projectId/elements',
+          5 => 'labtests/project/:projectId/elements_list',
+          6 => 'labtests/project/:projectId/elements_type',
+        ),
         'disabled' => true,
         'active' => false,
       ),
+      1 => 
+      array (
+        'slug' => '#',
+        'href' => '#',
+        'text' => 'Tasks',
+        'resource' => 'Controller_Projects',
+        'priority' => 219,
+        'showIn' => 
+        array (
+          0 => 'projects/update/:projectId',
+          1 => 'projects/update/:projectId/tasks',
+          2 => 'labtests/project/:projectId',
+          3 => 'plans/update/:projectId',
+          4 => 'labtests/project/:projectId/elements',
+          5 => 'labtests/project/:projectId/elements_list',
+          6 => 'labtests/project/:projectId/elements_type',
+        ),
+        'disabled' => true,
+        'active' => false,
+      ),
+      2 => 
+      array (
+        'slug' => '#',
+        'href' => '#',
+        'text' => 'Structures',
+        'resource' => 'Controller_Projects',
+        'priority' => 219,
+        'showIn' => 
+        array (
+          0 => 'projects/update/:projectId',
+          1 => 'projects/update/:projectId/tasks',
+          2 => 'labtests/project/:projectId',
+          3 => 'plans/update/:projectId',
+          4 => 'labtests/project/:projectId/elements',
+          5 => 'labtests/project/:projectId/elements_list',
+          6 => 'labtests/project/:projectId/elements_type',
+        ),
+        'disabled' => true,
+        'active' => false,
+      ),
+      3 => 
+      array (
+        'slug' => '#',
+        'href' => '#',
+        'text' => 'Delivery Items1',
+        'resource' => 'Controller_Projects',
+        'priority' => 219,
+        'showIn' => 
+        array (
+          0 => 'projects/update/:projectId',
+          1 => 'labtests/project/:projectId',
+          2 => 'projects/update/:projectId/tasks',
+          3 => 'plans/update/:projectId',
+          4 => 'labtests/project/:projectId/elements',
+          5 => 'labtests/project/:projectId/elements_list',
+          6 => 'labtests/project/:projectId/elements_type',
+        ),
+        'disabled' => true,
+        'active' => false,
+      ),
+      4 => 
+      array (
+        'slug' => '#',
+        'href' => '#',
+        'text' => 'Certificates',
+        'resource' => 'Controller_Projects',
+        'priority' => 219,
+        'showIn' => 
+        array (
+          0 => 'projects/update/:projectId',
+          1 => 'projects/update/:projectId/tasks',
+          2 => 'labtests/project/:projectId',
+          3 => 'plans/update/:projectId',
+          4 => 'labtests/project/:projectId/elements',
+          5 => 'labtests/project/:projectId/elements_list',
+          6 => 'labtests/project/:projectId/elements_type',
+        ),
+        'disabled' => true,
+        'active' => false,
+      ),
+      5 => 
+      array (
+        'slug' => '#',
+        'href' => '#',
+        'text' => 'Users',
+        'resource' => 'Controller_Projects',
+        'priority' => 219,
+        'showIn' => 
+        array (
+          0 => 'projects/update/:projectId',
+          1 => 'projects/update/:projectId/tasks',
+          2 => 'labtests/project/:projectId',
+          3 => 'plans/update/:projectId',
+          4 => 'labtests/project/:projectId/elements',
+          5 => 'labtests/project/:projectId/elements_list',
+          6 => 'labtests/project/:projectId/elements_type',
+        ),
+        'disabled' => true,
+        'active' => false,
+      ),
+      6 => 
+      array (
+        'slug' => '#',
+        'href' => '#',
+        'text' => 'Plans',
+        'icon' => 'q4bikon-file',
+        'resource' => 'Controller_Plans',
+        'priority' => 219,
+        'showIn' => 
+        array (
+          0 => 'projects/update/:projectId',
+          1 => 'projects/update/:projectId/tasks',
+          2 => 'labtests/project/:projectId',
+          3 => 'plans/update/:projectId',
+          4 => 'labtests/project/:projectId/elements',
+          5 => 'labtests/project/:projectId/elements_list',
+          6 => 'labtests/project/:projectId/elements_type',
+        ),
+        'disabled' => true,
+        'active' => false,
+      ),
+      7 => 
+      array (
+        'slug' => '#',
+        'href' => '#',
+        'text' => 'Lab control menu',
+        'icon' => 'q4bikon-lab',
+        'resource' => 'Controller_LabTests',
+        'priority' => 219,
+        'children' => 
+        array (
+          0 => 
+          array (
+            'slug' => '#',
+            'href' => '#',
+            'text' => 'Create Lab Control',
+            'resource' => 'Controller_LabTests',
+            'priority' => 219,
+            'showIn' => 
+            array (
+              0 => 'labtests/project/:projectId',
+            ),
+            'disabled' => true,
+            'active' => false,
+          ),
+          1 => 
+          array (
+            'slug' => '#',
+            'href' => '#',
+            'text' => 'Lab control list',
+            'resource' => 'Controller_LabTests',
+            'priority' => 219,
+            'showIn' => 
+            array (
+              0 => 'labtests/project/:projectId',
+            ),
+            'disabled' => true,
+            'active' => false,
+          ),
+        ),
+        'showIn' => 
+        array (
+          0 => 'projects/update/:projectId',
+          1 => 'projects/update/:projectId/tasks',
+          2 => 'labtests/project/:projectId',
+          3 => 'plans/update/:projectId',
+          4 => 'labtests/project/:projectId/elements',
+          5 => 'labtests/project/:projectId/elements_list',
+          6 => 'labtests/project/:projectId/elements_type',
+        ),
+        'disabled' => true,
+        'active' => false,
+      ),
+      8 => 
+      array (
+        'slug' => '#',
+        'href' => '#',
+        'text' => 'elements',
+        'resource' => 'Controller_LabTests',
+        'priority' => 219,
+        'children' => 
+        array (
+          0 => 
+          array (
+            'slug' => '#',
+            'href' => '#',
+            'text' => 'Elements Type',
+            'resource' => 'Controller_LabTests',
+            'priority' => 219,
+            'showIn' => 
+            array (
+              0 => 'labtests/project/:projectId/elements_list',
+              1 => 'labtests/project/:projectId/elements_type',
+            ),
+            'disabled' => true,
+            'active' => false,
+          ),
+          1 => 
+          array (
+            'slug' => '#',
+            'href' => '#',
+            'text' => 'Elements List',
+            'resource' => 'Controller_LabTests',
+            'priority' => 219,
+            'showIn' => 
+            array (
+              0 => 'labtests/project/:projectId/elements_list',
+              1 => 'labtests/project/:projectId/elements_type',
+            ),
+            'disabled' => true,
+            'active' => false,
+          ),
+          2 => 
+          array (
+            'slug' => '#',
+            'href' => '#',
+            'text' => 'Report of Elements',
+            'resource' => 'Controller_LabTests',
+            'priority' => 219,
+            'showIn' => 
+            array (
+              0 => 'labtests/project/:projectId/elements_list',
+              1 => 'labtests/project/:projectId/elements_type',
+              2 => 'reports/list',
+            ),
+            'disabled' => true,
+            'active' => false,
+          ),
+        ),
+        'showIn' => 
+        array (
+          0 => 'projects/update/:projectId',
+          1 => 'projects/update/:projectId/tasks',
+          2 => 'plans/update/:projectId',
+          3 => 'labtests/project/:projectId',
+          4 => 'labtests/project/:projectId/elements',
+          5 => 'labtests/project/:projectId/elements_list',
+          6 => 'labtests/project/:projectId/elements_type',
+        ),
+        'disabled' => true,
+        'active' => false,
+      ),
+    ),
+    'showIn' => 
+    array (
+      0 => 'projects',
+    ),
+    'disabled' => false,
+    'active' => true,
+  ),
+  3 => 
+  array (
+    'slug' => 'reports/list',
+    'href' => 'reports/list',
+    'text' => 'Reports',
+    'tooltip' => 'Reports',
+    'icon' => 'q4bikon-reports',
+    'resource' => 'Controller_Reports',
+    'priority' => 219,
+    'showIn' => 
+    array (
+      0 => 'reports/list',
+    ),
+    'disabled' => false,
+    'active' => false,
+  ),
+  4 => 
+  array (
+    'slug' => 'consultants',
+    'href' => 'consultants',
+    'text' => 'Users',
+    'tooltip' => 'Users',
+    'icon' => 'q4bikon-public',
+    'resource' => 'Controller_Consultants',
+    'priority' => 159,
+    'showIn' => 
+    array (
+      0 => 'consultants',
     ),
     'disabled' => false,
     'active' => false,
   ),
   5 => 
   array (
-    'slug' => 'plans',
-    'text' => 'Plans',
-    'tooltip' => 'Plans',
-    'icon' => 'q4bikon-file',
-    'resource' => 'Controller_Plans',
-    'priority' => 219,
-    'disabled' => false,
-    'active' => false,
-  ),
-  6 => 
-  array (
-    'slug' => 'reports/list',
-    'text' => 'Reports',
-    'tooltip' => 'Reports',
-    'icon' => 'q4bikon-reports',
-    'resource' => 'Controller_Reports',
-    'priority' => 219,
-    'disabled' => false,
-    'active' => false,
-  ),
-  7 => 
-  array (
-    'slug' => 'consultants',
-    'text' => 'Menu_Consultants And Auditors',
-    'tooltip' => 'Tooltip_Consultants And Auditors',
-    'icon' => 'q4bikon-public',
-    'resource' => 'Controller_Consultants',
-    'priority' => 159,
-    'disabled' => false,
-    'active' => false,
-  ),
-  8 => 
-  array (
     'slug' => 'settings',
+    'href' => 'settings',
     'text' => 'Settings',
     'tooltip' => 'Settings',
     'icon' => 'q4bikon-settings2',
     'resource' => 'Controller_Settings',
     'priority' => 99,
-    'disabled' => false,
-    'active' => false,
-  ),
-  9 => 
-  array (
-    'slug' => '',
-    'text' => 'Archive',
-    'icon' => 'q4bikon-archive',
-    'resource' => 'Controller_Archive',
-    'priority' => 159,
+    'showIn' => 
+    array (
+      0 => 'settings',
+    ),
     'disabled' => false,
     'active' => false,
   ),

@@ -135,7 +135,7 @@ class Controller_Plans extends HDVP_Controller_Template
 
     public function action_update(){
 
-        $this->project = ORM::factory('Project',(int)$this->request->param('id'));
+        $this->project = ORM::factory('Project',(int)$this->request->param('projectId'));
         if( ! $this->project->loaded() OR !$this->_user->canUseProject($this->project)){
             throw new HTTP_Exception_404;
         }
@@ -243,7 +243,7 @@ class Controller_Plans extends HDVP_Controller_Template
 
     public function action_get_images(){
         $this->_checkForAjaxOrDie();
-        $id = (int)$this->request->param('id');
+        $id = (int)$this->request->param('projectId');
         $this->project = ORM::factory('Project',$id);
         if( ! $this->project->loaded() OR !$this->_user->canUseProject($this->project)){
             throw new HTTP_Exception_404;
@@ -296,7 +296,7 @@ class Controller_Plans extends HDVP_Controller_Template
     public function action_plans_professions_list(){
         $this->_checkForAjaxOrDie();
 
-        $this->project = ORM::factory('Project',(int)$this->request->param('id'));
+        $this->project = ORM::factory('Project',(int)$this->request->param('projectId'));
         if( ! $this->project->loaded() OR !$this->_user->canUseProject($this->project)){
             throw new HTTP_Exception_404;
         }
@@ -468,7 +468,7 @@ class Controller_Plans extends HDVP_Controller_Template
     }
 
     public function action_plans_delete(){
-        $projectId = (int)$this->request->param('id');
+        $projectId = (int)$this->request->param('projectId');
         $plansIds = Arr::get($this->post(), 'plans');
         $this->project = ORM::factory('Project',$projectId);
         $professionId = Arr::get($this->post(), 'professionId');
@@ -502,11 +502,11 @@ class Controller_Plans extends HDVP_Controller_Template
     }
 
     public function action_update_plan_list(){
-        if(($this->request->method() != HTTP_Request::POST) OR !(int)$this->request->param('id')){
+        if(($this->request->method() != HTTP_Request::POST) OR !(int)$this->request->param('projectId')){
             throw new HTTP_Exception_404;
         }
         $this->_checkForAjaxOrDie();
-        $this->project = ORM::factory('Project',$this->getUIntParamOrDie($this->request->param('id')));
+        $this->project = ORM::factory('Project',$this->getUIntParamOrDie($this->request->param('projectId')));
         if( ! $this->project->loaded() OR empty($this->post()) OR !$this->_user->canUseProject($this->project)){
             throw new HTTP_Exception_404;
         }
@@ -1315,7 +1315,7 @@ class Controller_Plans extends HDVP_Controller_Template
     }
 
     public function action_plans_printed(){
-        $projectId = $this->getUIntParamOrDie($this->request->param('id'));
+        $projectId = $this->getUIntParamOrDie($this->request->param('projectId'));
         $this->project = ORM::factory('Project',$projectId);
         $plans = $this->getNormalizedPostArr('plans');
 
@@ -1351,7 +1351,7 @@ class Controller_Plans extends HDVP_Controller_Template
     }
 
     public function action_plans_mailing(){
-        $projectId = $this->getUIntParamOrDie($this->request->param('id'));
+        $projectId = $this->getUIntParamOrDie($this->request->param('projectId'));
         $this->project = ORM::factory('Project',$projectId);
         if(!$this->project->loaded() OR !$this->_user->canUseProject($this->project)) {
             throw new HDVP_Exception('Access Denied');
@@ -1503,7 +1503,7 @@ class Controller_Plans extends HDVP_Controller_Template
 
     public function action_update_tracking(){
         $this->_checkForAjaxOrDie();
-        $trackingId = $this->getUIntParamOrDie($this->request->param('id'));
+        $trackingId = $this->getUIntParamOrDie($this->request->param('projectId'));
         $tracking = ORM::factory('PlanTracking',$trackingId);
         if( ! $tracking->loaded()){
             throw new HTTP_Exception_404();
@@ -1557,7 +1557,7 @@ class Controller_Plans extends HDVP_Controller_Template
 
     public function action_delete_tracking_file(){
         $this->_checkForAjaxOrDie();
-        $trackingId = $this->getUIntParamOrDie($this->request->param('id'));
+        $trackingId = $this->getUIntParamOrDie($this->request->param('projectId'));
         $tracking = ORM::factory('PlanTracking',$trackingId);
         if( ! $tracking->loaded()){
             throw new HTTP_Exception_404();
@@ -1574,7 +1574,7 @@ class Controller_Plans extends HDVP_Controller_Template
 
     public function action_delete_tracking(){
         $this->_checkForAjaxOrDie();
-        $trackingId = $this->getUIntParamOrDie($this->request->param('id'));
+        $trackingId = $this->getUIntParamOrDie($this->request->param('projectId'));
         $tracking = ORM::factory('PlanTracking',$trackingId);
         if( ! $tracking->loaded()){
             throw new HTTP_Exception_404();
@@ -1590,7 +1590,7 @@ class Controller_Plans extends HDVP_Controller_Template
      */
     public function action_register_tracking(){
         $this->_checkForAjaxOrDie();
-        $projectId = $this->getUIntParamOrDie($this->request->param('id'));
+        $projectId = $this->getUIntParamOrDie($this->request->param('projectId'));
         $plans = Arr::get($this->post(),'plans');
         $this->project = ORM::factory('Project',$projectId);
         if( ! $this->project->loaded() OR !$this->_user->canUseProject($this->project) OR empty($plans)){

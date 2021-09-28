@@ -5,7 +5,7 @@
  * Date: 03.12.2016
  * Time: 6:16
  */
-Route::set('site.projectTasks','projects/update/<id>/<action>',['action' => '[a-z0-9_]+', 'id' => '[0-9]+'])
+Route::set('site.projectTasks','projects/update/<projectId>/<action>',['action' => '[a-z0-9_]+', 'projectId' => '[0-9]+'])
     ->defaults([
         'controller' => 'projects',
         'action' => 'tasks_list'
@@ -49,7 +49,7 @@ Route::set('site.project.trackingList2','projects/tracking_list/<id>(/filter/<fi
         'action' => 'tracking_list',
         'page' => 1,
     ]);
-Route::set('site.projects','projects(/<action>(/<id>))',['action' => '[a-z0-9_]+', 'id' => '[0-9]+'])
+Route::set('site.projects','projects(/<action>(/<projectId>))',['action' => '[a-z0-9_]+', 'projectId' => '[0-9]+'])
     ->defaults([
         'controller' => 'projects',
         'action' => 'list'

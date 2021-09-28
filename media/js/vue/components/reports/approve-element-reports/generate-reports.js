@@ -441,6 +441,8 @@ Vue.component('generate-reports', {
             count: 0,
             requested: false,
             time: [],
+            queryCompanyId: null,
+            queryProjectId: null,
             selectedCompany: null,
             selectedProject: null,
             selectedStructures: [],
@@ -517,11 +519,14 @@ Vue.component('generate-reports', {
     watch: {
         selectedCompany(val) {
             if (val) {
-                let a = Object.values(val.projects)
-                this.cmpProjects = a;
+                console.log('company', val)
+                this.cmpProjects = Object.values(val.projects);
                 if(this.filters?.selectedProject) {
                     this.selectedProject = this.filters.selectedProject
                     this.filters.selectedProject = null;
+                } else if(this.queryProjectId) {
+                    this.selectedProject = this.cmpProjects.filter(project => +project.id === +this.queryProjectId)[0]
+                    // console.log('selectedProject',selectedProject)
                 } else {
                     this.selectedProject = null;
                 }
@@ -594,6 +599,9 @@ Vue.component('generate-reports', {
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
                     this.companies = response.items ? response.items : [];
+                        if(this.queryCompanyId) {
+                            this.selectedCompany = this.companies.filter(company => +company.id === +this.queryCompanyId)[0]
+                        }
                     this.showLoader = false;
                 })
         },
@@ -814,17 +822,17 @@ Vue.component('generate-reports', {
             const urlParams = new URLSearchParams(window.location.search);
 
             return {
-                companyId: urlParams.get('companyId'),
-                projectId: urlParams.get('projectId'),
-                objectIds: JSON.parse(urlParams.get('objectIds')),
-                elementIds: JSON.parse(urlParams.get('elementIds')),
-                specialityIds: JSON.parse(urlParams.get('specialityIds')),
-                placeIds: JSON.parse(urlParams.get('placeIds')),
-                floorIds: JSON.parse(urlParams.get('floorIds')),
-                statuses: JSON.parse(urlParams.get('statuses')),
-                positions: JSON.parse(urlParams.get('positions')),
-                from: urlParams.get('from'),
-                to: urlParams.get('to')
+                companyId: urlParams.get('companyId') ? urlParams.get('companyId') : null,
+                projectId: urlParams.get('projectId') ? urlParams.get('projectId') : null,
+                objectIds: urlParams.get('objectIds') ? JSON.parse(urlParams.get('objectIds')) : null,
+                elementIds: urlParams.get('elementIds') ? JSON.parse(urlParams.get('elementIds')) : null,
+                specialityIds: urlParams.get('specialityIds') ? JSON.parse(urlParams.get('specialityIds')) : null,
+                placeIds: urlParams.get('placeIds') ? JSON.parse(urlParams.get('placeIds')) : null,
+                floorIds: urlParams.get('floorIds') ? JSON.parse(urlParams.get('floorIds')) : null,
+                statuses: urlParams.get('statuses') ? JSON.parse(urlParams.get('statuses')) : null,
+                positions: urlParams.get('positions') ? JSON.parse(urlParams.get('positions')) : null,
+                from: urlParams.get('from') ? urlParams.get('from') : null,
+                to: urlParams.get('to') ? urlParams.get('to') : null
             }
         },
         generateReports() {
@@ -845,9 +853,6 @@ Vue.component('generate-reports', {
         this.getCompanies();
     },
     mounted() {
-        if(window.location.search) {
-            this.$emit('getFiltersForReportsGenerating', this.getFiltersFromUrl())
-        }
         if(this.filters) {
             this.selectedCompany = this.filters.selectedCompany
             this.selectedProject = this.filters.selectedProject
@@ -868,7 +873,21 @@ Vue.component('generate-reports', {
             this.selectedManagerStatuses.forEach(managerStatus => {
                 this.onSelect(managerStatus, 'elManagerStatuses')
             })
+
+            let newURL = location.href.split("?")[0];
+            window.history.pushState('object', document.title, newURL);
+
         } else {
+            if(window.location.search) {
+                let filters = this.getFiltersFromUrl();
+                if(filters.objectIds) {
+                    this.$emit('getFiltersForReportsGenerating', this.getFiltersFromUrl())
+                } else {
+                    this.queryCompanyId = filters.companyId;
+                    this.queryProjectId = filters.projectId;
+                }
+            }
+
             this.toggleSelectAll('selectedManagerStatuses', 'elManagerStatuses');
             this.toggleSelectAll('selectedStatuses', 'elStatuses');
         }

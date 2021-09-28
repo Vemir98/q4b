@@ -19722,7 +19722,7 @@ html.rtl .lt_project_item_logo {
   /*display: none;*/
   background: #386885;
   border-left-width: 4px;
-  border-left-color: transparent;
+  /*border-left-color: transparent;*/
 }
 
 .sidebar .sidebar-nav ul li .sidebar-items.sub-items .sidebar-items_title {
@@ -23559,7 +23559,7 @@ tr.parent-tr>td:nth-last-of-type(1) {
   display: inline-flex;
   font-style: normal;
   font-weight: bold;
-  font-size: 24px;
+  font-size: 20px;
   line-height: 22px;
   color: #9FA3B4;
   margin-right: 8px;
@@ -23567,7 +23567,7 @@ tr.parent-tr>td:nth-last-of-type(1) {
 
 .approve-elv-top-item-value {
   font-weight: bold;
-  font-size: 24px;
+  font-size: 20px;
   line-height: 22px;
   color: #4B5371;
 }

@@ -749,6 +749,7 @@ class Controller_Api_Projects extends HDVP_Controller_API
                 'placeId' => $q->place_id,
                 'spaceId' => $q->space_id,
                 'planId' => $q->plan_id,
+                'elementId' => Api_DBElApprovals::getElApprovalElementByElAppId($q->el_approval_id)[0]['id'],
                 'tasks' => [],
                 'files' => $this->getQualityControlImages($q),
                 'professionId' => $q->profession_id,

@@ -37,7 +37,7 @@
                                 <select class="q4-select q4-form-input" onchange="document.location=this.options[this.selectedIndex].value">
                                     <option value=""><?=__('Please select')?></option>
                                     <?foreach ($filterCompanies as $item): ?>
-                                        <option value="<?=URL::site('companies/update/'.$item->id)?>"><?=$item->name?></option>
+                                        <option value="<?=URL::site('companies/update/'.$item->id.'?tab=info')?>"><?=$item->name?></option>
                                     <?endforeach ?>
                                 </select>
                             </div>

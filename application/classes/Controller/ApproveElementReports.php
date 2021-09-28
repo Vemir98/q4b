@@ -8,12 +8,12 @@
 use JonnyW\PhantomJs\Client;
 class Controller_ApproveElementReports extends HDVP_Controller_Template
 {
-    protected $_actions_perms = [
-        'index' => [
-            'GET' => 'read',
-            'POST' => 'read'
-        ]
-    ];
+//    protected $_actions_perms = [
+//        'index' => [
+//            'GET' => 'read',
+//            'POST' => 'read'
+//        ]
+//    ];
     public function before()
     {
         parent::before();
@@ -123,10 +123,6 @@ class Controller_ApproveElementReports extends HDVP_Controller_Template
             'manager_signature' => __('manager_signature'),
             'notes_description' => __('notes_description')
         ];
-
-//        foreach (Api_DBModules::getModulesForTasks() as $module) {
-//            $translations['module_'.$module['id']] = $module['name'];
-//        }
 
 
         $this->template->content = View::make('reports/approve-element/index', [

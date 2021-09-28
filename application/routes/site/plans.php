@@ -59,7 +59,7 @@ Route::set('site.plans.createPlan','plans/create_plan/<id>(/object/<object_id>)(
         'controller' => 'plans',
         'action' => 'create_plan'
     ]);
-Route::set('site.plans','plans(/<action>(/<id>))',['action' => '[a-z0-9_]+', 'id' => '[0-9]+'])
+Route::set('site.plans','plans(/<action>(/<projectId>))',['action' => '[a-z0-9_]+', 'projectId' => '[0-9]+'])
     ->defaults([
         'controller' => 'plans',
         'action' => 'list'

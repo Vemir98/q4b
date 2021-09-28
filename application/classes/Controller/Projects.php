@@ -135,17 +135,36 @@ class Controller_Projects extends HDVP_Controller_Template
             $ws->get_active_sheet()->getStyle($header_range)->getFont()->setSize(12)->setBold(true);
             $ws->send(['name'=>'report', 'format'=>'Excel5']);
         }else {
-            $projectIds = [];
-            foreach ($result['items'] as $item){
-                $projectIds [] = $item->id;
-            }
-            $this->template->content = View::make('projects/list', $result + ['filterProjects' => $filterProjects]);
+
+            $translations = [
+                "projects" => __('Projects'),
+                "select_project" => __('Select project'),
+                "company" => __('Company'),
+                "status" => __('Status'),
+                "active" => __('active'),
+                "archive" => __('archive'),
+                "suspended" => __('suspended'),
+                "start_date" => __('Start Date'),
+                "end_date" => __('End Date'),
+            ];
+
+//            $projectIds = [];
+//            foreach ($result['items'] as $item){
+//                $projectIds [] = $item->id;
+//            }
+
+            VueJs::instance()->addComponent('projects/projects-list');
+            VueJs::instance()->addComponent('projects/project-item');
+            VueJs::instance()->includeMultiselect();
+            $this->template->content = View::make('projects/list', ['translations' => $translations]);
+
+//            $this->template->content = View::make('projects/list', $result + ['filterProjects' => $filterProjects]);
         }
     }
 
     public function action_company(){
         $this->_setUsrMinimalPriorityLvl(Enum_UserPriorityLevel::Company);
-        $id = (int) $this->request->param('id');
+        $id = (int) $this->request->param('projectId');
         $company = ORM::factory('Company',$id);
         if( ! $company->loaded()){
             throw new HTTP_Exception_404;
@@ -382,7 +401,7 @@ class Controller_Projects extends HDVP_Controller_Template
 
     public function action_update(){
         $this->include_editor = true;
-        $this->project = ORM::factory('Project',(int)$this->request->param('id'));
+        $this->project = ORM::factory('Project',(int)$this->request->param('projectId'));
         if( ! $this->project->loaded() OR !$this->_user->canUseProject($this->project)){
             throw new HTTP_Exception_404;
         }
@@ -476,20 +495,33 @@ class Controller_Projects extends HDVP_Controller_Template
             }else{
                 $companies = ORM::factory('Company')->find_all();
             }
+
+            $tab = Arr::get($_GET,'tab');
+
             Breadcrumbs::add(Breadcrumb::factory()->set_title($this->project->name));
             VueJs::instance()->addComponent('certifications/universal-certification');
             VueJs::instance()->includeMultiselect();
-            $this->template->content = View::make('projects/update')
-                ->set('companies',$companies)
-                ->set('objectsCount',$projectObjectsCount)
-                ->set('users',$this->project->users->find_all())
-                ->set('tasks',$this->project->tasks->order_by('id','DESC')->find_all());
+
 
             VueJs::instance()->addComponent('tabs');
             VueJs::instance()->addComponent('reserve-materials');
             VueJs::instance()->addComponent('transferable-items');
             VueJs::instance()->addComponent('texts');
             VueJs::instance()->includeMultiselect();
+
+            if($tab) {
+                $this->template->content = View::make('projects/sub-tabs/'.$tab)
+                    ->set('companies',$companies)
+                    ->set('objectsCount',$projectObjectsCount)
+                    ->set('users',$this->project->users->find_all())
+                    ->set('tasks',$this->project->tasks->order_by('id','DESC')->find_all());
+            } else {
+                $this->template->content = View::make('projects/update')
+                    ->set('companies',$companies)
+                    ->set('objectsCount',$projectObjectsCount)
+                    ->set('users',$this->project->users->find_all())
+                    ->set('tasks',$this->project->tasks->order_by('id','DESC')->find_all());
+            }
         }
     }
 
@@ -2441,7 +2473,7 @@ class Controller_Projects extends HDVP_Controller_Template
 
     public function action_quality_control(){
         $this->_checkForAjaxOrDie();
-        $placeId = (int)$this->request->param('id');
+        $placeId = (int)$this->request->param('projectId');
         $place = ORM::factory('PrPlace',$placeId);
         if( ! $place->loaded()){
             throw new HTTP_Exception_404;
@@ -3345,7 +3377,7 @@ class Controller_Projects extends HDVP_Controller_Template
     }
     public function action_tasks()
     {
-        $id = $this->getUIntParamOrDie($this->request->param('id'));
+        $id = $this->getUIntParamOrDie($this->request->param('projectId'));
         $project = ORM::factory('Project',$id);
         if( ! $project->loaded()){
             throw new HTTP_Exception_404;

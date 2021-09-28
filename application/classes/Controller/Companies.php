@@ -248,6 +248,8 @@ class Controller_Companies extends HDVP_Controller_Template
         }
         else{// НЕ POST запрос
 
+            $tab = Arr::get($_GET,'tab');
+
             Breadcrumbs::add(Breadcrumb::factory()->set_title($this->company->name));
             $countries = ORM::factory('Country')->find_all();
 
@@ -267,16 +269,29 @@ class Controller_Companies extends HDVP_Controller_Template
             VueJs::instance()->addComponent('certifications/universal-certification');
             VueJs::instance()->includeMultiselect();
 
-            $this->template->content = View::make('companies/update')
-                ->set('countries',Model_Country::getKeyValuePair($countries))
-                ->set('clientCountryId',$this->company->country_id)
-                ->set('company',$this->company)
-                ->set('crafts',$this->company->crafts->order_by('id','DESC')->find_all())
-                ->set('professions',$this->company->professions->order_by('id','DESC')->find_all())
-                ->set('professionsSelectedCrafts',ORM::factory('CmpProfession')->getProfCraftsIdsKeyValPairArray($this->company->id))
-                ->set('userRoles',$userRoles)
-                ->set('users',ORM::factory('User')->where('client_id','=',$this->company->client->id)->and_where('company_id','=',$this->company->id)->order_by('id','DESC')->find_all())
-                ->set('standards',$this->company->standards->find_all());
+            if($tab) {
+                $this->template->content = View::make('companies/sub-tabs/'.$tab)
+                    ->set('countries',Model_Country::getKeyValuePair($countries))
+                    ->set('clientCountryId',$this->company->country_id)
+                    ->set('company',$this->company)
+                    ->set('crafts',$this->company->crafts->order_by('id','DESC')->find_all())
+                    ->set('professions',$this->company->professions->order_by('id','DESC')->find_all())
+                    ->set('professionsSelectedCrafts',ORM::factory('CmpProfession')->getProfCraftsIdsKeyValPairArray($this->company->id))
+                    ->set('userRoles',$userRoles)
+                    ->set('users',ORM::factory('User')->where('client_id','=',$this->company->client->id)->and_where('company_id','=',$this->company->id)->order_by('id','DESC')->find_all())
+                    ->set('standards',$this->company->standards->find_all());
+            } else {
+                $this->template->content = View::make('companies/update')
+                    ->set('countries',Model_Country::getKeyValuePair($countries))
+                    ->set('clientCountryId',$this->company->country_id)
+                    ->set('company',$this->company)
+                    ->set('crafts',$this->company->crafts->order_by('id','DESC')->find_all())
+                    ->set('professions',$this->company->professions->order_by('id','DESC')->find_all())
+                    ->set('professionsSelectedCrafts',ORM::factory('CmpProfession')->getProfCraftsIdsKeyValPairArray($this->company->id))
+                    ->set('userRoles',$userRoles)
+                    ->set('users',ORM::factory('User')->where('client_id','=',$this->company->client->id)->and_where('company_id','=',$this->company->id)->order_by('id','DESC')->find_all())
+                    ->set('standards',$this->company->standards->find_all());
+            }
         }
             
     }
