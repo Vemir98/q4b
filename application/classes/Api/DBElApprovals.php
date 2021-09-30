@@ -116,8 +116,10 @@ class Api_DBElApprovals
     public static function getElApprovalUsersListForNotify($elApprovalId)
     {
         $query = "SELECT 
-            ean.user_id as userId
+            ean.user_id as userId,
+            u.device_token as deviceToken
             FROM el_approvals_notifications ean
+            LEFT JOIN users u ON ean.user_id=u.id
             WHERE ean.ell_app_id=:ellAppId";
 
         return DB::query(Database::SELECT, $query)

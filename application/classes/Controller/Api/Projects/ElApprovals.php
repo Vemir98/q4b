@@ -171,6 +171,8 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
             }
 
             Database::instance()->commit();
+            $this->sendNotificationToUsers($elApprovalId);
+
             $this->_responseData = [
                 'status' => 'success',
                 'id' => $elApprovalId
@@ -1124,6 +1126,8 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
             ->set($queryData)
             ->where('id', '=', $elApprovalId)
             ->execute($this->_db);
+
+        $this->sendNotificationToUsers($elApprovalId);
     }
 
     /**
@@ -1139,5 +1143,28 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
             ->set($queryData)
             ->where('id', '=', $elApprovalCraftId)
             ->execute($this->_db);
+    }
+
+    private function sendNotificationToUsers($elApprovalId) {
+
+        $users = Api_DBElApprovals::getElApprovalUsersListForNotify($elApprovalId);
+
+        $usersDeviceTokens = array_column($users, 'deviceToken');
+        Kohana::$log->add(Log::ERROR, 'from elApprovals: ' . json_encode([$users], JSON_PRETTY_PRINT));
+
+        $fpns = new HDVP\FirebasePushNotification();
+
+        foreach ($usersDeviceTokens as $token) {
+            if($token) {
+                $fpns->notify([$token], ['action' => 'elApproval']);
+
+                $f = fopen(DOCROOT.'testNotification.txt', 'a');
+
+                if($f) {
+                    fputs($f, 'from elApprovals - '.date('H:i:s')."\n");
+                }
+                fclose($f);
+            }
+        }
     }
 }
