@@ -9,12 +9,13 @@
 ?>
 
 <section class="content_new_projects">
-        <div class="tab_panel">
-            <div class="panel_header">
+    <ul>
+        <li class="tab-panel">
+            <div class="panel_header open">
                 <h2><?=__('Project General Information')?></h2>
             </div>
 
-            <div class="panel_content">
+            <div class="panel_content open">
                 <form action="" class="q4_form" autocomplete="off" method="post" data-ajax="true" enctype="multipart/form-data">
                     <input type="hidden" value="" name="x-form-secure-tkn"/>
                     <div class="panel_body projects-general-info container-fluid">
@@ -190,5 +191,6 @@
                     </div>
                 </form>
             </div><!--panel_content-->
-        </div>
+        </li>
+    </ul>
 </section>

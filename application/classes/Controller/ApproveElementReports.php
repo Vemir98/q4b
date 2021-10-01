@@ -128,7 +128,8 @@ class Controller_ApproveElementReports extends HDVP_Controller_Template
         $this->template->content = View::make('reports/approve-element/index', [
             'translations' => $translations,
             'userProfession' => $this->_user->professions->find()->name,
-            'userRole' =>  $this->_user->getRelevantRole('name')
+            'userRole' =>  $this->_user->getRelevantRole('name'),
+            'projectId' => Request::current()->param('projectId')
         ]);
     }
 }

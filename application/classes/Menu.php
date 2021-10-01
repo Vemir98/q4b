@@ -8,32 +8,63 @@
 
 class Menu
 {
+    const CATEGORIES = array(
+        'dashboard' => [
+            'dashboard'
+        ],
+        'companies' => [
+            'companies/update/:id?tab=info',
+            'companies/update/:id?tab=instructions',
+            'companies/update/:id?tab=professions',
+            'companies/update/:id?tab=specialities',
+            'companies/update/:id?tab=users',
+        ],
+        'projects' => [
+            'projects/update/:projectId?tab=info',
+            'projects/update/:projectId?tab=structures',
+            'projects/update/:projectId?tab=delivery-items',
+            'projects/update/:projectId?tab=users',
+            'projects/update/:projectId?tab=certificates',
+            'projects/update/:projectId/tasks',
+            'plans/update/:projectId',
+            'labtests/project/:projectId/elements'
+        ],
+        'labtests' => [
+            'labtests/project/:projectId',
+        ],
+        'elements' => [
+            'labtests/project/:projectId/elements_list',
+            'labtests/project/:projectId/elements_type',
+            'reports/approve_element/:projectId'
+        ]
+    );
+
     public static function setActiveItems(&$items, $hasParent = false){
         foreach ($items as $key => &$item){
+            foreach ($item['showIn'] as $routeKey => $route) {
+                if(strpos($route,':') !== false){
+                    preg_match('~\/?\:(?<param>[^/|?]+)~',$route,$matches);
+                    if(!empty($matches['param'])){
+                        if(!empty(Request::current()->param($matches['param']))) {
+                            if($route === $item['slug']) {
+                                $item['slug'] = str_replace(':' . $matches['param'],Request::current()->param($matches['param']),$item['slug']);
+                            }
+                            if($route === $item['href']) {
+                                $item['href'] = str_replace(':' . $matches['param'],Request::current()->param($matches['param']),$item['href']);
 
-            $hrefWithoutQuery = explode('?', $item['href'])[0];
-            if(strpos($hrefWithoutQuery,':') !== false){
-                preg_match('~\/?\:(?<param>[^/]+)~',$hrefWithoutQuery,$matches);
-
-                if(!empty($matches['param'])){
-                    if(!empty(Request::current()->param($matches['param']))) {
-                        $item['slug'] = str_replace(':' . $matches['param'],Request::current()->param($matches['param']),$item['slug']);
-                        $item['href'] = str_replace(':' . $matches['param'],Request::current()->param($matches['param']),$item['href']);
-
-                        foreach ($item['showIn'] as $routeKey => $route) {
+                            }
                             $item['showIn'][$routeKey] = str_replace(':' . $matches['param'],Request::current()->param($matches['param']),$item['showIn'][$routeKey]);
                         }
+                    }else{
+                        $item['disabled'] = true;
                     }
-                }else{
-                    $item['disabled'] = true;
                 }
             }
 
             $showTab = false;
 
             foreach ($item['showIn'] as $routeKey => $route) {
-//                if((!empty($item['slug']) AND strpos(URL::site(Request::detect_uri(), TRUE) . URL::query(),URL::site($route)) !== false)) {
-                if((!empty($item['slug']) AND Request::detect_uri() === URL::site($route))) {
+                if((!empty($item['slug']) AND Request::detect_uri(). URL::query() === URL::site($route))) {
                     $showTab = true;
                     break;
                 }
@@ -60,7 +91,6 @@ class Menu
                 $item['href'] = '#';
             }
         }
-
     }
 
     public static function createSideBar($items, $hasParent = false) {

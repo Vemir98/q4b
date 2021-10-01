@@ -10,11 +10,11 @@
 
 <section id="certifications" class="new-styles">
     <ul>
-        <li class="tab_panel">
-            <div class="panel_header">
+        <li class="tab-panel">
+            <div class="panel_header open">
                 <h2><?=__('Certifications')?></h2>
             </div>
-            <div class="panel_content">
+            <div class="panel_content open">
                 <div class="panel_body container-fluid">
                     <universal-certification
                         items-url="<?=URL::site('/entities/certifications/'. $_PROJECT->company->id.'/'.$_PROJECT->id)?>"

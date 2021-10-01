@@ -12,7 +12,7 @@ Route::set('site.delivery.reports','reports/delivery(/<action>(/<id>))',['action
     ]);
 
 //approve element
-Route::set('site.approveElement.reports','reports/approve_element(/<action>(/<id>))',['action' => '[a-z0-9_]+', 'id' => '[0-9]+'])
+Route::set('site.approveElement.reports','reports/approve_element(/<projectId>(/<action>(/<id>)))',['action' => '[a-z0-9_]+', 'id' => '[0-9]+'])
     ->defaults([
         'controller' => 'ApproveElementReports',
     ]);

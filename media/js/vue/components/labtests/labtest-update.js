@@ -222,13 +222,13 @@ Vue.component('labtest-update', {
                         <input type="text" v-model="ticket.number" autocomplete="off" :placeholder="trans.lab_certificate" name="ticket_number" :class="{'disabled': (ticket.id && !(isSuperAdmin()))}">
                     </div>
                     <div class="ltest_info_select">
-                        <div class="input_item_label" v-show="ticket.freshStrength">{{ trans.fresh_concrete_strength }}</div>
-                        <input type="number" v-model="ticket.freshStrength" autocomplete="off" :placeholder="trans.fresh_concrete_strength" @input="emptyErrors" :class="{'disabled': (ticket.id && !(isSuperAdmin()))}" name="fresh_strength" v-validate="'numeric'">
+                        <div class="input_item_label" v-show="ticket.fresh_strength">{{ trans.fresh_concrete_strength }}</div>
+                        <input type="number" v-model="ticket.fresh_strength" autocomplete="off" :placeholder="trans.fresh_concrete_strength" @input="emptyErrors" :class="{'disabled': (ticket.id && !(isSuperAdmin()))}" name="fresh_strength" v-validate="'numeric'">
                         <span v-show="errors.has('fresh_strength')" class="help is-danger">{{ errors.first('fresh_strength') }}</span>
                     </div>
                     <div class="ltest_info_select">
-                        <div class="input_item_label" v-show="ticket.rollStrength">{{ trans.roll_strength }}</div>
-                        <input type="number" v-model="ticket.rollStrength" autocomplete="off" :placeholder="trans.roll_strength" @input="emptyErrors" :class="{'disabled': (ticket.id && !(isSuperAdmin()))}" name="roll_strength" v-validate="'numeric'">
+                        <div class="input_item_label" v-show="ticket.roll_strength">{{ trans.roll_strength }}</div>
+                        <input type="number" v-model="ticket.roll_strength" autocomplete="off" :placeholder="trans.roll_strength" @input="emptyErrors" :class="{'disabled': (ticket.id && !(isSuperAdmin()))}" name="roll_strength" v-validate="'numeric'">
                         <span v-show="errors.has('roll_strength')" class="help is-danger">{{ errors.first('roll_strength') }}</span>
                     </div>
                 </div>
@@ -512,7 +512,7 @@ Vue.component('labtest-update', {
         getParamValue(item, list) {
             let val = item.defaultValue;
             list.forEach((p) => {
-                if (p.clpId == item.id) {
+                if (p.clp_id == item.id) {
                     val = parseInt(p.value)
                 }
             })
@@ -549,6 +549,7 @@ Vue.component('labtest-update', {
             await this.$validator.validateAll();
             if (!this.errors.any()) {
                 this.sendLabtestSaveRequest();
+
                 if (this.ticket.id && (this.ticket.id === this.labtest.ticketId)) {
                     this.sendLabtestTicketUpdateRequest();
                 } else {
@@ -628,7 +629,6 @@ Vue.component('labtest-update', {
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
                     this.labtestCraftParams = response;
-                    console.log('labtestCraftParams',this.labtestCraftParams);
                     let newArr = [...this.ltCraftParamsList];
                     newArr.forEach((item, ind) => {
                         let newItem = JSON.parse(JSON.stringify(item));
@@ -637,7 +637,6 @@ Vue.component('labtest-update', {
                     })
                     this.ltCraftParamsList = [...newArr];
 
-                    console.log(22, this.ltCraftParamsList);
                 })
         },
         getLtCrafts() {
@@ -685,6 +684,8 @@ Vue.component('labtest-update', {
             data.status = this.labtest.status;
             data.images = this.images;
             data.imagesOld = this.imagesOld;
+            data.freshStrength = data.fresh_strength
+            data.rollStrength = data.roll_strength
             qfetch(url, {method: 'PUT', headers: {}, body: data})
                 .then(response => {
                     this.editing = false;
@@ -734,7 +735,6 @@ Vue.component('labtest-update', {
             this.showLoader = true;
             let url = `/projects/${this.project.id}/labtests/${this.labtest.id}`;
             let data = {labtest: this.labtest, labtestCraftParams: this.getParams()}
-            console.log('data', data);
             qfetch(url, {method: 'PUT', headers: {}, body: data})
                 .then(response => {
                     this.creating = false;
@@ -812,14 +812,12 @@ Vue.component('labtest-update', {
         },
         saveImage(){
 
-            console.log(this.openedImageIndex)
             this.editor.tool('crop').cancel();
             let openedIndex = this.openedImageIndex;
             let image = {...this.images[openedIndex]};
             let imgs = this.images;
             let ext = image.ext === 'pdf' ? 'jpeg': image.ext
             image.src = this.editor.getCanvasDataAs(ext);
-            console.log(image.ext)
             if(image.id){
                this.imagesOld.push(image.id)
                 image.id = null;
@@ -851,7 +849,6 @@ Vue.component('labtest-update', {
         },
         openModal(index){
             this.openedImageIndex = index;
-            console.log(this.openedImageIndex)
             setTimeout( () => {
                 this.editor.resetCanvas(true);
                 this.editor.setActiveTool('select')

@@ -423,13 +423,14 @@ Vue.component('generate-reports', {
                     </button>
                 </div>
             </div>            
-        </div>                
+        </div>
     </section>
     `,
     props: {
         statuses: {required: true},
         translations: {required: true},
-        filters: {required: true}
+        filters: {required: true},
+        projectId: {required: true}
     },
     components: {
         Multiselect: window.VueMultiselect.default,
@@ -441,7 +442,6 @@ Vue.component('generate-reports', {
             count: 0,
             requested: false,
             time: [],
-            queryCompanyId: null,
             queryProjectId: null,
             selectedCompany: null,
             selectedProject: null,
@@ -519,14 +519,12 @@ Vue.component('generate-reports', {
     watch: {
         selectedCompany(val) {
             if (val) {
-                console.log('company', val)
                 this.cmpProjects = Object.values(val.projects);
                 if(this.filters?.selectedProject) {
                     this.selectedProject = this.filters.selectedProject
                     this.filters.selectedProject = null;
                 } else if(this.queryProjectId) {
                     this.selectedProject = this.cmpProjects.filter(project => +project.id === +this.queryProjectId)[0]
-                    // console.log('selectedProject',selectedProject)
                 } else {
                     this.selectedProject = null;
                 }
@@ -599,8 +597,12 @@ Vue.component('generate-reports', {
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
                     this.companies = response.items ? response.items : [];
-                        if(this.queryCompanyId) {
-                            this.selectedCompany = this.companies.filter(company => +company.id === +this.queryCompanyId)[0]
+                        if(this.queryProjectId) {
+                            this.selectedCompany = this.companies.filter(company => {
+                                return ((Object.values(company.projects).filter(project => +project.id === +this.queryProjectId)).length > 0)
+                            })[0]
+
+                            console.log('selectedCompany', this.selectedCompany)
                         }
                     this.showLoader = false;
                 })
@@ -621,7 +623,6 @@ Vue.component('generate-reports', {
                 })
         },
         // async getProjectsbyIds(ids) {
-        //     console.log('3')
         //     if (!this.selectedCompany) return;
         //     this.showLoader = true;
         //     let projects = [];
@@ -631,9 +632,7 @@ Vue.component('generate-reports', {
         //         projects.push(result.item)
         //     }
         //     this.showLoader = false;
-        //     // console.log('projects', projects)
         //     this.cmpProjects = projects;
-        //     console.log('4')
         //     if(this.filters?.selectedProject) {
         //         this.selectedProject = this.filters.selectedProject
         //         this.filters.selectedProject = null;
@@ -880,11 +879,14 @@ Vue.component('generate-reports', {
         } else {
             if(window.location.search) {
                 let filters = this.getFiltersFromUrl();
-                if(filters.objectIds) {
+                // if(filters.objectIds) {
                     this.$emit('getFiltersForReportsGenerating', this.getFiltersFromUrl())
-                } else {
-                    this.queryCompanyId = filters.companyId;
+                // } else {
                     this.queryProjectId = filters.projectId;
+                // }
+            } else {
+                if(this.projectId) {
+                    this.queryProjectId = this.projectId
                 }
             }
 

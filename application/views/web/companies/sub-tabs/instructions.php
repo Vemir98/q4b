@@ -8,12 +8,12 @@
  */
 ?>
 <section id="instructions" class="new-styles">
-<!--    <ul>-->
-<!--        <li class="tab_panel">-->
-            <div class="panel_header">
+    <ul>
+        <li class="tab-panel">
+            <div class="panel_header open">
                 <h2><?=__('Instructions')?></h2>
             </div>
-            <div class="panel_content">
+            <div class="panel_content open">
                 <div class="panel_body container-fluid">
                     <universal-certification
                             items-url="<?=URL::site('/entities/instructions/'. $company->id)?>"
@@ -40,8 +40,8 @@
                 </div>
 
             </div>
-<!--        </li>-->
-<!--    </ul>-->
+        </li>
+    </ul>
 </section>
 <script>
     var regulations = new Vue({

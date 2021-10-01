@@ -1062,7 +1062,7 @@ html.rtl {
   left: 10px;
 }
 
-.rtl ul li.tab_panel .panel_header .sign {
+.rtl ul li.tab_panel .panel_header .sign, .rtl ul li.tab-panel .panel_header .sign {
   margin-left: 15px;
 }
 
@@ -1970,7 +1970,8 @@ html.rtl {
   .rtl .report-status-list .reports-prop-title h3:first-child {
     margin-right: 15px;
   }
-  ul li.tab_panel .panel_content.open .fixed-table-container tbody td {
+  ul li.tab_panel .panel_content.open .fixed-table-container tbody td,
+  ul li.tab-panel .panel_content.open .fixed-table-container tbody td {
     border-left: none;
   }
 }
@@ -2768,11 +2769,11 @@ figcaption.mobile-fig-caption a {
   font-family: "proxima_nova_rgregular", Arial, Helvetica, sans-serif;
 }
 
-ul li.tab_panel {
+ul li.tab_panel, ul li.tab-panel {
   margin-bottom: 20px;
 }
 
-ul li.tab_panel .panel_header {
+ul li.tab_panel .panel_header, ul li.tab-panel .panel_header {
   height: 45px;
   line-height: 43px;
   background: #1ebae5;
@@ -2784,17 +2785,17 @@ ul li.tab_panel .panel_header {
   border-radius: 10px;
 }
 
-ul li.tab_panel .panel_header.open {
+ul li.tab_panel .panel_header.open, ul li.tab-panel .panel_header.open {
   border-bottom-left-radius: 0px;
   border-bottom-right-radius: 0px;
 }
 
-ul li.tab_panel .panel_header .panel_header_icon {
+ul li.tab_panel .panel_header .panel_header_icon, ul li.tab-panel .panel_header .panel_header_icon {
   color: #ffffff;
   font-size: 16px;
 }
 
-ul li.tab_panel .panel_header h2 {
+ul li.tab_panel .panel_header h2, ul li.tab-panel .panel_header h2 {
   display: inline-block;
   vertical-align: middle;
   font-size: 16px;
@@ -2805,7 +2806,7 @@ ul li.tab_panel .panel_header h2 {
   color: #ffffff;
 }
 
-ul li.tab_panel .panel_header .sign {
+ul li.tab_panel .panel_header .sign, ul li.tab-panel .panel_header .sign {
   float: right;
   margin-top: 2px;
 }
@@ -2824,7 +2825,7 @@ ul li.tab_panel_qc div.panel_content div.report-desc-approve-text {
   border: 0;
 }
 
-ul li.tab_panel .panel_header_qc {
+ul li.tab_panel .panel_header_qc, ul li.tab-panel .panel_header_qc {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -2832,34 +2833,34 @@ ul li.tab_panel .panel_header_qc {
   padding: 0;
 }
 
-ul li.tab_panel .panel_header_qc .reports-tasks-box-title {
+ul li.tab_panel .panel_header_qc .reports-tasks-box-title, ul li.tab-panel .panel_header_qc .reports-tasks-box-title {
   margin: 0 10px;
 }
 
-ul li.tab_panel .panel_header_qc div.separator {
+ul li.tab_panel .panel_header_qc div.separator, ul li.tab-panel .panel_header_qc div.separator {
   height: 1px;
   background: #d4e1ea;
   flex-grow: 2;
 }
 
-ul li.tab_panel .panel_header_qc.open div.separator {
+ul li.tab_panel .panel_header_qc.open div.separator, ul li.tab-panel .panel_header_qc.open div.separator {
   height: 1px;
   background: #f2faff;
   flex-grow: 2;
 }
 
-ul li.tab_panel .panel_header_qc span.sign {
+ul li.tab_panel .panel_header_qc span.sign, ul li.tab-panel .panel_header_qc span.sign {
   padding: 2px;
   font-size: 10px;
 }
 
-ul li.tab_panel .panel_header_qc i.panel_header_icon {
+ul li.tab_panel .panel_header_qc i.panel_header_icon, ul li.tab-panel .panel_header_qc i.panel_header_icon {
   padding: 2px;
   border: 1px solid #777;
   font-size: 10px;
 }
 
-ul li.tab_panel .panel_content {
+ul li.tab_panel .panel_content, ul li.tab-panel .panel_content {
   display: none;
   width: 100%;
   box-shadow: 0px 1px 3px #dcdfe6;
@@ -2867,11 +2868,11 @@ ul li.tab_panel .panel_content {
   border-bottom-right-radius: 10px;
 }
 
-ul li.tab_panel .panel_content.open {
+ul li.tab_panel .panel_content.open, ul li.tab-panel .panel_content.open {
   display: block;
 }
 
-ul li.tab_panel .panel_content.open .fixed-table-container {
+ul li.tab_panel .panel_content.open .fixed-table-container, ul li.tab-panel .panel_content.open .fixed-table-container {
   border-radius: 0;
 }
 
@@ -16117,19 +16118,23 @@ header .header_bottom .header_create_company .header_add_company {
   .content {
     padding: 40px 16px 40px 16px;
   }
-  .content .content_new_company ul li.tab_panel .panel_content .panel_body .upload_logo {
+  .content .content_new_company ul li.tab_panel .panel_content .panel_body .upload_logo,
+  .content .content_new_company ul li.tab-panel .panel_content .panel_body .upload_logo {
     margin: 0 auto;
   }
-  .content .content_new_company ul li.tab_panel .panel_content .panel_body #browse_logo {
+  .content .content_new_company ul li.tab_panel .panel_content .panel_body #browse_logo,
+  .content .content_new_company ul li.tab-panel .panel_content .panel_body #browse_logo {
     margin: 15px auto;
   }
-  .content .content_new_company ul li.tab_panel .panel_content .panel_footer {
+  .content .content_new_company ul li.tab_panel .panel_content .panel_footer,
+  .content .content_new_company ul li.tab-panel .panel_content .panel_footer {
     height: auto;
     line-height: 1;
     padding: 10px 15px 15px 15px;
     margin: 0 0 0 0;
   }
-  .content .content_new_company ul li.tab_panel .panel_content .panel_footer .dark_blue_button {
+  .content .content_new_company ul li.tab_panel .panel_content .panel_footer .dark_blue_button,
+  .content .content_new_company ul li.tab-panel .panel_content .panel_footer .dark_blue_button {
     margin: 20px 0 20px 0;
   }
   .content .plans-add-edition-box {
@@ -19309,14 +19314,15 @@ html.rtl .qc-report-redesign .report-result .reports-property .reports-prop-desc
   width: 50%;
 }
 
-.qc-report-redesign ul li.tab_panel .panel_header_qc .reports-tasks-box-title {
+.qc-report-redesign ul li.tab_panel .panel_header_qc .reports-tasks-box-title,
+.qc-report-redesign ul li.tab-panel .panel_header_qc .reports-tasks-box-title {
   margin: 0;
   padding: 0 16px;
   margin-top: 24px;
   margin-bottom: 18px;
 }
 
-.qc-report-redesign ul li.tab_panel .panel_content {
+.qc-report-redesign ul li.tab_panel .panel_content, .qc-report-redesign ul li.tab-panel .panel_content {
   border: none;
   box-shadow: none;
 }
@@ -24291,7 +24297,9 @@ html.rtl  .approve-elv-report-item .report_tasks_wraper {
   flex-direction: row;
 }
 .approve-elv-property.sign-image img{
-  max-width: 100%;
+  max-height: 40px;
+  min-height: 40px;
+  max-width: 80px;
 }
 
 .approve-elv-task-status{

@@ -6,6 +6,7 @@ Vue.component('approve-elements-tab', {
                     :statuses='statuses'
                     :translations='translations'
                     :filters="filters"
+                    :projectId="projectId"
                     @getFiltersForReportsGenerating="generateReports"
                 />
             </template>
@@ -48,7 +49,8 @@ Vue.component('approve-elements-tab', {
         username: {required: true},
         statuses: {required: true},
         translations: {required: true},
-        userProfession: {required: true}
+        userProfession: {required: true},
+        projectId: {required: true}
     },
     components: {
         Multiselect: window.VueMultiselect.default,

@@ -9,6 +9,7 @@
         :username='<?=json_encode(Auth::instance()->get_user()->name)?>'
         translations='<?=json_encode($translations)?>'
         :statuses='<?=json_encode(array_values(Enum_ApprovalStatus::toArray()))?>'
+        project-id="<?=$projectId?>"
     />
 </div>
 <script>

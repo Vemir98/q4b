@@ -146,7 +146,7 @@
 //
 //];
 
-
+//echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([_PROJECT]); echo "</pre>"; exit;
 $items = [
     [
         'slug' => 'dashboard',
@@ -177,9 +177,7 @@ $items = [
                 'text' => 'Info',
                 'resource' => 'Controller_Companies',
                 'priority' => Enum_UserPriorityLevel::Project,
-                'showIn' => [
-                    'companies/update/:id'
-                ],
+                'showIn' => Menu::CATEGORIES['companies'],
                 'disabled' => false,
                 'active' => false,
             ],
@@ -189,9 +187,7 @@ $items = [
                 'text' => 'Crafts',
                 'resource' => 'Controller_Companies',
                 'priority' => Enum_UserPriorityLevel::Project,
-                'showIn' => [
-                    'companies/update/:id'
-                ],
+                'showIn' => Menu::CATEGORIES['companies'],
                 'disabled' => false,
                 'active' => false,
             ],
@@ -201,9 +197,7 @@ $items = [
                 'text' => 'Professions',
                 'resource' => 'Controller_Companies',
                 'priority' => Enum_UserPriorityLevel::Project,
-                'showIn' => [
-                    'companies/update/:id'
-                ],
+                'showIn' => Menu::CATEGORIES['companies'],
                 'disabled' => false,
                 'active' => false,
             ],
@@ -213,9 +207,7 @@ $items = [
                 'text' => 'Instructions',
                 'resource' => 'Controller_Companies',
                 'priority' => Enum_UserPriorityLevel::Project,
-                'showIn' => [
-                    'companies/update/:id'
-                ],
+                'showIn' => Menu::CATEGORIES['companies'],
                 'disabled' => false,
                 'active' => false,
             ],
@@ -225,9 +217,7 @@ $items = [
                 'text' => 'Users',
                 'resource' => 'Controller_Companies',
                 'priority' => Enum_UserPriorityLevel::Project,
-                'showIn' => [
-                    'companies/update/:id'
-                ],
+                'showIn' => Menu::CATEGORIES['companies'],
                 'disabled' => false,
                 'active' => false,
             ],
@@ -253,17 +243,14 @@ $projectRoutes = [
             'slug' => 'projects/update/:projectId?tab=info',
             'href' => 'projects/update/:projectId?tab=info',
             'text' => 'Info',
+            '22' => 22,
             'resource' => 'Controller_Projects',
             'priority' => Enum_UserPriorityLevel::Project,
-            'showIn' => [
-                'projects/update/:projectId',
-                'projects/update/:projectId/tasks',
-                'labtests/project/:projectId',
-                'plans/update/:projectId',
-                'labtests/project/:projectId/elements',
-                'labtests/project/:projectId/elements_list',
-                'labtests/project/:projectId/elements_type',
-            ],
+            'showIn' => array_merge(
+                    Menu::CATEGORIES['projects'],
+                    Menu::CATEGORIES['labtests'],
+                    Menu::CATEGORIES['elements']
+            ),
             'disabled' => false,
             'active' => false,
         ],
@@ -282,15 +269,11 @@ $projectRoutes = [
         'text' => 'Tasks',
         'resource' => 'Controller_Projects',
         'priority' => Enum_UserPriorityLevel::Project,
-        'showIn' => [
-            'projects/update/:projectId',
-            'projects/update/:projectId/tasks',
-            'labtests/project/:projectId',
-            'plans/update/:projectId',
-            'labtests/project/:projectId/elements',
-            'labtests/project/:projectId/elements_list',
-            'labtests/project/:projectId/elements_type',
-        ],
+        'showIn' => array_merge(
+            Menu::CATEGORIES['projects'],
+            Menu::CATEGORIES['labtests'],
+            Menu::CATEGORIES['elements']
+        ),
         'disabled' => false,
         'active' => false,
     ];
@@ -303,15 +286,11 @@ if(!Auth::instance()->get_user()->is('project_adviser')) {
         'text' => 'Structures',
         'resource' => 'Controller_Projects',
         'priority' => Enum_UserPriorityLevel::Project,
-        'showIn' => [
-            'projects/update/:projectId',
-            'projects/update/:projectId/tasks',
-            'labtests/project/:projectId',
-            'plans/update/:projectId',
-            'labtests/project/:projectId/elements',
-            'labtests/project/:projectId/elements_list',
-            'labtests/project/:projectId/elements_type',
-        ],
+        'showIn' => array_merge(
+            Menu::CATEGORIES['projects'],
+            Menu::CATEGORIES['labtests'],
+            Menu::CATEGORIES['elements']
+        ),
         'disabled' => false,
         'active' => false,
     ];
@@ -324,15 +303,11 @@ if(Usr::role() == 'super_admin') {
         'text' => 'Delivery Items1',
         'resource' => 'Controller_Projects',
         'priority' => Enum_UserPriorityLevel::Project,
-        'showIn' => [
-            'projects/update/:projectId',
-            'labtests/project/:projectId',
-            'projects/update/:projectId/tasks',
-            'plans/update/:projectId',
-            'labtests/project/:projectId/elements',
-            'labtests/project/:projectId/elements_list',
-            'labtests/project/:projectId/elements_type',
-        ],
+        'showIn' => array_merge(
+            Menu::CATEGORIES['projects'],
+            Menu::CATEGORIES['labtests'],
+            Menu::CATEGORIES['elements']
+        ),
         'disabled' => false,
         'active' => false,
     ];
@@ -345,15 +320,11 @@ if(!Auth::instance()->get_user()->is('project_adviser')) {
         'text' => 'Certificates',
         'resource' => 'Controller_Projects',
         'priority' => Enum_UserPriorityLevel::Project,
-        'showIn' => [
-            'projects/update/:projectId',
-            'projects/update/:projectId/tasks',
-            'labtests/project/:projectId',
-            'plans/update/:projectId',
-            'labtests/project/:projectId/elements',
-            'labtests/project/:projectId/elements_list',
-            'labtests/project/:projectId/elements_type',
-        ],
+        'showIn' => array_merge(
+            Menu::CATEGORIES['projects'],
+            Menu::CATEGORIES['labtests'],
+            Menu::CATEGORIES['elements']
+        ),
         'disabled' => false,
         'active' => false,
     ];
@@ -364,15 +335,11 @@ if(!Auth::instance()->get_user()->is('project_adviser')) {
             'text' => 'Users',
             'resource' => 'Controller_Projects',
             'priority' => Enum_UserPriorityLevel::Project,
-            'showIn' => [
-                'projects/update/:projectId',
-                'projects/update/:projectId/tasks',
-                'labtests/project/:projectId',
-                'plans/update/:projectId',
-                'labtests/project/:projectId/elements',
-                'labtests/project/:projectId/elements_list',
-                'labtests/project/:projectId/elements_type',
-            ],
+            'showIn' => array_merge(
+                Menu::CATEGORIES['projects'],
+                Menu::CATEGORIES['labtests'],
+                Menu::CATEGORIES['elements']
+            ),
             'disabled' => false,
             'active' => false,
         ];
@@ -388,21 +355,17 @@ $projectRoutes['children'][] = [
     'icon' => 'q4bikon-file',
     'resource' => 'Controller_Plans',
     'priority' => Enum_UserPriorityLevel::Project,
-    'showIn' => [
-        'projects/update/:projectId',
-        'projects/update/:projectId/tasks',
-        'labtests/project/:projectId',
-        'plans/update/:projectId',
-        'labtests/project/:projectId/elements',
-        'labtests/project/:projectId/elements_list',
-        'labtests/project/:projectId/elements_type',
-    ],
+    'showIn' => array_merge(
+        Menu::CATEGORIES['projects'],
+        Menu::CATEGORIES['labtests'],
+        Menu::CATEGORIES['elements']
+    ),
     'disabled' => false,
     'active' => false,
 ];
 
 $projectRoutes['children'][] = [
-    'slug' => 'labtests',
+    'slug' => 'labtests/project/:projectId',
     'href' => 'labtests/project/:projectId',
     'text' => 'Lab control menu',
     'icon' => 'q4bikon-lab',
@@ -415,9 +378,7 @@ $projectRoutes['children'][] = [
             'text' => 'Create Lab Control',
             'resource' => 'Controller_LabTests',
             'priority' => Enum_UserPriorityLevel::Project,
-            'showIn' => [
-                'labtests/project/:projectId',
-            ],
+            'showIn' => Menu::CATEGORIES['labtests'],
             'disabled' => false,
             'active' => false,
         ],
@@ -427,22 +388,16 @@ $projectRoutes['children'][] = [
             'text' => 'Lab control list',
             'resource' => 'Controller_LabTests',
             'priority' => Enum_UserPriorityLevel::Project,
-            'showIn' => [
-                'labtests/project/:projectId',
-            ],
+            'showIn' => Menu::CATEGORIES['labtests'],
             'disabled' => false,
             'active' => false,
         ],
     ],
-    'showIn' => [
-        'projects/update/:projectId',
-        'projects/update/:projectId/tasks',
-        'labtests/project/:projectId',
-        'plans/update/:projectId',
-        'labtests/project/:projectId/elements',
-        'labtests/project/:projectId/elements_list',
-        'labtests/project/:projectId/elements_type',
-    ],
+    'showIn' => array_merge(
+        Menu::CATEGORIES['projects'],
+        Menu::CATEGORIES['labtests'],
+        Menu::CATEGORIES['elements']
+    ),
     'disabled' => false,
     'active' => false,
 ];
@@ -460,10 +415,7 @@ $projectRoutes['children'][] = [
             'text' => 'Elements Type',
             'resource' => 'Controller_LabTests',
             'priority' => Enum_UserPriorityLevel::Project,
-            'showIn' => [
-                'labtests/project/:projectId/elements_list',
-                'labtests/project/:projectId/elements_type',
-            ],
+            'showIn' => Menu::CATEGORIES['elements'],
             'disabled' => false,
             'active' => false,
         ],
@@ -473,37 +425,26 @@ $projectRoutes['children'][] = [
             'text' => 'Elements List',
             'resource' => 'Controller_LabTests',
             'priority' => Enum_UserPriorityLevel::Project,
-            'showIn' => [
-                'labtests/project/:projectId/elements_list',
-                'labtests/project/:projectId/elements_type',
-            ],
+            'showIn' => Menu::CATEGORIES['elements'],
             'disabled' => false,
             'active' => false,
         ],
         [
-            'slug' => 'reports/approve_element',
-            'href' => 'reports/approve_element',
+            'slug' => 'reports/approve_element/:projectId',
+            'href' => 'reports/approve_element/:projectId',
             'text' => 'Report of Elements',
             'resource' => 'Controller_LabTests',
             'priority' => Enum_UserPriorityLevel::Project,
-            'showIn' => [
-                'labtests/project/:projectId/elements_list',
-                'labtests/project/:projectId/elements_type',
-                'reports/list'
-            ],
+            'showIn' => Menu::CATEGORIES['elements'],
             'disabled' => false,
             'active' => false,
         ],
     ],
-    'showIn' => [
-        'projects/update/:projectId',
-        'projects/update/:projectId/tasks',
-        'plans/update/:projectId',
-        'labtests/project/:projectId',
-        'labtests/project/:projectId/elements',
-        'labtests/project/:projectId/elements_list',
-        'labtests/project/:projectId/elements_type',
-    ],
+    'showIn' => array_merge(
+        Menu::CATEGORIES['projects'],
+        Menu::CATEGORIES['labtests'],
+        Menu::CATEGORIES['elements']
+    ),
     'disabled' => false,
     'active' => false,
 ];
