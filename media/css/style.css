@@ -13161,7 +13161,7 @@ ul.q4-unordered-list>li .q4-nested-list>li:last-child {
   border-radius: 11px;
 }
 
-.sidebar .sidebar-nav ul {
+.sidebar .sidebar-nav > ul {
   border-top: 1px solid rgba(255, 255, 255, 0.15);
 }
 
@@ -24507,7 +24507,7 @@ html.rtl #approve-element .next_arrow a:hover  {
 /* end of pagination*/
 
 #approve-element .sign-section {
-  min-width: 150px;
+  min-width: 100px;
 }
 
 html.rtl #approve-element .sign-section {
@@ -24521,14 +24521,15 @@ html.ltr #approve-element .sign-section {
 #approve-element .sign-content {
   max-width: 170px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
 }
 
 
 #approve-element .sign-content img {
-  min-height: 40px;
   max-height: 40px;
+  min-height: 40px;
+  max-width: 80px;
 }
 
 #approve-element .el-app-disabled{

@@ -538,7 +538,7 @@ Vue.component('report-item', {
         },
         convertTimestampToDate(timestamp) {
             const date = new Date(+timestamp*1000);
-            const month = ((date.getMonth()+1).length > 1) ? (date.getMonth()+1) : "0"+(date.getMonth()+1);
+            const month = ((date.getMonth()+1) > 9) ? (date.getMonth()+1) : "0"+(date.getMonth()+1);
             return date.getDate()+ '/' + month + '/' + date.getFullYear();
         },
         updateReport(speciality) {
@@ -561,7 +561,6 @@ Vue.component('report-item', {
         reportNoteChanged(event) {
             this.report.notice = event.target.value;
             this.report.updated = true;
-            console.log(event.target.value)
         },
         getStatuses(statusesArr) {
             let statuses = [];

@@ -35,7 +35,18 @@ Vue.component('tasks-list', {
                         <div class="lt_elements_list_input_headline">{{ trans.copy_to }}:</div>
                         <div class="lt_elements_list_input">             
                            <div class="multiselect-col">
-                                <multiselect v-model="selectedCompany"  :option-height="104" :placeholder="trans.select_company" :disabled="(companies.length < 1) || (activeTab !== 'enabled')" :options="companies" track-by="id" label="name" :searchable="true" :allow-empty="false" :show-labels="false">
+                                <multiselect 
+                                    v-model="selectedCompany"  
+                                    :option-height="104" 
+                                    :placeholder="trans.select_company" 
+                                    :disabled="(companies.length < 1) || (activeTab !== 'enabled')" 
+                                    :options="companies" 
+                                    track-by="id" 
+                                    label="name" 
+                                    :searchable="true" 
+                                    :allow-empty="false" 
+                                    :show-labels="false"
+                                >
                                     <template slot="singleLabel" slot-scope="props">{{ props.option.name }}</template>
                                     <template slot="option" slot-scope="props">
                                     <span>{{ props.option.name }}</span>
@@ -45,7 +56,18 @@ Vue.component('tasks-list', {
                         </div>
                         <div class="lt_elements_list_input">     
                             <div class="multiselect-col">
-                                 <multiselect v-model="selectedProject"  :option-height="104" :placeholder="trans.select_project" :disabled="(cmpProjects.length < 1) || (activeTab !== 'enabled')" :options="cmpProjects" track-by="id" label="name" :searchable="true" :allow-empty="false" :show-labels="false">
+                                 <multiselect 
+                                    v-model="selectedProject"  
+                                    :option-height="104" 
+                                    :placeholder="trans.select_project" 
+                                    :disabled="(cmpProjects.length < 1) || (activeTab !== 'enabled')" 
+                                    :options="cmpProjects" 
+                                    track-by="id" 
+                                    label="name" 
+                                    :searchable="true" 
+                                    :allow-empty="false" 
+                                    :show-labels="false"
+                                >
                                     <template slot="singleLabel" slot-scope="props">{{ props.option.name }}</template>
                                     <template slot="option" slot-scope="props">
                                     <span>{{ props.option.name }}</span>
@@ -366,7 +388,8 @@ Vue.component('tasks-list', {
     watch: {
         selectedCompany(val) {
             if (val) {
-                this.getCmpProjects()
+                this.cmpProjects = Object.values(val.projects);
+                // this.getCmpProjects()
             } else {
                 this.selectedCompany = null
             }
@@ -437,7 +460,7 @@ Vue.component('tasks-list', {
         },
         getCompanies(){
             this.showLoader = true;
-            let url = '/companies/entities/list';
+            let url = '/companies/entities/for_current_user';
 
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {

@@ -630,6 +630,9 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
             if(($this->_user->getRelevantRole('name') !== 'super_admin') && ($status === 'waiting')) {
                 throw API_Exception::factory(500,'Operation Error');
             }
+
+            Database::instance()->begin();
+
             $queryData = [
                 'status' => $status,
                 'updated_at' => time(),
@@ -640,6 +643,10 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                 ->set($queryData)
                 ->where('id', '=', $elApprovalId)
                 ->execute($this->_db);
+
+            $this->updateElementApproval($elApprovalId);
+            Database::instance()->commit();
+
 
             $this->_responseData = [
                 'status' => "success"
@@ -671,10 +678,17 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                 'updated_by' => Auth::instance()->get_user()->id,
             ];
 
+            Database::instance()->begin();
+
+
             DB::update('el_approvals')
                 ->set($queryData)
                 ->where('id', '=', $elApprovalId)
                 ->execute($this->_db);
+
+            $this->updateElementApproval($elApprovalId);
+
+            Database::instance()->commit();
 
             $this->_responseData = [
                 'status' => "success"
@@ -694,12 +708,20 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
         try {
             $elApprovalId = $this->getUIntParamOrDie($this->request->param('id'));
 
+            Database::instance()->begin();
+
             DB::delete('el_approvals')->where('id', '=', $elApprovalId)->execute($this->_db);
+
+            $this->updateElementApproval($elApprovalId);
+
+            Database::instance()->commit();
+
 
             $this->_responseData = [
                 'status' => "success"
             ];
         } catch (Exception $e){
+            Database::instance()->rollback();
             throw API_Exception::factory(500,'Operation Error');
         }
     }
@@ -1147,24 +1169,29 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
 
     private function sendNotificationToUsers($elApprovalId) {
 
-        $users = Api_DBElApprovals::getElApprovalUsersListForNotify($elApprovalId);
+//        $elApproval = Api_DBElApprovals::getElApprovalById($elApprovalId);
 
-        $usersDeviceTokens = array_column($users, 'deviceToken');
-        Kohana::$log->add(Log::ERROR, 'from elApprovals: ' . json_encode([$users], JSON_PRETTY_PRINT));
+//        if($elApproval['status'] === Enum_ApprovalStatus::Waiting) {
 
-        $fpns = new HDVP\FirebasePushNotification();
-
-        foreach ($usersDeviceTokens as $token) {
-            if($token) {
-                $fpns->notify([$token], ['action' => 'elApproval']);
-
-                $f = fopen(DOCROOT.'testNotification.txt', 'a');
-
-                if($f) {
-                    fputs($f, 'from elApprovals - '.date('H:i:s')."\n");
-                }
-                fclose($f);
-            }
-        }
+//            $users = Api_DBElApprovals::getElApprovalUsersListForNotify($elApprovalId);
+//
+//            $usersDeviceTokens = array_column($users, 'deviceToken');
+//            Kohana::$log->add(Log::ERROR, 'from elApprovals: ' . json_encode([$users], JSON_PRETTY_PRINT));
+//
+//            $fpns = new HDVP\FirebasePushNotification();
+//
+//            foreach ($usersDeviceTokens as $token) {
+//                if($token) {
+//                    $fpns->notify([$token], ['action' => 'elApproval']);
+//
+//                    $f = fopen(DOCROOT.'testNotification.txt', 'a');
+//
+//                    if($f) {
+//                        fputs($f, 'from elApprovals - '.date('H:i:s')."\n");
+//                    }
+//                    fclose($f);
+//                }
+//            }
+//        }
     }
 }

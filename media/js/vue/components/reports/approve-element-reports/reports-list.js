@@ -283,7 +283,7 @@ Vue.component('reports-list', {
         },
         convertTimestampToDate(timestamp) {
             const date = new Date(+timestamp*1000);
-            const month = ((date.getMonth()+1).length > 1) ? (date.getMonth()+1) : "0"+(date.getMonth()+1);
+            const month = ((date.getMonth()+1) > 9) ? (date.getMonth()+1) : "0"+(date.getMonth()+1);
             return date.getDate()+ '/' + month + '/' + date.getFullYear();
         },
         paginate() {

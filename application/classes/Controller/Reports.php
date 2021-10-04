@@ -739,6 +739,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
 
                 $data['due_date'] = DateTime::createFromFormat('d/m/Y',$data['due_date'])->getTimestamp();
                 $project = $qc->project;
+                $usersList = $qc->project->users->find_all();
                 $project->makeProjectPaths();
                 if(!empty($this->files()) AND !empty($this->files()['images'])){
                     foreach ($this->files()['images'] as $key => $image){
@@ -788,6 +789,12 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
 
                 if(!empty(trim($data['message'])))
                 ORM::factory('QcComment')->values(['message' => $data['message'], 'qcontrol_id' => $qc->pk()])->save();
+
+//                if($data['status'] != Enum_QualityControlStatus::Existing && $data['status'] != Enum_QualityControlStatus::Normal){
+//                    if($data['approval_status'] != Enum_QualityControlApproveStatus::Approved) {
+                        $this->sendNotificationToUsers($usersList);
+//                    }
+//                }
 
                 $this->setResponseData('triggerEvent','qualityControlUpdated');
                 Database::instance()->commit();
@@ -1518,5 +1525,33 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         }else{
             echo View::make($viewInfo['path'],$output);
         }
+    }
+
+    private function sendNotificationToUsers($usersList) {
+
+//        $usersDeviceTokens = [];
+//
+//        foreach ($usersList as $user) {
+//            if($user->device_token) {
+//                array_push($usersDeviceTokens, ['token' => $user->device_token, 'id' => $user->id]);
+//            }
+//        }
+//
+//        Kohana::$log->add(Log::ERROR, 'from barev: ' . json_encode([$usersDeviceTokens], JSON_PRETTY_PRINT));
+//
+//        $fpns = new HDVP\FirebasePushNotification();
+//
+//        foreach ($usersDeviceTokens as $token) {
+//            if($token['token']) {
+//                $fpns->notify([$token['token']], ['action' => 'qc']);
+//
+//                $f = fopen(DOCROOT.'testNotification.txt', 'a');
+//
+//                if($f) {
+//                    fputs($f, 'from barev - '.date('H:i:s')."\n");
+//                }
+//                fclose($f);
+//            }
+//        }
     }
 }

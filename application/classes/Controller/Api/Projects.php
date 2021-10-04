@@ -554,11 +554,11 @@ class Controller_Api_Projects extends HDVP_Controller_API
                 ORM::factory('QcComment')->values(['message' => $message, 'qcontrol_id' => $qc->pk()])->save();
             Database::instance()->commit();
 
-            if($clientData['status'] != Enum_QualityControlStatus::Existing && $clientData['status'] != Enum_QualityControlStatus::Normal){
+//            if($clientData['status'] != Enum_QualityControlStatus::Existing && $clientData['status'] != Enum_QualityControlStatus::Normal){
 //                if($clientData['approval_status'] != Enum_QualityControlApproveStatus::Approved) {
                     $this->sendNotificationToUsers($place->project->users->find_all());
 //                }
-            }
+//            }
             $fs->sendLazyTasks();
         }catch (ORM_Validation_Exception $e){
             Database::instance()->rollback();
@@ -692,11 +692,11 @@ class Controller_Api_Projects extends HDVP_Controller_API
                 ORM::factory('QcComment')->values(['message' => $message, 'qcontrol_id' => $qc->pk()])->save();
             Database::instance()->commit();
 
-            if($clientData['status'] != Enum_QualityControlStatus::Existing && $clientData['status'] != Enum_QualityControlStatus::Normal){
-                if($clientData['approval_status'] != Enum_QualityControlApproveStatus::Approved) {
+//            if($clientData['status'] != Enum_QualityControlStatus::Existing && $clientData['status'] != Enum_QualityControlStatus::Normal){
+//                if($clientData['approval_status'] != Enum_QualityControlApproveStatus::Approved) {
                     $this->sendNotificationToUsers($qc->project->users->find_all());
-                }
-            }
+//                }
+//            }
 
             $fs->sendLazyTasks();
         }catch (ORM_Validation_Exception $e){
@@ -1000,29 +1000,29 @@ class Controller_Api_Projects extends HDVP_Controller_API
 
     private function sendNotificationToUsers($usersList) {
 
-        $usersDeviceTokens = [];
-
-        foreach ($usersList as $user) {
-            if($user->device_token) {
-                array_push($usersDeviceTokens, ['token' => $user->device_token, 'id' => $user->id]);
-            }
-        }
-
-        Kohana::$log->add(Log::ERROR, 'from elApprovals: ' . json_encode([$usersDeviceTokens], JSON_PRETTY_PRINT));
-
-        $fpns = new HDVP\FirebasePushNotification();
-
-        foreach ($usersDeviceTokens as $token) {
-            if($token['token']) {
-                $fpns->notify([$token['token']], ['action' => 'qc']);
-
-                $f = fopen(DOCROOT.'testNotification.txt', 'a');
-
-                if($f) {
-                    fputs($f, 'from qc - '.date('H:i:s')."\n");
-                }
-                fclose($f);
-            }
-        }
+//        $usersDeviceTokens = [];
+//
+//        foreach ($usersList as $user) {
+//            if($user->device_token) {
+//                array_push($usersDeviceTokens, ['token' => $user->device_token, 'id' => $user->id]);
+//            }
+//        }
+//
+//        Kohana::$log->add(Log::ERROR, 'from elApprovals: ' . json_encode([$usersDeviceTokens], JSON_PRETTY_PRINT));
+//
+//        $fpns = new HDVP\FirebasePushNotification();
+//
+//        foreach ($usersDeviceTokens as $token) {
+//            if($token['token']) {
+//                $fpns->notify([$token['token']], ['action' => 'qc']);
+//
+//                $f = fopen(DOCROOT.'testNotification.txt', 'a');
+//
+//                if($f) {
+//                    fputs($f, 'from qc - '.date('H:i:s')."\n");
+//                }
+//                fclose($f);
+//            }
+//        }
     }
 }
