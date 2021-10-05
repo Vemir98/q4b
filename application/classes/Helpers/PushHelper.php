@@ -116,4 +116,8 @@ class PushHelper {
             ],$timestamp, 0, 1);
         }
     }
+
+    public static function test($data, $timestamp) {
+        \Queue::enqueue('notification','Job_Notification_SendPushNotification', $data ,$timestamp, 0, 1);
+    }
 }

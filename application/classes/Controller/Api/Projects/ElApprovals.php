@@ -1,5 +1,6 @@
 <?php
 use JonnyW\PhantomJs\Client;
+use Helpers\PushHelper;
 
 
 class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
@@ -1169,29 +1170,21 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
 
     private function sendNotificationToUsers($elApprovalId) {
 
-//        $elApproval = Api_DBElApprovals::getElApprovalById($elApprovalId);
+//      $elApproval = Api_DBElApprovals::getElApprovalById($elApprovalId);
 
-//        if($elApproval['status'] === Enum_ApprovalStatus::Waiting) {
-
-//            $users = Api_DBElApprovals::getElApprovalUsersListForNotify($elApprovalId);
+//      $users = Api_DBElApprovals::getElApprovalUsersListForNotify($elApprovalId);
 //
-//            $usersDeviceTokens = array_column($users, 'deviceToken');
+        $timestamp = time();
+
+        $usersDeviceTokens = ['f5bWjICSSMiE40tO7w5RF2:APA91bGGAwSYAYz5t7b1l8jnC385xjLGne5FkWh2LxHQ9W19AflFCnNHsLo8nF1Ydn9_w3dd2a1BmhGFPfLlmGMrWmB0z3k5hQ77bq0zljFxPQAasA9tBjA45rXHb-uXZ6NFgQKklP0i'];
 //            Kohana::$log->add(Log::ERROR, 'from elApprovals: ' . json_encode([$users], JSON_PRETTY_PRINT));
-//
-//            $fpns = new HDVP\FirebasePushNotification();
-//
-//            foreach ($usersDeviceTokens as $token) {
-//                if($token) {
-//                    $fpns->notify([$token], ['action' => 'elApproval']);
-//
-//                    $f = fopen(DOCROOT.'testNotification.txt', 'a');
-//
-//                    if($f) {
-//                        fputs($f, 'from elApprovals - '.date('H:i:s')."\n");
-//                    }
-//                    fclose($f);
-//                }
-//            }
-//        }
+
+        PushHelper::test([
+            'lang' => \Language::getCurrent()->iso2,
+            'action' => 'elApproval',
+            'usersDeviceTokens' => $usersDeviceTokens
+        ], $timestamp );
+
+
     }
 }

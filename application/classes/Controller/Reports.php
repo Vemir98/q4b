@@ -1,5 +1,7 @@
 <?php defined('SYSPATH') OR die('No direct script access.');
 
+use Helpers\PushHelper;
+
 /**
  * Created by PhpStorm.
  * User: SUR0
@@ -1536,22 +1538,15 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
 //                array_push($usersDeviceTokens, ['token' => $user->device_token, 'id' => $user->id]);
 //            }
 //        }
-//
-//        Kohana::$log->add(Log::ERROR, 'from barev: ' . json_encode([$usersDeviceTokens], JSON_PRETTY_PRINT));
-//
-//        $fpns = new HDVP\FirebasePushNotification();
-//
-//        foreach ($usersDeviceTokens as $token) {
-//            if($token['token']) {
-//                $fpns->notify([$token['token']], ['action' => 'qc']);
-//
-//                $f = fopen(DOCROOT.'testNotification.txt', 'a');
-//
-//                if($f) {
-//                    fputs($f, 'from barev - '.date('H:i:s')."\n");
-//                }
-//                fclose($f);
-//            }
-//        }
+
+        $timestamp = time();
+
+        $usersDeviceTokens = ['f5bWjICSSMiE40tO7w5RF2:APA91bGGAwSYAYz5t7b1l8jnC385xjLGne5FkWh2LxHQ9W19AflFCnNHsLo8nF1Ydn9_w3dd2a1BmhGFPfLlmGMrWmB0z3k5hQ77bq0zljFxPQAasA9tBjA45rXHb-uXZ6NFgQKklP0i'];
+
+        PushHelper::test([
+            'lang' => \Language::getCurrent()->iso2,
+            'action' => 'qc',
+            'usersDeviceTokens' => $usersDeviceTokens
+        ], $timestamp );
     }
 }
