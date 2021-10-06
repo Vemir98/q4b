@@ -1531,17 +1531,20 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
 
     private function sendNotificationToUsers($usersList) {
 
-//        $usersDeviceTokens = [];
+        $usersDeviceTokens = [];
 //
-//        foreach ($usersList as $user) {
-//            if($user->device_token) {
-//                array_push($usersDeviceTokens, ['token' => $user->device_token, 'id' => $user->id]);
-//            }
-//        }
+        foreach ($usersList as $user) {
+            if($user->device_token) {
+                array_push($usersDeviceTokens, $user->device_token);
+            }
+        }
+
+//        echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$usersDeviceTokens]); echo "</pre>"; exit;
+
 
         $timestamp = time();
 
-        $usersDeviceTokens = ['f5bWjICSSMiE40tO7w5RF2:APA91bGGAwSYAYz5t7b1l8jnC385xjLGne5FkWh2LxHQ9W19AflFCnNHsLo8nF1Ydn9_w3dd2a1BmhGFPfLlmGMrWmB0z3k5hQ77bq0zljFxPQAasA9tBjA45rXHb-uXZ6NFgQKklP0i'];
+//        $usersDeviceTokens = ['f5bWjICSSMiE40tO7w5RF2:APA91bGGAwSYAYz5t7b1l8jnC385xjLGne5FkWh2LxHQ9W19AflFCnNHsLo8nF1Ydn9_w3dd2a1BmhGFPfLlmGMrWmB0z3k5hQ77bq0zljFxPQAasA9tBjA45rXHb-uXZ6NFgQKklP0i'];
 
         PushHelper::test([
             'lang' => \Language::getCurrent()->iso2,

@@ -146,7 +146,6 @@
 //
 //];
 
-//echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([_PROJECT]); echo "</pre>"; exit;
 $items = [
     [
         'slug' => 'dashboard',
@@ -156,6 +155,7 @@ $items = [
         'icon' => 'q4bikon-uncheked',
         'resource' => 'Controller_Dashboard',
         'priority' => Enum_UserPriorityLevel::Project,
+        'deepLevel' => 1,
         'showIn' => [
                 'dashboard'
         ],
@@ -163,13 +163,14 @@ $items = [
         'active' => false,
     ],
     [
-        'slug' => 'companies',
+        'slug' => 'companies/{any}',
         'href' => 'companies',
         'text' => 'Companies',
         'tooltip' => 'Companies',
         'icon' => 'q4bikon-companies',
         'resource' => 'Controller_Companies',
         'priority' => Enum_UserPriorityLevel::Corporate,
+        'deepLevel' => 1,
         'children' => [
             [
                 'slug' => 'companies/update/:id?tab=info',
@@ -177,6 +178,7 @@ $items = [
                 'text' => 'Info',
                 'resource' => 'Controller_Companies',
                 'priority' => Enum_UserPriorityLevel::Project,
+                'deepLevel' => 2,
                 'showIn' => Menu::CATEGORIES['companies'],
                 'disabled' => false,
                 'active' => false,
@@ -187,6 +189,7 @@ $items = [
                 'text' => 'Crafts',
                 'resource' => 'Controller_Companies',
                 'priority' => Enum_UserPriorityLevel::Project,
+                'deepLevel' => 2,
                 'showIn' => Menu::CATEGORIES['companies'],
                 'disabled' => false,
                 'active' => false,
@@ -197,6 +200,7 @@ $items = [
                 'text' => 'Professions',
                 'resource' => 'Controller_Companies',
                 'priority' => Enum_UserPriorityLevel::Project,
+                'deepLevel' => 2,
                 'showIn' => Menu::CATEGORIES['companies'],
                 'disabled' => false,
                 'active' => false,
@@ -207,6 +211,7 @@ $items = [
                 'text' => 'Instructions',
                 'resource' => 'Controller_Companies',
                 'priority' => Enum_UserPriorityLevel::Project,
+                'deepLevel' => 2,
                 'showIn' => Menu::CATEGORIES['companies'],
                 'disabled' => false,
                 'active' => false,
@@ -217,13 +222,14 @@ $items = [
                 'text' => 'Users',
                 'resource' => 'Controller_Companies',
                 'priority' => Enum_UserPriorityLevel::Project,
+                'deepLevel' => 2,
                 'showIn' => Menu::CATEGORIES['companies'],
                 'disabled' => false,
                 'active' => false,
             ],
         ],
         'showIn' => [
-            'companies'
+            'companies/{any}'
         ],
         'disabled' => false,
         'active' => false,
@@ -238,6 +244,7 @@ $projectRoutes = [
     'icon' => 'q4bikon-project',
     'resource' => 'Controller_Projects',
     'priority' => Enum_UserPriorityLevel::Project,
+    'deepLevel' => 1,
     'children' => [
         [
             'slug' => 'projects/update/:projectId?tab=info',
@@ -246,6 +253,7 @@ $projectRoutes = [
             '22' => 22,
             'resource' => 'Controller_Projects',
             'priority' => Enum_UserPriorityLevel::Project,
+            'deepLevel' => 2,
             'showIn' => array_merge(
                     Menu::CATEGORIES['projects'],
                     Menu::CATEGORIES['labtests'],
@@ -269,6 +277,7 @@ $projectRoutes = [
         'text' => 'Tasks',
         'resource' => 'Controller_Projects',
         'priority' => Enum_UserPriorityLevel::Project,
+        'deepLevel' => 2,
         'showIn' => array_merge(
             Menu::CATEGORIES['projects'],
             Menu::CATEGORIES['labtests'],
@@ -286,6 +295,7 @@ if(!Auth::instance()->get_user()->is('project_adviser')) {
         'text' => 'Structures',
         'resource' => 'Controller_Projects',
         'priority' => Enum_UserPriorityLevel::Project,
+        'deepLevel' => 2,
         'showIn' => array_merge(
             Menu::CATEGORIES['projects'],
             Menu::CATEGORIES['labtests'],
@@ -303,6 +313,7 @@ if(Usr::role() == 'super_admin') {
         'text' => 'Delivery Items1',
         'resource' => 'Controller_Projects',
         'priority' => Enum_UserPriorityLevel::Project,
+        'deepLevel' => 2,
         'showIn' => array_merge(
             Menu::CATEGORIES['projects'],
             Menu::CATEGORIES['labtests'],
@@ -320,6 +331,7 @@ if(!Auth::instance()->get_user()->is('project_adviser')) {
         'text' => 'Certificates',
         'resource' => 'Controller_Projects',
         'priority' => Enum_UserPriorityLevel::Project,
+        'deepLevel' => 2,
         'showIn' => array_merge(
             Menu::CATEGORIES['projects'],
             Menu::CATEGORIES['labtests'],
@@ -335,6 +347,7 @@ if(!Auth::instance()->get_user()->is('project_adviser')) {
             'text' => 'Users',
             'resource' => 'Controller_Projects',
             'priority' => Enum_UserPriorityLevel::Project,
+            'deepLevel' => 2,
             'showIn' => array_merge(
                 Menu::CATEGORIES['projects'],
                 Menu::CATEGORIES['labtests'],
@@ -355,6 +368,7 @@ $projectRoutes['children'][] = [
     'icon' => 'q4bikon-file',
     'resource' => 'Controller_Plans',
     'priority' => Enum_UserPriorityLevel::Project,
+    'deepLevel' => 2,
     'showIn' => array_merge(
         Menu::CATEGORIES['projects'],
         Menu::CATEGORIES['labtests'],
@@ -371,6 +385,7 @@ $projectRoutes['children'][] = [
     'icon' => 'q4bikon-lab',
     'resource' => 'Controller_LabTests',
     'priority' => Enum_UserPriorityLevel::Project,
+    'deepLevel' => 2,
     'children' => [
         [
             'slug' => 'labtests/create/:projectId',
@@ -378,6 +393,7 @@ $projectRoutes['children'][] = [
             'text' => 'Create Lab Control',
             'resource' => 'Controller_LabTests',
             'priority' => Enum_UserPriorityLevel::Project,
+            'deepLevel' => 3,
             'showIn' => Menu::CATEGORIES['labtests'],
             'disabled' => false,
             'active' => false,
@@ -388,6 +404,7 @@ $projectRoutes['children'][] = [
             'text' => 'Lab control list',
             'resource' => 'Controller_LabTests',
             'priority' => Enum_UserPriorityLevel::Project,
+            'deepLevel' => 3,
             'showIn' => Menu::CATEGORIES['labtests'],
             'disabled' => false,
             'active' => false,
@@ -408,6 +425,7 @@ $projectRoutes['children'][] = [
     'text' => 'elements',
     'resource' => 'Controller_LabTests',
     'priority' => Enum_UserPriorityLevel::Project,
+    'deepLevel' => 2,
     'children' => [
         [
             'slug' => 'labtests/project/:projectId/elements_type',
@@ -415,6 +433,7 @@ $projectRoutes['children'][] = [
             'text' => 'Elements Type',
             'resource' => 'Controller_LabTests',
             'priority' => Enum_UserPriorityLevel::Project,
+            'deepLevel' => 3,
             'showIn' => Menu::CATEGORIES['elements'],
             'disabled' => false,
             'active' => false,
@@ -425,6 +444,7 @@ $projectRoutes['children'][] = [
             'text' => 'Elements List',
             'resource' => 'Controller_LabTests',
             'priority' => Enum_UserPriorityLevel::Project,
+            'deepLevel' => 3,
             'showIn' => Menu::CATEGORIES['elements'],
             'disabled' => false,
             'active' => false,
@@ -435,6 +455,7 @@ $projectRoutes['children'][] = [
             'text' => 'Report of Elements',
             'resource' => 'Controller_LabTests',
             'priority' => Enum_UserPriorityLevel::Project,
+            'deepLevel' => 3,
             'showIn' => Menu::CATEGORIES['elements'],
             'disabled' => false,
             'active' => false,
@@ -453,15 +474,16 @@ $projectRoutes['children'][] = [
 array_push($items,
     $projectRoutes,
     [
-        'slug' => 'reports/list',
+        'slug' => 'reports/{any}',
         'href' => 'reports/list',
         'text' => 'Reports',
         'tooltip' => 'Reports',
         'icon' => 'q4bikon-reports',
         'resource' => 'Controller_Reports',
         'priority' => Enum_UserPriorityLevel::Project,
+        'deepLevel' => 1,
         'showIn' => [
-            'reports/list'
+            'reports/{any}'
         ],
         'disabled' => false,
         'active' => false,
@@ -474,6 +496,7 @@ array_push($items,
         'icon' => 'q4bikon-public',
         'resource' => 'Controller_Consultants',
         'priority' => Enum_UserPriorityLevel::Company,
+        'deepLevel' => 1,
         'showIn' => [
             'consultants'
         ],
@@ -488,6 +511,7 @@ array_push($items,
         'icon' => 'q4bikon-settings2',
         'resource' => 'Controller_Settings',
         'priority' => Enum_UserPriorityLevel::General,
+        'deepLevel' => 1,
         'showIn' => [
             'settings'
         ],

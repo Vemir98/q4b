@@ -870,18 +870,20 @@ html.rtl {
 
 .rtl .sidebar .sidebar-nav ul li .sidebar-items.active {
   border-left: none;
-  border-right: 4px solid #1ebae5;
+  background-color: #1ebae5 !important;
+  /*border-right: 4px solid #1ebae5;*/
 }
 
 .rtl .sidebar .sidebar-nav ul li .sidebar-items:hover {
   border-left: none;
-  border-right: 4px solid #1ebae5;
+  background-color: #1ebae5;
+  /*border-right: 4px solid #1ebae5;*/
 }
 
 .rtl .sidebar .sidebar-nav ul li .sidebar-items .sidebar-items_title {
-  padding: 0 7px 0 0;
+  /*padding: 0 7px 0 0;*/
   border-left: none;
-  border-right: 1px solid rgba(255, 255, 255, 0.15);
+  /*border-right: 1px solid rgba(255, 255, 255, 0.15);*/
 }
 
 .rtl .rtl-float-right {
@@ -13122,11 +13124,21 @@ ul.q4-unordered-list>li .q4-nested-list>li:last-child {
 
 .sidebar {
   display: table-cell;
-  background: #003a63 url("../img/sidebar_bg.jpg") no-repeat;
+  /*background: #003a63 url("../img/sidebar_bg2.png") no-repeat;*/
+  background: url("../img/sidebar_bg2.png") no-repeat;
+  background-size: auto;
   width: 205px;
   min-width: 205px;
+  height: 100%;
   background-attachment: fixed;
+}
+
+.ltr .sidebar {
   background-position: top left;
+}
+
+.rtl .sidebar {
+  background-position: top right;
 }
 
 .sidebar .logo {
@@ -13168,7 +13180,7 @@ ul.q4-unordered-list>li .q4-nested-list>li:last-child {
 .sidebar .sidebar-nav ul li .sidebar-items {
   display: table;
   width: 100%;
-  height: 60px;
+  height: 50px;
   line-height: 60px;
   text-align: left;
   color: #ffffff;
@@ -13178,6 +13190,8 @@ ul.q4-unordered-list>li .q4-nested-list>li:last-child {
   font-weight: normal;
   font-style: normal;
   font-family: "proxima_nova_rgregular", Arial, Helvetica, sans-serif;
+  background-color: #064266;
+  margin-bottom: 1px;
 }
 
 .sidebar .sidebar-nav ul li .sidebar-items .icon {
@@ -13188,11 +13202,11 @@ ul.q4-unordered-list>li .q4-nested-list>li:last-child {
 }
 
 .sidebar .sidebar-nav ul li .sidebar-items .sidebar-items_title {
-  padding: 0 0 0 7px;
+  /*padding: 0 0 0 7px;*/
   display: table-cell;
-  vertical-align: middle;
-  width: 145px;
-  border-left: 1px solid rgba(255, 255, 255, 0.15);
+  /*vertical-align: middle;*/
+  /*width: 145px;*/
+  /*border-left: 1px solid rgba(255, 255, 255, 0.15);*/
   font-size: 16px;
   font-weight: normal;
   font-style: normal;
@@ -13200,13 +13214,23 @@ ul.q4-unordered-list>li .q4-nested-list>li:last-child {
   line-height: 18px;
 }
 
+.ltr .sidebar .sidebar-nav ul li .sidebar-items .sidebar-sub-item_title {
+  padding-left: 15px;
+}
+
+.rtl .sidebar .sidebar-nav ul li .sidebar-items .sidebar-sub-item_title {
+  padding-right: 15px;
+}
+
 .sidebar .sidebar-nav ul li .sidebar-items.active {
-  border-left: 4px solid #1ebae5;
+  /*border-left: 4px solid #1ebae5;*/
+  background-color: #1ebae5 !important;
   text-decoration: none;
 }
 
 .sidebar .sidebar-nav ul li .sidebar-items:hover {
-  border-left: 4px solid #1ebae5;
+  /*border-left: 4px solid #1ebae5;*/
+  background-color: #1ebae5;
   text-decoration: none;
 }
 
@@ -19732,11 +19756,13 @@ html.rtl .lt_project_item_logo {
 }
 
 .sidebar .sidebar-nav ul li .sidebar-items.sub-items .sidebar-items_title {
+  font-size: 14px;
   border-left: none;
 }
 
 .sidebar .sidebar-nav ul li .sidebar-items.sub-items:hover {
-  border-left-color: #1ebae5;
+  /*border-left-color: #1ebae5;*/
+  background-color: #1ebae5;
 }
 
 .lt_page_title {
@@ -21818,8 +21844,16 @@ html.rtl .labtest_filter_input .multiselect__placeholder {
 }
 
 ul.submenu li a.sidebar-items.sub-items {
-  padding-right: 10px;
+  height: 40px;
+  /*padding-left: 10px;*/
+}
+
+.rtl ul.submenu li a.sidebar-items.sub-items {
   padding-left: 10px;
+}
+
+.ltr ul.submenu li a.sidebar-items.sub-items {
+  padding-right: 10px;
 }
 
 ul.submenu li a.sidebar-items.sub-items span {
@@ -24592,6 +24626,22 @@ html.rtl #approve-elements-content .parent-tr td.td-floor{
   color: #F99C19;
   font-weight: 600;
   cursor: pointer;
+}
+
+.sidebar .sidebar-nav ul li .sidebar-items .sidebar-items_content {
+  padding: 0 0 0 7px;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 130px;
+  /*border-left: 1px solid rgba(255, 255, 255, 0.15);*/
+}
+
+.sidebar .sidebar-nav ul li .sidebar-items .sidebar-item_icon {
+  width: 14px;
+  height: 8px;
+  padding-bottom: 16px;
 }
 
 @media screen and (max-width:1440px){

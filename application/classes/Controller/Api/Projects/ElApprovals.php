@@ -1168,15 +1168,27 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
             ->execute($this->_db);
     }
 
+//    PushNotification::notifyElAppUsers($elApprovalId);
+
     private function sendNotificationToUsers($elApprovalId) {
 
 //      $elApproval = Api_DBElApprovals::getElApprovalById($elApprovalId);
 
-//      $users = Api_DBElApprovals::getElApprovalUsersListForNotify($elApprovalId);
+      $users = Api_DBElApprovals::getElApprovalUsersListForNotify($elApprovalId);
+
+      $usersDeviceTokens = [];
+
+      foreach ($users as $user) {
+          if($user['deviceToken']) {
+              array_push($usersDeviceTokens, $user['deviceToken']);
+          }
+      }
 //
+//        echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$usersDeviceTokens]); echo "</pre>"; exit;
+
         $timestamp = time();
 
-        $usersDeviceTokens = ['f5bWjICSSMiE40tO7w5RF2:APA91bGGAwSYAYz5t7b1l8jnC385xjLGne5FkWh2LxHQ9W19AflFCnNHsLo8nF1Ydn9_w3dd2a1BmhGFPfLlmGMrWmB0z3k5hQ77bq0zljFxPQAasA9tBjA45rXHb-uXZ6NFgQKklP0i'];
+//        $usersDeviceTokens = ['f5bWjICSSMiE40tO7w5RF2:APA91bGGAwSYAYz5t7b1l8jnC385xjLGne5FkWh2LxHQ9W19AflFCnNHsLo8nF1Ydn9_w3dd2a1BmhGFPfLlmGMrWmB0z3k5hQ77bq0zljFxPQAasA9tBjA45rXHb-uXZ6NFgQKklP0i'];
 //            Kohana::$log->add(Log::ERROR, 'from elApprovals: ' . json_encode([$users], JSON_PRETTY_PRINT));
 
         PushHelper::test([

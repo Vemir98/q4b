@@ -9,7 +9,7 @@ class Job_Notification_SendPushNotification
 
         try {
 
-            $usersDeviceTokens = $this->args['usersDeviceTokens'] ?: null;
+            $usersDeviceTokens = $this->args['usersDeviceTokens'] ?: [];
 
             Kohana::$log->add(Log::ERROR, 'JOB PERFORM() try: ' . json_encode([$usersDeviceTokens], JSON_PRETTY_PRINT));
 

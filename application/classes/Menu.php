@@ -39,7 +39,7 @@ class Menu
         ]
     );
 
-    public static function setActiveItems(&$items, $hasParent = false){
+    public static function setActiveItems(&$items, &$parentItem = null){
         foreach ($items as $key => &$item){
             foreach ($item['showIn'] as $routeKey => $route) {
                 if(strpos($route,':') !== false){
@@ -63,27 +63,48 @@ class Menu
 
             $showTab = false;
 
-            foreach ($item['showIn'] as $routeKey => $route) {
-                if((!empty($item['slug']) AND Request::detect_uri(). URL::query() === URL::site($route))) {
-                    $showTab = true;
-                    break;
+            foreach ($item['showIn'] as $routeKey => &$route) {
+                if(strpos($route,'/{any}') !== false) {
+                    $route = explode('/{any}', $route)[0];
+
+                    if(!empty($item['slug']) && strpos(Request::detect_uri(). URL::query(), URL::site($route)) === 0) {
+                        $showTab = true;
+                        break;
+                    }
+                } else {
+                    if((!empty($item['slug']) AND Request::detect_uri(). URL::query() === URL::site($route))) {
+                        $showTab = true;
+                        break;
+                    }
                 }
             }
 
 
-            if(!empty($item['slug']) AND $showTab){
-                if(URL::site($item['slug']) === Request::detect_uri(). URL::query()) {
-                    $item['active'] = true;
+            if(!empty($item['slug']) AND $showTab) {
+
+                if(strpos($item['slug'],'/{any}') !== false) {
+                    $item['slug'] = explode('/{any}', $item['slug'])[0];
+                    if(strpos(Request::detect_uri(). URL::query(), URL::site($item['slug'])) === 0) {
+                        $item['active'] = true;
+                    }
+                } else {
+                    if(URL::site($item['slug']) === Request::detect_uri(). URL::query()) {
+                        $item['active'] = true;
+                    }
+                }
+
+                if($parentItem) {
+                    $parentItem['active'] = true;
                 }
             }else{
                 $item['active'] = false;
-                if($hasParent){
+                if($parentItem){
                     $item['disabled'] = true;
                 }
             }
 
             if(!empty($item['children'])){
-               self::setActiveItems($item['children'], true);
+               self::setActiveItems($item['children'], $item);
             }
 
             if($item['disabled']){
@@ -103,17 +124,28 @@ class Menu
             $isActive = $item->active ? 'active' : '';
             $isDisabled = $item->disabled ? 'hidden' : '';
             $isChild = $hasParent ? 'sub-items' : '';
+            $isNestedChild = ($item->deepLevel > 2) ? 'sidebar-sub-item_title' : '';
             $hasIcon = $hasParent ? '' : $item->icon;
+            $arrowIcon = '';
 
-
-            $result .= "<a href='$href' class='$hasSubMenu sidebar-items $isChild $isActive $isDisabled' title='$item->tooltip'>";
-
-            if(!$hasParent) {
-                $result .=      "<i class='fw-600 icon $hasIcon' style='font-weight: 600'></i>";
+            if(isset($item->children)) {
+                $arrowIcon = 'q4bikon-arrow_right1';
+                if($isActive) {
+                    $arrowIcon = 'q4bikon-arrow_bottom1';
+                }
             }
 
-            $result .=      "<span class='sidebar-items_title'>".__($item->text)."</span>";
-            $result .= "</a>";
+            $result .= "<a href='$href' class='$hasSubMenu sidebar-items $isChild $isActive $isDisabled' title='$item->tooltip'>";
+            $result .=      "<i class='fw-600 icon $hasIcon' style='font-weight: 600'></i>";
+            $result .=      "<div class='sidebar-items_content'>
+                                <span class='sidebar-items_title $isNestedChild'>".__($item->text)."</span>";
+
+            if($arrowIcon) {
+                $result .= "<i class='fw-600 icon $arrowIcon sidebar-item_icon'></i>";
+            }
+
+            $result .=   "</div>
+                        </a>";
 
             if(isset($item->children) && count($item->children)) {
                 $result .= "<ul class='submenu'>";
