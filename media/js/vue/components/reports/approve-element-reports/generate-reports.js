@@ -602,7 +602,6 @@ Vue.component('generate-reports', {
                                 return ((Object.values(company.projects).filter(project => +project.id === +this.queryProjectId)).length > 0)
                             })[0]
 
-                            console.log('selectedCompany', this.selectedCompany)
                         }
                     this.showLoader = false;
                 })
@@ -835,7 +834,10 @@ Vue.component('generate-reports', {
             }
         },
         generateReports() {
-            this.$emit('getFiltersForReportsGenerating', this.getFilters())
+            this.$emit('getFiltersForReportsGenerating', {
+                filters: this.getFilters(),
+                page: 1
+            })
         }
     },
     created() {
@@ -873,17 +875,14 @@ Vue.component('generate-reports', {
                 this.onSelect(managerStatus, 'elManagerStatuses')
             })
 
-            let newURL = location.href.split("?")[0];
-            window.history.pushState('object', document.title, newURL);
-
+            let url = location.href.split("/");
+            if(url.length === 6) {
+                url.pop();
+                window.history.replaceState('object', document.title, url.join('/'));
+            }
         } else {
             if(window.location.search) {
-                let filters = this.getFiltersFromUrl();
-                // if(filters.objectIds) {
-                    this.$emit('getFiltersForReportsGenerating', this.getFiltersFromUrl())
-                // } else {
-                    this.queryProjectId = filters.projectId;
-                // }
+                this.$emit('getFiltersForReportsGenerating', this.getFiltersFromUrl())
             } else {
                 if(this.projectId) {
                     this.queryProjectId = this.projectId

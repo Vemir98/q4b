@@ -148,6 +148,7 @@ Kohana::modules(array(
 	'vuejs'  => MODPATH.'vue',  // vue js
     'authenticator'  => MODPATH.'authenticator',  // Google Authenticator
     'put-request-handler'  => MODPATH.'put-request-handler',  // Google Authenticator
+    'push-notification' => MODPATH.'push-notification' // sending notifications to devices
 	));
 
 /**

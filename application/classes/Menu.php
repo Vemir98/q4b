@@ -36,6 +36,17 @@ class Menu
             'labtests/project/:projectId/elements_list',
             'labtests/project/:projectId/elements_type',
             'reports/approve_element/:projectId'
+        ],
+        'reports' => [
+            'reports',
+            'reports/list',
+            'reports/approve_element',
+            'reports/quality/{any}',
+            'reports/tasks',
+            'reports/place',
+            'reports/delivery',
+//            'reports#tab_statistics',
+            'reports/generate/{any}'
         ]
     );
 
@@ -95,6 +106,7 @@ class Menu
 
                 if($parentItem) {
                     $parentItem['active'] = true;
+                    $parentItem['hasActiveChild'] = true;
                 }
             }else{
                 $item['active'] = false;
@@ -129,8 +141,12 @@ class Menu
             $arrowIcon = '';
 
             if(isset($item->children)) {
-                $arrowIcon = 'q4bikon-arrow_right1';
-                if($isActive) {
+                if(Language::getCurrent()->direction === 'rtl') {
+                    $arrowIcon = 'q4bikon-arrow_left1';
+                } else {
+                    $arrowIcon = 'q4bikon-arrow_right1';
+                }
+                if($item->hasActiveChild) {
                     $arrowIcon = 'q4bikon-arrow_bottom1';
                 }
             }

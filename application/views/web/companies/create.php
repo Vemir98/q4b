@@ -10,9 +10,9 @@
 <!--content_new_company-->
 <section class="content_new_company">
     <ul>
-        <li class="tab_panel">
+        <li class="tab-panel">
             <div class="panel_header open">
-                <span class="sign"><i class="panel_header_icon q4bikon-minus"></i></span><h2><?=__('Company General Information')?></h2>
+                <h2><?=__('Company General Information')?></h2>
             </div>
 
             <div class="panel_content open">
@@ -130,47 +130,6 @@
                 </form>
             </div><!--panel_content-->
 
-        </li>
-        <li class="tab_panel disable">
-            <div class="panel_header">
-                <span class="sign"><i class="panel_header_icon q4bikon-plus"></i></span><h2><?=__('Crafts')?></h2>
-            </div>
-            <div class="panel_content">
-
-            </div><!--.panel_content-->
-        </li>
-        <li class="tab_panel disable">
-            <div class="panel_header">
-                <span class="sign"><i class="panel_header_icon q4bikon-plus"></i></span><h2><?=__('Professions')?></h2>
-            </div>
-            <div class="panel_content">
-
-            </div><!--.panel_content-->
-        </li>
-        <li class="tab_panel disable">
-            <div class="panel_header">
-                <span class="sign"><i class="panel_header_icon q4bikon-plus"></i></span><h2><?=__('Users')?></h2>
-            </div>
-            <div class="panel_content">
-
-            </div>
-
-        </li>
-        <li class="tab_panel disable">
-            <div class="panel_header">
-                <span class="sign"><i class="panel_header_icon q4bikon-plus"></i></span><h2><?=__('Standards')?></h2>
-            </div>
-            <div class="panel_content">
-
-            </div><!--.panel_content-->
-        </li>
-        <li class="tab_panel disable">
-            <div class="panel_header">
-                <span class="sign"><i class="panel_header_icon q4bikon-plus"></i></span><h2><?=__('Links to other systems')?></h2>
-            </div>
-            <div class="panel_content">
-
-            </div><!--.panel_content-->
         </li>
     </ul>
 </section><!--.content_new_company-->

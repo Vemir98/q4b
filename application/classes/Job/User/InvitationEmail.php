@@ -11,7 +11,7 @@ class Job_User_InvitationEmail
     public function perform(){
         $mail = new Mail(Kohana::$config->load('mail'));
         $mail->to($this->args['email']);
-        $mail->from('info@qforb.net');
+        $mail->from('info@qforb.net', 'Info Invite');
         $mail->subject('Q4b user invite You to company team');
         $mail->body(View::factory($this->args['view'],[
             'currentUser' => $this->args['currentUser'],

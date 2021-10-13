@@ -73,8 +73,8 @@
                     <?foreach ($items as $item):?>
                     <li class="q4-list-item">
                         <figure>
-                            <a href="<?=URL::site('companies/update/' . $item->id)?>"><img src="/<?=$item->logo?>" alt="<?=$item->name?>" class="content_companies_list_logo"></a>
-                            <figcaption><a href="<?=URL::site('companies/update/' . $item->id)?>"><?=$item->name?></a></figcaption>
+                            <a href="<?=URL::site('companies/update/' . $item->id. '?tab=info')?>"><img src="/<?=$item->logo?>" alt="<?=$item->name?>" class="content_companies_list_logo"></a>
+                            <figcaption><a href="<?=URL::site('companies/update/' . $item->id. '?tab=info')?>"><?=$item->name?></a></figcaption>
                         </figure>
                         <?if($item->projects->count_all()):?>
                             <span class="q4-list-item-info projects"><a href="<?=URL::site('projects/company/'.$item->id)?>"><?=__('Projects')?>: <?=$item->projects->count_all()?></a></span>

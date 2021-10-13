@@ -557,9 +557,11 @@ class Controller_Api_Projects extends HDVP_Controller_API
                 ORM::factory('QcComment')->values(['message' => $message, 'qcontrol_id' => $qc->pk()])->save();
             Database::instance()->commit();
 
+            PushNotification::notifyQcUsers($qc->id, Enum_NotifyAction::Created);
 //            if($clientData['status'] != Enum_QualityControlStatus::Existing && $clientData['status'] != Enum_QualityControlStatus::Normal){
 //                if($clientData['approval_status'] != Enum_QualityControlApproveStatus::Approved) {
-                    $this->sendNotificationToUsers($place->project->users->find_all());
+//                    $this->sendNotificationToUsers($place->project->users->find_all());
+
 //                }
 //            }
             $fs->sendLazyTasks();
@@ -695,11 +697,7 @@ class Controller_Api_Projects extends HDVP_Controller_API
                 ORM::factory('QcComment')->values(['message' => $message, 'qcontrol_id' => $qc->pk()])->save();
             Database::instance()->commit();
 
-//            if($clientData['status'] != Enum_QualityControlStatus::Existing && $clientData['status'] != Enum_QualityControlStatus::Normal){
-//                if($clientData['approval_status'] != Enum_QualityControlApproveStatus::Approved) {
-                    $this->sendNotificationToUsers($qc->project->users->find_all());
-//                }
-//            }
+            PushNotification::notifyQcUsers($qc->id, Enum_NotifyAction::Updated);
 
             $fs->sendLazyTasks();
         }catch (ORM_Validation_Exception $e){
@@ -1001,30 +999,30 @@ class Controller_Api_Projects extends HDVP_Controller_API
         }
     }
 
-    private function sendNotificationToUsers($usersList) {
+//    private function sendNotificationToUsers($usersList) {
 
-        $usersDeviceTokens = [];
-//
-        foreach ($usersList as $user) {
-            if($user->device_token) {
-                array_push($usersDeviceTokens, $user->device_token);
-            }
-        }
+//        $usersDeviceTokens = [];
+////
+//        foreach ($usersList as $user) {
+//            if($user->device_token) {
+//                array_push($usersDeviceTokens, $user->device_token);
+//            }
+//        }
 
 //        echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$usersDeviceTokens]); echo "</pre>"; exit;
 //
 //        Kohana::$log->add(Log::ERROR, 'from elApprovals: ' . json_encode([$usersDeviceTokens], JSON_PRETTY_PRINT));
 //
 
-        $timestamp = time();
+//        $timestamp = time();
 
 //        $usersDeviceTokens = ['f5bWjICSSMiE40tO7w5RF2:APA91bGGAwSYAYz5t7b1l8jnC385xjLGne5FkWh2LxHQ9W19AflFCnNHsLo8nF1Ydn9_w3dd2a1BmhGFPfLlmGMrWmB0z3k5hQ77bq0zljFxPQAasA9tBjA45rXHb-uXZ6NFgQKklP0i'];
 
-        PushHelper::test([
-            'lang' => \Language::getCurrent()->iso2,
-            'action' => 'qc',
-            'usersDeviceTokens' => $usersDeviceTokens
-        ], $timestamp );
+//        PushHelper::test([
+//            'lang' => \Language::getCurrent()->iso2,
+//            'action' => 'qc',
+//            'usersDeviceTokens' => $usersDeviceTokens
+//        ], $timestamp );
 
-    }
+//    }
 }

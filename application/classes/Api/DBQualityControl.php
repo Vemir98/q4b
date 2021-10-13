@@ -40,6 +40,7 @@ class Api_DBQualityControl
             qc.space_id as spaceId,
             qc.plan_id as planId,
             qc.profession_id as professionId,
+            ea.element_id as elementId,
             qc.craft_id as craftId,
             qc.del_rep_id as delRepId,
             qc.el_approval_id as elApprovalId,
@@ -58,6 +59,7 @@ class Api_DBQualityControl
             qc.approved_by as approvedBy,
             qc.approval_status as approvalStatus
             FROM quality_controls qc
+            LEFT JOIN el_approvals ea ON qc.el_approval_id=ea.element_id
             WHERE qc.id=:qcId";
 
             $query = DB::query(Database::SELECT, $query);

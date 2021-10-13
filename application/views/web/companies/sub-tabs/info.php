@@ -34,9 +34,9 @@
                                         <?endif?>
                                     </div>
                                     <a href="#" class="form-control light_blue_btn set-image-link trigger-image-upload"><?=__('Browse company logo')?></a>
-                                    <?if($company->projects->count_all()):?>
-                                        <div class="q4-list-item-info projects text-center"><a href="<?=URL::site('projects/company/'.$company->id)?>"><?=__('Projects')?>: <?=$company->projects->count_all()?></a></div>
-                                    <?endif?>
+<!--                                    --><?//if($company->projects->count_all()):?>
+<!--                                        <div class="q4-list-item-info projects text-center"><a href="--><?//=URL::site('projects/company/'.$company->id)?><!--">--><?//=__('Projects')?><!--: --><?//=$company->projects->count_all()?><!--</a></div>-->
+<!--                                    --><?//endif?>
                                 </div>
                             </div>
 

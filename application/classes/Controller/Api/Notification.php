@@ -13,34 +13,48 @@ class Controller_Api_Notification extends HDVP_Controller_API {
     public function action_send()
     {
         try {
-            $timestamp = time() + 60;
 
-            $users = Api_DBElApprovals::getElApprovalUsersListForNotify(81);
-//
-            $usersDeviceTokens = [];
+            $fpns = new HDVP\FirebasePushNotification();
 
-            foreach ($users as $user) {
-                if($user['deviceToken']) {
-                    array_push($usersDeviceTokens, $user['deviceToken']);
-                }
-            }
+            $token = 'cNh86BsYT-ujq49Kt5AEEZ:APA91bFdKan-3VMqdFLCoiZsmK1NbjEOJ9VL7hWhC4luGavuvfFK1bU5ZcOLlxvP-UO2jByDZC-39qTGBxJerAJ9Q3ggR-XmgmKZ86zQC4R5iAMuFTk6gMnxnMWz4qkXmmoWjWuxte8N';
 
-            PushHelper::test([
-                'lang' => \Language::getCurrent()->iso2,
-                'action' => 'elApproval',
-                'usersDeviceTokens' => $usersDeviceTokens
-            ], $timestamp );
+            $fpns->notify([$token], ['action' => 'elApproval']);
 
             $f = fopen(DOCROOT.'testNotification.txt', 'a');
-
             if($f) {
-                fputs($f, 'from action_send() - '.date('H:i:s')."\n");
+                fputs($f, 'from request action_send()');
             }
             fclose($f);
 
-            $this->_responseData = [
-                'status' => 'success'
-            ];
+//------------------------------------------------
+//            $timestamp = time() + 60;
+//
+//            $users = Api_DBElApprovals::getElApprovalUsersListForNotify(81);
+////
+//            $usersDeviceTokens = [];
+//
+//            foreach ($users as $user) {
+//                if($user['deviceToken']) {
+//                    array_push($usersDeviceTokens, $user['deviceToken']);
+//                }
+//            }
+//
+//            PushHelper::test([
+//                'lang' => \Language::getCurrent()->iso2,
+//                'action' => 'elApproval',
+//                'usersDeviceTokens' => $usersDeviceTokens
+//            ], $timestamp );
+//
+//            $f = fopen(DOCROOT.'testNotification.txt', 'a');
+//
+//            if($f) {
+//                fputs($f, 'from action_send() - '.date('H:i:s')."\n");
+//            }
+//            fclose($f);
+//
+//            $this->_responseData = [
+//                'status' => 'success'
+//            ];
 
  // ----------------------------
 
@@ -80,7 +94,7 @@ class Controller_Api_Notification extends HDVP_Controller_API {
 //            }
 //
 //            $this->_responseData = [];
-//            $this->_responseData['status'] = 'success';
+            $this->_responseData['status'] = 'success';
         } catch (Exception $exception) {
             throw API_Exception::factory(500,$exception->getMessage());
         }

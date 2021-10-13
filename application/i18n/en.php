@@ -935,5 +935,7 @@ return [
     'manager_signature' => 'Manager Signature',
     'list_of_files' => 'List of files',
     'without_elements' => 'Without elements',
+    'delivery_module_settings' => 'Delivery module settings',
+    'approval_element_reports' => 'Approval element reports',
     ''=>'',
 ];

@@ -792,11 +792,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                 if(!empty(trim($data['message'])))
                 ORM::factory('QcComment')->values(['message' => $data['message'], 'qcontrol_id' => $qc->pk()])->save();
 
-//                if($data['status'] != Enum_QualityControlStatus::Existing && $data['status'] != Enum_QualityControlStatus::Normal){
-//                    if($data['approval_status'] != Enum_QualityControlApproveStatus::Approved) {
-                        $this->sendNotificationToUsers($usersList);
-//                    }
-//                }
+                PushNotification::notifyQcUsers($qc->id, Enum_NotifyAction::Updated);
 
                 $this->setResponseData('triggerEvent','qualityControlUpdated');
                 Database::instance()->commit();
@@ -1529,27 +1525,27 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         }
     }
 
-    private function sendNotificationToUsers($usersList) {
-
-        $usersDeviceTokens = [];
+//    private function sendNotificationToUsers($usersList) {
 //
-        foreach ($usersList as $user) {
-            if($user->device_token) {
-                array_push($usersDeviceTokens, $user->device_token);
-            }
-        }
+//        $usersDeviceTokens = [];
+////
+//        foreach ($usersList as $user) {
+//            if($user->device_token) {
+//                array_push($usersDeviceTokens, $user->device_token);
+//            }
+//        }
 
 //        echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$usersDeviceTokens]); echo "</pre>"; exit;
 
 
-        $timestamp = time();
+//        $timestamp = time();
 
 //        $usersDeviceTokens = ['f5bWjICSSMiE40tO7w5RF2:APA91bGGAwSYAYz5t7b1l8jnC385xjLGne5FkWh2LxHQ9W19AflFCnNHsLo8nF1Ydn9_w3dd2a1BmhGFPfLlmGMrWmB0z3k5hQ77bq0zljFxPQAasA9tBjA45rXHb-uXZ6NFgQKklP0i'];
 
-        PushHelper::test([
-            'lang' => \Language::getCurrent()->iso2,
-            'action' => 'qc',
-            'usersDeviceTokens' => $usersDeviceTokens
-        ], $timestamp );
-    }
+//        PushHelper::test([
+//            'lang' => \Language::getCurrent()->iso2,
+//            'action' => 'qc',
+//            'usersDeviceTokens' => $usersDeviceTokens
+//        ], $timestamp );
+//    }
 }

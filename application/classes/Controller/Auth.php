@@ -42,9 +42,9 @@ class Controller_Auth extends HDVP_Controller_Template
                     $this->_auth->logout(TRUE);
                     $this->_setErrors('Your Account is deactivated! Please contact Your Manager');
                 }else{
-                    $this->_user = $this->_auth->get_user();
-                    $utkn = Model_UToken::makeApplicationToken($this->_user->id);
-                    $this->_responseData['user']['token'] = $utkn->as_array()['token'];
+//                    $this->_user = $this->_auth->get_user();
+//                    $utkn = Model_UToken::makeApplicationToken($this->_user->id);
+//                    $this->_responseData['user']['token'] = $utkn->as_array()['token'];
 
                     if((bool)Arr::get($this->post(),'remember')){
                         Cookie::set('un',AesCtr::encrypt(Arr::get($this->post(),'login'),$_SERVER['SERVER_NAME'],256));
@@ -205,31 +205,31 @@ class Controller_Auth extends HDVP_Controller_Template
     }
 
     private function getRedirectUri($outspread){
-//        die('mtav');
-//        $output = '';
+        $output = '';
 //        if(Auth::instance()->get_user()->can('update','Controller_QualityControl')){
 //            $output = 'quality_control/create';
 //        }else{
-//            switch ($outspread) {
-//                case Enum_UserOutspread::General:
+            switch ($outspread) {
+                case Enum_UserOutspread::General:
 //                    $output = 'dashboard';
-//                    break;
-//                case Enum_UserOutspread::Corporate:
-//                    $output = 'companies';
-//                    break;
-//                case Enum_UserOutspread::Company:
-//                    $output = 'companies/update/' . Auth::instance()->get_user()->company_id. '?tab=info';
-//                    break;
-//                case Enum_UserOutspread::Project:
-//                    if(Auth::instance()->get_user()->is('project_visitor'))
-//                        $output = 'reports';
-//                    else
-//                        $output = 'projects';
-//                    break;
-//            }
+                    $output = 'projects';
+                    break;
+                case Enum_UserOutspread::Corporate:
+                    $output = 'companies';
+                    break;
+                case Enum_UserOutspread::Company:
+                    $output = 'companies/update/' . Auth::instance()->get_user()->company_id. '?tab=info';
+                    break;
+                case Enum_UserOutspread::Project:
+                    if(Auth::instance()->get_user()->is('project_visitor'))
+                        $output = 'reports';
+                    else
+                        $output = 'projects';
+                    break;
+            }
 //        }
 
-        $output = 'projects';
+//        $output = 'projects';
 
         return URL::withLang($output,Language::getLangByIso2(Auth::instance()->get_user()->lang)->slug);
     }

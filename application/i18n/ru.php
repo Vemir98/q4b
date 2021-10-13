@@ -908,5 +908,7 @@ return [
     'manager_signature' => 'Подпись менеджера',
     'list_of_files' => 'Список файлов',
     'without_elements' => 'Без элементов',
+    'delivery_module_settings' => 'Настройки приёмки-сдачи',
+    'approval_element_reports' => 'Отчёт утвержденных элементов',
     ''=>'',
 ];

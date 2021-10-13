@@ -82,19 +82,28 @@
     <div class="header_bottom">
         <?if(Request::current()->controller() == 'Companies'):?>
             <?if(Usr::can(Usr::CREATE_PERM)):?>
-        <div class="header_create_company">
-            <span class="header_new_company"><?=__('New company')?></span>
-            <a class="orange_circle header_add_company" href="<?=URL::site('companies/create')?>"><i class="plus q4bikon-plus"></i></a>
-        </div>
+            <?php $companyUrl = (Language::getCurrent()->iso2 !== 'en') ? '/'.Language::getCurrent()->iso2.'/companies' : '/companies'; ?>
+                <?if(Request::detect_uri(). URL::query() === $companyUrl):?>
+                    <div class="header_create_company">
+                        <span class="header_new_company"><?=__('New company')?></span>
+                        <a class="orange_circle header_add_company" href="<?=URL::site('companies/create')?>"><i class="plus q4bikon-plus"></i></a>
+                    </div>
+                <?php unset($companyUrl); ?>
+                <?endif?>
             <?endif?>
         <?elseif(Request::current()->controller() == 'Projects'):?>
              <?if(!Auth::instance()->get_user()->is('project_admin')&&!Auth::instance()->get_user()->is('project_supervisor')&&!Auth::instance()->get_user()->is('project_adviser')&&!Auth::instance()->get_user()->is('project_visitor')):?>
-                    <div class="header_create_company">
+                <?php $projectUrl = (Language::getCurrent()->iso2 !== 'en') ? '/'.Language::getCurrent()->iso2.'/projects' : '/projects'; ?>
+<!--                --><?php //echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$projectUrl, Request::detect_uri(). URL::query()]); echo "</pre>"; exit; ?>
+                 <?if(Request::detect_uri(). URL::query() === $projectUrl):?>
+                     <div class="header_create_company">
                         <span class="header_new_company"><?=__('New project')?></span>
 
                         <a class="orange_circle header_add_company" href="<?=URL::site('projects/create')?>"><i class="plus q4bikon-plus"></i></a>
                     </div>
-                <?endif;?>
+                 <?php unset($projectUrl) ?>
+                 <?endif;?>
+             <?endif;?>
         <?endif?>
         <div class="header_breadcrumbs">
             <?=Breadcrumbs::render()?>

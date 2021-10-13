@@ -8,7 +8,7 @@
  */
 class Api_DBElApprovals
 {
-    public static function getElApprovalById($elApprovalId)
+    public static function getElApprovalById($elApprovalId, $filters = [])
     {
         $query = 'SELECT 
             ea.id,
@@ -40,8 +40,13 @@ class Api_DBElApprovals
             LEFT JOIN pr_objects o ON ea.object_id=o.id
             WHERE ea.id= :elAppId';
 
+        if(isset($filters['status'])) {
+            $query .= ' AND ea.status = :status';
+        }
+
         return DB::query(Database::SELECT, $query)
             ->bind(':elAppId', $elApprovalId)
+            ->bind(':status', $filters['status'])
             ->execute()->as_array();
     }
 

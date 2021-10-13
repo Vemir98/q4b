@@ -147,21 +147,22 @@
 //];
 
 $items = [
-    [
-        'slug' => 'dashboard',
-        'href' => 'dashboard',
-        'text' => 'Dashboard1',
-        'tooltip' => 'Dashboard1',
-        'icon' => 'q4bikon-uncheked',
-        'resource' => 'Controller_Dashboard',
-        'priority' => Enum_UserPriorityLevel::Project,
-        'deepLevel' => 1,
-        'showIn' => [
-                'dashboard'
-        ],
-        'disabled' => false,
-        'active' => false,
-    ],
+//    [
+//        'slug' => 'dashboard',
+//        'href' => 'dashboard',
+//        'text' => 'Dashboard1',
+//        'tooltip' => 'Dashboard1',
+//        'icon' => 'q4bikon-uncheked',
+//        'resource' => 'Controller_Dashboard',
+//        'priority' => Enum_UserPriorityLevel::Project,
+//        'deepLevel' => 1,
+//        'showIn' => [
+//                'dashboard/{any}'
+//        ],
+//        'disabled' => false,
+//        'active' => false,
+//        'hasActiveChild' => false
+//    ],
     [
         'slug' => 'companies/{any}',
         'href' => 'companies',
@@ -182,6 +183,7 @@ $items = [
                 'showIn' => Menu::CATEGORIES['companies'],
                 'disabled' => false,
                 'active' => false,
+                'hasActiveChild' => false
             ],
             [
                 'slug' => 'companies/update/:id?tab=specialities',
@@ -193,6 +195,7 @@ $items = [
                 'showIn' => Menu::CATEGORIES['companies'],
                 'disabled' => false,
                 'active' => false,
+                'hasActiveChild' => false
             ],
             [
                 'slug' => 'companies/update/:id?tab=professions',
@@ -204,6 +207,7 @@ $items = [
                 'showIn' => Menu::CATEGORIES['companies'],
                 'disabled' => false,
                 'active' => false,
+                'hasActiveChild' => false
             ],
             [
                 'slug' => 'companies/update/:id?tab=instructions',
@@ -215,6 +219,7 @@ $items = [
                 'showIn' => Menu::CATEGORIES['companies'],
                 'disabled' => false,
                 'active' => false,
+                'hasActiveChild' => false
             ],
             [
                 'slug' => 'companies/update/:id?tab=users',
@@ -226,6 +231,7 @@ $items = [
                 'showIn' => Menu::CATEGORIES['companies'],
                 'disabled' => false,
                 'active' => false,
+                'hasActiveChild' => false
             ],
         ],
         'showIn' => [
@@ -233,11 +239,12 @@ $items = [
         ],
         'disabled' => false,
         'active' => false,
+        'hasActiveChild' => false
     ],
 ];
 
 $projectRoutes = [
-    'slug' => 'projects',
+    'slug' => 'projects/{any}',
     'href' => 'projects',
     'text' => 'Menu _Projects',
     'tooltip' => 'Tooltip _Projects',
@@ -261,13 +268,52 @@ $projectRoutes = [
             ),
             'disabled' => false,
             'active' => false,
+            'hasActiveChild' => false
         ],
     ],
     'showIn' => [
-        'projects'
+        'projects/{any}'
     ],
     'disabled' => false,
     'active' => false,
+    'hasActiveChild' => false
+];
+
+if(!Auth::instance()->get_user()->is('project_adviser')) {
+    $projectRoutes['children'][] = [
+        'slug' => 'projects/update/:projectId?tab=structures',
+        'href' => 'projects/update/:projectId?tab=structures',
+        'text' => 'Structures',
+        'resource' => 'Controller_Projects',
+        'priority' => Enum_UserPriorityLevel::Project,
+        'deepLevel' => 2,
+        'showIn' => array_merge(
+            Menu::CATEGORIES['projects'],
+            Menu::CATEGORIES['labtests'],
+            Menu::CATEGORIES['elements']
+        ),
+        'disabled' => false,
+        'active' => false,
+        'hasActiveChild' => false
+    ];
+}
+
+$projectRoutes['children'][] = [
+    'slug' => 'plans/update/:projectId',
+    'href' => 'plans/update/:projectId',
+    'text' => 'Plans',
+    'icon' => 'q4bikon-file',
+    'resource' => 'Controller_Plans',
+    'priority' => Enum_UserPriorityLevel::Project,
+    'deepLevel' => 2,
+    'showIn' => array_merge(
+        Menu::CATEGORIES['projects'],
+        Menu::CATEGORIES['labtests'],
+        Menu::CATEGORIES['elements']
+    ),
+    'disabled' => false,
+    'active' => false,
+    'hasActiveChild' => false
 ];
 
 //if(Usr::can(Usr::TASKS_PERM)) {
@@ -285,98 +331,10 @@ $projectRoutes = [
         ),
         'disabled' => false,
         'active' => false,
+        'hasActiveChild' => false
     ];
 //}
 
-if(!Auth::instance()->get_user()->is('project_adviser')) {
-    $projectRoutes['children'][] = [
-        'slug' => 'projects/update/:projectId?tab=structures',
-        'href' => 'projects/update/:projectId?tab=structures',
-        'text' => 'Structures',
-        'resource' => 'Controller_Projects',
-        'priority' => Enum_UserPriorityLevel::Project,
-        'deepLevel' => 2,
-        'showIn' => array_merge(
-            Menu::CATEGORIES['projects'],
-            Menu::CATEGORIES['labtests'],
-            Menu::CATEGORIES['elements']
-        ),
-        'disabled' => false,
-        'active' => false,
-    ];
-}
-
-if(Usr::role() == 'super_admin') {
-    $projectRoutes['children'][] = [
-        'slug' => 'projects/update/:projectId?tab=delivery-items',
-        'href' => 'projects/update/:projectId?tab=delivery-items',
-        'text' => 'Delivery Items1',
-        'resource' => 'Controller_Projects',
-        'priority' => Enum_UserPriorityLevel::Project,
-        'deepLevel' => 2,
-        'showIn' => array_merge(
-            Menu::CATEGORIES['projects'],
-            Menu::CATEGORIES['labtests'],
-            Menu::CATEGORIES['elements']
-        ),
-        'disabled' => false,
-        'active' => false,
-    ];
-}
-
-if(!Auth::instance()->get_user()->is('project_adviser')) {
-    $projectRoutes['children'][] = [
-        'slug' => 'projects/update/:projectId?tab=certificates',
-        'href' => 'projects/update/:projectId?tab=certificates',
-        'text' => 'Certificates',
-        'resource' => 'Controller_Projects',
-        'priority' => Enum_UserPriorityLevel::Project,
-        'deepLevel' => 2,
-        'showIn' => array_merge(
-            Menu::CATEGORIES['projects'],
-            Menu::CATEGORIES['labtests'],
-            Menu::CATEGORIES['elements']
-        ),
-        'disabled' => false,
-        'active' => false,
-    ];
-    if(!Auth::instance()->get_user()->is('project_supervisor')) {
-        $projectRoutes['children'][] = [
-            'slug' => 'projects/update/:projectId?tab=users',
-            'href' => 'projects/update/:projectId?tab=users',
-            'text' => 'Users',
-            'resource' => 'Controller_Projects',
-            'priority' => Enum_UserPriorityLevel::Project,
-            'deepLevel' => 2,
-            'showIn' => array_merge(
-                Menu::CATEGORIES['projects'],
-                Menu::CATEGORIES['labtests'],
-                Menu::CATEGORIES['elements']
-            ),
-            'disabled' => false,
-            'active' => false,
-        ];
-    }
-}
-
-
-
-$projectRoutes['children'][] = [
-    'slug' => 'plans/update/:projectId',
-    'href' => 'plans/update/:projectId',
-    'text' => 'Plans',
-    'icon' => 'q4bikon-file',
-    'resource' => 'Controller_Plans',
-    'priority' => Enum_UserPriorityLevel::Project,
-    'deepLevel' => 2,
-    'showIn' => array_merge(
-        Menu::CATEGORIES['projects'],
-        Menu::CATEGORIES['labtests'],
-        Menu::CATEGORIES['elements']
-    ),
-    'disabled' => false,
-    'active' => false,
-];
 
 $projectRoutes['children'][] = [
     'slug' => 'labtests/project/:projectId',
@@ -387,17 +345,18 @@ $projectRoutes['children'][] = [
     'priority' => Enum_UserPriorityLevel::Project,
     'deepLevel' => 2,
     'children' => [
-        [
-            'slug' => 'labtests/create/:projectId',
-            'href' => 'labtests/create/:projectId',
-            'text' => 'Create Lab Control',
-            'resource' => 'Controller_LabTests',
-            'priority' => Enum_UserPriorityLevel::Project,
-            'deepLevel' => 3,
-            'showIn' => Menu::CATEGORIES['labtests'],
-            'disabled' => false,
-            'active' => false,
-        ],
+//        [
+//            'slug' => 'labtests/create/:projectId',
+//            'href' => 'labtests/create/:projectId',
+//            'text' => 'Create Lab Control',
+//            'resource' => 'Controller_LabTests',
+//            'priority' => Enum_UserPriorityLevel::Project,
+//            'deepLevel' => 3,
+//            'showIn' => Menu::CATEGORIES['labtests'],
+//            'disabled' => false,
+//            'active' => false,
+//            'hasActiveChild' => false
+//        ],
         [
             'slug' => 'labtests/project/:projectId',
             'href' => 'labtests/project/:projectId',
@@ -408,6 +367,7 @@ $projectRoutes['children'][] = [
             'showIn' => Menu::CATEGORIES['labtests'],
             'disabled' => false,
             'active' => false,
+            'hasActiveChild' => false
         ],
     ],
     'showIn' => array_merge(
@@ -417,6 +377,7 @@ $projectRoutes['children'][] = [
     ),
     'disabled' => false,
     'active' => false,
+    'hasActiveChild' => false
 ];
 
 $projectRoutes['children'][] = [
@@ -437,6 +398,7 @@ $projectRoutes['children'][] = [
             'showIn' => Menu::CATEGORIES['elements'],
             'disabled' => false,
             'active' => false,
+            'hasActiveChild' => false
         ],
         [
             'slug' => 'labtests/project/:projectId/elements_list',
@@ -448,17 +410,19 @@ $projectRoutes['children'][] = [
             'showIn' => Menu::CATEGORIES['elements'],
             'disabled' => false,
             'active' => false,
+            'hasActiveChild' => false
         ],
         [
             'slug' => 'reports/approve_element/:projectId',
             'href' => 'reports/approve_element/:projectId',
-            'text' => 'Report of Elements',
+            'text' => 'approval_element_reports',
             'resource' => 'Controller_LabTests',
             'priority' => Enum_UserPriorityLevel::Project,
             'deepLevel' => 3,
             'showIn' => Menu::CATEGORIES['elements'],
             'disabled' => false,
             'active' => false,
+            'hasActiveChild' => false
         ],
     ],
     'showIn' => array_merge(
@@ -468,8 +432,65 @@ $projectRoutes['children'][] = [
     ),
     'disabled' => false,
     'active' => false,
+    'hasActiveChild' => false
 ];
 
+if(!Auth::instance()->get_user()->is('project_adviser')) {
+    $projectRoutes['children'][] = [
+        'slug' => 'projects/update/:projectId?tab=certificates',
+        'href' => 'projects/update/:projectId?tab=certificates',
+        'text' => 'Certificates',
+        'resource' => 'Controller_Projects',
+        'priority' => Enum_UserPriorityLevel::Project,
+        'deepLevel' => 2,
+        'showIn' => array_merge(
+            Menu::CATEGORIES['projects'],
+            Menu::CATEGORIES['labtests'],
+            Menu::CATEGORIES['elements']
+        ),
+        'disabled' => false,
+        'active' => false,
+        'hasActiveChild' => false
+    ];
+}
+
+if(Usr::role() == 'super_admin') {
+    $projectRoutes['children'][] = [
+        'slug' => 'projects/update/:projectId?tab=delivery-items',
+        'href' => 'projects/update/:projectId?tab=delivery-items',
+        'text' => 'delivery_module_settings',
+        'resource' => 'Controller_Projects',
+        'priority' => Enum_UserPriorityLevel::Project,
+        'deepLevel' => 2,
+        'showIn' => array_merge(
+            Menu::CATEGORIES['projects'],
+            Menu::CATEGORIES['labtests'],
+            Menu::CATEGORIES['elements']
+        ),
+        'disabled' => false,
+        'active' => false,
+        'hasActiveChild' => false
+    ];
+}
+
+if(!Auth::instance()->get_user()->is('project_adviser') && !Auth::instance()->get_user()->is('project_supervisor')) {
+    $projectRoutes['children'][] = [
+        'slug' => 'projects/update/:projectId?tab=users',
+        'href' => 'projects/update/:projectId?tab=users',
+        'text' => 'Users',
+        'resource' => 'Controller_Projects',
+        'priority' => Enum_UserPriorityLevel::Project,
+        'deepLevel' => 2,
+        'showIn' => array_merge(
+            Menu::CATEGORIES['projects'],
+            Menu::CATEGORIES['labtests'],
+            Menu::CATEGORIES['elements']
+        ),
+        'disabled' => false,
+        'active' => false,
+        'hasActiveChild' => false
+    ];
+}
 
 array_push($items,
     $projectRoutes,
@@ -482,11 +503,10 @@ array_push($items,
         'resource' => 'Controller_Reports',
         'priority' => Enum_UserPriorityLevel::Project,
         'deepLevel' => 1,
-        'showIn' => [
-            'reports/{any}'
-        ],
+        'showIn' => MENU::CATEGORIES['reports'],
         'disabled' => false,
         'active' => false,
+        'hasActiveChild' => false
     ],
     [
         'slug' => 'consultants',
@@ -498,10 +518,11 @@ array_push($items,
         'priority' => Enum_UserPriorityLevel::Company,
         'deepLevel' => 1,
         'showIn' => [
-            'consultants'
+            'consultants/{any}'
         ],
         'disabled' => false,
-        'active' => false
+        'active' => false,
+        'hasActiveChild' => false
     ],
     [
         'slug' => 'settings',
@@ -513,10 +534,11 @@ array_push($items,
         'priority' => Enum_UserPriorityLevel::General,
         'deepLevel' => 1,
         'showIn' => [
-            'settings'
+            'settings/{any}'
         ],
         'disabled' => false,
         'active' => false,
+        'hasActiveChild' => false
     ]
 );
 

@@ -68,9 +68,9 @@ Vue.component('approve-elements-tab', {
         }
     },
     methods: {
-        async generateReports(filters) {
+        async generateReports({filters, page}) {
             this.filters = filters;
-
+            this.page = page;
 
             this.transformedFilters = {
                 'companyId': +this.filters.selectedCompany.id,

@@ -13125,8 +13125,8 @@ ul.q4-unordered-list>li .q4-nested-list>li:last-child {
 .sidebar {
   display: table-cell;
   /*background: #003a63 url("../img/sidebar_bg2.png") no-repeat;*/
-  background: url("../img/sidebar_bg2.png") no-repeat;
-  background-size: auto;
+  background: url("../img/sidebar_bg2.jpg") no-repeat;
+  background-size: 205px;
   width: 205px;
   min-width: 205px;
   height: 100%;
@@ -13191,7 +13191,7 @@ ul.q4-unordered-list>li .q4-nested-list>li:last-child {
   font-style: normal;
   font-family: "proxima_nova_rgregular", Arial, Helvetica, sans-serif;
   background-color: #064266;
-  margin-bottom: 1px;
+  margin-bottom: 2px;
 }
 
 .sidebar .sidebar-nav ul li .sidebar-items .icon {

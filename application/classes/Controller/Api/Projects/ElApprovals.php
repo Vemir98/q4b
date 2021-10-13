@@ -172,7 +172,9 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
             }
 
             Database::instance()->commit();
-            $this->sendNotificationToUsers($elApprovalId);
+
+            PushNotification::notifyElAppUsers($elApprovalId, Enum_NotifyAction::Created);
+//            $this->sendNotificationToUsers($elApprovalId);
 
             $this->_responseData = [
                 'status' => 'success',
@@ -335,19 +337,37 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
     public function action_index_get(){
         $elApprovalId = $this->getUIntParamOrDie($this->request->param('id'));
         try {
-            $elApproval = Api_DBElApprovals::getElApprovalById($elApprovalId);
 
-            if(empty($elApproval)) {
-                throw API_Exception::factory(500,'Incorrect EAR id');
+            $status = Arr::get($_GET, 'status');
+
+            $filters = [];
+            if($status) {
+                if(!in_array($status,Enum_ApprovalStatus::toArray(),true)) {
+                    throw API_ValidationException::factory(500, 'Invalid status');
+                }
+
+                $filters['status'] = $status;
             }
 
-            $elApproval = $this->getApproveElementsExpandedData($elApproval);
+            $elApproval = Api_DBElApprovals::getElApprovalById($elApprovalId, $filters)[0];
+
+//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$elApproval]); echo "</pre>"; exit;
+
+//            if(empty($elApproval)) {
+//                throw API_Exception::factory(500,'Incorrect EAR id');
+//            }
+
+//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$elApproval]); echo "</pre>"; exit;
+            $elApproval = $this->getApproveElementsExpandedData([$elApproval])[0];
+
+//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($elApproval); echo "</pre>"; exit;
             $this->_responseData = [
                 'status' => "success",
-                'items' => $elApproval
+                'item' => $elApproval
             ];
         }  catch (Exception $e){
             throw API_Exception::factory(500,'Operation Error');
+//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$e->getMessage()]); echo "</pre>"; exit;
         }
     }
 
@@ -420,6 +440,47 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
     public function action_list_user_post() {
         try {
             $filters = Arr::extract($_POST,
+                [
+                    'companyId',
+                    'projectId',
+                    'objectIds',
+                    'placeIds',
+                    'elementIds',
+                    'specialityIds',
+                    'statuses',
+                    'positions',
+                ]);
+
+            $valid = Validation::factory($filters);
+
+            $valid
+                ->rule('companyId', 'not_empty')
+                ->rule('projectId', 'not_empty');
+
+            if (!$valid->check()) {
+                throw API_ValidationException::factory(500, 'missing required field companyId or projectId');
+            }
+
+            $elApprovals = Api_DBElApprovals::getElApprovalsByUserId($filters, Auth::instance()->get_user()->id);
+            $elApprovals = $this->getApproveElementsExpandedData($elApprovals);
+
+            $this->_responseData = [
+                'status' => 'success',
+                'items' => $elApprovals
+            ];
+        } catch (Exception $e){
+            throw API_Exception::factory(500,'Operation Error');
+        }
+    }
+
+    /**
+     * returns element approvals filtered list (return only EAR's which available to current user)
+     * returned data will be as rows[{}]
+     * https://qforb.net/api/json/<appToken>/el-approvals/list/user
+     */
+    public function action_list_user_get() {
+        try {
+            $filters = Arr::extract($_GET,
                 [
                     'companyId',
                     'projectId',
@@ -713,10 +774,9 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
 
             DB::delete('el_approvals')->where('id', '=', $elApprovalId)->execute($this->_db);
 
-            $this->updateElementApproval($elApprovalId);
+            PushNotification::notifyElAppUsers($elApprovalId, Enum_NotifyAction::Deleted);
 
             Database::instance()->commit();
-
 
             $this->_responseData = [
                 'status' => "success"
@@ -1150,7 +1210,8 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
             ->where('id', '=', $elApprovalId)
             ->execute($this->_db);
 
-        $this->sendNotificationToUsers($elApprovalId);
+//        $this->sendNotificationToUsers($elApprovalId);
+        PushNotification::notifyElAppUsers($elApprovalId, Enum_NotifyAction::Updated);
     }
 
     /**
@@ -1170,33 +1231,33 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
 
 //    PushNotification::notifyElAppUsers($elApprovalId);
 
-    private function sendNotificationToUsers($elApprovalId) {
-
-//      $elApproval = Api_DBElApprovals::getElApprovalById($elApprovalId);
-
-      $users = Api_DBElApprovals::getElApprovalUsersListForNotify($elApprovalId);
-
-      $usersDeviceTokens = [];
-
-      foreach ($users as $user) {
-          if($user['deviceToken']) {
-              array_push($usersDeviceTokens, $user['deviceToken']);
-          }
-      }
+//    private function sendNotificationToUsers($elApprovalId) {
 //
-//        echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$usersDeviceTokens]); echo "</pre>"; exit;
-
-        $timestamp = time();
-
-//        $usersDeviceTokens = ['f5bWjICSSMiE40tO7w5RF2:APA91bGGAwSYAYz5t7b1l8jnC385xjLGne5FkWh2LxHQ9W19AflFCnNHsLo8nF1Ydn9_w3dd2a1BmhGFPfLlmGMrWmB0z3k5hQ77bq0zljFxPQAasA9tBjA45rXHb-uXZ6NFgQKklP0i'];
-//            Kohana::$log->add(Log::ERROR, 'from elApprovals: ' . json_encode([$users], JSON_PRETTY_PRINT));
-
-        PushHelper::test([
-            'lang' => \Language::getCurrent()->iso2,
-            'action' => 'elApproval',
-            'usersDeviceTokens' => $usersDeviceTokens
-        ], $timestamp );
-
-
-    }
+////      $elApproval = Api_DBElApprovals::getElApprovalById($elApprovalId);
+//
+//      $users = Api_DBElApprovals::getElApprovalUsersListForNotify($elApprovalId);
+//
+//      $usersDeviceTokens = [];
+//
+//      foreach ($users as $user) {
+//          if($user['deviceToken']) {
+//              array_push($usersDeviceTokens, $user['deviceToken']);
+//          }
+//      }
+////
+////        echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$usersDeviceTokens]); echo "</pre>"; exit;
+//
+//        $timestamp = time();
+//
+////        $usersDeviceTokens = ['f5bWjICSSMiE40tO7w5RF2:APA91bGGAwSYAYz5t7b1l8jnC385xjLGne5FkWh2LxHQ9W19AflFCnNHsLo8nF1Ydn9_w3dd2a1BmhGFPfLlmGMrWmB0z3k5hQ77bq0zljFxPQAasA9tBjA45rXHb-uXZ6NFgQKklP0i'];
+////            Kohana::$log->add(Log::ERROR, 'from elApprovals: ' . json_encode([$users], JSON_PRETTY_PRINT));
+//
+//        PushHelper::test([
+//            'lang' => \Language::getCurrent()->iso2,
+//            'action' => 'elApproval',
+//            'usersDeviceTokens' => $usersDeviceTokens
+//        ], $timestamp );
+//
+//
+//    }
 }

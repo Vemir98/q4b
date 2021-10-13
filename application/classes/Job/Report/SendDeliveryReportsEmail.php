@@ -15,7 +15,8 @@ class Job_Report_SendDeliveryReportsEmail
         foreach ($this->args['emails'] as $email){
             $mail->to($email);
         }
-        $mail->from('info@qforb.net',$this->args['user']['name']);
+//        $mail->from('info@qforb.net',$this->args['user']['name']);
+        $mail->from('info@qforb.net', 'Info Reports');
         $mail->subject(html_entity_decode(__(':user | דו״ח | :project',[':user' => $this->args['user']['name'], ':project' => $this->args['project']])));
         $mail->reply($this->args['user']['email'],$this->args['user']['name']);
         $mail->body(View::factory($this->args['view'],[

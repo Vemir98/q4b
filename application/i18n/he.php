@@ -147,7 +147,7 @@ return [
     'Building(s)'=>'בניין',
     'Parking(s)'=>'חניה',
     'Other'=>'אחר',
-    'Tasks'=>'בדיקות',
+    'Tasks'=>'מערך בדיקות',
     'Property'=>'מבנה',
     'Plans'=>'תוכניות',
     'Certifications'=>'אישורים/פתיחת מלאכות',
@@ -935,5 +935,7 @@ return [
     'manager_signature' => 'חתימת מנהל',
     'list_of_files' => 'רשימת קבצים',
     'without_elements' => 'בקרות ללא אלמנטים',
+    'delivery_module_settings' => 'הגדרות של פרוטוקול מסירות',
+    'approval_element_reports' => 'דו״ח אישור אלמנטים',
     ''=>'',
 ];
