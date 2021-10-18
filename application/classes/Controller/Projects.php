@@ -527,7 +527,7 @@ class Controller_Projects extends HDVP_Controller_Template
 
     public function action_get_images(){
         $this->_checkForAjaxOrDie();
-        $id = (int)$this->request->param('id');
+        $id = (int)$this->request->param('projectId');
         $this->project = ORM::factory('Project',$id);
         if( ! $this->project->loaded() OR !$this->_user->canUseProject($this->project)){
             throw new HTTP_Exception_404;
@@ -746,7 +746,8 @@ class Controller_Projects extends HDVP_Controller_Template
 
     public function action_update_properties(){
 
-        $this->project = ORM::factory('Project',(int)$this->request->param('id'));
+        $this->project = ORM::factory('Project',(int)$this->request->param('projectId'));
+
         if( ! $this->project->loaded() OR !$this->_user->canUseProject($this->project)){
             throw new HTTP_Exception_404;
         }
@@ -888,10 +889,10 @@ class Controller_Projects extends HDVP_Controller_Template
     }
 
     public function action_project_properties(){
-        $id = (int)$this->request->param('id');
+        $id = (int)$this->request->param('projectId');
 
         $this->_checkForAjaxOrDie();
-        $this->project = ORM::factory('Project',(int)$this->request->param('id'));
+        $this->project = ORM::factory('Project',(int)$this->request->param('projectId'));
         if( ! $this->project->loaded() OR !$this->_user->canUseProject($this->project)){
             throw new HTTP_Exception_404;
         }
@@ -2363,7 +2364,7 @@ class Controller_Projects extends HDVP_Controller_Template
 
     public function action_update_tracking(){
         $this->_checkForAjaxOrDie();
-        $trackingId = $this->getUIntParamOrDie($this->request->param('id'));
+        $trackingId = $this->getUIntParamOrDie($this->request->param('projectId'));
         $tracking = ORM::factory('PlanTracking',$trackingId);
         if( ! $tracking->loaded()){
             throw new HTTP_Exception_404();
@@ -2417,7 +2418,7 @@ class Controller_Projects extends HDVP_Controller_Template
 
     public function action_delete_tracking_file(){
         $this->_checkForAjaxOrDie();
-        $trackingId = $this->getUIntParamOrDie($this->request->param('id'));
+        $trackingId = $this->getUIntParamOrDie($this->request->param('projectId'));
         $tracking = ORM::factory('PlanTracking',$trackingId);
         if( ! $tracking->loaded()){
             throw new HTTP_Exception_404();
@@ -2608,7 +2609,7 @@ class Controller_Projects extends HDVP_Controller_Template
 
     public function action_quality_control_delete(){
         $this->_checkForAjaxOrDie();
-        $qcId = (int)$this->request->param('id');
+        $qcId = (int)$this->request->param('projectId');
         $qc = ORM::factory('QualityControl',$qcId);
         if( ! $qc->loaded()){
             throw new HTTP_Exception_404;
@@ -2617,6 +2618,7 @@ class Controller_Projects extends HDVP_Controller_Template
             throw new HTTP_Exception_403();
         }
         $qc->delete();
+//        PushNotification::notifyQcUsers($qc->id, Enum_NotifyAction::Deleted);
     }
 
     public function action_update_quality_control_message(){
@@ -2774,7 +2776,7 @@ class Controller_Projects extends HDVP_Controller_Template
 
     public function action_add_quality_control_image_from_raw_data(){
         $this->_checkForAjaxOrDie();
-        $qcId = $this->request->param('id');
+        $qcId = $this->request->param('projectId');
         $qc = ORM::factory('QualityControl',$qcId);
         if(!$qc->loaded()){
             throw new HTTP_Exception_404();

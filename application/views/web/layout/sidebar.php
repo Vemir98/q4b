@@ -585,25 +585,7 @@ $items = json_decode(json_encode($items));
 </div>
 
 <div class="sidebar_mobile">
-    <div class="wrap_sidebar_close">
-        <span class="close_mobile_sidebar">X</span>
-    </div>
-
-    <div class="search-mobile">
-        <div class="sidebar-profile-options">
-            <div class="sidebar-mobile-profile-img">
-                <img src="/media/img/profile.png" alt="profile picture">
-            </div>
-            <div class="mobile-profile-name">
-                <span class="f_name"><?=Auth::instance()->get_user()->name?></span>
-            </div>
-            <div class="mobile-profile-role"><?=__(Usr::role())?></div>
-        </div>
-        <ul class="profile-drop-list">
-            <li><a href="#" class="get-modal get-user-profile" data-url="<?=URL::site('user/profile')?>"><?=__('My Profile')?></a></li>
-            <li><a href="<?=URL::site('logout')?>" ><?=__('Logout')?></a></li>
-        </ul>
-        <?=Security::mousetrapRandLink()?>
+    <div class="sidebar_mobile_header">
         <div class="sidebar_options">
             <span class="flag-icon">
                  <span class="mobile-current-lang">
@@ -613,7 +595,7 @@ $items = json_decode(json_encode($items));
                 <ul class="mobile-lang-list">
                     <?foreach (Language::getAll() as $lang):?>
                         <?if(Language::getCurrent()->iso2 == $lang->iso2) continue?>
-                            <li>
+                        <li>
                                 <a href="<?=Route::url(Request::$current->route()->name(Request::$current->route()), array_merge(Request::$current->param(),['lang' => $lang->slug, 'controller' => Request::$current->controller(), 'action' => Request::$current->action()])).URL::query()?>">
                                     <img src="<?=URL::withLang($lang->image,Language::getDefault()->slug)?>" class="q4_flag" alt="<?=$lang->name?>">
                                 </a>
@@ -622,19 +604,50 @@ $items = json_decode(json_encode($items));
                 </ul>
             </span>
         </div>
+        <div class="logo">
+            <div class="wrap-logo">
+                <a href="/" title="logo"><img src="/media/img/logo_variation1-1-t.png" alt="logo"></a>
+            </div>
+        </div>
+        <div class="wrap_sidebar_close">
+            <i class="q4bikon-close1 close_mobile_sidebar"></i>
+<!--            <span class="close_mobile_sidebar">X</span>-->
+        </div>
     </div>
-    <ul>
-        <?foreach ($items as $i):?>
-        <li>
-            <a
-                href="<?=!empty($i->href) ? URL::site($i->href) : '#'?>"
-                class="sidebar-items <?=(!empty($i->href) AND strpos(URL::site(Request::detect_uri(), TRUE) . URL::query(),URL::site($i->href)) !== false) ? 'active' : ''?>"
-                title="<?=__($i->tooltip)?>">
-                <i class="icon <?=$i->icon?>"></i>
-                <span class="sidebar-items_title"><?=__($i->text)?></span>
-            </a>
-        </li>
-        <?endforeach?>
-    </ul>
+
+
+    <div class="search-mobile">
+        <div class="sidebar-profile-options get-modal get-user-profile" data-url="<?=URL::site('user/profile')?>">
+            <div class="sidebar-mobile-profile-img">
+                <img src="/media/img/profile.png" alt="profile picture">
+            </div>
+            <div class="mobile-profile-name">
+                <span class="f_name"><?=Auth::instance()->get_user()->name?></span>
+            </div>
+            <div class="mobile-profile-role"><?=__(Usr::role())?></div>
+        </div>
+<!--        <ul class="profile-drop-list">-->
+<!--            <li><a href="#" class="get-modal get-user-profile" data-url="--><?//=URL::site('user/profile')?><!--">--><?//=__('My Profile')?><!--</a></li>-->
+<!--            <li><a href="--><?//=URL::site('logout')?><!--" >--><?//=__('Logout')?><!--</a></li>-->
+<!--        </ul>-->
+        <?=Security::mousetrapRandLink()?>
+
+    </div>
+    <nav class="sidebar-nav">
+        <ul>
+            <?=Menu::createSideBar($items)?>
+            <li>
+                <a
+                    href="<?=URL::site('logout')?>"
+                    class="sidebar-items"
+                    title="<?=__('Logout')?>">
+                    <i class="fw-600 icon q4bikon-exit"></i>
+                    <div class='sidebar-items_content'>
+                        <span class="sidebar-items_title"><?=__('Logout')?></span>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </nav>
 <!--end responsive sidebar-->
 </div>

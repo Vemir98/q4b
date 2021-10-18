@@ -311,7 +311,7 @@ Vue.component('reports-list', {
         async getQcs(qcId) {
             this.showLoader = true;
 
-            let url = '/quality-controls/get/'+qcId+'?fields=createdAt';
+            let url = '/quality-controls/get/'+qcId+'?fields=createdAt&all=true';
             try {
                 let result = await qfetch(url, {method: 'GET', headers: {}});
                 this.showLoader = false;

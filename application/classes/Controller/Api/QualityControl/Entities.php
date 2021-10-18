@@ -18,25 +18,27 @@ class Controller_Api_QualityControl_Entities extends HDVP_Controller_API
         try {
 
             $fields = Arr::get($_GET,'fields');
+            $all = Arr::get($_GET,'all');
+
+//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$forMobile]); echo "</pre>"; exit;
+
             if(!empty($fields)){
                 $fields = Arr::decamelize(explode(',',$fields));
             }
 
-            $qc = Api_DBQualityControl::getQcById($qcId, $fields)[0];
+            $qc = Api_DBQualityControl::getQcById($qcId, $fields, $all)[0];
 
-            if(!$qc) {
-                throw API_Exception::factory(500,'Incorrect QC id');
-            }
-
-            if(empty($fields)) {
-                $qc['files'] = $this->getQcImages($qcId);
-                $qc['tasks'] = $this->getQcTasks($qcId);
-            } else {
-                if(in_array('files', $fields)) {
+            if($qc) {
+                if(empty($fields)) {
                     $qc['files'] = $this->getQcImages($qcId);
-                }
-                if(in_array('tasks', $fields)) {
                     $qc['tasks'] = $this->getQcTasks($qcId);
+                } else {
+                    if(in_array('files', $fields)) {
+                        $qc['files'] = $this->getQcImages($qcId);
+                    }
+                    if(in_array('tasks', $fields)) {
+                        $qc['tasks'] = $this->getQcTasks($qcId);
+                    }
                 }
             }
 
@@ -46,7 +48,8 @@ class Controller_Api_QualityControl_Entities extends HDVP_Controller_API
             ];
 
         } catch (Exception $e){
-            throw API_Exception::factory(500,'Operation Error');
+//            throw API_Exception::factory(500,'Operation Error');
+            throw API_Exception::factory(500,$e->getMessage());
         }
     }
 

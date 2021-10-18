@@ -558,6 +558,7 @@ class Controller_Api_Projects extends HDVP_Controller_API
             Database::instance()->commit();
 
             PushNotification::notifyQcUsers($qc->id, Enum_NotifyAction::Created);
+
 //            if($clientData['status'] != Enum_QualityControlStatus::Existing && $clientData['status'] != Enum_QualityControlStatus::Normal){
 //                if($clientData['approval_status'] != Enum_QualityControlApproveStatus::Approved) {
 //                    $this->sendNotificationToUsers($place->project->users->find_all());

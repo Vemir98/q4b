@@ -166,6 +166,7 @@ class Api_DBElApprovals
             LEFT JOIN elements e ON ea.element_id=e.id
             LEFT JOIN el_approvals_notifications ean ON ean.ell_app_id=ea.id';
 
+
         $query .= ' WHERE ea.company_id=:companyId AND ea.project_id=:projectId';
         if(isset($filters['objectIds']) && !empty($filters['objectIds'])){
             $objectIds = DB::expr(implode(',',$filters['objectIds']));

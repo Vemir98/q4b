@@ -215,14 +215,18 @@ class Controller_Auth extends HDVP_Controller_Template
                     $output = 'projects';
                     break;
                 case Enum_UserOutspread::Corporate:
-                    $output = 'companies';
+//                    $output = 'companies';
+                    $output = 'projects';
                     break;
                 case Enum_UserOutspread::Company:
-                    $output = 'companies/update/' . Auth::instance()->get_user()->company_id. '?tab=info';
+//                    $output = 'companies/update/' . Auth::instance()->get_user()->company_id. '?tab=info';
+//                    $output = 'companies';
+                    $output = 'projects';
                     break;
                 case Enum_UserOutspread::Project:
                     if(Auth::instance()->get_user()->is('project_visitor'))
                         $output = 'reports';
+//                        $output = 'projects';
                     else
                         $output = 'projects';
                     break;

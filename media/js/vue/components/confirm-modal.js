@@ -12,11 +12,11 @@ Vue.component('confirm-modal', {
                         </div>
                         <div class="confirmation-modal-body text-center">
 <!--                            <p class="red">{{ msg }} <span class="confirmation-object">"{{ deletable }}"</span>?</p>-->
-                            <p class="red">{{ msg }} {{ deletable }} {{ deletableId }} ?</p>
+                            <p :class="[confirmButtonText ? 'orange' : 'red']">{{ msg }} {{ deletable }} {{ deletableId }} ?</p>
                         </div>
                         <div class="confirmation-modal-footer">
                             <a class="btn btn-cancel" @click="$emit('closeConfirm')">{{ trans.cancel }}</a>
-                            <a class="btn btn-confirm red" @click="$emit('deleteConfirmed', modalData)">{{ trans.delete }}</a>
+                            <a :class="['btn','btn-confirm', (confirmButtonText ? 'orange' : 'red')]" @click="$emit('deleteConfirmed', modalData)">{{ confirmButtonText ? confirmButtonText : trans.delete }}</a>
                         </div>
                     </div>
                 </div>
@@ -28,9 +28,10 @@ Vue.component('confirm-modal', {
     props: {
         trans: {required: true},
         msg: {required: true},
-        deletable: {required: true},
-        deletableId: {required: true},
+        deletable: {required: false},
+        deletableId: {required: false},
         modalData: {required: false},
+        confirmButtonText: {required: false}
     },
 
     data() {

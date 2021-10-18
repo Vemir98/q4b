@@ -135,7 +135,7 @@ Vue.component('report-item', {
                 <div class="approve-elv-reports-top-headline">{{ trans.speciality_list }}</div>
                 <div class="approve-elv-reports-delete-all" >
                      <button
-                         @click="openConfirmDeletePopup = true"
+                         @click="openConfirmDeleteReportPopup = true"
                          class="delete-all"
                          v-if="canUpdate"
                      > 
@@ -300,14 +300,23 @@ Vue.component('report-item', {
             </div>
         </div>
         <confirm-modal 
-            v-if="openConfirmDeletePopup"
+            v-if="openConfirmDeleteReportPopup"
             :msg="trans.are_you_sure_to_delete" 
             :trans="trans" 
             :deletable="trans.approve_element"
             :deletable-id="report.id"
             :modal-data="{}"
-            @closeConfirm="openConfirmDeletePopup = false"
+            @closeConfirm="openConfirmDeleteReportPopup = false"
             @deleteConfirmed="deleteReport"
+        />
+        <confirm-modal 
+            v-if="openConfirmDeleteManagerSignaturePopup"
+            :msg="trans['change_status?']" 
+            :trans="trans" 
+            :modal-data="{}"
+            :confirm-button-text="trans.update"
+            @closeConfirm="managerSignatureDeletingCanceled"
+            @deleteConfirmed="updateManagerSignature"
         />
     </section>
     `,
@@ -328,7 +337,8 @@ Vue.component('report-item', {
         return {
             showLoader: false,
             openSignaturePopup: false,
-            openConfirmDeletePopup: false,
+            openConfirmDeleteReportPopup: false,
+            openConfirmDeleteManagerSignaturePopup: false,
             popupWasOpenFrom: '',
             trans: JSON.parse(this.translations),
             elStatuses: this.getStatuses(this.statuses),
@@ -352,26 +362,26 @@ Vue.component('report-item', {
     },
     components: { Multiselect: window.VueMultiselect.default },
     computed: {
-      canSign() {
-         return (this.signatureDrawn && this.currentSignerName && this.currentSignerPosition)
-      },
-      canUpdate() {
-          return (this.report.status === 'waiting')
-      },
+        canSign() {
+            return (this.signatureDrawn && (this.currentSignerName !== "") && (this.currentSignerPosition !== ""))
+        },
+        canUpdate() {
+            return (this.report.status === 'waiting')
+        },
         canUpdateReportNote() {
-          return this.initialReport.notice !== this.report.notice
+            return this.initialReport.notice !== this.report.notice
         }
     },
     watch: {
-      report: {
-          handler() {
-              this.report.specialities.forEach((speciality, index) => {
-                  this.canUpdateSpeciality[index] = (speciality.canUpdateNote || speciality.canUpdateSignatures || speciality.canUpdateTaskStatuses)
-                  this.report.updated = false;
-              })
-          },
-          deep: true
-      }
+        report: {
+            handler() {
+                this.report.specialities.forEach((speciality, index) => {
+                    this.canUpdateSpeciality[index] = (speciality.canUpdateNote || speciality.canUpdateSignatures || speciality.canUpdateTaskStatuses)
+                    this.report.updated = false;
+                })
+            },
+            deep: true
+        }
     },
     created() {
         var date = new Date();
@@ -419,6 +429,14 @@ Vue.component('report-item', {
                 this.newSignatures = [];
 
             } else {
+
+                this.signaturePad = new SignaturePad(this.$refs['signaturePad'], {
+                    penColor: "rgb(18,4,134)",
+                    onEnd: () => {
+                        this.signatureDrawn = true;
+                    }
+                })
+
                 this.keepOtherSignatures = keepOthers;
                 this.currentSpeciality = speciality;
                 this.currentSignerPosition = this.userProf;
@@ -439,7 +457,7 @@ Vue.component('report-item', {
                         'position': this.currentSignerPosition,
                         'image': this.signaturePad.toDataURL(),
                     }
-                break;
+                    break;
 
                 default:
                     this.newSignatures.push({
@@ -451,7 +469,7 @@ Vue.component('report-item', {
                         'createdAt': Date.now() / 1000,
                         'creatorName': this.username
                     })
-                break;
+                    break;
             }
 
             this.currentSignerName = this.username;
@@ -464,7 +482,7 @@ Vue.component('report-item', {
             switch(this.popupWasOpenFrom) {
                 case "managerSignature":
                     this.updateManagerSignature()
-                break;
+                    break;
                 default:
                     this.report.specialities.forEach(speciality => {
                         if(+speciality.id === +this.currentSpeciality.id) {
@@ -478,7 +496,7 @@ Vue.component('report-item', {
                         }
                     })
                     this.newSignatures = [];
-                break;
+                    break;
             }
             this.openSignaturePopup = false;
         },
@@ -545,7 +563,7 @@ Vue.component('report-item', {
             this.showLoader = true;
             let url = `/el-approvals/${this.report.id}`;
             speciality.projectId = this.project.id;
-            qfetch(url, {method: 'PUT', headers: {}, body: speciality})
+            qfetch(url, {method: 'PUT', headers: {}, body: {specialities: [speciality]}})
                 .then(response => {
                     this.getSpeciality(speciality.id);
                     this.showLoader = false;
@@ -595,24 +613,25 @@ Vue.component('report-item', {
                 })
         },
         ReportStatusChanged(status) {
-          switch (status.name) {
-              case "approved":
-                  this.togglePopup(null, true, false, 'managerSignature')
-                  break;
-              case "waiting":
-                  this.updateManagerSignature();
-                  break;
-          }
+            switch (status.name) {
+                case "approved":
+                    this.togglePopup(null, true, false, 'managerSignature')
+                    break;
+                case "waiting":
+                    this.openConfirmDeleteManagerSignaturePopup = true;
+                    break;
+            }
         },
         updateManagerSignature() {
             this.showLoader = true;
             let url = `/el-approvals/${this.report.id}/add_signature`;
             qfetch(url, {method: 'POST', headers: {}, body:this.managerSignature})
                 .then(response => {
-                    this.report.managerSignature = response.item;
-                    this.initialReport.managerSignature = response.item;
+                    this.report.managerSignature = response.item ? response.item :null;
+                    this.initialReport.managerSignature = response.item ? response.item :null;
                     this.changeReportStatus(this.selectedStatus)
                     this.showLoader = false;
+                    this.openConfirmDeleteManagerSignaturePopup = false;
                 })
                 .catch(error => {
                     this.selectedStatus = this.elStatuses.filter(elStatus => {
@@ -677,9 +696,9 @@ Vue.component('report-item', {
             }
         },
         nothingToUpdate() {
-           let array = this.report.specialities.filter((speciality,index ) => {
-               return !this.test1(index)
-           })
+            let array = this.report.specialities.filter((speciality,index ) => {
+                return !this.test1(index)
+            })
 
             return (array.length === this.report.specialities.length)
         },
@@ -689,7 +708,7 @@ Vue.component('report-item', {
                 if(speciality.qualityControl) {
                     this.showLoader = true;
 
-                    let url = '/quality-controls/get/'+speciality.qualityControl+'?fields=createdAt';
+                    let url = '/quality-controls/get/'+speciality.qualityControl+'?fields=createdAt&all=true';
 
                     qfetch(url, {method: 'GET', headers: {}})
                         .then(response => {
@@ -698,7 +717,14 @@ Vue.component('report-item', {
                         })
                 }
             })
-        }
+        },
+        managerSignatureDeletingCanceled() {
+            this.openConfirmDeleteManagerSignaturePopup = false;
+            this.selectedStatus = this.elStatuses.filter(elStatus => {
+                return elStatus.id === 1;
+            })[0];
+            console.log('this.selectedStatus', this.selectedStatus)
+        },
     },
     mounted() {
         this.signaturePad = new SignaturePad(this.$refs['signaturePad'], {
@@ -710,4 +736,3 @@ Vue.component('report-item', {
         this.selectedStatus = this.elStatuses.find(status => status.name === this.report.status)
     },
 });
-

@@ -145,7 +145,7 @@ if($_USER->is('project_supervisor') || $isSubcontractor){//запрет на и�
                                             <div class="row">
                                                 <div class="col-20 rtl-float-right">
                                                     <label class="table_label"><?=__('Floor')?></label>
-                                                    <input type="text" class="table_input bidi-override disabled-input" value="<?=$item->place->floor->custom_name ? $item->place->floor->custom_name : $item->place->floor->number?>"/>
+                                                    <input type="text" class="table_input bidi-override disabled-input" value="<?=$item->place->floor->number?>"/>
                                                 </div>
                                                 <div class="col-25 rtl-float-right">
                                                     <label class="table_label table_label-small"><?=__('Element number')?></label>
@@ -208,7 +208,7 @@ if($_USER->is('project_supervisor') || $isSubcontractor){//запрет на и�
                                                                         <?$i = 0?>
                                                                         <?$file = $plan->files->where('status','=',Enum_FileStatus::Active)->find()?>
                                                                         <li>
-                                                                            <a data-url="<?=URL::site('/projects/update_quality_control_plan_image/' . $item->id.'/'.$file->id)?>" data-fileid="<?=$file->id?>" data-ext="<?=$file->mime?>" data-controller="update_quality_control_plan_image"  class="call-lit-plugin" title="<?=$file->original_name?>"><img src="/media/img/choose-format/format-<?=strtolower($file->ext)?>.png" alt="<?=$file->ext?>"/></a>
+                                                                            <a data-url="<?=(strpos($file->getImageLink(), 'http') === false) ? '/' . trim($file->getImageLink(), '/') : $file->getImageLink()?>?>" data-fileid="<?=$file->id?>" data-ext="<?=$file->mime?>" data-controller="update_quality_control_plan_image"  class="call-lit-plugin" title="<?=$file->original_name?>"><img src="/media/img/choose-format/format-<?=strtolower($file->ext)?>.png" alt="<?=$file->ext?>"/></a>
                                                                         </li>
                                                                     </ul>
 
@@ -528,7 +528,7 @@ if($_USER->is('project_supervisor') || $isSubcontractor){//запрет на и�
                                     <textarea name="dialog" class='modal-plans-details-textarea'></textarea>
                                 </div>
                             </div>
-                        <?endif?>
+                        <?endif?>   
                     </div>
                 </div>
                 </div>
@@ -795,7 +795,15 @@ if($_USER->is('project_supervisor') || $isSubcontractor){//запрет на и�
                                                         <?$i = 0?>
                                                         <?$file = $plan->files->where('status','=',Enum_FileStatus::Active)->find()?>
                                                         <li>
-                                                            <a data-url="<?=$file->getImageLink()?>" data-fileid="<?=$file->id?>" data-ext="<?=$file->mime?>" data-controller="update_quality_control_plan_image"  class="call-lit-plugin" title="<?=$file->original_name?>"><img src="/media/img/choose-format/format-<?=strtolower($file->ext)?>.png" alt="<?=$file->ext?>"/></a>
+                                                            <a
+                                                                    data-url="<?=(strpos($file->getImageLink(), 'http') === false) ? '/' . trim($file->getImageLink(), '/') : $file->getImageLink()?>"
+                                                                    data-fileid="<?=$file->id?>"
+                                                                    data-ext="<?=$file->mime?>"
+                                                                    data-controller="update_quality_control_plan_image"
+                                                                    class="call-lit-plugin"
+                                                                    title="<?=$file->original_name?>">
+                                                                <img src="/media/img/choose-format/format-<?=strtolower($file->ext)?>.png" alt="<?=$file->ext?>"/>
+                                                            </a>
 
                                                         </li>
 

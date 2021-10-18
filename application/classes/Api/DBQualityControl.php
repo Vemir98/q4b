@@ -8,27 +8,13 @@
  */
 class Api_DBQualityControl
 {
-    public static function getQcById($qcId, $fields)
+    public static function getQcById($qcId, $fields, $all)
     {
         if(!empty($fields)) {
             $query = "SELECT
             :fields
             FROM quality_controls qc
             WHERE qc.id=:qcId";
-
-            $exceptions = ['files','tasks'];
-            foreach ($fields as $key => $field) {
-                if(!in_array($field, $exceptions)) {
-                    $fields[$key].= ' as '.Api_DBQualityControl::toCamelCase($field);
-                } else {
-                    unset($fields[$key]);
-                }
-            }
-            $query = DB::query(Database::SELECT, $query);
-            $query->param(':qcId', $qcId);
-
-            $fields = DB::expr(implode(',',$fields));
-            $query->param(':fields', $fields);
 
         } else {
             $query = "SELECT
@@ -54,17 +40,49 @@ class Api_DBQualityControl
             qc.created_at as createdAt,
             qc.updated_at as updatedAt,
             qc.approved_at as approvedAt,
-            qc.created_by as createdBy,
-            qc.updated_by as updatedBy,
-            qc.approved_by as approvedBy,
+            (select u.name from users u where u.id=qc.created_by) as createdBy,
+            (select u.name from users u where u.id=qc.updated_by) as updatedBy,
+            (select u.name from users u where u.id=qc.approved_by) as approvedBy,
             qc.approval_status as approvalStatus
             FROM quality_controls qc
-            LEFT JOIN el_approvals ea ON qc.el_approval_id=ea.element_id
+            LEFT JOIN el_approvals ea ON qc.el_approval_id=ea.id
             WHERE qc.id=:qcId";
 
-            $query = DB::query(Database::SELECT, $query);
-            $query->param(':qcId', $qcId);
         }
+//        if(!$all) {
+//            $query .= ' AND qc.status NOT IN (":statuses")';
+//            $query .= ' AND qc.approval_status != :approvalStatus';
+//        }
+
+        $query = DB::query(Database::SELECT, $query);
+        $query->param(':qcId', $qcId);
+
+        if(!empty($fields)) {
+
+            $exceptions = ['files','tasks'];
+            foreach ($fields as $key => $field) {
+                $field = Api_DBQualityControl::toCamelCase($field);
+                if(!in_array($field, $exceptions)) {
+                    $fields[$key].= ' as '.$field;
+                    if(in_array($field, ['createdBy', 'updatedBy', 'approvedBy'])) {
+                        $fields[$key] = '(select u.name from users u where u.id=qc.'.Arr::decamelize([$field])[0].') as '.$field;
+                    }
+                } else {
+                    unset($fields[$key]);
+                }
+            }
+
+            $fields = DB::expr(implode(',',$fields));
+            $query->param(':fields', $fields);
+        }
+
+//        $statuses = DB::expr(implode('","',[
+//            Enum_QualityControlStatus::Existing,
+//            Enum_QualityControlStatus::Normal
+//        ]));
+//        $approvalStatus = Enum_QualityControlApproveStatus::Approved;
+//        $query->param(':statuses', $statuses);
+//        $query->param(':approvalStatus', $approvalStatus);
 
         return $query->execute()->as_array();
     }

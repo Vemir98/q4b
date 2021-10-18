@@ -937,5 +937,6 @@ return [
     'without_elements' => 'בקרות ללא אלמנטים',
     'delivery_module_settings' => 'הגדרות של פרוטוקול מסירות',
     'approval_element_reports' => 'דו״ח אישור אלמנטים',
+    'change_status?' => 'האם אתה בטוח שאתה רוצה לשנות את הסטטוס',
     ''=>'',
 ];

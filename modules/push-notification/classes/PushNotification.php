@@ -28,7 +28,7 @@ class PushNotification
 
         $f = fopen(DOCROOT.'testNotification.txt', 'a');
         if($f) {
-            fputs($f, '[PushNotification] - [type=elApproval] - [action='.$action.'] - [id='.$elApprovalId.']'."\n");
+            fputs($f, '[PushNotification] - [type=elApproval] - [action='.$action.'] - [id='.$elApprovalId.'] - ['.date("Y-m-d h:i:sa").']'."\n");
         }
         fclose($f);
     }
@@ -61,7 +61,7 @@ class PushNotification
 
         $f = fopen(DOCROOT.'testNotification.txt', 'a');
         if($f) {
-            fputs($f, '[PushNotification] - [type='.$type.'] - [action='.$action.'] - [id='.$typeId.']'."\n");
+            fputs($f, '[PushNotification] - [type='.$type.'] - [action='.$action.'] - [id='.$typeId.'] - ['.date("Y-m-d h:i:sa").']'."\n");
         }
         fclose($f);
 

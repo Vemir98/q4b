@@ -937,5 +937,6 @@ return [
     'without_elements' => 'Without elements',
     'delivery_module_settings' => 'Delivery module settings',
     'approval_element_reports' => 'Approval element reports',
+    'change_status?' => 'Are you sure you want to change the status',
     ''=>'',
 ];

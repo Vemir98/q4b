@@ -910,5 +910,6 @@ return [
     'without_elements' => 'Без элементов',
     'delivery_module_settings' => 'Настройки приёмки-сдачи',
     'approval_element_reports' => 'Отчёт утвержденных элементов',
+    'change_status?' => 'Вы уверены, что хотите изменить статус',
     ''=>'',
 ];

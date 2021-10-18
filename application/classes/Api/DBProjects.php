@@ -22,6 +22,8 @@ class Api_DBProjects
             $query .= ($params['client_id'])?' AND ': ' WHERE ' .'projects.id in ('.implode(",", $params['projectIds']).')';
         }
 
+        $query .= ' ORDER BY projects.name asc';
+
         return  DB::query(Database::SELECT,$query)->execute()->as_array();
     }
     public static function getProjectsListTotal($params)
