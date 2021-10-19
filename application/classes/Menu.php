@@ -27,10 +27,11 @@ class Menu
             'projects/update/:projectId?tab=certificates',
             'projects/update/:projectId/tasks',
             'plans/update/:projectId',
-            'labtests/project/:projectId/elements'
+            'labtests/project/:projectId/elements',
         ],
         'labtests' => [
             'labtests/project/:projectId',
+            'labtests/project/:projectId/edit/:id'
         ],
         'elements' => [
             'labtests/project/:projectId/elements_list',
@@ -45,7 +46,6 @@ class Menu
             'reports/tasks',
             'reports/place',
             'reports/delivery',
-//            'reports#tab_statistics',
             'reports/generate/{any}'
         ]
     );
@@ -54,18 +54,47 @@ class Menu
         foreach ($items as $key => &$item){
             foreach ($item['showIn'] as $routeKey => $route) {
                 if(strpos($route,':') !== false){
-                    preg_match('~\/?\:(?<param>[^/|?]+)~',$route,$matches);
-                    if(!empty($matches['param'])){
-                        if(!empty(Request::current()->param($matches['param']))) {
-                            if($route === $item['slug']) {
-                                $item['slug'] = str_replace(':' . $matches['param'],Request::current()->param($matches['param']),$item['slug']);
-                            }
-                            if($route === $item['href']) {
-                                $item['href'] = str_replace(':' . $matches['param'],Request::current()->param($matches['param']),$item['href']);
+                    preg_match_all('~\/?\:(?<param>[^/|?]+)~',$route,$matches);
 
+                    if(!empty($matches['param'])){
+                            foreach ($matches['param'] as $matchedParam) {
+                                $hasAny = false;
+                                if(strpos($route,'/{any}') !== false) {
+                                    $anyExploded = explode('/{any}',$route);
+                                    $explodedRoute = explode(':', $anyExploded[0]);
+                                    $hasAny = true;
+                                } else {
+                                    $explodedRoute = explode(':', $route);
+                                }
+
+                                foreach ($explodedRoute as $routePartKey => $routePart) {
+                                    $explodedRoutePart = explode('/', $routePart);
+                                    if(strpos($explodedRoutePart[0],'?') !== false) {
+                                        $hasQueryParams = explode('?', $explodedRoutePart[0]);
+                                        if(!empty(Request::current()->param($matchedParam)) && !empty(Request::current()->param($hasQueryParams[0]))) {
+                                            $hasQueryParams[0] = Request::current()->param($hasQueryParams[0]);
+                                            $explodedRoutePart[0] = implode('?', $hasQueryParams);
+                                        }
+                                    } else {
+                                        if(!empty(Request::current()->param($matchedParam)) && !empty(Request::current()->param($explodedRoutePart[0]))) {
+                                            $explodedRoutePart[0] = Request::current()->param($explodedRoutePart[0]);
+                                        }
+                                    }
+                                    $explodedRoute[$routePartKey] = implode('/', $explodedRoutePart);
+                                }
+                                if(strpos($item['slug'],'/{any}') !== false) {
+                                    $item['slug'] = implode('', $explodedRoute).($hasAny ? '/{any}' : '');
+                                } else {
+                                    if($route === $item['slug']) {
+                                        $item['slug'] = implode('', $explodedRoute).($hasAny ? '/{any}' : '');
+                                    }
+                                }
+
+                                if($route === $item['href']) {
+                                    $item['href'] = implode('', $explodedRoute).($hasAny ? '/{any}' : '');
+                                }
+                                $item['showIn'][$routeKey] = implode('', $explodedRoute).($hasAny ? '/{any}' : '');
                             }
-                            $item['showIn'][$routeKey] = str_replace(':' . $matches['param'],Request::current()->param($matches['param']),$item['showIn'][$routeKey]);
-                        }
                     }else{
                         $item['disabled'] = true;
                     }
@@ -84,6 +113,7 @@ class Menu
                     }
                 } else {
                     if((!empty($item['slug']) AND Request::detect_uri(). URL::query() === URL::site($route))) {
+
                         $showTab = true;
                         break;
                     }

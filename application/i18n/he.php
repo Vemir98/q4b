@@ -417,6 +417,7 @@ return [
     'Created Date' => 'תאריך פתיחה',
     'Created Date' => 'תאריך פתיחה',
     'Create Date' => 'תאריך פתיחה',
+    'Create_Date' => 'תאריך פתיחה/יצירה',
     'Update Date' => 'תאריך עדכון',
     'Save'=> 'לשמור',
     'Edit image' => 'עורך תמונה',

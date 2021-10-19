@@ -438,6 +438,7 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
             'strengthAfter',
             'deliveryCert',
             'buildingId',
+            'createDate'
         ]);
 
         try {
@@ -479,6 +480,7 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
                 'project_id' => $ltData['projectId'],
                 'updated_at' => $ltData['updatedAt'],
                 'updated_by' => $ltData['updatedBy'],
+                'create_date' => $ltData['createDate']
             ];
 
             DB::update('labtests')->set($queryData)->where('id', '=', $id)->execute($this->_db);

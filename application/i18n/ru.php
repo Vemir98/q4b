@@ -412,6 +412,7 @@ return [
     'Alias' => 'Псевдоним',
     'Created Date' => 'Дата создания',
     'Create Date' => 'Дата создания',
+    'Create_Date' => 'Дата создания',
     'Update Date' => 'Дата обнавления',
     "alpha" => "Прозрачность",
     "saturation" => "Насыщенность",

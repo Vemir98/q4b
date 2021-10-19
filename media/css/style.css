@@ -21247,7 +21247,7 @@ html.rtl .labtest_filters1 .labtest_filter_input:nth-last-of-type(1), .labtest_f
   cursor: pointer;
   transform: scale(1.1);
 }
-.labtest_editor_by {
+.ltr .labtest_editor_by {
   font-weight: 600;
   font-size: 16px;
   line-height: 22px;
@@ -21255,11 +21255,21 @@ html.rtl .labtest_filters1 .labtest_filter_input:nth-last-of-type(1), .labtest_f
   margin-right: 10px;
 }
 
+.rtl .labtest_editor_by {
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 22px;
+  color: #BCC0D9;
+  margin-left: 10px;
+}
+
 .labtest_editor_name_sec {
   font-weight: bold;
   font-size: 16px;
   line-height: 22px;
   color: #D69A00;
+  display: flex;
+  align-items: center;
 }
 
 .labtest_edit_bottom {
@@ -21277,13 +21287,23 @@ html.rtl .labtest_filters1 .labtest_filter_input:nth-last-of-type(1), .labtest_f
   align-items: flex-end;
 }
 
-.labtest_editor_item {
+.ltr .labtest_editor_item {
   display: flex;
   justify-content: center;
-  align-items: flex-end;
+  align-items: center;
   max-width: max-content;
   margin-bottom: 16px;
 }
+
+.rtl .labtest_editor_item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: max-content;
+  margin-bottom: 16px;
+  direction: rtl;
+}
+
 
 .ltest_attachment_wraper {
   overflow-y: auto;
@@ -23284,7 +23304,7 @@ body * {
 }
 
 .mx-datepicker-main.mx-datepicker-popup {
-  left: 1164px !important;
+  /*left: 1164px !important;*/
 }
 
 .mx-calendar {
@@ -24219,7 +24239,7 @@ html.rtl .filter-item.datepicker {
 }
 
 html.rtl .mx-datepicker-main.mx-datepicker-popup {
-  left: 161px !important;
+  /*left: 161px !important;*/
 }
 
 html.rtl .new-styles .multiselect__option {

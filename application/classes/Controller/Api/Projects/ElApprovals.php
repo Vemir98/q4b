@@ -201,10 +201,12 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
             $elApproval = Api_DBElApprovals::getElApprovalById($elApprovalId)[0];
 
             if(!$elApproval) {
+                Kohana::$log->add(Log::ERROR, 'Incorrect EAR id');
                 throw API_ValidationException::factory(500, 'Incorrect EAR id');
             }
 
             if($elApproval['status'] === 'approved') {
+                Kohana::$log->add(Log::ERROR, 'Can\'t modify readable EAR');
                 throw API_ValidationException::factory(500, 'Can\'t modify readable EAR');
             }
 
@@ -222,6 +224,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                         ->rule('tasks', 'not_empty');
 
                     if (!$valid->check()) {
+                        Kohana::$log->add(Log::ERROR, 'missing required field in some task');
                         throw API_ValidationException::factory(500, 'missing required field in some task');
                     }
 
@@ -260,6 +263,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                                 ->rule('image', 'not_empty');
 
                             if (!$valid->check()) {
+                                Kohana::$log->add(Log::ERROR, 'missing required field in signatures');
                                 throw API_ValidationException::factory(500, 'missing required field in signatures');
                             }
 
@@ -299,6 +303,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                                 ->rule('appropriate', 'not_empty');
 
                             if (!$valid->check()) {
+                                Kohana::$log->add(Log::ERROR, 'missing required field in tasks');
                                 throw API_ValidationException::factory(500, 'missing required field in tasks');
                             }
 

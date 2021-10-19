@@ -437,6 +437,7 @@ return [
     'Alias' => 'Alias',
     'Created Date' => 'Created date',
     'Create Date' => 'Create date',
+    'Create_Date' => 'Create date',
     'Update Date' => 'Update date',
     'Save'=> 'Save',
     'Edit image' => 'Edit image',

@@ -47,7 +47,7 @@ class Controller_LabTests extends HDVP_Controller_Template
             "lab_certificate" => __('Lab certificate'),
             "lab_certificate_number" => __('Lab certificate number'),
             "date" => __('Date'),
-            "create_date" => __('Create Date'),
+            "create_date" => __('Create_Date'),
             "structure" => __('Structure'),
             "floor_level" => __('Floor/Level'),
             "element" => __('Element_item'),
@@ -207,6 +207,8 @@ class Controller_LabTests extends HDVP_Controller_Template
         VueJs::instance()->addComponent('./confirm-modal');
         VueJs::instance()->addComponent('labtests/labtest-update');
         VueJs::instance()->includeMultiselect();
+        VueJs::instance()->includeDateTimePiker();
+
         $this->template->content = View::make('labtests/update', ['projectId' => $project->id, 'labtestId' => $labtestId, 'translations' => $translations]);
     }
 }

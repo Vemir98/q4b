@@ -2,6 +2,12 @@ Vue.component('labtest-update', {
     template: `
     <section class='lt_edit'>     
         <div class="elements_title_sec">
+              <a class="back-to-filter">
+                    <i 
+                        class="q4bikon-arrow_back2"
+                        @click="closePage()"
+                    ></i>
+                </a>
             <div class="lt_page_title">{{ trans.project_name }} / <span class="project_name"> {{ project ? project.name : '' }}</span></div>
         </div>
         <form @submit.prevent="onSubmit">
@@ -316,8 +322,18 @@ Vue.component('labtest-update', {
                                 <div class="labtest_editor_name_sec">
                                     <span> {{ labtest['createUser'] }}</span>
                                     :
-                                    <span class="labtest_editor_name_sec">{{ getDate(labtest.createDate) }}</span>
-                                </div>
+                                <date-picker 
+                                    v-model="labtest.createDate"
+                                    :lang="langs[currentLang]"
+                                    :editable="false" 
+                                    :clearable="false"
+                                    :disabled="false" 
+                                    type="date"
+                                    :range="false" 
+                                    format="DD/MM/YYYY"
+                                >
+                                </date-picker>                           
+                                 </div>
                             </div>
                         </div>
                         
@@ -442,7 +458,31 @@ Vue.component('labtest-update', {
             creating: false,
             needToConfirm: false,
             modalData: null,
-            msg: ""
+            msg: "",
+            langs: {
+                ru: {
+                    formatLocale: {
+                        months: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+                        monthsShort: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
+                        weekdays: ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
+                        weekdaysShort: ['Вoс', 'Пон', 'Вто', 'Сре', 'Чет', 'Пят', 'Суб'],
+                        weekdaysMin: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+                        firstDayOfWeek: 0,
+                        firstWeekContainsDate: 1,
+                    }
+                },
+                he: {
+                    formatLocale: {
+                        months: ['ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני', 'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'],
+                        monthsShort: ['ינו', 'פבר', 'מרץ', 'אפר', 'מאי', 'יוני', 'יולי', 'אוג', 'ספט', 'אוק', 'נוב', 'דצמ'],
+                        weekdays: ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'],
+                        weekdaysShort: ['א\'', 'ב\'', 'ג\'', 'ד\'', 'ה\'', 'ו\'', 'שבת'],
+                        weekdaysMin: ['א\'', 'ב\'', 'ג\'', 'ד\'', 'ה\'', 'ו\'', 'שבת'],
+                        firstDayOfWeek: 0,
+                        firstWeekContainsDate: 1,
+                    }
+                }
+            },
         }
     },
     computed: {
@@ -584,6 +624,9 @@ Vue.component('labtest-update', {
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
                     this.labtest = response;
+                    if(this.labtest['createUser']) {
+                        this.labtest.createDate = new Date(this.labtest.createDate *1000)
+                    }
                     this.getLabtestTicket(this.labtest.ticketId);
                     this.getLabtestTickets();
                 })
@@ -735,6 +778,7 @@ Vue.component('labtest-update', {
             this.showLoader = true;
             let url = `/projects/${this.project.id}/labtests/${this.labtest.id}`;
             let data = {labtest: this.labtest, labtestCraftParams: this.getParams()}
+            data.labtest.createDate = (data.labtest.createDate.getTime() / 1000)
             qfetch(url, {method: 'PUT', headers: {}, body: data})
                 .then(response => {
                     this.creating = false;
