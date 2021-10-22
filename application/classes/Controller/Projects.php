@@ -148,15 +148,16 @@ class Controller_Projects extends HDVP_Controller_Template
                 "end_date" => __('End Date'),
             ];
 
-//            $projectIds = [];
-//            foreach ($result['items'] as $item){
-//                $projectIds [] = $item->id;
-//            }
+            $projectIds = [];
+            foreach ($result['items'] as $item){
+                $projectIds [] = $item->id;
+            }
 
             VueJs::instance()->addComponent('projects/projects-list');
             VueJs::instance()->addComponent('projects/project-item');
             VueJs::instance()->includeMultiselect();
-            $this->template->content = View::make('projects/list', ['translations' => $translations]);
+//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$result['items']]); echo "</pre>"; exit;
+            $this->template->content = View::make('projects/list', $result + ['translations' => $translations, 'filterProjects' => $filterProjects]);
 
 //            $this->template->content = View::make('projects/list', $result + ['filterProjects' => $filterProjects]);
         }

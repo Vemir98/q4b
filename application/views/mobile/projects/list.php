@@ -54,7 +54,7 @@
                         <select class="q4-select q4-form-input" onchange="document.location=this.options[this.selectedIndex].value">
                             <option value=""><?=__('Please select')?></option>
                             <?foreach ($filterProjects as $item): ?>
-                                <option value="<?=URL::site('projects/update/'.$item->id)?>"><?=$item->name?></option>
+                                <option value="<?=URL::site('projects/update/'.$item->id.'?tab=info')?>"><?=$item->name?></option>
                             <?endforeach ?>
                         </select>
                     </div>
@@ -86,22 +86,26 @@
             </div>
         </div> -->
         <!--Mobile Version -->
-
+<?php //echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$items]); echo "</pre>"; exit; ?>
         <div class="q4-wrap-mobile">
             <div data-structurecount="<?=count($items)?>" class="q4-list-items-mobile q4-owl-carousel">
                 <?if(!empty($items)):?>
                     <?foreach($items as $i):?>
+<!--                        --><?php //echo "line: ".__LINE__." ".__FILE__."<pre>"; var_dump([$i->main_image->originalFilePath()]); echo "</pre>"; exit; ?>
                         <div class="item">
                             <?$countNew = $i->quality_controls->where('created_at','>',strtotime(date('d-m-Y H:i:s'))-86400)->count_all();?>
                             <?if($countNew > 0):?>
                                 <span class="q4-list-item-st"><?=__('New QC')?> (<span class="q4-list-item-st-number"><?=$countNew?></span>)</span>
                             <?endif;?>
                             <figure class="mobile-figure">
-                                 <a href="<?=URL::site('projects/company_project_update/'.$i->id)?>">
-                                    <img src="<?=$i->main_image->originalFilePath()?>" alt="projects logo">
+<!--                                 <a href="--><?//=URL::site('projects/company_project_update/'.$i->id)?><!--">-->
+                                 <a href="<?=URL::site('projects/update/'.$i->id.'?tab=info')?>">
+<!--                                    <img src="--><?//=$i->main_image->originalFilePath()?><!--" alt="projects logo">-->
+                                    <img src="/media/img/project_default<?=rand(1,4)?>.png" alt="projects logo">
                                 </a>
                                 <figcaption class="mobile-fig-caption">
-                                    <a href="<?=URL::site('projects/company_project_update/'.$i->id)?>"><?=$i->name?></a>
+<!--                                    <a href="--><?//=URL::site('projects/company_project_update/'.$i->id)?><!--">--><?//=$i->name?><!--</a>-->
+                                    <a href="<?=URL::site('projects/update/'.$i->id.'?tab=info')?>"><?=$i->name?></a>
                                 </figcaption>
                             </figure>
 

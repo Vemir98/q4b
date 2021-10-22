@@ -217,7 +217,7 @@ Vue.component('labtest-update', {
                                     name="description" 
                                     @input="emptyErrors" 
                                     v-validate="'required'" 
-                                    :class="{'disabled': (ticket.id && !(isSuperAdmin()))}"
+                                    :class="{'disabled': (ticket.id && !(isSuperAdmin() || isProjectAdmin()))}"
                                 ></textarea>
                             </div>
                             <span v-show="errors.has('description')" class="help is-danger">{{ errors.first('description') }}</span>
@@ -225,16 +225,16 @@ Vue.component('labtest-update', {
                     </div>
                     <div class="ltest_info_select">
                         <div class="input_item_label" v-show="ticket.number">{{ trans.lab_certificate }}</div>
-                        <input type="text" v-model="ticket.number" autocomplete="off" :placeholder="trans.lab_certificate" name="ticket_number" :class="{'disabled': (ticket.id && !(isSuperAdmin()))}">
+                        <input type="text" v-model="ticket.number" autocomplete="off" :placeholder="trans.lab_certificate" name="ticket_number" :class="{'disabled': (ticket.id && !(isSuperAdmin() || isProjectAdmin()))}">
                     </div>
                     <div class="ltest_info_select">
                         <div class="input_item_label" v-show="ticket.fresh_strength">{{ trans.fresh_concrete_strength }}</div>
-                        <input type="number" v-model="ticket.fresh_strength" autocomplete="off" :placeholder="trans.fresh_concrete_strength" @input="emptyErrors" :class="{'disabled': (ticket.id && !(isSuperAdmin()))}" name="fresh_strength" v-validate="'numeric'">
+                        <input type="text" v-model="ticket.fresh_strength" autocomplete="off" :placeholder="trans.fresh_concrete_strength" @input="emptyErrors" :class="{'disabled': (ticket.id && !(isSuperAdmin() || isProjectAdmin()))}" name="fresh_strength" v-validate="'decimal:1'">
                         <span v-show="errors.has('fresh_strength')" class="help is-danger">{{ errors.first('fresh_strength') }}</span>
                     </div>
                     <div class="ltest_info_select">
                         <div class="input_item_label" v-show="ticket.roll_strength">{{ trans.roll_strength }}</div>
-                        <input type="number" v-model="ticket.roll_strength" autocomplete="off" :placeholder="trans.roll_strength" @input="emptyErrors" :class="{'disabled': (ticket.id && !(isSuperAdmin()))}" name="roll_strength" v-validate="'numeric'">
+                        <input type="number" v-model="ticket.roll_strength" autocomplete="off" :placeholder="trans.roll_strength" @input="emptyErrors" :class="{'disabled': (ticket.id && !(isSuperAdmin() || isProjectAdmin()))}" name="roll_strength" v-validate="'numeric'">
                         <span v-show="errors.has('roll_strength')" class="help is-danger">{{ errors.first('roll_strength') }}</span>
                     </div>
                 </div>
@@ -572,7 +572,10 @@ Vue.component('labtest-update', {
             document.getElementById('fileInput').click()
         },
         isSuperAdmin() {
-            return this.role === 'super_admin'
+            return (this.role === 'super_admin')
+        },
+        isProjectAdmin() {
+            return (this.role === 'project_admin')
         },
         emptyTicket() {
             this.creating = true;

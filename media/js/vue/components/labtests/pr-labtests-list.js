@@ -73,6 +73,9 @@ Vue.component('pr-labtests-list', {
                     </div>
                     <div class="labtest_filters1_right">
                         <!--<div class="labtest_filters_print"><button>Print</button></div>-->
+<!--                        <div class="labtest_filters_export" v-if="items.length">-->
+<!--                            <a class="report-button pdf" style="opacity: .5;cursor: auto"><i class="q4bikon-file1"></i>PDF</a>-->
+<!--                        </div>-->
                         <div class="labtest_filters_export" v-if="items.length">
                             <a :href="getExportHref" download="lab-reports.xls">{{ trans.export }}</a>
                         </div>

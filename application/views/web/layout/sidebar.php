@@ -640,7 +640,8 @@ $items = json_decode(json_encode($items));
                 <a
                     href="<?=URL::site('logout')?>"
                     class="sidebar-items"
-                    title="<?=__('Logout')?>">
+                    title="<?=__('Logout')?>"
+                >
                     <i class="fw-600 icon q4bikon-exit"></i>
                     <div class='sidebar-items_content'>
                         <span class="sidebar-items_title"><?=__('Logout')?></span>

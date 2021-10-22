@@ -591,13 +591,13 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
             $as->getDefaultStyle()->getFont()->setSize(10);
 
             $as->getColumnDimension('T')->setWidth(30);
-            $as->getColumnDimension('S')->setWidth(30);
-            $as->getColumnDimension('R')->setWidth(30);
+            $as->getColumnDimension('S')->setWidth(20);
+            $as->getColumnDimension('R')->setWidth(37);
             $as->getColumnDimension('Q')->setWidth(30);
             $as->getColumnDimension('P')->setWidth(40);
             $as->getColumnDimension('O')->setWidth(40);
-            $as->getColumnDimension('N')->setWidth(20);
-            $as->getColumnDimension('M')->setWidth(37);
+            $as->getColumnDimension('N')->setWidth(30);
+            $as->getColumnDimension('M')->setWidth(30);
             $as->getColumnDimension('L')->setWidth(35);
             $as->getColumnDimension('K')->setWidth(35);
             $as->getColumnDimension('J')->setWidth(20);
@@ -646,11 +646,11 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
                     __('Status'),
                     __('Delivery certificates'),
                     __('Essence of work/standard'),
-                    __('Fresh concrete strength'),
-                    __('Roll strength'),
                     __('Description'),
                     __('Notes'),
                     __('Strength after/result'),
+                    __('Fresh concrete strength'),
+                    __('Roll strength'),
                 ],
             ];
             foreach ($params as $key=>$p) {
@@ -688,11 +688,11 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
                     __($item['status']),
                     $item['deliveryCert'],
                     $item['standard'],
-                    $item['freshStrength'],
-                    $item['rollStrength'],
                     $item['description'],
                     $item['notes'],
                     $item['strengthAfter'],
+                    $item['freshStrength'],
+                    $item['rollStrength'],
                 ];
                 foreach ($params as $p) {
                     $key = "{$item['id']}_{$p['id']}";
