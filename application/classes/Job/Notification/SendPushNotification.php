@@ -10,21 +10,21 @@ class Job_Notification_SendPushNotification
         try {
 
             $usersDeviceTokens = $this->args['usersDeviceTokens'] ?: [];
-
-            Kohana::$log->add(Log::ERROR, 'JOB PERFORM() try: ' . json_encode([$usersDeviceTokens], JSON_PRETTY_PRINT));
-
-
-            $fpns = new HDVP\FirebasePushNotification();
-
-//            foreach ($usersDeviceTokens as $token) {
-//                if($token) {
-            $fpns->notify($usersDeviceTokens, ['action' => $this->args['action']]);
-
-            $f = fopen(DOCROOT.'testNotification.txt', 'a');
-            if($f) {
-                fputs($f, 'from job perform() action['.$this->args['action'].'] - '.json_encode([$usersDeviceTokens], JSON_PRETTY_PRINT)."\n");
-            }
-            fclose($f);
+//
+//            Kohana::$log->add(Log::ERROR, 'JOB PERFORM() try: ' . json_encode([$usersDeviceTokens], JSON_PRETTY_PRINT));
+//
+//
+//            $fpns = new HDVP\FirebasePushNotification();
+//
+////            foreach ($usersDeviceTokens as $token) {
+////                if($token) {
+//            $fpns->notify($usersDeviceTokens, ['action' => $this->args['action']]);
+//
+//            $f = fopen(DOCROOT.'testNotification.txt', 'a');
+//            if($f) {
+//                fputs($f, 'from job perform() action['.$this->args['action'].'] - '.json_encode([$usersDeviceTokens], JSON_PRETTY_PRINT)."\n");
+//            }
+//            fclose($f);
 //                }
 //            }
 //            $f = fopen(DOCROOT.'testNotification.txt', 'a');
