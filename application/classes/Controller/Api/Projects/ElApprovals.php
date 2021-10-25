@@ -173,7 +173,8 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
 
             Database::instance()->commit();
 
-            PushNotification::notifyElAppUsers($elApprovalId, Enum_NotifyAction::Created);
+            $users = Api_DBElApprovals::getElApprovalUsersListForNotify($elApprovalId);
+            PushNotification::notifyElAppUsers($elApprovalId, $users, Enum_NotifyAction::Created);
 //            $this->sendNotificationToUsers($elApprovalId);
 
             $this->_responseData = [
@@ -796,12 +797,13 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
     public function action_remove_delete(){
         try {
             $elApprovalId = $this->getUIntParamOrDie($this->request->param('id'));
+            $users = Api_DBElApprovals::getElApprovalUsersListForNotify($elApprovalId);
 
             Database::instance()->begin();
 
             DB::delete('el_approvals')->where('id', '=', $elApprovalId)->execute($this->_db);
 
-            PushNotification::notifyElAppUsers($elApprovalId, Enum_NotifyAction::Deleted);
+            PushNotification::notifyElAppUsers($elApprovalId, $users, Enum_NotifyAction::Deleted);
 
             Database::instance()->commit();
 
@@ -1238,7 +1240,8 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
             ->execute($this->_db);
 
 //        $this->sendNotificationToUsers($elApprovalId);
-        PushNotification::notifyElAppUsers($elApprovalId, Enum_NotifyAction::Updated);
+        $users = Api_DBElApprovals::getElApprovalUsersListForNotify($elApprovalId);
+        PushNotification::notifyElAppUsers($elApprovalId, $users, Enum_NotifyAction::Updated);
     }
 
     /**

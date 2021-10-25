@@ -110,7 +110,7 @@ class Controller_QualityControl extends HDVP_Controller_Template
                 if(!empty(trim($message)))
                     ORM::factory('QcComment')->values(['message' => $message, 'qcontrol_id' => $qc->pk()])->save();
 
-                PushNotification::notifyQcUsers($qc->id, Enum_NotifyAction::Created);
+                PushNotification::notifyQcUsers($qc->id, $qc->project->id, Enum_NotifyAction::Created);
 
                 Database::instance()->commit();
                 $fs->sendLazyTasks();

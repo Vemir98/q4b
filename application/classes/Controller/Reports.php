@@ -792,7 +792,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                 if(!empty(trim($data['message'])))
                 ORM::factory('QcComment')->values(['message' => $data['message'], 'qcontrol_id' => $qc->pk()])->save();
 
-                PushNotification::notifyQcUsers($qc->id, Enum_NotifyAction::Updated);
+                PushNotification::notifyQcUsers($qc->id, $qc->project->id, Enum_NotifyAction::Updated);
 
                 $this->setResponseData('triggerEvent','qualityControlUpdated');
                 Database::instance()->commit();

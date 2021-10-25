@@ -557,7 +557,7 @@ class Controller_Api_Projects extends HDVP_Controller_API
                 ORM::factory('QcComment')->values(['message' => $message, 'qcontrol_id' => $qc->pk()])->save();
             Database::instance()->commit();
 
-            PushNotification::notifyQcUsers($qc->id, Enum_NotifyAction::Created);
+            PushNotification::notifyQcUsers($qc->id, $qc->project->id, Enum_NotifyAction::Created);
 
 //            if($clientData['status'] != Enum_QualityControlStatus::Existing && $clientData['status'] != Enum_QualityControlStatus::Normal){
 //                if($clientData['approval_status'] != Enum_QualityControlApproveStatus::Approved) {
@@ -698,7 +698,7 @@ class Controller_Api_Projects extends HDVP_Controller_API
                 ORM::factory('QcComment')->values(['message' => $message, 'qcontrol_id' => $qc->pk()])->save();
             Database::instance()->commit();
 
-            PushNotification::notifyQcUsers($qc->id, Enum_NotifyAction::Updated);
+            PushNotification::notifyQcUsers($qc->id, $qc->project->id, Enum_NotifyAction::Updated);
 
             $fs->sendLazyTasks();
         }catch (ORM_Validation_Exception $e){

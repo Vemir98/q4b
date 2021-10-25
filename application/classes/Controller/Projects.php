@@ -2612,6 +2612,7 @@ class Controller_Projects extends HDVP_Controller_Template
         $this->_checkForAjaxOrDie();
         $qcId = (int)$this->request->param('projectId');
         $qc = ORM::factory('QualityControl',$qcId);
+        $projectId = $qc->project->id;
         if( ! $qc->loaded()){
             throw new HTTP_Exception_404;
         }
@@ -2619,7 +2620,7 @@ class Controller_Projects extends HDVP_Controller_Template
             throw new HTTP_Exception_403();
         }
         $qc->delete();
-//        PushNotification::notifyQcUsers($qc->id, Enum_NotifyAction::Deleted);
+        PushNotification::notifyQcUsers($qcId, $projectId,Enum_NotifyAction::Deleted);
     }
 
     public function action_update_quality_control_message(){
