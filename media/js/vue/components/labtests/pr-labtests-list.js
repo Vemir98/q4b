@@ -300,6 +300,7 @@ Vue.component('pr-labtests-list', {
                         <template v-for="(item, index) in items"> 
                             <labtest-list-item 
                             :itemData="item" 
+                            :page="page"
                             :index="index"
                             :trans="trans"  
                             :project-id="projectId"
@@ -375,7 +376,7 @@ Vue.component('pr-labtests-list', {
             search: '',
             time: [],
             items: [],
-            page: 1,
+            page: +sessionStorage.getItem('labtests-page') || 1,
             total: 0,
             limit: 0,
             showLoader: true,

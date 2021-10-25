@@ -638,6 +638,7 @@ $items = json_decode(json_encode($items));
             <?=Menu::createSideBar($items)?>
             <li>
                 <a
+                    onclick="sessionStorage.clear();"
                     href="<?=URL::site('logout')?>"
                     class="sidebar-items"
                     title="<?=__('Logout')?>"

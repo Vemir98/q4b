@@ -637,6 +637,7 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
                     __('Project name'),
                     __('Lab control'),
                     __('Lab certificate number'),
+                    __('Lab certificate'),
                     __('Create Date'),
                     __('Update Date'),
                     __('Craft'),
@@ -678,6 +679,7 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
                 $row =  [
                     $project[0]['name'],
                     $item['id'],
+                    $item['certNumber'],
                     $item['ticketNumber'],
                     date('d/m/Y',$item['createDate']),
                     date('d/m/Y',$item['updatedAt']),

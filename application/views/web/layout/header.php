@@ -50,7 +50,8 @@
                         <span class="header_profile_role"><?=__(Usr::role())?></span>
                         <ul class="header-profile-drop-list">
                             <li><a href="#" class="get-modal get-user-profile" data-url="<?=URL::site('user/profile')?>"><?=__('My Profile')?></a></li>
-                            <li><a href="<?=URL::site('logout')?>"><?=__('Logout')?></a></li>
+<!--                            <li><a href="--><?//=URL::site('logout')?><!--">--><?//=__('Logout')?><!--</a></li>-->
+                            <li><a href="<?=URL::site('logout')?>" onclick="sessionStorage.clear()"><?=__('Logout')?></a></li>
                         </ul>
                     </div>
                 </li>

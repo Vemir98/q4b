@@ -43,6 +43,7 @@ Vue.component('labtest-list-item', {
         trans: {required: true},
         itemData: {required: true},
         index: {required: true},
+        page: {required: true}
     },
     components: {
 
@@ -101,6 +102,7 @@ Vue.component('labtest-list-item', {
                 url = `/${this.currentLang}${url}`;
             }
             this.$destroy();
+            sessionStorage.setItem('labtests-page', this.page);
             window.location.href = url;
         },
         getEditLink() {
