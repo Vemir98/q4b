@@ -20,7 +20,10 @@ if($floorNumber[0] == '-'){
 </head>
 <body class="rtl">
 <link rel="stylesheet" href="/media/css/delivery-reports.css">
-<div class="pdf-main">
+
+
+<?if(!empty($report->customers->find_all()->as_array())):?>
+    <div class="pdf-main">
     <div class="pdf-padding">
         <div class="pdf-heading">
             <div class="pdf-logos">
@@ -93,6 +96,8 @@ if($floorNumber[0] == '-'){
         </div>
     </div>
 </div>
+<?endif;?>
+
 <?if($report->poaFiles->count_all()):?>
     <div class="pdf-main">
         <div class="pdf-padding">
@@ -160,8 +165,9 @@ if($floorNumber[0] == '-'){
         </div>
     </div>
 <?endif;?>
+
 <?if(strlen($report->el_pic) OR strlen($report->wm_pic)):?>
-<div class="pdf-main">
+    <div class="pdf-main">
     <div class="pdf-padding">
         <div class="pdf-heading">
             <div class="pdf-logos">
@@ -239,6 +245,8 @@ if($floorNumber[0] == '-'){
     </div>
 </div>
 <?endif;?>
+
+<?if(!empty($report->devAppFiles->find_all()->as_array())):?>
 <div class="pdf-main">
     <div class="pdf-padding">
         <div class="pdf-heading">
@@ -305,11 +313,11 @@ if($floorNumber[0] == '-'){
         </div>
     </div>
 </div>
-
+<?endif;?>
 
 <?if($report->quality_controls->count_all()):?>
     <?foreach ($report->quality_controls->find_all() as $qc):?>
-<div class="pdf-main">
+        <div class="pdf-main">
     <div class="pdf-padding">
         <div class="pdf-heading">
             <div class="pdf-logos">
@@ -397,7 +405,7 @@ if($floorNumber[0] == '-'){
 <?endif;?>
 
 <?if($report->transferableItems->count_all()):?>
-<div class="pdf-main">
+    <div class="pdf-main">
     <div class="pdf-padding">
         <div class="pdf-heading">
             <div class="pdf-logos">
@@ -486,8 +494,9 @@ if($floorNumber[0] == '-'){
     </div>
 </div>
 <?endif?>
+
 <?if($report->reserveMaterials->count_all()):?>
-<div class="pdf-main">
+    <div class="pdf-main">
     <div class="pdf-padding">
         <div class="pdf-heading">
             <div class="pdf-logos">
@@ -578,6 +587,7 @@ if($floorNumber[0] == '-'){
     </div>
 </div>
 <?endif?>
+
 <div class="pdf-main">
     <div class="pdf-padding">
         <div class="pdf-heading">
@@ -653,6 +663,7 @@ if($floorNumber[0] == '-'){
         </div>
     </div>
 </div>
+
 <script>
     (function(){
         if(window.opener) {

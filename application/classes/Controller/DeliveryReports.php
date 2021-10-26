@@ -192,11 +192,14 @@ class Controller_DeliveryReports extends HDVP_Controller_Template
     }
 
     public function action_get_pdf(){
+//        echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r(['mtav']); echo "</pre>"; exit;
         $this->auto_render = false;
         $report = ORM::factory('DeliveryReport',$this->request->param('id'));
         if( file_exists((DOCROOT.'media/data/delivery-reports/'.$report->pk().'/file.pdf'))){
-            header("Location: https://qforb.net/media/data/delivery-reports/".$report->pk()."/file.pdf");die;
+//            header("Location: https://qforb.net/media/data/delivery-reports/".$report->pk()."/file.pdf");die;
+            header("Location: https://qforb.sunrisedvp.systems/media/data/delivery-reports/".$report->pk()."/file.pdf");die;
         }
+//        die('azaza');
         $this->_makePdf($report);
         if( ! file_exists((DOCROOT.'media/data/delivery-reports/'.$report->pk().'/file.pdf'))){
             header("Refresh:0");die;

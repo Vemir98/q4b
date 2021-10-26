@@ -5,6 +5,7 @@
  * Date: 12.05.2020
  * Time: 6:33
  */
+
 $ii = 0;
 $floorNumber = $report->floor->number;
 if($floorNumber[0] == '-'){
@@ -381,6 +382,7 @@ if($floorNumber[0] == '-'){
                             <div class="qc-rep-img">
                                 <div class="img-desc"><p><span><?=$img->original_name?></span>(uploaded: <?=date('d/m/Y H:i',$img->created_at)?>)</p></div>
                                 <img src="<?=URL::withLang($img->originalFilePath(),Language::getDefault()->iso2,'https')?>" alt="<?=$img->original_name?>">
+<!--                                <img src="--><?//=$img->originalFilePath()?><!--" alt="--><?//=$img->original_name?><!--">-->
                             </div>
                         <?endforeach;?>
                     </div>

@@ -213,7 +213,12 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
 
             $clientData = Arr::extract($this->put(),
                 [
-                    'specialities'
+                    'specialities',
+                    'id',
+                    'notice',
+                    'signatures',
+                    'deletedSignatures',
+                    'tasks'
                 ]);
 
             if(!empty($clientData['specialities'])) {
@@ -326,10 +331,108 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                 $this->updateElementApproval($elApprovalId);
                 $f = fopen(DOCROOT.'testNotification.txt', 'a');
                 if($f) {
-                    fputs($f, '[zapros index.put]'."\n");
+                    fputs($f, '[zapros index.put if]'."\n");
                 }
                 fclose($f);
 
+            } else {
+                $elApprovalCraftId = $clientData['id'];
+                Database::instance()->begin();
+
+                $queryData = [
+                    'notice' => $clientData['notice'] ?: ""
+                ];
+
+                DB::update('el_approvals_crafts')
+                    ->set($queryData)
+                    ->where('id', '=', $elApprovalCraftId)
+                    ->execute($this->_db);
+
+                if(!empty($clientData['deletedSignatures'])) {
+                    foreach ($clientData['deletedSignatures'] as $signatureId) {
+                        DB::delete('el_app_signatures')
+                            ->where('id', '=', $signatureId)
+                            ->execute($this->_db);
+                    }
+                }
+
+                if(!empty($clientData['signatures'])) {
+                    $elApprovalCraftSignatureImagesPath = DOCROOT.'media/data/projects/'.$clientData['projectId'].'/el-approvals';
+                    if(!file_exists($elApprovalCraftSignatureImagesPath)) {
+                        mkdir($elApprovalCraftSignatureImagesPath, 0777, true);
+                    }
+
+                    foreach ($clientData['signatures'] as $signature) {
+                        $valid = Validation::factory($signature);
+
+                        $valid
+                            ->rule('name', 'not_empty')
+                            ->rule('position', 'not_empty')
+                            ->rule('image', 'not_empty');
+
+                        if (!$valid->check()) {
+                            throw API_ValidationException::factory(500, 'missing required field in signatures');
+                        }
+
+                        if(!$signature['id']) {
+                            $imageData = [
+                                'fileName' => $elApprovalId.'_'.$elApprovalCraftId.'_'.uniqid().'.png',
+                                'fileOriginalName' => $elApprovalId.'_'.$elApprovalCraftId.'_'.time().'.png',
+                                'filePath' => null,
+                                'src' => $signature['image'],
+                                'ext' => 'png'
+                            ];
+                            $file = $this->_b64Arr([$imageData], $elApprovalCraftSignatureImagesPath);
+                            $queryData = [
+                                'el_app_id' => $elApprovalId,
+                                'el_app_craft_id' => $elApprovalCraftId,
+                                'name' => $signature['name'],
+                                'position' => $signature['position'],
+                                'image' => str_replace(DOCROOT,'',$elApprovalCraftSignatureImagesPath.'/'.$file[0]['name']),
+                                'created_at' => time(),
+                                'created_by' => Auth::instance()->get_user()->id
+                            ];
+
+                            DB::insert('el_app_signatures')
+                                ->columns(array_keys($queryData))
+                                ->values(array_values($queryData))
+                                ->execute($this->_db);
+                        }
+                    }
+                }
+
+                if(!empty($clientData['tasks'])) {
+                    foreach ($clientData['tasks'] as $task) {
+                        $valid = Validation::factory($task);
+
+                        $valid
+                            ->rule('id', 'not_empty')
+                            ->rule('appropriate', 'not_empty');
+
+                        if (!$valid->check()) {
+                            throw API_ValidationException::factory(500, 'missing required field in tasks');
+                        }
+
+                        $queryData = [
+                            'appropriate' => $task['appropriate']
+                        ];
+
+                        DB::update('el_app_crafts_tasks')
+                            ->set($queryData)
+                            ->where('id', '=', $task['id'])
+                            ->execute($this->_db);
+                    }
+                }
+
+                $this->updateElementApproval($elApprovalId);
+                $f = fopen(DOCROOT.'testNotification.txt', 'a');
+                if($f) {
+                    fputs($f, '[zapros index.put else]'."\n");
+                }
+                fclose($f);
+                $this->updateElementApprovalCraft($clientData['id']);
+
+                Database::instance()->commit();
             }
 
             $this->_responseData = [
