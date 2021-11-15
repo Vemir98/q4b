@@ -152,7 +152,6 @@ class Controller_Api_Acceptance extends HDVP_Controller_API
             throw API_Exception::factory(500,$e->getMessage());
         }catch (Exception $e){
             Database::instance()->rollback();
-            Kohana::$log->add(Log::ERROR, 'delivery log: ' . json_encode([$e->getMessage()], JSON_PRETTY_PRINT));
             //throw API_Exception::factory(500,'Operation Error');
             throw API_Exception::factory(500,$e->getMessage());
         }
@@ -305,14 +304,12 @@ class Controller_Api_Acceptance extends HDVP_Controller_API
             ],\Carbon\Carbon::now()->addSeconds(30)->timestamp);
         }catch (ORM_Validation_Exception $e){
             Database::instance()->rollback();
-            Kohana::$log->add(Log::ERROR, 'pre-delivery log: ' . json_encode([$e->getMessage()], JSON_PRETTY_PRINT));
 
             throw API_Exception::factory(500,'Incorrect data');
 
 //            throw API_Exception::factory(500,$e->errors('validation'));
         }catch (HDVP_Exception $e){
             Database::instance()->rollback();
-            Kohana::$log->add(Log::ERROR, 'pre-delivery log: ' . json_encode([$e->getMessage()], JSON_PRETTY_PRINT));
             throw API_Exception::factory(500,'Incorrect data');
 
 //            throw API_Exception::factory(500,$e->getMessage());

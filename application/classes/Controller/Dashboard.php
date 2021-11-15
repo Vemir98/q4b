@@ -22,174 +22,285 @@ class Controller_Dashboard extends HDVP_Controller_Template
         ]
     ];
     public function action_index(){
-        $this->include_editor = true;
-        $requestData = $selectedObjects = [];
-        $selectedCompany = $selectedProject = null;
-        if($this->request->method() == Request::POST) {
-            $this->_checkForAjaxOrDie();
-
-            $requestData = Arr::extract($this->post(),['company','project','objects']);
-            foreach ($requestData as $val){
-                if(empty($val)){
-                    throw new HTTP_Exception_404();
-                }
-            }
-            $companies = $this->_user->availableCompanies();
-            $selectedCompany = $this->_user->getCompanyIfItAvailable($requestData['company']);
-//            if($this->_user->getRelevantRole('outspread') == Enum_UserOutspread::General){
-//                $selectedCompany = ORM::factory('Company',(int)$requestData['company']);
-//                $companies = ORM::factory('Company')->find_all()->as_array();
-//            }else{
-//                $selectedCompany = $this->_user->client->companies->where('id','=',(int)$requestData['company'])->find();
-//                $companies = $this->_user->client->companies->find_all()->as_array();
+//        $this->include_editor = true;
+//        $requestData = $selectedObjects = [];
+//        $selectedCompany = $selectedProject = null;
+//        if($this->request->method() == Request::POST) {
+//            $this->_checkForAjaxOrDie();
+//
+//            $requestData = Arr::extract($this->post(),['company','project','objects']);
+//            foreach ($requestData as $val){
+//                if(empty($val)){
+//                    throw new HTTP_Exception_404();
+//                }
 //            }
-            if( !$selectedCompany OR !$selectedCompany->loaded()){
-                throw new HTTP_Exception_404();
-            }
-
-            $selectedProject = $selectedCompany->projects->where('id','=',$requestData['project'])->find();
-            if( ! $selectedProject->loaded()){
-                throw new HTTP_Exception_404();
-            }
-            if(!is_array($requestData['objects'])){
-                $requestData['objects'] = [$requestData['objects']];
-            }
-            array_walk($requestData['objects'],function(&$item){
-                $item = (int)$item;
-            });
-            $selectedObjects = $selectedProject->objects->where('id','IN',DB::expr('('.implode(',',$requestData['objects']).')'))->find_all();
-            if(!count($selectedObjects)){
-                throw new HTTP_Exception_404();
-            }
-        }else{
-            $companies = $this->_user->availableCompanies();
-            if(!is_array($companies)){
-                $companies = $companies->as_array();
-            }
-//            if($this->_user->getRelevantRole('outspread') == Enum_UserOutspread::General){
-//                $companies = ORM::factory('Company')->find_all()->as_array();
-//                foreach ($companies as $key => $c){
-//                    if(!$c->projects->count_all()){
-//                        unset($companies[$key]);
+//            $companies = $this->_user->availableCompanies();
+//            $selectedCompany = $this->_user->getCompanyIfItAvailable($requestData['company']);
+////            if($this->_user->getRelevantRole('outspread') == Enum_UserOutspread::General){
+////                $selectedCompany = ORM::factory('Company',(int)$requestData['company']);
+////                $companies = ORM::factory('Company')->find_all()->as_array();
+////            }else{
+////                $selectedCompany = $this->_user->client->companies->where('id','=',(int)$requestData['company'])->find();
+////                $companies = $this->_user->client->companies->find_all()->as_array();
+////            }
+//            if( !$selectedCompany OR !$selectedCompany->loaded()){
+//                throw new HTTP_Exception_404();
+//            }
+//
+//            $selectedProject = $selectedCompany->projects->where('id','=',$requestData['project'])->find();
+//            if( ! $selectedProject->loaded()){
+//                throw new HTTP_Exception_404();
+//            }
+//            if(!is_array($requestData['objects'])){
+//                $requestData['objects'] = [$requestData['objects']];
+//            }
+//            array_walk($requestData['objects'],function(&$item){
+//                $item = (int)$item;
+//            });
+//            $selectedObjects = $selectedProject->objects->where('id','IN',DB::expr('('.implode(',',$requestData['objects']).')'))->find_all();
+//            if(!count($selectedObjects)){
+//                throw new HTTP_Exception_404();
+//            }
+//        }else{
+//            $companies = $this->_user->availableCompanies();
+//            if(!is_array($companies)){
+//                $companies = $companies->as_array();
+//            }
+////            if($this->_user->getRelevantRole('outspread') == Enum_UserOutspread::General){
+////                $companies = ORM::factory('Company')->find_all()->as_array();
+////                foreach ($companies as $key => $c){
+////                    if(!$c->projects->count_all()){
+////                        unset($companies[$key]);
+////                    }
+////                }
+////            }else{
+////                $companies = $this->_user->client->companies->find_all()->as_array();
+////            }
+//            foreach ($companies as $key => $c){
+//                if(!$c->projects->count_all()){
+//                    unset($companies[$key]);
+//                }
+//            }
+//            if(count($companies)){
+//                $selectedCompany = $companies[0];
+//            }
+//
+//        }
+//
+//        $projects = $objects =  $plans = $qualityControls = $certifications = $objectIds = [];
+//        if(!empty($companies)){
+//            if($this->_user->getRelevantRole('outspread') == Enum_UserOutspread::Project){
+//                $usrProjects = [];
+//                foreach($this->_user->projects->find_all() as $p){
+//                    $usrProjects[] = $p->id;
+//                }
+//                if(count($usrProjects)){
+//                    $usrProjects = '('.implode(',',$usrProjects).')';
+//                    foreach ($companies as $cmp){
+//                        $projects = Arr::merge($projects,$cmp->projects->where('id','IN',DB::expr($usrProjects))->find_all()->as_array());
 //                    }
 //                }
 //            }else{
-//                $companies = $this->_user->client->companies->find_all()->as_array();
+//                foreach ($companies as $cmp){
+//                    $projects = Arr::merge($projects,$cmp->projects->find_all()->as_array());
+//                }
 //            }
-            foreach ($companies as $key => $c){
-                if(!$c->projects->count_all()){
-                    unset($companies[$key]);
-                }
-            }
-            if(count($companies)){
-                $selectedCompany = $companies[0];
-            }
+//
+//
+//            if(!empty($projects)){
+//                if(empty($selectedProject)){
+//
+//                    if(!empty($selectedCompany)){
+//                        if(isset($usrProjects) AND count($usrProjects)){
+//                            $selectedProject = $projects[0];
+//                        }else{
+//                            $selectedProject = $selectedCompany->projects->find();
+//                        }
+//                    }else{
+//                        $selectedProject = $projects[0];
+//                    }
+//                }
+//                if(empty($selectedObjects)){
+//                    $selectedObjects = $selectedProject->objects->find_all();
+//                }
+//
+//                foreach ($selectedObjects as $o){
+//                    $objectIds []= $o->id;
+//                }
+//                foreach ($projects as $prj){
+//                    $objects = Arr::merge($objects,$prj->objects->find_all()->as_array());
+//                }
+//
+//                $certRequest = ORM::factory('PrCertification')
+//                    ->where('prcertification.project_id','=',$selectedProject->id)
+//                    ->with('project')
+//                    ->with('craft');
+//
+//
+//                $qualityControlsUrl = Route::url('site.dashboard.qualityControlList',[
+//                    'lang' => Language::getCurrent()->slug,
+//                    'controller' => 'dashboard',
+//                    'action' => 'quality_control_list',
+//                    'project' => $selectedProject->id,
+//                    'status' => Enum_QualityControlApproveStatus::Waiting,
+//                    'objects' => implode('-',$objectIds)
+//                ]);
+//                $qualityControls = Request::factory($qualityControlsUrl)->execute()->body();
+//
+//                $plansUrl = Route::url('site.dashboard.plansList',[
+//                    'lang' => Language::getCurrent()->slug,
+//                    'controller' => 'dashboard',
+//                    'action' => 'plans_list',
+//                    'project' => $selectedProject->id,
+//                    'status' => Enum_QualityControlApproveStatus::Waiting,
+//                    'objects' => implode('-',$objectIds)
+//                ]);
+//                $plans =  Request::factory($plansUrl)->execute()->body();
+//
+//                $certificationsUrl = Route::url('site.dashboard.certificationsList',[
+//                    'lang' => Language::getCurrent()->slug,
+//                    'controller' => 'dashboard',
+//                    'action' => 'certifications_list',
+//                    'status' => Enum_ApprovalStatus::Waiting,
+//                    'project' => $selectedProject->id
+//                ]);
+//                $certifications = Request::factory($certificationsUrl)->execute()->body();
+//            }
+//        }
+//
+//        $content = View::make('dashboard/main',[
+//            'filterView' => View::make('dashboard/filter',[
+//                'selectedCompanyId' => !empty($selectedCompany) ? $selectedCompany->id : null,
+//                'selectedProjectId' => !empty($selectedProject) ? $selectedProject->id : null,
+//                'selectedObjectIds' => $objectIds,
+//                'companies' => $companies,
+//                'projects' => $projects,
+//                'objects' => $objects,
+//            ]),
+//            'qualityControlsView' => !empty($qualityControls) ? $qualityControls : null,
+//            'plansView' => !empty($plans) ? $plans : null,
+//            'certificationsView' => !empty($certifications) ? $certifications : null
+//        ]);
+//
+//        if($this->_isAjax){
+//            $this->setResponseData('html',$content->render());
+//            $this->setResponseData('triggerEvent','dashboardUpdated');
+//        }else{
+//            $this->template->content = $content;
+//        }
 
-        }
+        VueJs::instance()->addComponent('dashboard/statistics');
+        VueJs::instance()->includeCharts();
+        VueJs::instance()->includeDateTimePiker();
+        VueJs::instance()->includeMultiselect();
 
-        $projects = $objects =  $plans = $qualityControls = $certifications = $objectIds = [];
-        if(!empty($companies)){
-            if($this->_user->getRelevantRole('outspread') == Enum_UserOutspread::Project){
-                $usrProjects = [];
-                foreach($this->_user->projects->find_all() as $p){
-                    $usrProjects[] = $p->id;
-                }
-                if(count($usrProjects)){
-                    $usrProjects = '('.implode(',',$usrProjects).')';
-                    foreach ($companies as $cmp){
-                        $projects = Arr::merge($projects,$cmp->projects->where('id','IN',DB::expr($usrProjects))->find_all()->as_array());
-                    }
-                }
-            }else{
-                foreach ($companies as $cmp){
-                    $projects = Arr::merge($projects,$cmp->projects->find_all()->as_array());
-                }
-            }
+        $translations = [
+            'companies' => __('Companies'),
+            'projects' => __('Projects'),
+            'select_all' => __('select all'),
+            'unselect_all' => __('unselect all'),
+            'date' => __('Date'),
+            'show' => __('Show'),
+            'today' => __('Today'),
+            'yesterday' => __('Yesterday'),
+            '7_days' => __('7 days'),
+            'monthly' => __('Monthly'),
+            'quarterly' => __('Quarterly'),
+            'half_year' => __('Half year'),
+            'qc' => __('QC'),
+            'places' => __('Places'),
+            'certificates' => __('Certificates'),
+            'dashboard_new' => __('Dashboard_new'),
+            'total' => __('Total'),
+            'delivery_protocols' => __('delivery_protocols'),
+            'ears' => __('ears'),
+            'lab_control_reports' => __('lab_control_reports'),
+            'show_full_reports' => __('show_full_reports'),
+            'analytics_for' => __('analytics_for'),
+            'qc_in_system' => __('qc_in_system'),
+            'invalid_qc_in_system' => __('invalid_qc_in_system'),
+            'repaired_qc_in_system' => __('repaired_qc_in_system'),
+            'other_qc_in_system' => __('other_qc_in_system'),
+            'places_in_system' => __('places_in_system'),
+            'private_places' => __('private_places'),
+            'public_places' => __('public_places'),
+            'certificates_in_system' => __('certificates_in_system'),
+            'not_approved_certificates' => __('not_approved_certificates'),
+            'approved_certificates' => __('approved_certificates'),
+            'deliveries_done' => __('deliveries_done'),
+            'pre_deliveries_done' => __('pre_deliveries_done'),
+            'ears_in_system' => __('ears_in_system'),
+            'not_appropriate_ears' => __('not_appropriate_ears'),
+            'appropriate_ears' => __('appropriate_ears'),
+            'lab_controls_sent' => __('lab_controls_sent'),
+            'approved_lab_controls' => __('approved_lab_controls'),
+            'approved' => __('Approved'),
+            'not_appropriate' => __('not_appropriate'),
+            'appropriate' => __('appropriate'),
+            'private' => __('private'),
+            'public' => __('public'),
+            'invalid' => __('invalid'),
+            'repaired' => __('repaired'),
+            'other' => __('other'),
+            'delivery' => __('Delivery'),
+            'pre_delivery' => __('pre_delivery'),
+            'not_approved' => __('non_approve'),
+            'not_approved_lab_controls' => __('not_approved_lab_controls'),
+            'no_data' => __('no_data'),
+            'no_qc' => __('no_qc'),
+            'with_qc' => __('with_qc'),
+            'qc_report' => __('QC Report'),
+            'place_report' => __('Place report'),
+            'delivery_report' => __('Delivery report')
+        ];
 
 
-            if(!empty($projects)){
-                if(empty($selectedProject)){
-
-                    if(!empty($selectedCompany)){
-                        if(isset($usrProjects) AND count($usrProjects)){
-                            $selectedProject = $projects[0];
-                        }else{
-                            $selectedProject = $selectedCompany->projects->find();
-                        }
-                    }else{
-                        $selectedProject = $projects[0];
-                    }
-                }
-                if(empty($selectedObjects)){
-                    $selectedObjects = $selectedProject->objects->find_all();
-                }
-
-                foreach ($selectedObjects as $o){
-                    $objectIds []= $o->id;
-                }
-                foreach ($projects as $prj){
-                    $objects = Arr::merge($objects,$prj->objects->find_all()->as_array());
-                }
-
-                $certRequest = ORM::factory('PrCertification')
-                    ->where('prcertification.project_id','=',$selectedProject->id)
-                    ->with('project')
-                    ->with('craft');
-
-
-                $qualityControlsUrl = Route::url('site.dashboard.qualityControlList',[
-                    'lang' => Language::getCurrent()->slug,
-                    'controller' => 'dashboard',
-                    'action' => 'quality_control_list',
-                    'project' => $selectedProject->id,
-                    'status' => Enum_QualityControlApproveStatus::Waiting,
-                    'objects' => implode('-',$objectIds)
-                ]);
-                $qualityControls = Request::factory($qualityControlsUrl)->execute()->body();
-
-                $plansUrl = Route::url('site.dashboard.plansList',[
-                    'lang' => Language::getCurrent()->slug,
-                    'controller' => 'dashboard',
-                    'action' => 'plans_list',
-                    'project' => $selectedProject->id,
-                    'status' => Enum_QualityControlApproveStatus::Waiting,
-                    'objects' => implode('-',$objectIds)
-                ]);
-                $plans =  Request::factory($plansUrl)->execute()->body();
-
-                $certificationsUrl = Route::url('site.dashboard.certificationsList',[
-                    'lang' => Language::getCurrent()->slug,
-                    'controller' => 'dashboard',
-                    'action' => 'certifications_list',
-                    'status' => Enum_ApprovalStatus::Waiting,
-                    'project' => $selectedProject->id
-                ]);
-                $certifications = Request::factory($certificationsUrl)->execute()->body();
-            }
-        }
-
-        $content = View::make('dashboard/main',[
-            'filterView' => View::make('dashboard/filter',[
-                'selectedCompanyId' => !empty($selectedCompany) ? $selectedCompany->id : null,
-                'selectedProjectId' => !empty($selectedProject) ? $selectedProject->id : null,
-                'selectedObjectIds' => $objectIds,
-                'companies' => $companies,
-                'projects' => $projects,
-                'objects' => $objects,
-            ]),
-            'qualityControlsView' => !empty($qualityControls) ? $qualityControls : null,
-            'plansView' => !empty($plans) ? $plans : null,
-            'certificationsView' => !empty($certifications) ? $certifications : null
+        $this->template->content = View::make('dashboard/index', [
+            'translations' => $translations
         ]);
 
-        if($this->_isAjax){
-            $this->setResponseData('html',$content->render());
-            $this->setResponseData('triggerEvent','dashboardUpdated');
-        }else{
-            $this->template->content = $content;
-        }
+//                $plansUrl = Route::url('site.dashboard.plansList',[
+//                    'lang' => Language::getCurrent()->slug,
+//                    'controller' => 'dashboard',
+//                    'action' => 'plans_list',
+//                    'project' => $selectedProject->id,
+//                    'status' => Enum_QualityControlApproveStatus::Waiting,
+//                    'objects' => implode('-',$objectIds)
+//                ]);
+//                $plans =  Request::factory($plansUrl)->execute()->body();
+//
+//                $certificationsUrl = Route::url('site.dashboard.certificationsList',[
+//                    'lang' => Language::getCurrent()->slug,
+//                    'controller' => 'dashboard',
+//                    'action' => 'certifications_list',
+//                    'status' => Enum_ApprovalStatus::Waiting,
+//                    'project' => $selectedProject->id
+//                ]);
+//                $certifications = Request::factory($certificationsUrl)->execute()->body();
+//            }
+//        }
+//
+//        $content = View::make('dashboard/main',[
+//            'filterView' => View::make('dashboard/filter',[
+//                'selectedCompanyId' => !empty($selectedCompany) ? $selectedCompany->id : null,
+//                'selectedProjectId' => !empty($selectedProject) ? $selectedProject->id : null,
+//                'selectedObjectIds' => $objectIds,
+//                'companies' => $companies,
+//                'projects' => $projects,
+//                'objects' => $objects,
+//            ]),
+//            'qualityControlsView' => !empty($qualityControls) ? $qualityControls : null,
+//            'plansView' => !empty($plans) ? $plans : null,
+//            'certificationsView' => !empty($certifications) ? $certifications : null
+//        ]);
+//
+//        if($this->_isAjax){
+//            $this->setResponseData('html',$content->render());
+//            $this->setResponseData('triggerEvent','dashboardUpdated');
+//        }else{
+//            $this->template->content = $content;
+//        }
     }
-
 
     public function action_quality_control_list(){
         $this->auto_render = false;

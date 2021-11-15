@@ -69,7 +69,12 @@
                         <figcaption><a href="<?=URL::site('reports/approve_element')?>"><?=__('approve_element_uppercase')?></a></figcaption>
                     </figure>
                 </li>
-
+                <li class="q4-list-item">
+                    <figure>
+                        <a href="<?=URL::site('reports/labtests')?>"><img src="/media/img/approve_element_report_icon.svg" alt="LAB CONTROL REPORTS"></a>
+                        <figcaption><a href="<?=URL::site('reports/labtests')?>"><?=__('lab_control_reports')?></a></figcaption>
+                    </figure>
+                </li>
             </ul>
 
         </div>

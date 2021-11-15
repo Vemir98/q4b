@@ -146,108 +146,111 @@
 //
 //];
 
-$items = [
-//    [
-//        'slug' => 'dashboard',
-//        'href' => 'dashboard',
-//        'text' => 'Dashboard1',
-//        'tooltip' => 'Dashboard1',
-//        'icon' => 'q4bikon-uncheked',
-//        'resource' => 'Controller_Dashboard',
-//        'priority' => Enum_UserPriorityLevel::Project,
-//        'deepLevel' => 1,
-//        'showIn' => [
-//                'dashboard/{any}'
-//        ],
-//        'disabled' => false,
-//        'active' => false,
-//        'hasActiveChild' => false
-//    ],
-    [
-        'slug' => 'companies/{any}',
-        'href' => 'companies',
-        'text' => 'Companies',
-        'tooltip' => 'Companies',
-        'icon' => 'q4bikon-companies',
-        'resource' => 'Controller_Companies',
-        'priority' => Enum_UserPriorityLevel::Corporate,
+$items = [];
+
+if(Usr::role() == 'super_admin') {
+    array_push($items, [
+        'slug' => 'dashboard',
+        'href' => 'dashboard',
+        'text' => 'Dashboard_new',
+        'tooltip' => __('Dashboard_new'),
+        'icon' => 'q4bikon-uncheked',
+        'resource' => 'Controller_Dashboard',
+        'priority' => Enum_UserPriorityLevel::Project,
         'deepLevel' => 1,
-        'children' => [
-            [
-                'slug' => 'companies/update/:id?tab=info',
-                'href' => 'companies/update/:id?tab=info',
-                'text' => 'Info',
-                'resource' => 'Controller_Companies',
-                'priority' => Enum_UserPriorityLevel::Project,
-                'deepLevel' => 2,
-                'showIn' => Menu::CATEGORIES['companies'],
-                'disabled' => false,
-                'active' => false,
-                'hasActiveChild' => false
-            ],
-            [
-                'slug' => 'companies/update/:id?tab=specialities',
-                'href' => 'companies/update/:id?tab=specialities',
-                'text' => 'Crafts',
-                'resource' => 'Controller_Companies',
-                'priority' => Enum_UserPriorityLevel::Project,
-                'deepLevel' => 2,
-                'showIn' => Menu::CATEGORIES['companies'],
-                'disabled' => false,
-                'active' => false,
-                'hasActiveChild' => false
-            ],
-            [
-                'slug' => 'companies/update/:id?tab=professions',
-                'href' => 'companies/update/:id?tab=professions',
-                'text' => 'Professions',
-                'resource' => 'Controller_Companies',
-                'priority' => Enum_UserPriorityLevel::Project,
-                'deepLevel' => 2,
-                'showIn' => Menu::CATEGORIES['companies'],
-                'disabled' => false,
-                'active' => false,
-                'hasActiveChild' => false
-            ],
-            [
-                'slug' => 'companies/update/:id?tab=instructions',
-                'href' => 'companies/update/:id?tab=instructions',
-                'text' => 'Instructions',
-                'resource' => 'Controller_Companies',
-                'priority' => Enum_UserPriorityLevel::Project,
-                'deepLevel' => 2,
-                'showIn' => Menu::CATEGORIES['companies'],
-                'disabled' => false,
-                'active' => false,
-                'hasActiveChild' => false
-            ],
-            [
-                'slug' => 'companies/update/:id?tab=users',
-                'href' => 'companies/update/:id?tab=users',
-                'text' => 'Users',
-                'resource' => 'Controller_Companies',
-                'priority' => Enum_UserPriorityLevel::Project,
-                'deepLevel' => 2,
-                'showIn' => Menu::CATEGORIES['companies'],
-                'disabled' => false,
-                'active' => false,
-                'hasActiveChild' => false
-            ],
-        ],
         'showIn' => [
-            'companies/{any}'
+            'dashboard'
         ],
         'disabled' => false,
         'active' => false,
         'hasActiveChild' => false
+    ]);
+}
+
+array_push($items, [
+    'slug' => 'companies/{any}',
+    'href' => 'companies',
+    'text' => 'Companies',
+    'tooltip' => __('Companies'),
+    'icon' => 'q4bikon-companies',
+    'resource' => 'Controller_Companies',
+    'priority' => Enum_UserPriorityLevel::Corporate,
+    'deepLevel' => 1,
+    'children' => [
+        [
+            'slug' => 'companies/update/:id?tab=info',
+            'href' => 'companies/update/:id?tab=info',
+            'text' => 'Info',
+            'resource' => 'Controller_Companies',
+            'priority' => Enum_UserPriorityLevel::Project,
+            'deepLevel' => 2,
+            'showIn' => Menu::CATEGORIES['companies'],
+            'disabled' => false,
+            'active' => false,
+            'hasActiveChild' => false
+        ],
+        [
+            'slug' => 'companies/update/:id?tab=specialities',
+            'href' => 'companies/update/:id?tab=specialities',
+            'text' => 'Crafts',
+            'resource' => 'Controller_Companies',
+            'priority' => Enum_UserPriorityLevel::Project,
+            'deepLevel' => 2,
+            'showIn' => Menu::CATEGORIES['companies'],
+            'disabled' => false,
+            'active' => false,
+            'hasActiveChild' => false
+        ],
+        [
+            'slug' => 'companies/update/:id?tab=professions',
+            'href' => 'companies/update/:id?tab=professions',
+            'text' => 'Professions',
+            'resource' => 'Controller_Companies',
+            'priority' => Enum_UserPriorityLevel::Project,
+            'deepLevel' => 2,
+            'showIn' => Menu::CATEGORIES['companies'],
+            'disabled' => false,
+            'active' => false,
+            'hasActiveChild' => false
+        ],
+        [
+            'slug' => 'companies/update/:id?tab=instructions',
+            'href' => 'companies/update/:id?tab=instructions',
+            'text' => 'Instructions',
+            'resource' => 'Controller_Companies',
+            'priority' => Enum_UserPriorityLevel::Project,
+            'deepLevel' => 2,
+            'showIn' => Menu::CATEGORIES['companies'],
+            'disabled' => false,
+            'active' => false,
+            'hasActiveChild' => false
+        ],
+        [
+            'slug' => 'companies/update/:id?tab=users',
+            'href' => 'companies/update/:id?tab=users',
+            'text' => 'Users',
+            'resource' => 'Controller_Companies',
+            'priority' => Enum_UserPriorityLevel::Project,
+            'deepLevel' => 2,
+            'showIn' => Menu::CATEGORIES['companies'],
+            'disabled' => false,
+            'active' => false,
+            'hasActiveChild' => false
+        ],
     ],
-];
+    'showIn' => [
+        'companies/{any}'
+    ],
+    'disabled' => false,
+    'active' => false,
+    'hasActiveChild' => false
+]);
 
 $projectRoutes = [
     'slug' => 'projects/{any}',
     'href' => 'projects',
     'text' => 'Menu _Projects',
-    'tooltip' => 'Tooltip _Projects',
+    'tooltip' => __('Tooltip _Projects'),
     'icon' => 'q4bikon-project',
     'resource' => 'Controller_Projects',
     'priority' => Enum_UserPriorityLevel::Project,
@@ -498,7 +501,7 @@ array_push($items,
         'slug' => 'reports/{any}',
         'href' => 'reports/list',
         'text' => 'Reports',
-        'tooltip' => 'Reports',
+        'tooltip' => __('Reports'),
         'icon' => 'q4bikon-reports',
         'resource' => 'Controller_Reports',
         'priority' => Enum_UserPriorityLevel::Project,
@@ -512,7 +515,7 @@ array_push($items,
         'slug' => 'consultants',
         'href' => 'consultants',
         'text' => 'Users',
-        'tooltip' => 'Users',
+        'tooltip' => __('Users'),
         'icon' => 'q4bikon-public',
         'resource' => 'Controller_Consultants',
         'priority' => Enum_UserPriorityLevel::Company,
@@ -528,7 +531,7 @@ array_push($items,
         'slug' => 'settings',
         'href' => 'settings',
         'text' => 'Settings',
-        'tooltip' => 'Settings',
+        'tooltip' => __('Settings'),
         'icon' => 'q4bikon-settings2',
         'resource' => 'Controller_Settings',
         'priority' => Enum_UserPriorityLevel::General,

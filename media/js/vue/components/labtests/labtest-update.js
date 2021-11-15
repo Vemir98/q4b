@@ -583,7 +583,11 @@ Vue.component('labtest-update', {
             this.images = [];
         },
         closePage(){
-            window.location.href = this.siteUrl + "/labtests/project/" + this.projectId
+            if(window.location.pathname.startsWith('/reports')) {
+                window.location.href = this.siteUrl + "/reports/labtests"
+            } else {
+                window.location.href = this.siteUrl + "/labtests/project/" + this.projectId
+            }
         },
         getPlanFilePath() {
             return this.plan.imagePath;
@@ -830,7 +834,11 @@ Vue.component('labtest-update', {
             let url = `/projects/${this.project.id}/labtests/${this.labtestId}`;
             qfetch(url, {method: 'DELETE', headers: {}})
                 .then(response => {
-                    window.location = `/labtests/project/${this.projectId}`
+                    if(window.location.pathname.startsWith('/reports')) {
+                        window.location = `/reports/labtests`
+                    } else {
+                        window.location = `/labtests/project/${this.projectId}`
+                    }
                 })
         },
         sendDeleteRequest(id) {

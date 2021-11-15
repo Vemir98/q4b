@@ -507,4 +507,23 @@ class Api_DBElApprovals
             ->execute()->as_array();
     }
 
+    public static function getProjectsElApprovalsStatistics($filters) : array
+    {
+        $query = "SELECT 
+            ea.appropriate,
+            COUNT(DISTINCT ea.id) as count
+            FROM el_approvals ea
+            WHERE ea.project_id IN (:projectIds) AND (ea.created_at>=:from AND ea.created_at<=:to)
+            GROUP BY ea.appropriate";
+
+        $query =  DB::query(Database::SELECT, $query);
+
+        $query->parameters(array(
+            ':projectIds' => DB::expr(implode(',',$filters['projectIds'])),
+            ':from' => $filters['from'],
+            ':to' => $filters['to']
+        ));
+
+        return $query->execute()->as_array();
+    }
 }

@@ -36,7 +36,6 @@ class Job_Notification_SendPushNotification
 
         } catch (Exception $exception) {
 
-            Kohana::$log->add(Log::ERROR, 'JON PERFORM() catch: ' . json_encode([$usersDeviceTokens], JSON_PRETTY_PRINT));
 
         }
 
@@ -88,11 +87,6 @@ class Job_Notification_SendPushNotification
 //
 //            PushHelper::queueIfNotExists($time, \Language::getCurrent()->iso2, 'Job_Notification_SendPushNotification', $timestamp, 'waiting');
 //
-//            \Kohana::$log->add(\Log::WARNING, json_encode([
-//                'name' => 'PushNotification_Job_Warning',
-//                'args_time' => $time,
-//                'time' => $time
-//            ]));
 //
 //        } catch (Exception $exception) {
 //            PushHelper::queueIfNotExists($time, \Language::getCurrent()->iso2, 'Job_Notification_SendPushNotification', $timestamp, 'waiting');

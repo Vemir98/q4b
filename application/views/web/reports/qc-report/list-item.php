@@ -166,8 +166,8 @@
             <div class="report-desc-approve">
                 <div class="report-desc-approve">
 
-                    <h4 class="reports-tasks-box-title" style="color: rgba(0, 0, 0, 0.7);"><?=__('Description')?></h4>
-                    <div class="report_descripticon mt-15">
+                    <h4 class="report_descripticon"><?=__('Description')?></h4>
+                    <div class="reports-tasks-box-title mt-15" style="color: rgba(0, 0, 0, 0.7);">
                         <?$desc = explode("\n",$q->getDesc(html_entity_decode($q->description), "@##"));
                         foreach ($desc as $line) {?>
                             <div><?=$line?></div>

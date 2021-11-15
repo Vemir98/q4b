@@ -568,12 +568,18 @@ class Controller_Api_Projects extends HDVP_Controller_API
             $fs->sendLazyTasks();
         }catch (ORM_Validation_Exception $e){
             Database::instance()->rollback();
+            Kohana::$log->add(Log::ERROR, '[ERROR CREATE QC (ORM_Validation_Exception)]: ' . $e->getMessage());
+
             throw API_Exception::factory(500,'Incorrect data');
         }catch (HDVP_Exception $e){
             Database::instance()->rollback();
+            Kohana::$log->add(Log::ERROR, '[ERROR CREATE QC (HDVP_Exception)]: ' . $e->getMessage());
+
             throw API_Exception::factory(500,'Incorrect data');
         }catch (Exception $e){
             Database::instance()->rollback();
+            Kohana::$log->add(Log::ERROR, '[ERROR CREATE QC (Exception)]: ' . $e->getMessage());
+
             throw API_Exception::factory(500,'Operation Error');
         }
     }
@@ -699,16 +705,29 @@ class Controller_Api_Projects extends HDVP_Controller_API
             Database::instance()->commit();
 
             PushNotification::notifyQcUsers($qc->id, $qc->project->id, Enum_NotifyAction::Updated);
+            if($qc->el_approval_id) {
+                $users = Api_DBElApprovals::getElApprovalUsersListForNotify($qc->el_approval_id);
+                $elApproval = Api_DBElApprovals::getElApprovalById($qc->el_approval_id)[0];
+
+
+                PushNotification::notifyElAppUsers($qc->el_approval_id, $users, $elApproval['projectId'], Enum_NotifyAction::Updated);
+            }
 
             $fs->sendLazyTasks();
         }catch (ORM_Validation_Exception $e){
             Database::instance()->rollback();
+            Kohana::$log->add(Log::ERROR, '[ERROR UPDATE QC (ORM_Validation_Exception)]: ' . $e->getMessage());
+
             throw API_Exception::factory(500,'Incorrect data');
         }catch (HDVP_Exception $e){
             Database::instance()->rollback();
+            Kohana::$log->add(Log::ERROR, '[ERROR UPDATE QC (ORM_Validation_Exception)]: ' . $e->getMessage());
+
             throw API_Exception::factory(500,'Incorrect data');
         }catch (Exception $e){
             Database::instance()->rollback();
+            Kohana::$log->add(Log::ERROR, '[ERROR UPDATE QC (ORM_Validation_Exception)]: ' . $e->getMessage());
+
             throw API_Exception::factory(500,'Operation Error');
         }
     }
@@ -1012,7 +1031,6 @@ class Controller_Api_Projects extends HDVP_Controller_API
 
 //        echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$usersDeviceTokens]); echo "</pre>"; exit;
 //
-//        Kohana::$log->add(Log::ERROR, 'from elApprovals: ' . json_encode([$usersDeviceTokens], JSON_PRETTY_PRINT));
 //
 
 //        $timestamp = time();

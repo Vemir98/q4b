@@ -40,6 +40,7 @@ Vue.component('labtest-list-item', {
 `,
     props: {
         projectId: {required: true},
+        fromProjects: {required: true},
         trans: {required: true},
         itemData: {required: true},
         index: {required: true},
@@ -97,7 +98,12 @@ Vue.component('labtest-list-item', {
             this.editing = true;
         },
         edit() {
-            let url = `/labtests/project/${this.projectId}/edit/${this.item.id}`;
+            let url = '';
+            if(this.fromProjects) {
+                url = `/labtests/project/${this.projectId}/edit/${this.item.id}`;
+            } else {
+                url = `/reports/labtests/${this.projectId}/edit/${this.item.id}`;
+            }
             if (this.currentLang !== 'en') {
                 url = `/${this.currentLang}${url}`;
             }
@@ -106,7 +112,14 @@ Vue.component('labtest-list-item', {
             window.location.href = url;
         },
         getEditLink() {
-            let url = `/labtests/project/${this.projectId}/edit/${this.item.id}`;
+            let url = '';
+
+            if(this.fromProjects) {
+                url = `/labtests/project/${this.projectId}/edit/${this.item.id}`;
+            } else {
+                url = `/reports/labtests/${this.projectId}/edit/${this.item.id}`;
+            }
+
             if (this.currentLang !== 'en') {
                 url = `/${this.currentLang}${url}`;
             }

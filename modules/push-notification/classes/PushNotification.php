@@ -8,7 +8,7 @@
 
 class PushNotification
 {
-    public static function notifyElAppUsers($elApprovalId, $users, $action) {
+    public static function notifyElAppUsers($elApprovalId, $users, $projectId, $action) {
         $usersDeviceTokens = [];
 
         foreach ($users as $user) {
@@ -21,7 +21,8 @@ class PushNotification
         $fpns->notify($usersDeviceTokens, [
             'type' => 'elApproval',
             'action' => $action,
-            'id' => $elApprovalId
+            'id' => $elApprovalId,
+            'projectId' => $projectId
         ]);
 
         $f = fopen(DOCROOT.'testNotification.txt', 'a');
@@ -66,7 +67,8 @@ class PushNotification
         $fpns->notify($usersDeviceTokens, [
             'type' => $type,
             'action' => $action,
-            'id' => $typeId
+            'id' => $typeId,
+            'projectId' => $projectId
         ]);
 
         $f = fopen(DOCROOT.'testNotification.txt', 'a');

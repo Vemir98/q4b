@@ -584,34 +584,36 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
 
             $ws->set_active_sheet(0);
             $as = $ws->get_active_sheet();
-            $cols = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T'];
+            $cols = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U'];
 
             $as->setTitle('Lab Control');
 
             $as->getDefaultStyle()->getFont()->setSize(10);
 
-            $as->getColumnDimension('T')->setWidth(30);
-            $as->getColumnDimension('S')->setWidth(20);
-            $as->getColumnDimension('R')->setWidth(37);
-            $as->getColumnDimension('Q')->setWidth(30);
-            $as->getColumnDimension('P')->setWidth(40);
-            $as->getColumnDimension('O')->setWidth(40);
-            $as->getColumnDimension('N')->setWidth(30);
-            $as->getColumnDimension('M')->setWidth(30);
-            $as->getColumnDimension('L')->setWidth(35);
-            $as->getColumnDimension('K')->setWidth(35);
-            $as->getColumnDimension('J')->setWidth(20);
-            $as->getColumnDimension('I')->setWidth(30);
-            $as->getColumnDimension('H')->setWidth(25);
-            $as->getColumnDimension('G')->setWidth(30);
-            $as->getColumnDimension('F')->setWidth(35);
-            $as->getColumnDimension('E')->setWidth(20);
-            $as->getColumnDimension('D')->setWidth(20);
-            $as->getColumnDimension('C')->setWidth(30);
-            $as->getColumnDimension('B')->setWidth(20);
+            $as->getColumnDimension('U')->setWidth(12);
+            $as->getColumnDimension('T')->setWidth(12);
+            $as->getColumnDimension('S')->setWidth(12);
+            $as->getColumnDimension('R')->setWidth(12);
+            $as->getColumnDimension('Q')->setWidth(12);
+            $as->getColumnDimension('P')->setWidth(17);
+            $as->getColumnDimension('O')->setWidth(32);
+            $as->getColumnDimension('N')->setWidth(24);
+            $as->getColumnDimension('M')->setWidth(24);
+            $as->getColumnDimension('L')->setWidth(12);
+            $as->getColumnDimension('K')->setWidth(17);
+            $as->getColumnDimension('J')->setWidth(17);
+            $as->getColumnDimension('I')->setWidth(17);
+            $as->getColumnDimension('H')->setWidth(24);
+            $as->getColumnDimension('G')->setWidth(32);
+            $as->getColumnDimension('F')->setWidth(17);
+            $as->getColumnDimension('E')->setWidth(17);
+            $as->getColumnDimension('D')->setWidth(17);
+            $as->getColumnDimension('C')->setWidth(15);
+            $as->getColumnDimension('B')->setWidth(12);
             $as->getColumnDimension('A')->setWidth(35);
+
             $as->getRowDimension('1')->setRowHeight(80);
-            $as->getRowDimension('2')->setRowHeight(25);
+            $as->getRowDimension('2')->setRowHeight(50);
             $as->setAutoFilter('A2:T2');
             $objDrawing = new PHPExcel_Worksheet_Drawing();
             $objDrawing->setName('Logo');
@@ -657,6 +659,9 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
             foreach ($params as $key=>$p) {
                 array_push($sh[2], __($p['name']));
             }
+
+            $mustBeAlignCenter = ['B','C','D','E','F','L','P','Q','R','S','T','U'];
+
             if (Language::getCurrent()->direction == 'rtl') {
                 foreach ($cols as $col) {
                     $as->getStyle($col)
@@ -664,12 +669,28 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
                         ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
                     $as->getStyle($col)->getFont()->setSize(10);
                 }
+            } else {
+                foreach ($cols as $col) {
+                    $as->getStyle($col)
+                        ->getAlignment()
+                        ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+                    $as->getStyle($col)->getFont()->setSize(10);
+                }
             }
+
             foreach ($cols as $col) {
                 $as->getStyle($col)
                     ->getAlignment()
                     ->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
+                if(in_array($col, $mustBeAlignCenter)) {
+                    $as->getStyle($col)
+                        ->getAlignment()
+                        ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                }
+                $ws->get_active_sheet()->getStyle($col.'1:'.$col.'999')
+                    ->getAlignment()->setWrapText(true);
             }
+
             $ws->set_data($sh, false);
             foreach ($labtests as $item){
                 $levelsRange = $item['smallerFloor'].'-'.$item['biggerFloor'];
@@ -709,14 +730,7 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
             $last_letter = PHPExcel_Cell::stringFromColumnIndex(count($sh[2])-1);
             $header_range = "{$first_letter}2:{$last_letter}2";
             $ws->get_active_sheet()->getStyle($header_range)->getFont()->setSize(14)->setBold(true);
-            $ws->get_active_sheet()->getStyle('K1:K999')
-                ->getAlignment()->setWrapText(true);
-            $ws->get_active_sheet()->getStyle('L1:L999')
-                ->getAlignment()->setWrapText(true);
-            $ws->get_active_sheet()->getStyle('O1:O999')
-                ->getAlignment()->setWrapText(true);
-            $ws->get_active_sheet()->getStyle('P1:P999')
-                ->getAlignment()->setWrapText(true);
+
             $ws->rtl(Language::getCurrent()->direction === 'rtl');
             $ws->send(['name'=>'lab-report', 'format'=>'Excel5']);
         }
@@ -749,6 +763,8 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
         ]);
         $data['status'] = $data['status'] ? $data['status'] : 'waiting';
         $imgData = isset($_POST['images']) ? $_POST['images'] : [];
+        Kohana::$log->add(Log::ERROR, '[LAB_CONTROL_TICKET CREATE LOG (IMG DATA)]: ' . json_encode($imgData, JSON_PRETTY_PRINT));
+
         $data['labtestId'] = $labtestId;
         try {
         $project = Api_DBProjects::getProjectById($projectId);
@@ -785,7 +801,9 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
             'created_by' => $data['createdBy'],
         ];
 
-        $result = DB::insert('labtests_tickets')
+            Kohana::$log->add(Log::ERROR, '[LAB_CONTROL_TICKET CREATE LOG (QUERY DATA)]: ' . json_encode($queryData, JSON_PRETTY_PRINT));
+
+            $result = DB::insert('labtests_tickets')
             ->columns(array_keys($queryData))
             ->values(array_values($queryData))
             ->execute($this->_db);
@@ -794,7 +812,9 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
 
         $ltTicketPath = DOCROOT.'media/data/projects/'.$projectId.'/labtest-tickets';
         $files = $this->_b64Arr($imgData, $ltTicketPath);
-        if(!empty($files)){
+            Kohana::$log->add(Log::ERROR, '[LAB_CONTROL_TICKET CREATE LOG (FILES)]: ' . json_encode($files, JSON_PRETTY_PRINT));
+
+            if(!empty($files)){
         foreach ($files as $image){
             $uploadedFiles[] = [
                 'name' => $image['name'],
@@ -807,7 +827,11 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
             }
         }
         $fs = new FileServer();
-        if(!empty($uploadedFiles)){
+
+        Kohana::$log->add(Log::ERROR, '[LAB_CONTROL_TICKET CREATE LOG (UPLOADED_FILES)]: ' . json_encode($uploadedFiles, JSON_PRETTY_PRINT));
+
+
+            if(!empty($uploadedFiles)){
             for ($i=count($uploadedFiles)-1; $i>=0; $i--) {
                 $image = $uploadedFiles[$i];
                 $image['created_at'] = time();
@@ -832,9 +856,11 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
 
         } catch (API_ValidationException $e){
             Database::instance()->rollback();
+            Kohana::$log->add(Log::ERROR, '[LAB_CONTROL_TICKET CREATE ERROR LOG (API_ValidationException)]: ' . $e->getMessage());
             throw API_Exception::factory(500,'Incorrect data');
         }catch (Exception $e){
             Database::instance()->rollback();
+            Kohana::$log->add(Log::ERROR, '[LAB_CONTROL_TICKET CREATE ERROR LOG (Exception)]: ' . $e->getMessage());
             throw API_Exception::factory(500,$e->getMessage());
         }
     }

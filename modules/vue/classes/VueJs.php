@@ -72,6 +72,11 @@ class VueJs
         $this->addStyle("https://qforb.net/media/js/vue/libs/vue2-datepicker/index.css",5);
     }
 
+    public function includeCharts(){
+        $this->addScript("https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js",5);
+//        $this->addScript("https://unpkg.com/vue-chartjs/dist/vue-chartjs.min.js",5);
+    }
+
     public function includeAxios(){
         $this->addScript("https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js",5);
     }

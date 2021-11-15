@@ -224,7 +224,9 @@ class Controller_Projects extends HDVP_Controller_Template
             $ws->send(['name'=>'report', 'format'=>'Excel5']);
         }else {
 //            $this->template->content = View::make('projects/list', $result + ['projectsEmptyPlans' => Model_Project::getProjectsWithoutPlansSpecialities()]);
-            $this->template->content = View::make('projects/list', $result);
+//            $this->template->content = View::make('projects/list', $result + ['filterProjects' => $filterProjects]);
+
+            $this->template->content = View::make('projects/list_old', $result);
         }
         Breadcrumbs::clear();
         Breadcrumbs::add(Breadcrumb::factory()->set_title(__('Home'))->set_url('/'));
@@ -2619,6 +2621,13 @@ class Controller_Projects extends HDVP_Controller_Template
         if( ! $this->_user->is('super_admin')){
             throw new HTTP_Exception_403();
         }
+        if($qc->el_approval_id) {
+            $users = Api_DBElApprovals::getElApprovalUsersListForNotify($qc->el_approval_id);
+            $elApproval = Api_DBElApprovals::getElApprovalById($qc->el_approval_id)[0];
+
+            PushNotification::notifyElAppUsers($qc->el_approval_id, $users, $elApproval['projectId'], Enum_NotifyAction::Updated);
+        }
+
         $qc->delete();
         PushNotification::notifyQcUsers($qcId, $projectId,Enum_NotifyAction::Deleted);
     }

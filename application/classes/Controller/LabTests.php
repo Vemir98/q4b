@@ -25,12 +25,6 @@ class Controller_LabTests extends HDVP_Controller_Template
 
     public function action_project()
     {
-        $id = $this->getUIntParamOrDie($this->request->param('projectId'));
-        $project = ORM::factory('Project',$id);
-        if( ! $project->loaded()){
-            throw new HTTP_Exception_404;
-        }
-
         $translations = [
             "project_name" => __('Project name'),
             "search" => __('Search'),
@@ -65,14 +59,25 @@ class Controller_LabTests extends HDVP_Controller_Template
             "are_you_sure" => __('Are you sure, you want'),
             "to_delete" => __('delete'),
             "are_you_sure_to_delete" => __('Are you sure, you want delete this'),
+            'select_company' => __('Select Company'),
+            'select_project' => __('Select project'),
+            'company' => __('company'),
+            'project' => __('project')
         ];
+        if($this->request->param('projectId')) {
+            $id = $this->getUIntParamOrDie($this->request->param('projectId'));
+            $project = ORM::factory('Project',$id);
+            if( ! $project->loaded()){
+                throw new HTTP_Exception_404;
+            }
+        }
 
         VueJs::instance()->addComponent('./confirm-modal');
         VueJs::instance()->addComponent('labtests/pr-labtests-list');
         VueJs::instance()->addComponent('labtests/labtest-list-item');
         VueJs::instance()->includeDateTimePiker();
         VueJs::instance()->includeMultiselect();
-        $this->template->content = View::make('labtests/pr-labtests-list', ['projectId' => $project->id, 'translations' => $translations]);
+        $this->template->content = View::make('labtests/pr-labtests-list', ['projectId' => $this->request->param('projectId') ? $project->id : null, 'translations' => $translations]);
     }
     public function action_index()
     {

@@ -1,8 +1,8 @@
 Vue.component('pr-labtests-list', {
     template: `
         <section class='labtest_list'>
-        <div class="elements_title_sec">
-            <div class="lt_page_title">{{ trans.project_name }} / <span class="project_name"> {{ project ? project.name : '' }}</span></div>
+        <div class="elements_title_sec" v-if="items.length">
+            <div class="lt_page_title">{{ trans.project_name }} / <span class="project_name"> {{ selectedProject ? selectedProject.name : '' }}</span></div>
             <div class="elements_title_left">
                 <form class="elements-form" action="">
                     <i class="q4bikon-search1 icon"></i>
@@ -21,11 +21,56 @@ Vue.component('pr-labtests-list', {
         </div>
         <div class="labtest_filters">
                 <div class="labtest_filters1 row-flex">
-                    <div class="labtest_filters1_left">
+                    <div class="labtest_filters1_left" style="max-width: 100%">
+                        <div class="labtest_filter_input" v-if="!projectId">
+                            <label class="filter-item-label" :class="{'labtest-disabled': !companies.length}">{{ trans.company }}</label>
+                            <multiselect 
+                                v-model="selectedCompany"
+                                :option-height="104" 
+                                :placeholder="trans.select_company" 
+                                :disabled="companies.length < 1" 
+                                :options="companies" 
+                                track-by="id" 
+                                label="name" 
+                                :searchable="true" 
+                                :allow-empty="false" 
+                                :show-labels="false"
+                            >
+                            <template slot="singleLabel" slot-scope="props">{{ props.option.name }}</template>
+                            <template slot="option" slot-scope="props">
+                                <span>{{ props.option.name }}</span>
+                            </template>
+                            <template slot="option-selected" slot-scope="props">
+                                <span>{{ props.option.name }}</span>
+                            </template>
+                        </multiselect>                                
+                        </div>
+                        <div class="labtest_filter_input" v-if="!projectId">
+                            <label class="filter-item-label" :class="{'labtest-disabled': !ltStatuses.length}">{{ trans.project }}</label>
+                            <multiselect 
+                                v-model="selectedProject"
+                                :option-height="104" 
+                                :placeholder="trans.select_project" 
+                                :disabled="(projects.length < 1)" 
+                                :options="projects" 
+                                track-by="id" 
+                                label="name" 
+                                :searchable="true"
+                                :allow-empty="false" 
+                                :show-labels="false"
+                            >
+                                <template slot="singleLabel" slot-scope="props">{{ props.option.name }}</template>
+                                <template slot="option" slot-scope="props">
+                                    <span>{{ props.option.name }}</span>
+                                </template>
+                                <template slot="option-selected" slot-scope="props">
+                                    <span>{{ props.option.name }}</span>
+                                </template>
+                            </multiselect>                                
+                        </div>
                         <div class="labtest_filter_input">
                             <date-picker v-model="time" :lang="langs[currentLang]" :editable="false" :clearable="false" :disabled="false" @change="timeChanged" type="date" :range="true" format="DD/MM/YYYY"></date-picker>
                         </div>
-
                         <div class="labtest_filter_input">
                             <label class="table_label" :class="{'labtest-disabled': !ltStatuses.length}">
                                 <span @click="toggleSelectAll('selectedStatus', 'ltStatuses')">
@@ -65,10 +110,12 @@ Vue.component('pr-labtests-list', {
                                     <template slot="tag">{{ '' }}</template>
                             </multiselect>                                 
                         </div>
-                        <div class="labtest_filter_input">
+<!--                        <div class="labtest_filter_input">-->
                             <button class="labtest_filter_show_btn" @click="getLabtests()">{{ trans.show }}</button>
+<!--                        </div>-->
+                        <div class="labtest_filters_export" v-if="items.length" style="margin-left: 20px">
+                            <a :href="getExportHref" download="lab-reports.xls">{{ trans.export }}</a>
                         </div>
-
 
                     </div>
                     <div class="labtest_filters1_right">
@@ -76,9 +123,7 @@ Vue.component('pr-labtests-list', {
 <!--                        <div class="labtest_filters_export" v-if="items.length">-->
 <!--                            <a class="report-button pdf" style="opacity: .5;cursor: auto"><i class="q4bikon-file1"></i>PDF</a>-->
 <!--                        </div>-->
-                        <div class="labtest_filters_export" v-if="items.length">
-                            <a :href="getExportHref" download="lab-reports.xls">{{ trans.export }}</a>
-                        </div>
+                        
                     </div>
                 </div>
                 <div class="labtest_filters2 row-flex">
@@ -303,7 +348,8 @@ Vue.component('pr-labtests-list', {
                             :page="page"
                             :index="index"
                             :trans="trans"  
-                            :project-id="projectId"
+                            :project-id="selectedProject.id"
+                            :from-projects="projectId ? true : false"
                             @toggleMore="toggleMore"             
                             @deleteItem="deleteItem"             
                             />                            
@@ -326,42 +372,9 @@ Vue.component('pr-labtests-list', {
 
             <pagination v-model="page" :records="total" :per-page="limit" @paginate="paginate" :options="{chunk:5,'chunksNavigation':'fixed'}"></pagination>
         </section>`,
-    /** Props
-     * projectId: 52
-     * statuses: "["waiting", "approve", "non_approve"]"
-     * translations: "{
-     * "project_name":"Project name",
-     * "search":"Search",
-     * "select_status":"Select status",
-     * "show":"Show",
-     * "print":"Print",
-     * "export":"Export",
-     * "select_structure":"Select structure",
-     * "select_floor_level":"Select floor/level",
-     * "select_place":"Select place",
-     * "select_element":"Select element",
-     * "select_specialty":"Select specialty",
-     * "lab_control":"Lab control",
-     * "lab_certificate":"Lab certificate",
-     * "date":"Date",
-     * "structure":"Structure",
-     * "floor_level":"Floor/Level",
-     * "element":"Element",
-     * "standard":"Essence of work/standard",
-     * "status":"Status",
-     * "more":"More",
-     * "waiting":"Waiting",
-     * "approve":"Approved",
-     * "non_approve":"Not approved",
-     * "edit":"Edit",
-     * "delete":"Delete",
-     * "select_all":"select all",
-     * "unselect_all":"unselect all"
-     * }"
-     */
     props: {
         siteUrl: {required: true},
-        projectId: {required: true},
+        projectId: {required: false},
         translations: {required: true},
         statuses: {required: true},
     },
@@ -370,7 +383,6 @@ Vue.component('pr-labtests-list', {
     },
     data() {
         return {
-            project: null,
             trans: JSON.parse(this.translations),
             ltStatuses:  this.getStatuses(JSON.parse(this.statuses)),
             search: '',
@@ -381,6 +393,8 @@ Vue.component('pr-labtests-list', {
             limit: 0,
             showLoader: true,
             selectedStatus: [],
+            selectedCompany: null,
+            selectedProject: null,
             selectedCraft: [],
             selectedPlace: [],
             selectedFloor: [],
@@ -392,7 +406,8 @@ Vue.component('pr-labtests-list', {
             places: [],
             elements: [],
             crafts: [],
-
+            companies: [],
+            projects: [],
             langs: {
                 ru: {
                     formatLocale: {
@@ -434,7 +449,7 @@ Vue.component('pr-labtests-list', {
             return (this.selectedStructure.length > 1) || (this.selectedFloor.length > 1)
         },
         getExportHref() {
-            let url = `${this.siteUrl}${API_PATH}/projects/${this.projectId}/labtests/export_xls`;
+            let url = `${this.siteUrl}${API_PATH}/projects/${this.selectedProject.id}/labtests/export_xls`;
             url += this.getUrlQueryParams();
             url += `&lang=${this.currentLang}`
             return url;
@@ -449,27 +464,33 @@ Vue.component('pr-labtests-list', {
         this.time = [date, end];
         var url = window.location.pathname;
         var id = url.substring(url.lastIndexOf('/') + 1);
-    },
-    mounted() {
+
+        this.getCompanies();
         if (this.projectId) {
             this.getProject(this.projectId);
         }
+    },
+    mounted() {
         this.toggleSelectAll('selectedStatus', 'ltStatuses');
     },
     watch: {
-        projectId(val) {
+        selectedProject(val) {
             if(val) {
-                this.getProject(val);
+                 (async () => {
+                    await this.getStructures();
+                    await this.getElements();
+                    await this.getCompanyCrafts();
+                    if(this.projectId) {
+                        await this.getLabtests();
+                    }
+                })()
             }
         },
-        project(val) {
+        selectedCompany(val) {
             if(val) {
-                this.getStructures();
-                this.getElements();
-                this.getCompanyCrafts();
-                setTimeout(() => {
-                    this.getLabtests();
-                }, 1000)
+                this.projects = Object.values(val.projects);
+            } else {
+                this.projects = null;
             }
         },
         selectedStructure(val) {
@@ -496,6 +517,16 @@ Vue.component('pr-labtests-list', {
         },
     },
     methods: {
+        getCompanies(){
+            this.showLoader = true;
+            let url = '/companies/entities/for_current_user';
+
+            qfetch(url, {method: 'GET', headers: {}})
+                .then(response => {
+                    this.companies = response.items ? response.items : [];
+                    this.showLoader = false;
+                })
+        },
         emptyFilter(selected, list) {
             this[selected] = [];
             this[list] = [];
@@ -534,7 +565,6 @@ Vue.component('pr-labtests-list', {
             let index = this[objName].findIndex(item => item.id==option.id);
             this[objName][index].checked = true;
         },
-
         onRemove (option, objName) {
             let index = this[objName].findIndex(item => item.id==option.id);
             this[objName][index].checked = false;
@@ -572,11 +602,11 @@ Vue.component('pr-labtests-list', {
             let url = `/projects/${id}/entities/project?fields=id,name`;
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
-                    this.project = response.item;
+                    this.selectedProject = response.item;
                 })
         },
         getStructures() {
-            let url = `/projects/${this.project.id}/entities/objects?fields=id,name`;
+            let url = `/projects/${this.selectedProject.id}/entities/objects?fields=id,name`;
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
                     this.structures = response.items;
@@ -616,11 +646,11 @@ Vue.component('pr-labtests-list', {
             this.items = [...items];
         },
         sendDeleteRequest(id) {
-            let url = `/projects/${this.project.id}/labtests/${id}`;
+            let url = `/projects/${this.selectedProject.id}/labtests/${id}`;
             qfetch(url, {method: 'DELETE', headers: {}});
         },
         getElements(){
-            let url = `/projects/${this.project.id}/labtests/elements`;
+            let url = `/projects/${this.selectedProject.id}/labtests/elements`;
             let param = encodeURIComponent('?search=')
             url +=  param;
             qfetch(url, {method: 'GET', headers: {}})
@@ -631,7 +661,7 @@ Vue.component('pr-labtests-list', {
         },
         getCompanyCrafts() {
             let fields="id,name,companyId,catalogNumber,status,relatedId";
-            let url = `/companies/${this.project.company_id}/entities/crafts?fields=${fields}`;
+            let url = `/companies/${this.projectId ? this.selectedProject.company_id : this.selectedCompany.id}/entities/crafts?fields=${fields}`;
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
                     this.crafts = response.items;
@@ -665,7 +695,7 @@ Vue.component('pr-labtests-list', {
         },
         getLabtests(){
             this.showLoader = true;
-            let url = `/projects/${this.projectId}/labtests`;
+            let url = `/projects/${this.selectedProject.id}/labtests`;
 
             let page = this.page
             if(page > 1){

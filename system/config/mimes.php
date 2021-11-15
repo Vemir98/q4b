@@ -224,5 +224,7 @@ return [
 	'xvid'     => ['video/x-xvid'],
 	'xwd'      => ['image/x-xwindowdump'],
 	'z'        => ['application/x-compress'],
-	'zip'      => ['application/x-zip', 'application/zip', 'application/x-zip-compressed']
+	'zip'      => ['application/x-zip', 'application/zip', 'application/x-zip-compressed'],
+    'heif'     => ['image/heif'],
+    'heic'     => ['image/heic'],
 ];

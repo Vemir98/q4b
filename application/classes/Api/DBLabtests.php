@@ -613,6 +613,26 @@ class Api_DBLabtests
         return $query->execute()->as_array();
     }
 
+    public static function getProjectsLabTestsCountsGroupsByStatus($filters) :array
+    {
+        $query = 'SELECT 
+            lt.status,
+            COUNT(DISTINCT lt.id) as count
+            FROM labtests lt
+            WHERE lt.project_id IN (:projectIds) AND (lt.created_at>=:from AND lt.created_at<=:to)
+            GROUP BY lt.status';
+
+        $query =  DB::query(Database::SELECT, $query);
+
+        $query->parameters(array(
+            ':projectIds' => DB::expr(implode(',',$filters['projectIds'])),
+            ':from' => $filters['from'],
+            ':to' => $filters['to']
+        ));
+
+        return $query->execute()->as_array();
+    }
+
     private static function toCamelCase($string) {
         return lcfirst(implode('', array_map('ucfirst', explode('_', $string))));
     }

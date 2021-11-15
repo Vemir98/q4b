@@ -311,11 +311,11 @@ Vue.component('reports-list', {
         async getQcs(qcId) {
             this.showLoader = true;
 
-            let url = '/quality-controls/get/'+qcId+'?fields=createdAt&all=true';
+            let url = '/quality-controls/get/'+qcId+'?fields=dueDate&all=true';
             try {
                 let result = await qfetch(url, {method: 'GET', headers: {}});
                 this.showLoader = false;
-                return result.item.createdAt;
+                return result.item.dueDate;
             } catch (e) {
                 this.showLoader = false;
                 console.log(e)
@@ -337,10 +337,10 @@ Vue.component('reports-list', {
 
             if(speciality) {
                 this.showLoader = true;
-                let result = await qfetch('/quality-controls/get/'+speciality.qualityControl+'?fields=createdAt', {method: 'GET', headers: {}});
+                let result = await qfetch('/quality-controls/get/'+speciality.qualityControl+'?fields=dueDate', {method: 'GET', headers: {}});
                 this.showLoader = false;
 
-                let date = this.convertTimestampToDate(result.item.createdAt);
+                let date = this.convertTimestampToDate(result.item.dueDate);
                 let queryParams = `?from=${date}&to=${date}&crafts[]=${speciality.craftId}&company=${this.company.id}&project=${this.project.id}&el_app_id=${report.id}#tab_qc_controls`;
                 url += queryParams;
 
@@ -352,9 +352,9 @@ Vue.component('reports-list', {
 
                 for(spec of report.specialities) {
                     if(spec.qualityControl) {
-                        let url = '/quality-controls/get/'+spec.qualityControl+'?fields=createdAt';
+                        let url = '/quality-controls/get/'+spec.qualityControl+'?fields=dueDate';
                         let result = await qfetch(url, {method: 'GET', headers: {}});
-                        range.push(+result.item.createdAt)
+                        range.push(+result.item.dueDate)
                     }
                 }
                 this.showLoader = false;

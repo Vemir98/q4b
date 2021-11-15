@@ -794,6 +794,14 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
 
                 PushNotification::notifyQcUsers($qc->id, $qc->project->id, Enum_NotifyAction::Updated);
 
+                if($qc->el_approval_id) {
+                    $users = Api_DBElApprovals::getElApprovalUsersListForNotify($qc->el_approval_id);
+                    $elApproval = Api_DBElApprovals::getElApprovalById($qc->el_approval_id)[0];
+
+
+                    PushNotification::notifyElAppUsers($qc->el_approval_id, $users, $elApproval['projectId'], Enum_NotifyAction::Updated);
+                }
+
                 $this->setResponseData('triggerEvent','qualityControlUpdated');
                 Database::instance()->commit();
                 $fs->sendLazyTasks();

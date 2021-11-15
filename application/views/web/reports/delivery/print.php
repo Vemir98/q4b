@@ -11,6 +11,7 @@ $floorNumber = $report->floor->number;
 if($floorNumber[0] == '-'){
     $floorNumber = substr($floorNumber,1).'-';
 }
+//die('barev');
 ?>
 <!DOCTYPE html>
 <html lang="en" class="rtl">
@@ -381,8 +382,8 @@ if($floorNumber[0] == '-'){
                         <?foreach ($qc->images->find_all() as $img):?>
                             <div class="qc-rep-img">
                                 <div class="img-desc"><p><span><?=$img->original_name?></span>(uploaded: <?=date('d/m/Y H:i',$img->created_at)?>)</p></div>
-                                <img src="<?=URL::withLang($img->originalFilePath(),Language::getDefault()->iso2,'https')?>" alt="<?=$img->original_name?>">
-<!--                                <img src="--><?//=$img->originalFilePath()?><!--" alt="--><?//=$img->original_name?><!--">-->
+<!--                                <img src="--><?//=$img->getBigThumbPath()?><!--?--><?//=rand(100000,99999999)?><!--" alt="--><?//=$img->original_name?><!--">-->
+                                <img src="<?=$img->originalFilePath()?>?<?=rand(100000,99999999)?>" alt="<?=$img->original_name?>">
                             </div>
                         <?endforeach;?>
                     </div>

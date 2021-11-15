@@ -114,6 +114,25 @@ class Api_DBQualityControl
             ->execute()->as_array();
     }
 
+    public static function getProjectsQcListCountsByStatus($filters) {
+        $query = 'SELECT
+            qc.status,
+            count(*) as count
+            FROM quality_controls qc
+            WHERE qc.project_id IN (:projectIds) AND (qc.created_at>=:from AND qc.created_at<=:to)
+            GROUP BY qc.status';
+
+        $query =  DB::query(Database::SELECT, $query);
+
+        $query->parameters(array(
+            ':projectIds' => DB::expr(implode(',',$filters['projectIds'])),
+            ':from' => $filters['from'],
+            ':to' => $filters['to']
+        ));
+
+        return $query->execute()->as_array();
+    }
+
     private static function toCamelCase($string) {
         return lcfirst(implode('', array_map('ucfirst', explode('_', $string))));
     }

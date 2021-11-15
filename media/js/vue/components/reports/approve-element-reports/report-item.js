@@ -683,7 +683,7 @@ Vue.component('report-item', {
         },
         getGenerateQcHref(speciality) {
             let url = `${this.siteUrl}/reports/generate`;
-            let date = this.convertTimestampToDate(speciality.qcCreatedAt);
+            let date = this.convertTimestampToDate(speciality.qcDueDate);
             let queryParams = `?from=${date}&to=${date}&crafts[]=${speciality.craftId}&company=${this.company.id}&project=${this.project.id}&el_app_id=${this.report.id}#tab_qc_controls`;
             url += queryParams;
             window.open(url);
@@ -708,11 +708,11 @@ Vue.component('report-item', {
                 if(speciality.qualityControl) {
                     this.showLoader = true;
 
-                    let url = '/quality-controls/get/'+speciality.qualityControl+'?fields=createdAt&all=true';
+                    let url = '/quality-controls/get/'+speciality.qualityControl+'?fields=dueDate&all=true';
 
                     qfetch(url, {method: 'GET', headers: {}})
                         .then(response => {
-                            speciality.qcCreatedAt = response.item.createdAt
+                            speciality.qcDueDate = response.item.dueDate
                             this.showLoader = false;
                         })
                 }

@@ -174,8 +174,9 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
             Database::instance()->commit();
 
             $users = Api_DBElApprovals::getElApprovalUsersListForNotify($elApprovalId);
-            PushNotification::notifyElAppUsers($elApprovalId, $users, Enum_NotifyAction::Created);
-//            $this->sendNotificationToUsers($elApprovalId);
+            $elApproval = Api_DBElApprovals::getElApprovalById($elApprovalId)[0];
+
+            PushNotification::notifyElAppUsers($elApprovalId, $users, $elApproval['projectId'], Enum_NotifyAction::Created);
 
             $this->_responseData = [
                 'status' => 'success',
@@ -202,12 +203,10 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
             $elApproval = Api_DBElApprovals::getElApprovalById($elApprovalId)[0];
 
             if(!$elApproval) {
-                Kohana::$log->add(Log::ERROR, 'Incorrect EAR id');
                 throw API_ValidationException::factory(500, 'Incorrect EAR id');
             }
 
             if($elApproval['status'] === 'approved') {
-                Kohana::$log->add(Log::ERROR, 'Can\'t modify readable EAR');
                 throw API_ValidationException::factory(500, 'Can\'t modify readable EAR');
             }
 
@@ -230,7 +229,6 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                         ->rule('tasks', 'not_empty');
 
                     if (!$valid->check()) {
-                        Kohana::$log->add(Log::ERROR, 'missing required field in some task');
                         throw API_ValidationException::factory(500, 'missing required field in some task');
                     }
 
@@ -269,7 +267,6 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                                 ->rule('image', 'not_empty');
 
                             if (!$valid->check()) {
-                                Kohana::$log->add(Log::ERROR, 'missing required field in signatures');
                                 throw API_ValidationException::factory(500, 'missing required field in signatures');
                             }
 
@@ -309,7 +306,6 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                                 ->rule('appropriate', 'not_empty');
 
                             if (!$valid->check()) {
-                                Kohana::$log->add(Log::ERROR, 'missing required field in tasks');
                                 throw API_ValidationException::factory(500, 'missing required field in tasks');
                             }
 
@@ -888,7 +884,6 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
             ];
         } catch (Exception $e){
             Database::instance()->rollback();
-            Kohana::$log->add(Log::ERROR, 'el app note update log: ' . json_encode([$e->getMessage()], JSON_PRETTY_PRINT));
             throw API_Exception::factory(500,'Operation Error');
         }
     }
@@ -901,12 +896,13 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
         try {
             $elApprovalId = $this->getUIntParamOrDie($this->request->param('id'));
             $users = Api_DBElApprovals::getElApprovalUsersListForNotify($elApprovalId);
+            $elApproval = Api_DBElApprovals::getElApprovalById($elApprovalId)[0];
 
             Database::instance()->begin();
 
             DB::delete('el_approvals')->where('id', '=', $elApprovalId)->execute($this->_db);
 
-            PushNotification::notifyElAppUsers($elApprovalId, $users, Enum_NotifyAction::Deleted);
+            PushNotification::notifyElAppUsers($elApprovalId, $users, $elApproval['projectId'], Enum_NotifyAction::Deleted);
 
             Database::instance()->commit();
 
@@ -1344,7 +1340,9 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
 
 //        $this->sendNotificationToUsers($elApprovalId);
         $users = Api_DBElApprovals::getElApprovalUsersListForNotify($elApprovalId);
-        PushNotification::notifyElAppUsers($elApprovalId, $users, Enum_NotifyAction::Updated);
+        $elApproval = Api_DBElApprovals::getElApprovalById($elApprovalId)[0];
+
+        PushNotification::notifyElAppUsers($elApprovalId, $users, $elApproval['projectId'], Enum_NotifyAction::Updated);
     }
 
     /**
@@ -1361,36 +1359,4 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
             ->where('id', '=', $elApprovalCraftId)
             ->execute($this->_db);
     }
-
-//    PushNotification::notifyElAppUsers($elApprovalId);
-
-//    private function sendNotificationToUsers($elApprovalId) {
-//
-////      $elApproval = Api_DBElApprovals::getElApprovalById($elApprovalId);
-//
-//      $users = Api_DBElApprovals::getElApprovalUsersListForNotify($elApprovalId);
-//
-//      $usersDeviceTokens = [];
-//
-//      foreach ($users as $user) {
-//          if($user['deviceToken']) {
-//              array_push($usersDeviceTokens, $user['deviceToken']);
-//          }
-//      }
-////
-////        echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$usersDeviceTokens]); echo "</pre>"; exit;
-//
-//        $timestamp = time();
-//
-////        $usersDeviceTokens = ['f5bWjICSSMiE40tO7w5RF2:APA91bGGAwSYAYz5t7b1l8jnC385xjLGne5FkWh2LxHQ9W19AflFCnNHsLo8nF1Ydn9_w3dd2a1BmhGFPfLlmGMrWmB0z3k5hQ77bq0zljFxPQAasA9tBjA45rXHb-uXZ6NFgQKklP0i'];
-////            Kohana::$log->add(Log::ERROR, 'from elApprovals: ' . json_encode([$users], JSON_PRETTY_PRINT));
-//
-//        PushHelper::test([
-//            'lang' => \Language::getCurrent()->iso2,
-//            'action' => 'elApproval',
-//            'usersDeviceTokens' => $usersDeviceTokens
-//        ], $timestamp );
-//
-//
-//    }
 }

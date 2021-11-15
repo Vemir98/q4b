@@ -8,7 +8,7 @@
  */
 class Model_Image extends Model_File
 {
-    protected $_allowed_ext = ['jpe','jpeg','jpg','png','tif','tiff'];
+    protected $_allowed_ext = ['jpe','jpeg','jpg','png','tif','tiff','heif','heic'];
 //    public function rules()
 //    {
 //        $rules = parent::rules();
@@ -77,9 +77,28 @@ class Model_Image extends Model_File
         $path = $this->path . '/' .$this->name;
         if(!$this->remote){
             $path = '/'.$path;
+        }else{
+            $path = str_replace('https://fs.qforb.net/','',$path);
+            $path = str_replace('/','-',$path);
+            $path = 'https://fs.qforb.net/image/miniature/w756-h500-q50/' . $path;
         }
         return $path;
     }
+
+    public function getSmallThumbPath(){
+
+        $path = $this->path . '/' .$this->name;
+        if(!$this->remote){
+            $path = '/'.$path;
+        }else{
+            $path = str_replace('https://fs.qforb.net/','',$path);
+            $path = str_replace('/','-',$path);
+            $path = 'https://fs.qforb.net/image/miniature/w200-h132-q50/' . $path;
+        }
+        return $path;
+    }
+
+
 
     public function __getBigTHumb(){
         $path = [DOCROOT.$this->path];

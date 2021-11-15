@@ -211,6 +211,7 @@ class Controller_DeliveryReports extends HDVP_Controller_Template
 
         $client = Client::getInstance();
         $client->getEngine()->setPath(DOCROOT.'phantomjs-2.1.1-linux-x86_64/bin/phantomjs');
+        $client->getEngine()->addOption('--ignore-ssl-errors=true');
 
 //        $client->getEngine()->setPath('/home/qforbnet/www/phantomjs-2.1.1-linux-x86_64/bin/phantomjs');
         $client->getEngine()->addOption('--cookies-file=cook.txt');
@@ -236,7 +237,7 @@ class Controller_DeliveryReports extends HDVP_Controller_Template
          * @see JonnyW\PhantomJs\Http\Response
          **/
         $response = $client->getMessageFactory()->createResponse();
-        //$request->setDelay(3);
+//        $request->setDelay(3);
         // Send the request
         $client->send($request, $response);
         exec("chmod -R 777 /home/qforbnet/www/media/data/delivery-reports/".$report->pk() . '/file.pdf');

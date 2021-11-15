@@ -77,7 +77,8 @@
                             <figcaption><a href="<?=URL::site('companies/update/' . $item->id. '?tab=info')?>"><?=$item->name?></a></figcaption>
                         </figure>
                         <?if($item->projects->count_all()):?>
-                            <span class="q4-list-item-info projects"><a href="<?=URL::site('projects/company/'.$item->id)?>"><?=__('Projects')?>: <?=$item->projects->count_all()?></a></span>
+<!--                            <span class="q4-list-item-info projects"><a href="--><?//=URL::site('projects/company/'.$item->id)?><!--">--><?//=__('Projects')?><!--: --><?//=$item->projects->count_all()?><!--</a></span>-->
+                            <span class="q4-list-item-info projects"><a href="<?=URL::site('companies/'.$item->id.'/projects/list')?>"><?=__('Projects')?>: <?=$item->projects->count_all()?></a></span>
                         <?else:?>
                             <span class="q4-list-item-info projects"><?=__('Projects')?>: <?=$item->projects->count_all()?></span>
                         <?endif?>

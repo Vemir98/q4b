@@ -46,7 +46,8 @@ class Menu
             'reports/tasks',
             'reports/place',
             'reports/delivery',
-            'reports/generate/{any}'
+            'reports/generate/{any}',
+            'reports/labtests/{any}',
         ]
     );
 

@@ -64,7 +64,7 @@
                         </figure>
                     </div>
 <!--                --><?//endif;?>
-                <?if(Usr::can(Usr::READ_PERM,'Controller_DeliveryReports',Enum_UserPriorityLevel::General) OR Auth::instance()->get_user()->email == 'eldar5390@gmail.com'):?>
+                <?if(Usr::can(Usr::READ_PERM,'Controller_DeliveryReports',Enum_UserPriorityLevel::General) OR in_array(Auth::instance()->get_user()->email,['eldar5390@gmail.com','adirr@sh-av.co.il','eyal@sh-av.co.il'])):?>
                 <div class="item">
                     <figure class="mobile-figure">
                         <a href="<?=URL::site('reports/delivery')?>">
@@ -76,6 +76,16 @@
                     </figure>
                 </div>
                 <?endif;?>
+                <div class="item">
+                    <figure class="mobile-figure">
+                        <a href="<?=URL::site('reports/approve_element')?>">
+                            <img src="/media/img/approve_element_report_icon.svg" alt="<?=__('approve_element_uppercase')?>" style="height: 71%;margin-left: 14px;">
+                        </a>
+                        <figcaption class="mobile-fig-caption">
+                            <a href="<?=URL::site('reports/approve_element')?>"><?=__('approve_element_uppercase')?></a>
+                        </figcaption>
+                    </figure>
+                </div>
             </div>
 
         </div>

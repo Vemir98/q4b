@@ -17,6 +17,17 @@ Route::set('site.approveElement.reports','reports/approve_element(/<projectId>(/
         'controller' => 'ApproveElementReports',
     ]);
 
+//labtests
+Route::set('site.labtest.reports','reports/labtests(/<action>(/<id>))',['action' => '[a-z0-9_]+', 'id' => '[0-9]+'])
+    ->defaults([
+        'controller' => 'LabTests',
+        'action' => 'project'
+    ]);
+
+Route::set('site.labtest.reports.edit','reports/labtests/<projectId>/<action>(/<id>)',['action' => '[a-z0-9_]+', 'id' => '[0-9]+'])
+    ->defaults([
+        'controller' => 'LabTests',
+    ]);
 
 //quality reports
 Route::set('site.quality.reports','reports/quality(/<action>)',['action' => '[a-z0-9_]+'])
