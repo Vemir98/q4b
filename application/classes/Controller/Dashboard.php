@@ -1,4 +1,5 @@
 <?php defined('SYSPATH') OR die('No direct script access.');
+use JonnyW\PhantomJs\Client;
 
 /**
  * Created by PhpStorm.
@@ -9,7 +10,7 @@
 class Controller_Dashboard extends HDVP_Controller_Template
 {
     protected $_actions_perms = [
-        'index,quality_control_list,plans_list,certifications_list,show_fcc' => [
+        'index,quality_control_list,plans_list,certifications_list,show_fcc,print,export_pdf' => [
             'GET' => 'read',
             'POST' => 'read'
         ],
@@ -207,6 +208,8 @@ class Controller_Dashboard extends HDVP_Controller_Template
             'monthly' => __('Monthly'),
             'quarterly' => __('Quarterly'),
             'half_year' => __('Half year'),
+            'one_year' => __('one_year'),
+            'two_years' => __('two_years'),
             'qc' => __('QC'),
             'places' => __('Places'),
             'certificates' => __('Certificates'),
@@ -251,12 +254,24 @@ class Controller_Dashboard extends HDVP_Controller_Template
             'with_qc' => __('with_qc'),
             'qc_report' => __('QC Report'),
             'place_report' => __('Place report'),
-            'delivery_report' => __('Delivery report')
+            'delivery_report' => __('Delivery report'),
+            'export' => __('Export')
         ];
 
+        $filters = Arr::extract($_GET, [
+            'projectIds',
+            'range'
+        ]);
+
+//        if(!empty($a)) {
+//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$a]); echo "</pre>"; exit;
+//
+//        }
 
         $this->template->content = View::make('dashboard/index', [
-            'translations' => $translations
+            'translations' => $translations,
+            'projectIds' => $filters['projectIds'] ?: null,
+            'range' => $filters['range'] ?: null,
         ]);
 
 //                $plansUrl = Route::url('site.dashboard.plansList',[
@@ -696,6 +711,103 @@ class Controller_Dashboard extends HDVP_Controller_Template
                 'action' => URL::site('dashboard/update_plan/'.$plan->id),
                 'item' => $plan
             ]));
+        }
+
+    }
+
+    public function action_print(){
+
+//        echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([Arr::extract($_GET, [
+//            'projectIds',
+//            'range'
+//        ])]); echo "</pre>"; exit;
+
+        $this->auto_render = false;
+
+        echo View::make('dashboard/print_pdf');
+    }
+
+    public function action_export_pdf(){
+        try {
+            $filters = Arr::extract($_GET, [
+                'projectIds',
+                'range'
+            ]);
+
+            $lang = Arr::get($_GET,'lang', 'en');
+
+            $valid = Validation::factory($filters);
+
+            $valid
+                ->rule('projectIds', 'not_empty')
+                ->rule('range', 'not_empty');
+
+            if (!$valid->check()) {
+                throw API_ValidationException::factory(500, 'Incorrect data');
+            }
+
+//            $filePath = $this->_makePdf(URL::withLang('dashboard/print', $lang,'https').'?'.http_build_query($filters));
+            $filePath = $this->_makePdf(URL::withLang('dashboard', $lang,'https').'?'.http_build_query($filters));
+
+            header('Location: '.URL::withLang($filePath,'en'));exit;
+        } catch (API_ValidationException $e){
+            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$e->getMessage()]); echo "</pre>"; exit;
+        } catch (Exception $e){
+            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$e->getMessage()]); echo "</pre>"; exit;
+        }
+
+    }
+
+    private function _makePdf($url){
+        try {
+            $client = Client::getInstance();
+
+            $client->getEngine()->setPath(DOCROOT.'phantomjs-2.1.1-linux-x86_64/bin/phantomjs');
+
+//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($a); echo "</pre>"; exit;
+//        $client->getEngine()->setPath('/home/qforbnet/www/phantomjs-2.1.1-linux-x86_64/bin/phantomjs');
+            $client->getEngine()->addOption('--cookies-file=cook.txt');
+
+
+//            $request = $client->getMessageFactory()->createCaptureRequest('https://qforb.sunrisedvp.systems', 'GET');
+            $request = $client->getMessageFactory()->createCaptureRequest('https://qforb.net', 'GET');
+
+            $request->addHeader('Pjsbot76463', '99642');
+
+            $response = $client->getMessageFactory()->createResponse();
+            $client->send($request, $response);
+
+            /**
+             * @see JonnyW\PhantomJs\Http\CaptureRequest
+             **/
+            $request = $client->getMessageFactory()->createPdfRequest($url, 'GET',15000);
+            $request->addHeader('Pjsbot76463', '99642');
+
+            $uniqId = uniqid();
+            $filePath = 'media/data/dashboard/statistics/'.$uniqId.'.pdf';
+            $request->setOutputFile(DOCROOT.$filePath);
+            $request->setFormat('A4');
+//        $request->setOrientation('landscape');
+            $request->setViewportSize(1920, 1690);
+            $request->setPaperSize(1960, 1750);
+            /**
+             * @see JonnyW\PhantomJs\Http\Response
+             **/
+            $response = $client->getMessageFactory()->createResponse();
+            $request->setDelay(3);
+//
+
+            // Send the request
+            $client->send($request, $response);
+//            exec("chmod -R 777 ".DOCROOT.$filePath);
+//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r("chmod -R 777 ".DOCROOT.'media/data/dashboard/statistics'); echo "</pre>"; exit;
+//            exec("chmod -R 777 ".DOCROOT.'media/data/dashboard/statistics');
+
+
+
+            return $filePath;
+        }  catch (Exception $e){
+            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$e->getMessage()]); echo "</pre>"; exit;
         }
 
     }

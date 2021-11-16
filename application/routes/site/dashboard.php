@@ -28,3 +28,15 @@ Route::set('site.dashboard','dashboard(/<action>(/<id>))',['action' => '[a-z0-9_
         'controller' => 'dashboard',
         'action' => 'index'
     ]);
+
+Route::set('site.dashboard.export_pdf','dashboard/export_pdf',['action' => '[a-z0-9_]+', 'id' => '[0-9]+'])
+    ->defaults([
+        'controller' => 'dashboard',
+        'action' => 'export_pdf'
+    ]);
+
+Route::set('site.dashboard.print','dashboard/print',['action' => '[a-z0-9_]+', 'id' => '[0-9]+'])
+    ->defaults([
+        'controller' => 'dashboard',
+        'action' => 'print'
+    ]);

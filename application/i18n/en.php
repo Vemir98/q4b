@@ -528,6 +528,8 @@ return [
     'Monthly' => 'Monthly',
     'Quarterly' => 'Quarterly',
     'Half year' => 'Half year',
+    'one_year' => 'One year',
+    'two_years' => 'Two years',
     //'created' => 'created',
     'were created new quality control forms' => 'were created new quality control forms',
     'Q4b New quality control forms' => 'Q4B New quality control forms',

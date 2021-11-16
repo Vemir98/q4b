@@ -500,6 +500,8 @@ return [
     'Monthly' => 'Месяц',
     'Quarterly' => 'Квартал',
     'Half year' => 'Полгода',
+    'one_year' => 'Один год',
+    'two_years' => 'Два года',
     'were created new quality control forms' => 'созданы новые формы контроля качества',
     'Q4b New quality control forms' => 'Q4B Новый формы контроля качества',
     'Get Messages' => 'Получать сообщения',

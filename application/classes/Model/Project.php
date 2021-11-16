@@ -215,40 +215,40 @@ class Model_Project extends MORM
 
     public function create(Validation $validation = NULL){
         parent::create($validation);
-        $tasksData = DB::query(Database::SELECT,'SELECT
-              tasks.name,
-              cmp_crafts.id AS craft_id,
-              tasks.id AS task_id
-            FROM tasks_crafts
-              INNER JOIN tasks
-                ON tasks_crafts.task_id = tasks.id
-              INNER JOIN crafts
-                ON tasks_crafts.craft_id = crafts.id
-                AND crafts.status = \'enabled\'
-              INNER JOIN cmp_crafts
-                ON crafts.id = cmp_crafts.related_id
-                AND cmp_crafts.status = \'enabled\'
-                WHERE cmp_crafts.company_id = '.$this->company_id)
-            ->execute()->as_array();
-
-        if(count($tasksData)){
-            $tasks = [];
-            foreach ($tasksData as $td){
-                if( ! isset($tasks[$td['name']])){
-                    $tasks[$td['name']] = ORM::factory('PrTask');
-                    $tasks[$td['name']]->name = $td['name'];
-                    $tasks[$td['name']]->project_id = $this->pk();
-                    $tasks[$td['name']]->status = Enum_Status::Enabled;
-                    $tasks[$td['name']]->save();
-                }
-            }
-
-            foreach ($tasksData as $td){
-                if(isset($tasks[$td['name']]) AND $tasks[$td['name']] instanceof ORM){
-                    $tasks[$td['name']]->add('crafts',$td['craft_id']);
-                }
-            }
-        }
+//        $tasksData = DB::query(Database::SELECT,'SELECT
+//              tasks.name,
+//              cmp_crafts.id AS craft_id,
+//              tasks.id AS task_id
+//            FROM tasks_crafts
+//              INNER JOIN tasks
+//                ON tasks_crafts.task_id = tasks.id
+//              INNER JOIN crafts
+//                ON tasks_crafts.craft_id = crafts.id
+//                AND crafts.status = \'enabled\'
+//              INNER JOIN cmp_crafts
+//                ON crafts.id = cmp_crafts.related_id
+//                AND cmp_crafts.status = \'enabled\'
+//                WHERE cmp_crafts.company_id = '.$this->company_id)
+//            ->execute()->as_array();
+//
+//        if(count($tasksData)){
+//            $tasks = [];
+//            foreach ($tasksData as $td){
+//                if( ! isset($tasks[$td['name']])){
+//                    $tasks[$td['name']] = ORM::factory('PrTask');
+//                    $tasks[$td['name']]->name = $td['name'];
+//                    $tasks[$td['name']]->project_id = $this->pk();
+//                    $tasks[$td['name']]->status = Enum_Status::Enabled;
+//                    $tasks[$td['name']]->save();
+//                }
+//            }
+//
+//            foreach ($tasksData as $td){
+//                if(isset($tasks[$td['name']]) AND $tasks[$td['name']] instanceof ORM){
+//                    $tasks[$td['name']]->add('crafts',$td['craft_id']);
+//                }
+//            }
+//        }
 
         return $this;
     }

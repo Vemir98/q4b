@@ -209,6 +209,9 @@ class Controller_Auth extends HDVP_Controller_Template
 //        if(Auth::instance()->get_user()->can('update','Controller_QualityControl')){
 //            $output = 'quality_control/create';
 //        }else{
+        if(Auth::instance()->get_user()->is('super_admin')) {
+            $output = 'dashboard';
+        } else {
             switch ($outspread) {
                 case Enum_UserOutspread::General:
 //                    $output = 'dashboard';
@@ -231,9 +234,7 @@ class Controller_Auth extends HDVP_Controller_Template
                         $output = 'projects';
                     break;
             }
-//        }
-
-//        $output = 'projects';
+        }
 
         return URL::withLang($output,Language::getLangByIso2(Auth::instance()->get_user()->lang)->slug);
     }

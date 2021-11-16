@@ -362,7 +362,7 @@ class Controller_Projects extends HDVP_Controller_Template
                 Event::instance()->fire('onProjectAdded',['sender' => $this,'item' => $project]);
                 Event::instance()->fire('onItemAdded',['sender' => $this,'item' => $project]);
                 Database::instance()->commit();
-                $this->makeRedirect('projects/update/'.$project->pk());
+                $this->makeRedirect('projects/update/'.$project->pk().'?tab=info');
 
 
             }catch(HDVP_Exception $e){

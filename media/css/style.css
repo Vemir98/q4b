@@ -24799,6 +24799,12 @@ html.rtl #approve-elements-content .parent-tr td.td-floor{
   align-items: center;
 }
 
+#dashboard #dashboard-content .period-filter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 #dashboard #dashboard-content .period-filter .filter-item.datepicker {
   min-width: 100%;
 }

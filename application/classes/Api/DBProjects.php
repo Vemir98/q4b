@@ -127,4 +127,28 @@ class Api_DBProjects
 
         return DB::query(Database::SELECT, $query)->execute()->as_array();
     }
+
+    public static function getProjectsTasksCountsWithDeliveryModule($projectIds) {
+
+        $query = 'SELECT
+            p.id,
+            (
+                SELECT COUNT(DISTINCT pt.id)  
+		        FROM pr_tasks pt
+                INNER JOIN pr_tasks_crafts ptc on pt.id=ptc.task_id
+                INNER JOIN modules_tasks_crafts mtc on ptc.id = mtc.tc_id 
+                WHERE mtc.module_id = 2 and pt.project_id = p.id
+            ) as count
+            FROM projects p
+            WHERE p.id IN (:projectIds)';
+
+
+        $query =  DB::query(Database::SELECT, $query);
+
+        $query->parameters(array(
+            ':projectIds' => DB::expr(implode(',',$projectIds)),
+        ));
+
+        return $query->execute()->as_array();
+    }
 }

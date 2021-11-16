@@ -235,6 +235,16 @@ class Controller_Api_Projects_Dashboard extends HDVP_Controller_API
                 throw API_ValidationException::factory(500, 'missing required field');
             }
 
+            $ProjectsDeliveryModuleTasksCounts = Api_DBProjects::getProjectsTasksCountsWithDeliveryModule($filters['projectIds']);
+
+            $filteredProjects = [];
+
+            foreach ($ProjectsDeliveryModuleTasksCounts as $group) {
+                if((int)$group['count'] > 0) array_push($filteredProjects, $group['id']);
+            }
+
+            $filters['projectIds'] = $filteredProjects;
+
             $result = [
                 'total' => Api_DBPlaces::getProjectsPlacesCounts($filters)[0]['count'],
                 'delivery' => 0,

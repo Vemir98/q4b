@@ -304,18 +304,21 @@ class Controller_Api_Acceptance extends HDVP_Controller_API
             ],\Carbon\Carbon::now()->addSeconds(30)->timestamp);
         }catch (ORM_Validation_Exception $e){
             Database::instance()->rollback();
-
+            Kohana::$log->add(Log::ERROR, '[ERROR CREATE PRE_DELIVERY (ORM_Validation_Exception)]: ' . $e->getMessage());
             throw API_Exception::factory(500,'Incorrect data');
 
 //            throw API_Exception::factory(500,$e->errors('validation'));
         }catch (HDVP_Exception $e){
             Database::instance()->rollback();
+            Kohana::$log->add(Log::ERROR, '[ERROR CREATE PRE_DELIVERY (HDVP_Exception)]: ' . $e->getMessage());
+
             throw API_Exception::factory(500,'Incorrect data');
 
 //            throw API_Exception::factory(500,$e->getMessage());
         }catch (Exception $e){
             Database::instance()->rollback();
             //throw API_Exception::factory(500,'Operation Error');
+            Kohana::$log->add(Log::ERROR, '[ERROR CREATE PRE_DELIVERY (Exception)]: ' . $e->getMessage());
             throw API_Exception::factory(500,$e->getMessage());
         }
     }

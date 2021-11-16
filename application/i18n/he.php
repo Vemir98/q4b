@@ -508,6 +508,8 @@ return [
     'Monthly' => 'חודשי',
     'Quarterly' => 'רבעון',
     'Half year' => 'חצי שנה',
+    'one_year' => 'שנה',
+    'two_years' => 'שנתיים',
     'were created new quality control forms' => 'היום בפרויקט',
     'Q4b New quality control forms' => 'Q4B בקרות חדשות במערכת',
     'Get Messages' => 'קבלת הודעות',

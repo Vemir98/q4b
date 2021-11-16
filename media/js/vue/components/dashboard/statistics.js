@@ -4,7 +4,6 @@ Vue.component('statistics', {
             <div v-if="showLoader" class="loader_backdrop_vue">
                 <div class="loader"></div>
             </div>
-<!--            <button @click="resetStatistics">reset</button>-->
             <div class="page-title-sec flex-start">
                 <div class="page-title"> {{ trans.dashboard_new }} </div>
             </div>
@@ -131,6 +130,12 @@ Vue.component('statistics', {
                                 </multiselect>
                             </div>
                         </div>
+<!--                        <div-->
+<!--                            v-if="canExport" -->
+<!--                            class="labtest_filters_export"-->
+<!--                        >-->
+<!--                            <a :href="getExportPdfUrl">{{ trans.export }}</a>-->
+<!--                        </div>-->
                     </div>
                 </div>
                 <div class="dashboard-filter-results">
@@ -463,7 +468,13 @@ Vue.component('statistics', {
         },
         canGenerateStatistics() {
             return (this.selectedProjects.length && this.selectedCompanies.length && this.selectedRange)
-        }
+        },
+        getExportPdfUrl() {
+            let url = `${this.siteUrl}/dashboard/export_pdf`;
+            url += this.getQueryParamsOfFiltersForUrl();
+            url += `&lang=${this.currentLang}`
+            return url;
+        },
     },
     data() {
         return {
@@ -478,6 +489,8 @@ Vue.component('statistics', {
                 {id: 4, name: 'monthly'},
                 {id: 5, name: 'quarterly'},
                 {id: 6, name: 'half_year'},
+                {id: 7, name: 'one_year'},
+                {id: 8, name: 'two_years'},
             ],
             selectedCompanies: [],
             selectedProjects: [],
@@ -534,6 +547,8 @@ Vue.component('statistics', {
                 chart: null,
               },
             },
+            companiesToIgnore: [13,15,31,66]
+            // companiesToIgnore: []
         }
     },
     watch: {
@@ -611,6 +626,10 @@ Vue.component('statistics', {
 
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
+                    response.items = response.items.filter(company => {
+                        return !this.companiesToIgnore.includes(+company.id)
+                    }, this)
+
                     this.companies = response.items ? response.items : [];
                     this.showLoader = false;
                 })
@@ -639,6 +658,12 @@ Vue.component('statistics', {
                 break;
                 case 'half_year':
                     result.from.setMonth(result.from.getMonth() - 6)
+                break;
+                case 'one_year':
+                    result.from.setFullYear(result.from.getFullYear()-1);
+                break;
+                case 'two_years':
+                    result.from.setFullYear(result.from.getFullYear()-2);
                 break;
             }
 
@@ -948,7 +973,7 @@ Vue.component('statistics', {
                                 data: (data.filter(item => +item.data > 0).length > 0) ? data.map(item => item.data) : [1],
                                 backgroundColor: (data.filter(item => +item.data > 0).length > 0) ? data.map(item => item.backgroundColor) : ['rgba(237,237,241,1)'],
                                 borderColor: (data.filter(item => +item.data > 0).length > 0) ? data.map(item => item.borderColor) : ['rgba(237,237,241,1)'],
-                                borderWidth: 1
+                                borderWidth: 0
                             }]
                         },
                         options: {
@@ -973,12 +998,28 @@ Vue.component('statistics', {
         },
         getPercent(current, total) {
             return ((+current * 100) / +total).toFixed(2) + "%";
-        }
+        },
+        getQueryParamsOfFiltersForUrl() {
+            let projectIds = encodeURIComponent(JSON.stringify(this.selectedProjects.map(project => +project.id)));
+            let range = encodeURIComponent(JSON.stringify(this.selectedRange?.name));
+
+            return `?projectIds=${projectIds}&range=${range}`;
+        },
     },
     created() {
         this.getCompanies();
     },
     mounted() {
+        // if(window.location.search) {
+        //     (function(){
+        //         if(window.opener) {
+        //             //window.opener.csrf = document.querySelector(Q4U.options.csrfTokenSelector).content;
+        //             window.print();
+        //             setTimeout(function () {
+        //                 window.close();
+        //             }, 1500);
+        //         }
+        //     })()
+        // }
     }
 });
-
