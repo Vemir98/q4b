@@ -491,6 +491,8 @@ Vue.component('statistics', {
                 {id: 6, name: 'half_year'},
                 {id: 7, name: 'one_year'},
                 {id: 8, name: 'two_years'},
+                {id: 9, name: 'three_years'},
+                {id: 10, name: 'four_years'},
             ],
             selectedCompanies: [],
             selectedProjects: [],
@@ -547,8 +549,8 @@ Vue.component('statistics', {
                 chart: null,
               },
             },
-            companiesToIgnore: [13,15,31,66]
-            // companiesToIgnore: []
+            // companiesToIgnore: [13,15,31,66]
+            companiesToIgnore: []
         }
     },
     watch: {
@@ -665,6 +667,12 @@ Vue.component('statistics', {
                 case 'two_years':
                     result.from.setFullYear(result.from.getFullYear()-2);
                 break;
+                case 'three_years':
+                    result.from.setFullYear(result.from.getFullYear()-3);
+                    break;
+                case 'four_years':
+                    result.from.setFullYear(result.from.getFullYear()-4);
+                    break;
             }
 
             return result;

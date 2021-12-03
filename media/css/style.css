@@ -25006,3 +25006,430 @@ html.rtl #approve-elements-content .parent-tr td.td-floor{
 }
 
 /*Dashboard styles end*/
+
+
+/*Info-center styles start*/
+
+#info-center .info-center-content {
+  background: #FFFFFF;
+  box-shadow: 0px 4px 20px rgb(0 0 0 / 6%);
+  border-radius: 10px;
+  padding: 20px 25px;
+  margin-bottom: 16px;
+}
+
+#info-center .info-center-content .info-center-filters {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+#info-center .info-center-send-projects  {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+#info-center .info-center-send-message {
+  margin-bottom: 16px;
+
+}
+
+#info-center .info-center-project-tag {
+  border: 1px solid #C5C7CD;
+  border-radius: 20px;
+  padding: 7px 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+#info-center .info-center-project-tag.project-selected {
+  background: #1ebae5;
+}
+
+.ltr #info-center .info-center-project-tag {
+  margin-right: 10px;
+}
+
+.rtl #info-center .info-center-project-tag {
+  margin-left: 10px;
+}
+
+#info-center .info-center-icons {
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+#info-center .project-tag-close-icon {
+  background-image: url(../img/close.png);
+}
+
+#info-center .project-tag-edit-icon {
+  background-image: url(../img/edit.png);
+}
+
+#info-center .project-tag-edit-icon-disabled {
+  background-image: url(../img/edit_disabled.png);
+}
+
+#info-center .project-tag-resend-icon {
+  background-image: url(../img/replay.png);
+}
+
+#info-center .project-tag-resend-icon-disabled {
+  background-image: url(../img/replay_disabled.png);
+}
+
+#info-center .info-center-resend-section {
+  position: relative;
+}
+
+#info-center .info-center-dropdown {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1050;
+  display: none;
+  overflow: hidden;
+  -webkit-overflow-scrolling: touch;
+  outline: 0;
+}
+
+#info-center .project-tag-delete-icon {
+  background-image: url(../img/delete.png);
+}
+
+#info-center .project-tag-delete-icon-disabled {
+  background-image: url(../img/delete_disabled.png);
+}
+
+#info-center .message-text-history-icon {
+  background-image: url(../img/history.png);
+}
+
+.ltr #info-center .info-center-icons {
+  margin-left: 15px;
+}
+
+.rtl #info-center .info-center-icons {
+  margin-right: 15px;
+}
+
+.info-center-icon {
+  background-image: url(../img/info-center-icon.png);
+  background-size: 19px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.ltr #info-center .message-text-history-icon {
+  right: 10px;
+}
+
+.rtl #info-center .message-text-history-icon {
+  left: 10px;
+}
+
+#info-center #info-center-send-content textarea {
+  width: 100%;
+  background: #F6F6FC;
+  border: none;
+}
+
+#info-center .info-center-history-message textarea {
+  width: 100%;
+  background: inherit;
+  border: none;
+}
+
+#info-center .info-center-send-buttons {
+  display: flex;
+  justify-content: flex-end;
+}
+
+#info-center .info-center-send-button {
+  width: 86px;
+  height: 36px;
+  border-radius: 20px;
+  border: 1px solid #F99C19;
+  background: #FEF5E8;
+  font-weight: 800;
+  color: #F99C19;
+}
+
+#info-center .info-center-history-filters {
+  display: flex;
+  margin-bottom: 25px;
+}
+
+#info-center .info-center-history-filters .filter-item {
+  display: flex;
+  margin-bottom: 0;
+}
+
+#info-center .info-center-history-filters>.filter-item-label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  color: #5D5D5D;
+}
+
+.ltr #info-center .info-center-history-filters>.filter-item-label {
+  margin-right: 30px;
+}
+
+.rtl #info-center .info-center-history-filters>.filter-item-label {
+  margin-left: 30px;
+}
+
+#info-center .info-center-history-filters-results {
+  border: 1px solid #C5C7CD;
+  border-radius: 5px;
+  padding: 16px;
+}
+
+#info-center .info-center-history-message {
+  margin-bottom: 15px;
+}
+
+#info-center .info-center-history-message .message-date {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  color: #858E99;
+  margin-bottom: 16px;
+}
+
+#info-center .info-center-history-message .message-data {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  font-size: 12px;
+  color: #858E99;
+  margin-bottom: 4px;
+}
+
+#info-center .info-center-history-message .message-text {
+  border: 1px solid #E3E5EA;
+  border-radius: 10px;
+  padding: 12px 16px;
+}
+
+#info-center .info-center-history-message .message-text.history-selected {
+  background: #F2F3F8;
+}
+
+#info-center .info-center-history-actions,
+#info-center .info-center-history-edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 5px;
+}
+
+#info-center .info-center-history-edit-actions span {
+  font-size: 16px;
+  color: rgba(82, 95, 127, 0.87);
+}
+
+#info-center .info-center-history-edit-actions .action-cancel,
+#info-center .info-center-history-edit-actions .action-edit {
+  cursor: pointer;
+}
+
+.ltr #info-center .info-center-history-edit-actions .action-cancel {
+  margin-left: 15px;
+}
+
+.rtl #info-center .info-center-history-edit-actions .action-cancel {
+  margin-right: 15px;
+}
+
+#info-center .message-history-modal {
+  width: 700px;
+  height: 500px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+}
+
+#info-center .confirm-popup {
+  width: 400px;
+  height: 200px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+}
+
+#info-center .modal-cover {
+  display: block;
+  background: rgba(0,0,0,0.5);
+}
+
+#info-center .dropdown-cover {
+  display: block;
+}
+
+#info-center .message-history-modal .message-history-modal-header,
+#info-center .confirm-popup .confirm-popup-header,
+#info-center .confirm-popup .confirm-popup-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60px;
+}
+
+#info-center .confirm-popup .confirm-popup-body {
+  font-weight: 700;
+  font-size: 19px;
+}
+
+
+#info-center .modal-separator {
+  width: 100%;
+  height: 1px;
+  background: #C4C4C4;
+}
+
+#info-center .message-history-modal-body .info-center-history-filters-results {
+  height: 350px;
+  overflow: scroll;
+  overflow-x: hidden;
+}
+
+#info-center .message-history-modal-footer,
+#info-center .confirm-popup-footer {
+  display: flex;
+  align-items: center;
+  height: 90px;
+}
+
+#info-center .message-history-modal-footer {
+  justify-content: center;
+}
+
+#info-center .confirm-popup-footer {
+  justify-content: space-around;
+}
+
+#info-center .message-history-modal-footer .message-history-modal-close-btn,
+#info-center .confirm-popup-footer .confirm-popup-btn,
+#info-center .confirm-popup-footer .cancel-popup-btn,
+#info-center .resend-message-dropdown .confirm-dropdown-btn {
+  width: 144px;
+  height: 40px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+  border: none;
+  color: rgba(0, 0, 0, 0.6);
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+}
+
+#info-center .confirm-popup-footer .cancel-popup-btn {
+  background: #F99C19;
+  color: #FFF;
+}
+
+#info-center .info-center-history-message .message-data-projects {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+#info-center .info-center-history-message .message-data-projects .message-data-project-tag {
+  border: 1px solid #C5C7CD;
+  border-radius: 10px;
+  padding: 6px 15px;
+  margin-left: 8px;
+  margin-top: 8px;
+  cursor: auto;
+}
+
+#info-center .resend-project-item {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+#info-center .resend-message-dropdown {
+  width: 250px;
+  position: absolute;
+  top: 0px;
+  background: white;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  z-index: 9999;
+  padding: 20px;
+}
+
+.ltr #info-center .resend-message-dropdown {
+  right: 110px;
+}
+
+.rtl #info-center .resend-message-dropdown {
+  left: 110px;
+}
+
+
+#info-center .resend-message-dropdown .resend-message-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#info-center .info-center-checkbox {
+  position: relative !important;
+  left: auto !important;
+  right: auto !important;
+}
+
+.ltr #info-center .info-center-checkbox {
+  margin-right: 30px;
+}
+
+.rtl #info-center .info-center-checkbox {
+  margin-left: 30px;
+}
+
+#info-center .resend-message-dropdown .resend-project-name {
+  width: 160px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#info-center .resend-message-dropdown .resend-projects-list {
+  margin-bottom: 20px;
+}
+
+#info-center .info-center-history-edit-actions .action-edit.disabled {
+  cursor: none;
+  opacity: 0.5;
+}
+
+@media (max-width: 999px) {
+  #info-center .message-history-modal {
+    width: 400px;
+    height: 500px;
+  }
+}
+
+/*Info-center styles end*/

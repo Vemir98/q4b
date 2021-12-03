@@ -545,6 +545,26 @@ array_push($items,
     ]
 );
 
+if(Usr::role() === 'super_admin') {
+  $items[] = [
+      'slug' => 'info-center',
+      'href' => 'info-center',
+      'text' => 'info_center',
+      'tooltip' => 'Info Center',
+      'icon' => 'info-center-icon',
+      'resource' => 'Controller_Settings',
+      'priority' => Enum_UserPriorityLevel::Project,
+      'deepLevel' => 1,
+      'showIn' => [
+          'info-center/{any}'
+      ],
+      'disabled' => false,
+      'active' => false,
+      'hasActiveChild' => false
+  ];
+}
+
+
 Menu::setActiveItems($items);
 file_put_contents(DOCROOT . 'menu.txt',var_export($items,true));
 $detector = new Mobile_Detect; // todo:: Just add Plans page for Mobile devices
@@ -599,10 +619,10 @@ $items = json_decode(json_encode($items));
                     <?foreach (Language::getAll() as $lang):?>
                         <?if(Language::getCurrent()->iso2 == $lang->iso2) continue?>
                         <li>
-                                <a href="<?=Route::url(Request::$current->route()->name(Request::$current->route()), array_merge(Request::$current->param(),['lang' => $lang->slug, 'controller' => Request::$current->controller(), 'action' => Request::$current->action()])).URL::query()?>">
-                                    <img src="<?=URL::withLang($lang->image,Language::getDefault()->slug)?>" class="q4_flag" alt="<?=$lang->name?>">
-                                </a>
-                            </li>
+                            <a href="<?=Route::url(Request::$current->route()->name(Request::$current->route()), array_merge(Request::$current->param(),['lang' => $lang->slug, 'controller' => Request::$current->controller(), 'action' => Request::$current->action()])).URL::query()?>">
+                                <img src="<?=URL::withLang($lang->image,Language::getDefault()->slug)?>" class="q4_flag" alt="<?=$lang->name?>">
+                            </a>
+                        </li>
                     <?endforeach?>
                 </ul>
             </span>

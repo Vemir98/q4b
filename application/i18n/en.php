@@ -386,6 +386,7 @@ return [
     'forgot password text' => 'Enter your email address that you used to register.
             We\'ll send you an email with your username and a link to reset your password.',
     'Send' => 'SEND',
+    'send' => 'Send',
     'back to login' => 'back to login',
     'Welcome to'=>'Welcome to ',
     'My Profile' => 'My Profile',
@@ -974,5 +975,13 @@ return [
     'no_data' => 'No data',
     'no_qc' => 'No QC',
     'with_qc' => 'With QC',
+    'info_center' => 'Info Center',
+    'filter_by:' => 'Filter by:',
+    'your_message' => 'Your message...',
+    'message_history' => 'Message History',
+    'are_you_sure_you_want_to_delete_this_message' => 'Are you sure you want to delete this message?',
+    'three_years' => 'Three years',
+    'four_years' => 'Four years',
+    'resend' => 'Resend',
     ''=>'',0
 ];

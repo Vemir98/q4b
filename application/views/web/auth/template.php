@@ -11,7 +11,7 @@
 <html lang="<?=Language::getCurrent()->iso2?>" class="<?=Language::getCurrent()->direction?>">
     <head lang="en">
         <meta charset="UTF-8">
-        <title>Q4U | <?=__('Login')?></title>
+        <title>Q4B | <?=__('Login')?></title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="tkn" content="<?=Security::token(true)?>">
         <meta name="base-uri" content="<?=URL::base()?>">

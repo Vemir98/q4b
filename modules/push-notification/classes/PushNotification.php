@@ -33,22 +33,16 @@ class PushNotification
     }
 
     public static function notifyQcUsers($qcId, $projectId, $action) {
-        $f = fopen(DOCROOT.'testNotification.txt', 'a');
-        if($f) {
-            fputs($f, 'qc = '.json_encode($projectId, JSON_PRETTY_PRINT)."\n");
-            fputs($f, 'qcId = '.json_encode($qcId, JSON_PRETTY_PRINT)."\n");
-        }
-        fclose($f);
-
         self::notifyProjectUsers($projectId, 'qc', $action, $qcId);
     }
 
-    private static function notifyProjectUsers($projectId, $type, $action, $typeId) {
-        $f = fopen(DOCROOT.'testNotification.txt', 'a');
-        if($f) {
-            fputs($f, 'projectId = '.json_encode($projectId, JSON_PRETTY_PRINT)."\n");
+    public static function notifyInfoCenterMessageUsers($messageId, $projectIds, $action) {
+        foreach ($projectIds as $projectId) {
+            self::notifyProjectUsers($projectId, 'infoCenter', $action, $messageId);
         }
-        fclose($f);
+    }
+
+    private static function notifyProjectUsers($projectId, $type, $action, $typeId) {
         $project = ORM::factory('Project', $projectId);
 
         $usersList = $project->users->find_all();

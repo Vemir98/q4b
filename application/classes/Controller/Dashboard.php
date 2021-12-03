@@ -210,6 +210,8 @@ class Controller_Dashboard extends HDVP_Controller_Template
             'half_year' => __('Half year'),
             'one_year' => __('one_year'),
             'two_years' => __('two_years'),
+            'three_years' => __('three_years'),
+            'four_years' => __('four_years'),
             'qc' => __('QC'),
             'places' => __('Places'),
             'certificates' => __('Certificates'),
