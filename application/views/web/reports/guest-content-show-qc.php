@@ -435,7 +435,8 @@ if($_USER->is('project_supervisor') || $isSubcontractor){//запрет на и�
                                                     <span class="modal-details-action-status blue"><?=$approveUsr->name?>&#x200E; <span class="d-color">(<?=date('d.m.Y H:ia',$item->approved_at)?>)&#x200E;</span></span>
                                                 </div>
                                             <?endif;?>
-                                            <div>
+                                            <?if(($item->approval_status !== Enum_QualityControlApproveStatus::Approved) && !Auth::instance()->get_user()->is('super_admin')):?>
+                                                <div>
                                                 <span class="modal-details-action blue"><?=__('Status')?> : </span>
                                                 <span class="modal-details-action-status s-box">
                                                 <div class="select-wrapper"><i class="q4bikon-arrow_bottom"></i>
@@ -472,6 +473,7 @@ if($_USER->is('project_supervisor') || $isSubcontractor){//запрет на и�
                                                 </div>
                                             </span>
                                             </div>
+                                            <?endif;?>
                                             <div>
                                                 <span class="modal-details-action blue"><?=__('Created by')?> : </span>
                                                 <span class="modal-details-action-status blue"><?=$createUsr->name?>&#x200E; <span class="d-color">(<?=date('d.m.Y H:ia',$item->created_at)?>)&#x200E;</span></span>

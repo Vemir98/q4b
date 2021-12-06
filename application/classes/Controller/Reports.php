@@ -417,6 +417,9 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
             if($qc->el_approval_id) {
                 $element = Api_DBElApprovals::getElApprovalElementByElAppId($qc->el_approval_id);
                 $qcElementNames[$qcKey] = $element[0]['name'];
+            } elseif($qc->element_id) {
+                $element = ORM::factory('Element')->where('id', '=', $qc->element_id)->find();
+                $qcElementNames[$qcKey] = $element->name;
             }
         }
         $report = [];

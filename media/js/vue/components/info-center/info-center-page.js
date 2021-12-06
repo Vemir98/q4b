@@ -88,7 +88,7 @@ Vue.component('info-center-page', {
     },
     computed: {
         canCreateMessage() {
-            return (this.selectedCompany && this.selectedProjects.length && this.message.length)
+            return (this.selectedCompany && this.selectedProjects.length && this.message.trim().length)
         },
         getMessageHistoriesByMessage() {
             if(this.messageHistoryModalSelectedHistory) {
@@ -207,6 +207,7 @@ Vue.component('info-center-page', {
         sendMessage() {
             switch (this.action) {
                 case 'create':
+                    if(!this.canCreateMessage) return false;
                     this.createMessageAPI();
                     break;
                 case 'edit':

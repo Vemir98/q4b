@@ -205,34 +205,42 @@ class Controller_Auth extends HDVP_Controller_Template
     }
 
     private function getRedirectUri($outspread){
+        $detector = new Mobile_Detect;
+
         $output = '';
 //        if(Auth::instance()->get_user()->can('update','Controller_QualityControl')){
 //            $output = 'quality_control/create';
 //        }else{
-        if(Auth::instance()->get_user()->is('super_admin')) {
-            $output = 'dashboard';
+
+
+        if($detector->isMobile()) {
+            $output = 'projects';
         } else {
-            switch ($outspread) {
-                case Enum_UserOutspread::General:
+            if(Auth::instance()->get_user()->is('super_admin')) {
+                $output = 'dashboard';
+            } else {
+                switch ($outspread) {
+                    case Enum_UserOutspread::General:
 //                    $output = 'dashboard';
-                    $output = 'projects';
-                    break;
-                case Enum_UserOutspread::Corporate:
+                        $output = 'projects';
+                        break;
+                    case Enum_UserOutspread::Corporate:
 //                    $output = 'companies';
-                    $output = 'projects';
-                    break;
-                case Enum_UserOutspread::Company:
+                        $output = 'projects';
+                        break;
+                    case Enum_UserOutspread::Company:
 //                    $output = 'companies/update/' . Auth::instance()->get_user()->company_id. '?tab=info';
 //                    $output = 'companies';
-                    $output = 'projects';
-                    break;
-                case Enum_UserOutspread::Project:
-                    if(Auth::instance()->get_user()->is('project_visitor'))
-                        $output = 'reports';
-//                        $output = 'projects';
-                    else
                         $output = 'projects';
-                    break;
+                        break;
+                    case Enum_UserOutspread::Project:
+                        if(Auth::instance()->get_user()->is('project_visitor'))
+                            $output = 'reports';
+//                        $output = 'projects';
+                        else
+                            $output = 'projects';
+                        break;
+                }
             }
         }
 

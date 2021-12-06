@@ -107,10 +107,12 @@
                                         <span class="pdf_main_content_properties_list_item_name"><?=__('QC status')?>:</span>
                                         <span class="pdf_main_content_properties_list_item_value"><?=__($q->status)?></span>
                                     </li>
-                                    <li class="pdf_main_content_properties_list_item">
-                                        <span class="pdf_main_content_properties_list_item_name"><?=__('Manager status')?>:</span>
-                                        <span class="pdf_main_content_properties_list_item_value"><?=__($q->approval_status)?></span>
-                                    </li>
+                                    <?if(($q->approval_status !== Enum_QualityControlApproveStatus::Approved) && !Auth::instance()->get_user()->is('super_admin')):?>
+                                        <li class="pdf_main_content_properties_list_item">
+                                            <span class="pdf_main_content_properties_list_item_name"><?=__('Manager status')?>:</span>
+                                            <span class="pdf_main_content_properties_list_item_value"><?=__($q->approval_status)?></span>
+                                        </li>
+                                    <?endif?>
                                     <?if(strlen($q->severity_level)):?>
                                         <li class="pdf_main_content_properties_list_item">
                                             <span class="pdf_main_content_properties_list_item_name"><?=__('Severity Level')?>:</span>

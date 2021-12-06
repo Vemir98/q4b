@@ -26,7 +26,7 @@ class Api_DBQualityControl
             qc.space_id as spaceId,
             qc.plan_id as planId,
             qc.profession_id as professionId,
-            ea.element_id as elementId,
+            qc.element_id as elementId,
             qc.craft_id as craftId,
             qc.del_rep_id as delRepId,
             qc.el_approval_id as elApprovalId,

@@ -13,87 +13,53 @@ class Controller_Api_Notification extends HDVP_Controller_API {
     public function action_send()
     {
         try {
-
-            $fpns = new HDVP\FirebasePushNotification();
-
-            $token = 'cNh86BsYT-ujq49Kt5AEEZ:APA91bFdKan-3VMqdFLCoiZsmK1NbjEOJ9VL7hWhC4luGavuvfFK1bU5ZcOLlxvP-UO2jByDZC-39qTGBxJerAJ9Q3ggR-XmgmKZ86zQC4R5iAMuFTk6gMnxnMWz4qkXmmoWjWuxte8N';
-
-            $fpns->notify([$token], ['action' => 'elApproval']);
-
-            $f = fopen(DOCROOT.'testNotification.txt', 'a');
-            if($f) {
-                fputs($f, 'from request action_send()');
-            }
-            fclose($f);
-
-//------------------------------------------------
-//            $timestamp = time() + 60;
 //
-//            $users = Api_DBElApprovals::getElApprovalUsersListForNotify(81);
-////
-//            $usersDeviceTokens = [];
+//            $query = 'SELECT qc.id
+//	FROM quality_controls qc
+//	LEFT join el_approvals ea on qc.el_approval_id = ea.id
+//	WHERE (qc.el_approval_id is not null) and (ea.id is null)';
 //
-//            foreach ($users as $user) {
-//                if($user['deviceToken']) {
-//                    array_push($usersDeviceTokens, $user['deviceToken']);
-//                }
+//            $a = array_column(DB::query(Database::SELECT, $query)->execute()->as_array(), 'id');
+//
+//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($a); echo "</pre>"; exit;
+
+
+
+//            $query = 'SELECT
+//                ea.id
+//                FROM el_approvals ea ORDER BY ea.id DESC';
+//
+//            $elApprovalIds = array_column(DB::query(Database::SELECT, $query)->execute()->as_array(), 'id');
+//
+//            $query = "SELECT
+//                qc.id,
+//                qc.craft_id as craftId,
+//                qc.el_approval_id as elApprovalId,
+//                ea.element_id as elementId,
+//                qc.element_id as qcElementId
+//                FROM quality_controls qc
+//                INNER JOIN el_approvals ea on qc.el_approval_id = ea.id
+//                WHERE qc.el_approval_id IN (:elAppIds)";
+//
+//            $elApprovalIds = DB::expr(implode(',', $elApprovalIds));
+//
+//            $elApprovalsQcList =  DB::query(Database::SELECT, $query)
+//                ->bind(':elAppIds', $elApprovalIds)
+//                ->execute()->as_array();
+//
+//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($elApprovalsQcList); echo "</pre>"; exit;
+//
+//            foreach ($elApprovalsQcList as $qc) {
+//                $queryData = [
+//                    'element_id' => $qc['elementId']
+//                ];
+//                DB::update('quality_controls')
+//                    ->set($queryData)
+//                    ->where('id', '=', $qc['id'])
+//                    ->execute($this->_db);
 //            }
-//
-//            PushHelper::test([
-//                'lang' => \Language::getCurrent()->iso2,
-//                'action' => 'elApproval',
-//                'usersDeviceTokens' => $usersDeviceTokens
-//            ], $timestamp );
-//
-//            $f = fopen(DOCROOT.'testNotification.txt', 'a');
-//
-//            if($f) {
-//                fputs($f, 'from action_send() - '.date('H:i:s')."\n");
-//            }
-//            fclose($f);
-//
-//            $this->_responseData = [
-//                'status' => 'success'
-//            ];
 
- // ----------------------------
-
-
-//            $time = $this->request->query('time');
-//            $dt = \Carbon\Carbon::parse($time);
-//            $dt->addMinutes(2);
-//            $timestamp = (int)strtotime($this->request->query('time')) + 3600;
-//            $time = date('H:i',$timestamp);
-//
-//            $ids = DB::select('id')
-//                ->from('users')
-//                ->where('device_token','IS NOT', NULL)
-//                ->and_where('device_token','!=', "")
-//                ->and_where('os_type','IS NOT', NULL)
-//                ->execute('persistent')
-//                ->as_array();
-//            $idsArr = [];
-//            foreach($ids as $x => $value) {
-//                $idsArr[] = $value['id'];
-//            }
-//
-//            if (count($idsArr)) {
-//                $users = ORM::factory('User')->where('id','IN', $idsArr)->find_all()->as_array();
-//                foreach ($users as $user){
-//                    PushHelper::send($user);
-//                }
-//
-//                $f = fopen(DOCROOT.'testNotification.txt', 'a');
-//
-//                if($f) {
-//                    fputs($f, 'from request - '.date('H:i:s')."\n");
-//                }
-//                fclose($f);
-//
-//            PushHelper::queueIfNotExists($time, \Language::getCurrent()->iso2, 'Job_Notification_SendPushNotification', $timestamp, 'waiting');
-//            }
-//
-//            $this->_responseData = [];
+            $this->_responseData = [];
             $this->_responseData['status'] = 'success';
         } catch (Exception $exception) {
             throw API_Exception::factory(500,$exception->getMessage());

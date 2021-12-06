@@ -16,11 +16,18 @@
                     <span class="reports-prop-title-status"><?=__('QC status')?>: </span>
                     <span class="reports-prop-title-status-value statistic-blue"><?=__($q->status)?></span>
                 </div>
+                <?if($q->approval_status !== Enum_QualityControlApproveStatus::Approved):?>
                 <div class="qc_status_cont">
                     <span class="reports-prop-title-status"><?=__('Manager status')?>: </span>
                     <span class="reports-prop-title-status-value statistic-orange"><?=__($q->approval_status)?></span>
                 </div>
+                <?endif;?>
                 <?if($q->el_approval_id):?>
+                    <div class="qc_status_cont">
+                        <span class="reports-prop-title-status"><?=__('Element_item')?>: </span>
+                        <span class="reports-prop-title-status-value statistic-orange"><?=$qcElementNames[$qcKey]?></span>
+                    </div>
+                <?elseif($q->element_id):?>
                     <div class="qc_status_cont">
                         <span class="reports-prop-title-status"><?=__('Element_item')?>: </span>
                         <span class="reports-prop-title-status-value statistic-orange"><?=$qcElementNames[$qcKey]?></span>

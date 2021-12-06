@@ -441,6 +441,7 @@ class Controller_Api_Projects extends HDVP_Controller_API
                 'description',
                 'tasks',
                 'profession_id',
+                'element_id',
                 'craft_id',
                 'severity_level',
                 'condition_list',
@@ -450,6 +451,15 @@ class Controller_Api_Projects extends HDVP_Controller_API
                 'del_rep_id',
                 'el_approval_id'
             ]);
+
+        if(isset($clientData['element_id'])) {
+            if ((empty($clientData['element_id']) or !(int)$clientData['element_id'])) {
+                unset($clientData['element_id']);
+            } else {
+                $clientData['element_id'] = (int)$clientData['element_id'];
+            }
+        }
+
         if(empty($clientData['el_approval_id']) OR !(int)$clientData['el_approval_id']){
             unset($clientData['el_approval_id']);
         }else{
@@ -462,6 +472,9 @@ class Controller_Api_Projects extends HDVP_Controller_API
             unset($clientData['del_rep_id']);
         }else{
             $clientData['del_rep_id'] = (int) $clientData['del_rep_id'];
+            if(isset($clientData['element_id'])){
+                unset($clientData['element_id']);
+            }
         }
         $clientData['unique_token'] = (int) $clientData['unique_token'];
         if($clientData['unique_token']){

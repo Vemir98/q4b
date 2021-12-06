@@ -52,7 +52,7 @@ Vue.component('info-center-message', {
             this.$emit('onProjectSelected', projects)
         },
         projects(projects) {
-            this.selectedProjects = [];
+            this.selectedProjects = JSON.parse(JSON.stringify(projects));
         }
     },
     methods: {
