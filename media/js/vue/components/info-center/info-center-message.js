@@ -2,15 +2,29 @@ Vue.component('info-center-message', {
     template: `
         <div class="info-center-send-content">
             <div class="info-center-send-projects">
-                <div 
-                    v-for="project in projects"
-                    class="info-center-project-tag"
-                    :class="{'project-selected': isProjectSelected(project)}"
-                    @click="projectSelected(project)"
-                >
-                    <div class="project-tag-name">
-                        <span>{{ project.name }}</span>
+                <div class="info-center-project-tags">
+                    <div 
+                        v-for="project in projects"
+                        class="info-center-project-tag"
+                        :class="{'project-selected': isProjectSelected(project)}"
+                        @click="projectSelected(project)"
+                    >
+                        <div class="project-tag-name">
+                            <span>{{ project.name }}</span>
+                        </div>
                     </div>
+                </div>
+                <div class="project-tags-select-label">
+                    <label class="table_label" :class="{'labtest-disabled': !projects.length}">
+                        <span @click="toggleSelectAll('selectedProjects', 'projects')">
+                           <template v-if="selectedProjects.length < projects.length">
+                                   {{ trans.select_all }}
+                            </template>
+                            <template v-else>
+                                   {{ trans.unselect_all }}
+                            </template>
+                        </span>
+                    </label>
                 </div>
             </div>
             <div class="info-center-send-message">
@@ -52,7 +66,7 @@ Vue.component('info-center-message', {
             this.$emit('onProjectSelected', projects)
         },
         projects(projects) {
-            this.selectedProjects = JSON.parse(JSON.stringify(projects));
+            // this.selectedProjects = JSON.parse(JSON.stringify(projects));
         }
     },
     methods: {
@@ -76,10 +90,19 @@ Vue.component('info-center-message', {
                 }
             }, this)
         },
+        toggleSelectAll(selected, list) {
+            if (list.length) {
+                if (this[selected].length < this[list].length) {
+                    this[selected] = JSON.parse(JSON.stringify(this[list]))
+                } else {
+                    this[selected] = []
+                }
+            }
+        },
     },
     mounted() {
         this.currentMessage = this.message;
-        this.selectedProjects = JSON.parse(JSON.stringify(this.projects))
+        // this.selectedProjects = JSON.parse(JSON.stringify(this.projects))
     }
 });
 

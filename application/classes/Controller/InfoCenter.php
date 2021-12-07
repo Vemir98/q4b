@@ -45,7 +45,9 @@ class Controller_InfoCenter extends HDVP_Controller_Template
             'delete' => __('Delete'),
             'are_you_sure_you_want_to_delete_this_message' => __('are_you_sure_you_want_to_delete_this_message'),
             'confirm' => __('Confirm'),
-            'resend' => __('resend')
+            'resend' => __('resend'),
+            "select_all" => __('select all'),
+            "unselect_all" => __('unselect all'),
         ];
 
         $this->template->content = View::make('info-center/index', [

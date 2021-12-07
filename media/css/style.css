@@ -25034,8 +25034,8 @@ html.rtl #approve-elements-content .parent-tr td.td-floor{
 
 #info-center .info-center-send-projects  {
   display: flex;
-  justify-content: flex-start;
-  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
   margin-bottom: 24px;
 }
 
@@ -25053,6 +25053,24 @@ html.rtl #approve-elements-content .parent-tr td.td-floor{
   align-items: center;
   margin-top: 10px;
   cursor: pointer;
+}
+
+#info-center .info-center-project-tags {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap-reverse;
+}
+
+#info-center .project-tags-select-label label{
+  color: #1ebae5;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 18px;
+  transition: 0.2s ease-in;
+  width: 100px;
+  margin-bottom: 0;
+  display: flex;
+  justify-content: flex-end;
 }
 
 #info-center .info-center-project-tag.project-selected {
