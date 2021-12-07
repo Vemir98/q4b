@@ -24899,8 +24899,16 @@ html.rtl #approve-elements-content .parent-tr td.td-floor{
   background: #005C87;
 }
 
+#dashboard .statistics-data-icon.dark {
+  background: black;
+}
+
 #dashboard td span.black {
   color: #005C87;
+}
+
+#dashboard td span.dark {
+  color: black;
 }
 
 #dashboard td span.green {

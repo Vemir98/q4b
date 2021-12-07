@@ -11,6 +11,8 @@
     <statistics
         translations='<?=json_encode($translations)?>'
         site-url="<?=trim(URL::site('','https'),'/')?>"
+        user-preferences-types='<?=json_encode($userPreferencesTypes)?>'
+        user-id='<?=Auth::instance()->get_user()->id?>'
     />
 </div>
 <script>

@@ -265,15 +265,12 @@ class Controller_Dashboard extends HDVP_Controller_Template
             'range'
         ]);
 
-//        if(!empty($a)) {
-//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$a]); echo "</pre>"; exit;
-//
-//        }
 
         $this->template->content = View::make('dashboard/index', [
             'translations' => $translations,
             'projectIds' => $filters['projectIds'] ?: null,
             'range' => $filters['range'] ?: null,
+            'userPreferencesTypes' => Enum_UserPreferencesTypes::toArray()
         ]);
 
 //                $plansUrl = Route::url('site.dashboard.plansList',[

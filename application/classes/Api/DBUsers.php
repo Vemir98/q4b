@@ -147,6 +147,20 @@ class Api_DBUsers
             ->execute()->as_array();
     }
 
+    public static function getUserPreference($userId, $preferenceType)
+    {
+        $query = 'SELECT
+            up.key as preferenceKey,
+            up.value as preferenceValue 
+            FROM users_preferences up
+            WHERE up.user_id=:userId and up.group=:preferenceType';
+
+        return DB::query(Database::SELECT, $query)
+            ->bind(':userId', $userId)
+            ->bind(':preferenceType', $preferenceType)
+            ->execute()->as_array();
+    }
+
     private static function toCamelCase($string) {
         return lcfirst(implode('', array_map('ucfirst', explode('_', $string))));
     }

@@ -246,23 +246,70 @@ class Controller_Api_Projects_Dashboard extends HDVP_Controller_API
             $filters['projectIds'] = $filteredProjects;
 
             $result = [
-                'total' => Api_DBPlaces::getProjectsPlacesCounts($filters)[0]['count'],
-                'delivery' => 0,
-                'preDelivery' => 0
+                'total' => [
+                    'total' => 0,
+                    'delivery' => 0,
+                    'preDelivery' => 0
+                ],
+                'public' => [
+                    'total' => 0,
+                    'delivery' => 0,
+                    'preDelivery' => 0
+                ],
+                'private' => [
+                    'total' => 0,
+                    'delivery' => 0,
+                    'preDelivery' => 0
+                ],
             ];
 
-            $delProtocols = Api_DBDelivery::getProjectsDeliveryPlacesCounts($filters);
+            if(!empty($filters['projectIds'])) {
+                $places = Api_DBPlaces::getProjectsPlacesCountsByType($filters);
 
-            foreach ($delProtocols as $delGroup) {
-                switch ((int)$delGroup['isPreDelivery']) {
-                    case 0:
-                        $result['delivery'] = (int)$delGroup['count'];
-                        break;
-                    case 1:
-                        $result['preDelivery'] = (int)$delGroup['count'];
-                        break;
+                foreach ($places as $placeGroup) {
+                    switch ($placeGroup['type']) {
+                        case Enum_ProjectPlaceType::PublicS:
+                            $result[Enum_ProjectPlaceType::PublicS]['total'] = (int)$placeGroup['count'];
+                            break;
+                        case Enum_ProjectPlaceType::PrivateS:
+                            $result[Enum_ProjectPlaceType::PrivateS]['total'] = (int)$placeGroup['count'];
+                            break;
+                    }
+                    $result['total']['total'] += (int)$placeGroup['count'];
+                }
+
+                $publicDeliveryPlaces = Api_DBDelivery::getProjectsDeliveryPlacesCountsByType($filters, Enum_ProjectPlaceType::PublicS);
+
+                foreach ($publicDeliveryPlaces as $publicDelGroup) {
+                    switch ((int)$publicDelGroup['isPreDelivery']) {
+                        case 0:
+                            $result[Enum_ProjectPlaceType::PublicS]['delivery'] = (int)$publicDelGroup['count'];
+                            $result['total']['delivery'] += (int)$publicDelGroup['count'];
+                            break;
+                        case 1:
+                            $result[Enum_ProjectPlaceType::PublicS]['preDelivery'] = (int)$publicDelGroup['count'];
+                            $result['total']['preDelivery'] += (int)$publicDelGroup['count'];
+                            break;
+                    }
+                }
+
+                $privateDeliveryPlaces = Api_DBDelivery::getProjectsDeliveryPlacesCountsByType($filters, Enum_ProjectPlaceType::PrivateS);
+
+
+                foreach ($privateDeliveryPlaces as $privateDelGroup) {
+                    switch ((int)$privateDelGroup['isPreDelivery']) {
+                        case 0:
+                            $result[Enum_ProjectPlaceType::PrivateS]['delivery'] = (int)$privateDelGroup['count'];
+                            $result['total']['delivery'] += (int)$privateDelGroup['count'];
+                            break;
+                        case 1:
+                            $result[Enum_ProjectPlaceType::PrivateS]['preDelivery'] = (int)$privateDelGroup['count'];
+                            $result['total']['preDelivery'] += (int)$privateDelGroup['count'];
+                            break;
+                    }
                 }
             }
+
 
             $this->_responseData = [
                 'status' => "success",
@@ -274,8 +321,7 @@ class Controller_Api_Projects_Dashboard extends HDVP_Controller_API
             throw API_Exception::factory(500,'Incorrect data');
         } catch (Exception $e){
             Database::instance()->rollback();
-//            throw API_Exception::factory(500,'Operation Error');
-            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$e->getMessage()]); echo "</pre>"; exit;
+            throw API_Exception::factory(500,'Operation Error');
         }
     }
 

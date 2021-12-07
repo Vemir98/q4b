@@ -319,33 +319,41 @@ Vue.component('statistics', {
                                     <tr>
                                         <th>&nbsp;</th>
                                         <th>{{ trans.total }}</th>
+                                        <th>{{ trans.public }}</th>
+                                        <th>{{ trans.private }}</th>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="statistics-data-item">
+                                                <div class="statistics-data-icon dark"></div>
+                                                <div class="statistics-data-descr">{{ trans.places_in_system }}</div>
+                                            </div>
+                                        </td>
+                                        <td><span class="dark bold">{{ statistics.delivery.data.total.total }}</span></td>
+                                        <td><span class="dark bold">{{ statistics.delivery.data.public.total }}</span></td>
+                                        <td><span class="dark bold">{{ statistics.delivery.data.private.total }}</span></td>
                                     </tr>
                                     <tr>
                                         <td>
                                             <div class="statistics-data-item">
                                                 <div class="statistics-data-icon black"></div>
-                                                <div class="statistics-data-descr">{{ trans.places_in_system }}</div>
+                                                <div class="statistics-data-descr">{{ trans.deliveries_done }}</div>
                                             </div>
                                         </td>
-                                        <td><span class="black bold">{{ statistics.delivery.data.total }}</span></td>
+                                        <td><span class="black bold">{{ statistics.delivery.data.total.delivery }}</span></td>
+                                        <td><span class="black bold">{{ statistics.delivery.data.public.delivery }}</span></td>
+                                        <td><span class="black bold">{{ statistics.delivery.data.private.delivery }}</span></td>
                                     </tr>
                                     <tr>
                                         <td>
                                             <div class="statistics-data-item">
                                                 <div class="statistics-data-icon green"></div>
-                                                <div class="statistics-data-descr">{{ trans.deliveries_done }}</div>
-                                            </div>
-                                        </td>
-                                        <td><span class="green bold">{{ statistics.delivery.data.delivery }}</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="statistics-data-item">
-                                                <div class="statistics-data-icon red"></div>
                                                 <div class="statistics-data-descr">{{ trans.pre_deliveries_done }}</div>
                                             </div>
                                         </td>
-                                        <td><span class="red bold">{{ statistics.delivery.data.preDelivery }}</span></td>
+                                        <td><span class="green bold">{{ statistics.delivery.data.total.preDelivery }}</span></td>
+                                        <td><span class="green bold">{{ statistics.delivery.data.public.preDelivery }}</span></td>
+                                        <td><span class="green bold">{{ statistics.delivery.data.private.preDelivery }}</span></td>
                                     </tr>
                                 </table>
                             </div>
@@ -456,7 +464,9 @@ Vue.component('statistics', {
     `,
     props: {
         translations: {required: true},
-        siteUrl: {required: true}
+        siteUrl: {required: true},
+        userPreferencesTypes: {required: true},
+        userId: {required: true}
     },
     components: {
         Multiselect: window.VueMultiselect.default,
@@ -550,7 +560,9 @@ Vue.component('statistics', {
               },
             },
             // companiesToIgnore: [13,15,31,66]
-            companiesToIgnore: []
+            companiesToIgnore: [],
+            userPrefTypes: JSON.parse(this.userPreferencesTypes),
+            dashboardFilters: null
         }
     },
     watch: {
@@ -558,36 +570,77 @@ Vue.component('statistics', {
             this.projects = [];
             this.selectedProjects = [];
 
-            this.selectedCompanies = companies;
-            this.selectedCompanies.map(company => {
-                company.checked = true;
-                return company
-            })
+            if(this.dashboardFilters) {
+                this.dashboardFilters.companies = this.dashboardFilters.companies.map(companyId => +companyId);
+                this.dashboardFilters.projects = this.dashboardFilters.projects.map(projectId => +projectId);
 
-            this.selectedRange = this.ranges.filter(range => {
-                return range.id === 4
-            })[0]
+                this.selectedRange = this.ranges.filter(range => {
+                    return +range.id === +this.dashboardFilters.range[0]
+                })[0]
 
-            companies.forEach(company => {
-                if(company.projects) {
-                    this.projects = this.projects.concat(Object.values(company.projects))
-                    this.toggleSelectAll('selectedProjects', 'projects');
-                }
-            }, this)
+                this.selectedCompanies = this.companies.filter(company => {
+                    company.checked = this.dashboardFilters.companies.includes(+company.id)
+                    if(company.checked && company.projects) {
+                        this.projects = this.projects.concat(Object.values(company.projects))
+                    }
+                    return company.checked
+                }, this)
 
+                this.selectedProjects = this.projects.filter(project => {
+                    project.checked = this.dashboardFilters.projects.includes(+project.id)
+                    return project.checked
+                }, this)
+
+            } else {
+                this.selectedCompanies = companies;
+
+                this.selectedCompanies.map(company => {
+                    company.checked = true;
+                    return company
+                })
+
+                this.selectedRange = this.ranges.filter(range => {
+                    return range.id === 4
+                })[0]
+
+                companies.forEach(company => {
+                    if(company.projects) {
+                        this.projects = this.projects.concat(Object.values(company.projects))
+                        this.toggleSelectAll('selectedProjects', 'projects');
+                    }
+                }, this)
+            }
             this.generateStatistics();
         },
         selectedCompanies(companies) {
             this.projects = [];
             this.selectedProjects = [];
 
-            companies.forEach(company => {
-                if(company.projects) {
-                    this.projects = this.projects.concat(Object.values(company.projects))
-                    this.toggleSelectAll('selectedProjects', 'projects');
-                }
-            }, this)
-        },
+            if(this.dashboardFilters) {
+                companies.forEach(company => {
+                    company.checked = this.dashboardFilters.companies.includes(+company.id)
+                    if(company.checked && company.projects) {
+                        this.projects = this.projects.concat(Object.values(company.projects))
+                    }
+                    return company.checked
+                }, this)
+
+                this.selectedProjects = this.projects.filter(project => {
+                    project.checked = this.dashboardFilters.projects.includes(+project.id)
+                    return project.checked
+                }, this)
+
+            } else {
+                companies.forEach(company => {
+                    if(company.projects) {
+                        this.projects = this.projects.concat(Object.values(company.projects))
+                        this.toggleSelectAll('selectedProjects', 'projects');
+                    }
+                }, this)
+            }
+
+            this.dashboardFilters = null;
+        }
     },
     methods: {
         getMultiselectSelectionValue(values, trans) {
@@ -622,15 +675,23 @@ Vue.component('statistics', {
                 }
             }
         },
-        getCompanies(){
+        async getCompanies(){
             this.showLoader = true;
             let url = '/companies/entities/for_current_user';
+
+            const dashboardFiltersUrl = `/user/${this.userId}/preferences/get/${this.userPrefTypes.Dashboard}`;
+            const dashboardFilters = await qfetch(dashboardFiltersUrl, {method: 'GET', headers: {}})
+
 
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
                     response.items = response.items.filter(company => {
                         return !this.companiesToIgnore.includes(+company.id)
                     }, this)
+
+                    if(dashboardFilters.item) {
+                        this.dashboardFilters = dashboardFilters.item;
+                    }
 
                     this.companies = response.items ? response.items : [];
                     this.showLoader = false;
@@ -680,6 +741,7 @@ Vue.component('statistics', {
         generateStatistics() {
             this.showStatistics = true;
             this.resetStatistics();
+
             let projectIds = this.selectedProjects.map(project => 'projectIds[]=' +project.id)
             let period = this.getPeriodFromRange(this.selectedRange.name);
             let from = (Math.round(period.from.getTime()/1000));
@@ -687,6 +749,9 @@ Vue.component('statistics', {
 
 
             let params = `?${projectIds.join('&')}&from=${from}&to=${to}`;
+            if(!this.dashboardFilters) {
+                this.setUserPreferencesAPI(this.userPrefTypes.Dashboard)
+            }
 
             this.getQcStatistics(params);
             this.getPlaceStatistics(params);
@@ -701,7 +766,6 @@ Vue.component('statistics', {
             let url = '/projects/statistics/qc';
             qfetch(url + params, {method: 'GET', headers: {}})
                 .then(response => {
-                    // console.log('QC', response.item)
                     this.statistics.qc.data = response.item;
                     this.showLoader = false;
                     this.statistics.qc.chart = this.createChart(
@@ -772,7 +836,6 @@ Vue.component('statistics', {
             let url = '/projects/statistics/ear';
             qfetch(url + params, {method: 'GET', headers: {}})
                 .then(response => {
-                    // console.log('EAR', response.item)
                     this.statistics.ear.data = response.item;
                     this.showLoader = false;
                     this.statistics.ear.chart = this.createChart(
@@ -801,26 +864,35 @@ Vue.component('statistics', {
             let url = '/projects/statistics/delivery';
             qfetch(url + params, {method: 'GET', headers: {}})
                 .then(response => {
-                    // console.log('DELIVERY', response.item)
                     this.statistics.delivery.data = response.item;
                     this.showLoader = false;
                     this.statistics.delivery.chart = this.createChart(
                         this.$refs['delivery-chart'],
                         'bar',
+
                         [
                             {
-                                label: this.trans.delivery,
-                                data: [this.statistics.delivery.data.delivery],
-                                backgroundColor: 'rgba(15, 154, 96, 1)',
+                                label: this.trans.deliveries_done,
+                                data: [
+                                    this.statistics.delivery.data.private.delivery,
+                                    this.statistics.delivery.data.public.delivery,
+                                ],
+                                backgroundColor: 'rgba(0,92,135, 1)',
                             },
                             {
-                                label: this.trans.pre_delivery,
-                                data: [this.statistics.delivery.data.preDelivery],
-                                backgroundColor: 'rgba(255, 0, 0, 1)',
-                            }
+                                label: this.trans.pre_deliveries_done,
+                                data: [
+                                    this.statistics.delivery.data.private.preDelivery,
+                                    this.statistics.delivery.data.public.preDelivery,
+                                ],
+                                backgroundColor: 'rgba(15, 154, 96, 1)',
+                            },
                         ],
-                        [this.trans.places],
-                        this.statistics.delivery.data.total
+                        [this.trans.private, this.trans.public],
+                        {
+                            private: this.statistics.delivery.data.private.total,
+                            public: this.statistics.delivery.data.public.total
+                        }
                     );
                 })
         },
@@ -858,7 +930,6 @@ Vue.component('statistics', {
             let url = '/projects/statistics/certificates';
             qfetch(url + params, {method: 'GET', headers: {}})
                 .then(response => {
-                    // console.log('CERTIFICATES', response.item)
                     this.statistics.certificates.data = response.item;
                     this.showLoader = false;
                     this.statistics.certificates.chart = this.createChart(
@@ -1013,6 +1084,21 @@ Vue.component('statistics', {
 
             return `?projectIds=${projectIds}&range=${range}`;
         },
+        setUserPreferencesAPI(type) {
+            let url = `/user/${this.userId}/preferences/set/${type}`;
+
+            const data = {
+                preferences: {
+                    companies: this.selectedCompanies.map(company => +company.id),
+                    projects: this.selectedProjects.map(project => +project.id),
+                    range: this.selectedRange.id
+                }
+            }
+
+            qfetch(url, {method: 'POST', headers: {},  body: data})
+                .then(response => {
+                })
+        }
     },
     created() {
         this.getCompanies();

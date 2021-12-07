@@ -452,13 +452,17 @@ class Controller_Api_Projects extends HDVP_Controller_API
                 'el_approval_id'
             ]);
 
-        if(isset($clientData['element_id'])) {
+//        if(isset($clientData['element_id'])) {
             if ((empty($clientData['element_id']) or !(int)$clientData['element_id'])) {
                 unset($clientData['element_id']);
+                Kohana::$log->add(Log::ERROR, '[unset]: ');
+
             } else {
+                Kohana::$log->add(Log::ERROR, '[unset che]: ');
+
                 $clientData['element_id'] = (int)$clientData['element_id'];
             }
-        }
+//        }
 
         if(empty($clientData['el_approval_id']) OR !(int)$clientData['el_approval_id']){
             unset($clientData['el_approval_id']);
@@ -520,6 +524,8 @@ class Controller_Api_Projects extends HDVP_Controller_API
                 }
             }
             $qc = ORM::factory('QualityControl');
+            Kohana::$log->add(Log::ERROR, '[$clientData]: '. json_encode($clientData, JSON_PRETTY_PRINT));
+
             $qc->values($clientData);
             $qc->place_id = $place->id;
             $qc->project_id = $place->project_id;
