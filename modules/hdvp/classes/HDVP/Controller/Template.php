@@ -69,25 +69,26 @@ class HDVP_Controller_Template extends HDVP_Controller
                         throw new HTTP_Exception_404();
                 }
             }
-
+//todo:Закомментировал из за того что при переходе из емейла по ссылке отчета для гостя
+            //перестало нормально работать перенаправление пользователя
             //проверяем пользователь в первый раз заходит на сайт или нет
-            if( ! Cookie::get('lastVisit',false)){
-                $detectedLang = $this->_detectClientLocale();
-                if($detectedLang AND $detectedLang->slug != Language::getCurrent()->slug){
-                    Cookie::set('lastVisit',time(),time() + Date::YEAR);
-                    $routeParams  = Arr::merge(
-                        Request::$current->param(),
-                        [
-                            'lang' => $detectedLang->slug,
-                            'controller' => $request->controller(),
-                            'action' => $request->action()]
-                    );
-
-                    $this->redirect(URL::route(Route::name($request->route()), $routeParams));
-                }
-            }else{
-                Cookie::set('lastVisit',time(),time() + Date::YEAR);
-            }
+//            if( ! Cookie::get('lastVisit',false)){
+//                $detectedLang = $this->_detectClientLocale();
+//                if($detectedLang AND $detectedLang->slug != Language::getCurrent()->slug){
+//                    Cookie::set('lastVisit',time(),time() + Date::YEAR);
+//                    $routeParams  = Arr::merge(
+//                        Request::$current->param(),
+//                        [
+//                            'lang' => $detectedLang->slug,
+//                            'controller' => $request->controller(),
+//                            'action' => $request->action()]
+//                    );
+//
+//                    $this->redirect(URL::route(Route::name($request->route()), $routeParams));
+//                }
+//            }else{
+//                Cookie::set('lastVisit',time(),time() + Date::YEAR);
+//            }
 
 //        Cookie::set('clientLang',Language::getCurrent()->slug,time() + Date::YEAR);
         }

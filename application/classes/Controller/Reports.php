@@ -294,9 +294,11 @@ class Controller_Reports extends HDVP_Controller_Template
                     $filteredCraftsListQuery['and'][] = 'AND pf.number IN ('.implode(',',$advancedData['floors']).')';
                 }
             }else{
-                $advancedData['space'] = (int)$advancedData['space'];
-                $qcs->and_where('qualitycontrol.space_id','=',$advancedData['space']);
-                $filteredCraftsListQuery['and'][] = 'AND qualitycontrol.space_id ="'.$advancedData['space'].'"';
+                    if($advancedData['space'] != 'all') {
+                        $advancedData['space'] = (int)$advancedData['space'];
+                        $qcs->and_where('qualitycontrol.space_id','=',$advancedData['space']);
+                        $filteredCraftsListQuery['and'][] = 'AND qualitycontrol.space_id ="'.$advancedData['space'].'"';
+                    }
             }
 
 
@@ -698,6 +700,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
 
         if(count($places)){
             foreach ($places as $p){
+                $output .= '<option value="all">'.__('All').'</option>';
                 foreach ($p->spaces->find_all() as $s){
                     $output .= '<option value="'.$s->id.'">'.$s->type->name.' -'.$s->desc.'</option>';
                 }
@@ -1177,18 +1180,19 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
 
         $as->getDefaultStyle()->getFont()->setSize(10);
 
-        $as->getColumnDimension('P')->setWidth(12);
+        $as->getColumnDimension('Q')->setWidth(12);
+        $as->getColumnDimension('P')->setWidth(60);
         $as->getColumnDimension('O')->setWidth(60);
-        $as->getColumnDimension('N')->setWidth(60);
-        $as->getColumnDimension('M')->setWidth(15);
-        $as->getColumnDimension('L')->setWidth(16);
+        $as->getColumnDimension('N')->setWidth(15);
+        $as->getColumnDimension('M')->setWidth(16);
+        $as->getColumnDimension('L')->setWidth(19);
         $as->getColumnDimension('K')->setWidth(19);
         $as->getColumnDimension('J')->setWidth(19);
-        $as->getColumnDimension('I')->setWidth(19);
-        $as->getColumnDimension('H')->setWidth(45);
-        $as->getColumnDimension('G')->setWidth(20);
-        $as->getColumnDimension('F')->setWidth(22);
-        $as->getColumnDimension('E')->setWidth(14);
+        $as->getColumnDimension('I')->setWidth(45);
+        $as->getColumnDimension('H')->setWidth(20);
+        $as->getColumnDimension('G')->setWidth(22);
+        $as->getColumnDimension('F')->setWidth(14);
+        $as->getColumnDimension('E')->setWidth(20);
         $as->getColumnDimension('D')->setWidth(9);
         $as->getColumnDimension('C')->setWidth(17);
         $as->getColumnDimension('B')->setWidth(25);
@@ -1223,6 +1227,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                 __('Project'),
                 __('Structure'),
                 __('Floor'),
+                __('Space'),
                 __('Element type'),
                 __('Element number'),
                 __('Stage'),
@@ -1244,6 +1249,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                 $item->project->name,
                 $item->object->name,
                 $item->floor->custom_name ? $item->floor->custom_name . ' (' . $item->floor->number . ')' : $item->floor->number,
+                $item->space->type->name,
                 __($item->place->type),
                 $item->place->custom_number,
                 __($item->project_stage),
@@ -1258,7 +1264,6 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                 __($item->status),
             ];
         }
-
         $ws->set_data($sh, false);
         $first_letter = PHPExcel_Cell::stringFromColumnIndex(0);
         $last_letter = PHPExcel_Cell::stringFromColumnIndex(count($sh[2])-1);
@@ -1277,7 +1282,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
 //            }
 //        }
 
-        $as->getStyle('A1:P'.count($sh))->getBorders()->applyFromArray(
+        $as->getStyle('A1:Q'.count($sh))->getBorders()->applyFromArray(
             array(
                 'inside' => array(
                     'style' => PHPExcel_Style_Border::BORDER_THIN,
@@ -1288,7 +1293,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
             )
         );
 
-        $as->getStyle('A3:P'.count($sh))->getBorders()->applyFromArray(
+        $as->getStyle('A3:Q'.count($sh))->getBorders()->applyFromArray(
             array(
                 'outline' => array(
                     'style' => PHPExcel_Style_Border::BORDER_THICK,

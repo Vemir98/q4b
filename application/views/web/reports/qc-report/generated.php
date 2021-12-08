@@ -47,18 +47,18 @@ $range = Arr::extract($_GET,["from","to"]);
         <?else: ?>
         <div class="qc_tabs_sec">
             <div class="qc_tabs_sec_tabs">
-                <?if(empty($del_rep_id)):?>
+                <?//if(empty($del_rep_id)):?>
                     <div class="qc_tab qc_tabs Statistics" data-tab="tab_statistics"><?=__('Statistics')?></div>
-                <?endif;?>
+                <?//endif;?>
 
                 <div class="qc_tab qc_tabs Quality-controls" data-tab="tab_qc_controls"><?=__('Quality controls')?></div>
-                <?if(empty($del_rep_id)):?>
+                <?//if(empty($del_rep_id)):?>
                     <div class="qc_tab qc_tabs Info" data-tab="tab_info"><?=__('Info')?></div>
-                <?endif;?>
+                <?//endif;?>
 
             </div>
 
-            <?if(empty($del_rep_id)):?>
+            <?//if(empty($del_rep_id)):?>
             <div class="qc_tabs_sec_btns">
                 <div class="qc_tabs_sec_btns">
                     <a href="<?='?'.Request::current()->getQueryString().'&export=1'?>" class="qc_tabs_sec_btn-export q4-page-export-new qc_tabs_btn">
@@ -76,7 +76,7 @@ $range = Arr::extract($_GET,["from","to"]);
                     </div>
                 </div>
             </div>
-            <?endif?>
+            <?//endif?>
         </div>
         <?endif;?>
     </div>
