@@ -240,16 +240,18 @@ class Controller_Reports extends HDVP_Controller_Template
         }
 
         if(!empty($data['elements'])) {
-            $qcs->join('el_approvals','LEFT');
-            $qcs->on('qualitycontrol.el_approval_id','=','el_approvals.id');
-            $filteredCraftsListQuery['join'][] = 'LEFT JOIN el_approvals ON qualitycontrol.el_approval_id = el_approvals.id';
+//            $qcs->join('el_approvals','LEFT');
+//            $qcs->on('qualitycontrol.el_approval_id','=','el_approvals.id');
+//            $filteredCraftsListQuery['join'][] = 'LEFT JOIN el_approvals ON qualitycontrol.el_approval_id = el_approvals.id';
             $qcs->and_where_open();
             $elementsQuery = 'AND (';
-            $qcs->where('el_approvals.element_id','IN',DB::expr('('.implode(',',$data['elements']).')'));
-            $elementsQuery .= 'el_approvals.element_id IN ('.implode(',',$data['elements']).') ';
+            $qcs->where('qualitycontrol.element_id','IN',DB::expr('('.implode(',',$data['elements']).')'));
+//            $qcs->where('el_approvals.element_id','IN',DB::expr('('.implode(',',$data['elements']).')'));
+            $elementsQuery .= 'qualitycontrol.element_id IN ('.implode(',',$data['elements']).') ';
+//            $elementsQuery .= 'el_approvals.element_id IN ('.implode(',',$data['elements']).') ';
             if(in_array(0,$data['elements'])) {
-                $qcs->or_where('qualitycontrol.el_approval_id','IS',null);
-                $elementsQuery .= 'OR qualitycontrol.el_approval_id IS NULL';
+                $qcs->or_where('qualitycontrol.element_id','IS',null);
+                $elementsQuery .= 'OR qualitycontrol.element_id IS NULL';
             }
             $elementsQuery .= ')';
             $qcs->and_where_close();
@@ -355,8 +357,6 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                 $filteredCraftsListQuery['and'] = implode(' ',$filteredCraftsListQuery['and']);
             }
 
-//            echo "line: ".__LINE__." ".__FILE__."<pre>"; echo($filteredCraftsListQuery['join']); echo "</pre>"; exit;
-
             $query = '
                 SELECT cc.id, cc.name, count(craft_id) `count`
                 FROM quality_controls qualitycontrol
@@ -365,8 +365,6 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                 WHERE 
                 qualitycontrol.project_id = '.$data['project'].' AND qualitycontrol.craft_id IN ('.implode(',',$data['crafts']).') AND (qualitycontrol.due_date BETWEEN '.$data['from'].' AND '.$data['to'].') AND cc.status="'.Enum_Status::Enabled.'" AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: null).$approvalStatusQuery.' GROUP BY qualitycontrol.craft_id';
 
-
-//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$query]); echo "</pre>"; exit;
 
             $filteredCraftsList = DB::query(Database::SELECT, $query)->execute()->as_array('id');
         }
