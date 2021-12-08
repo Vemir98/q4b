@@ -24384,7 +24384,8 @@ html.rtl  .approve-elv-report-item .report_tasks_wraper {
 }
 
 /* select all */
-.q4b-approve-el  .table_label {
+.q4b-approve-el  .table_label,
+#report-delivery .table_label {
   color: #1ebae5;
   text-decoration: underline;
   cursor: pointer;

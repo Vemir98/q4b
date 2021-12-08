@@ -325,6 +325,10 @@ ul li.tab_panel .panel_header h2, ul li.tab-panel .panel_header h2 {
     line-height: 22px;
     color: rgba(82, 95, 127, 0.87);
 }
+#report-delivery .multiselect__tags {
+    min-height: 45px;
+}
+
 .multiselect__tag{
     background: #1ebae5 !important;
 }

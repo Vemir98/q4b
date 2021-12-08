@@ -32,13 +32,45 @@ Vue.component('report-delivery', {
             </div>
             <div class="row-flex">
                 <div class="multiselect-col">
-                    <label class="multiselect-label">{{structureTxt}}</label>
-                    <multiselect v-model="selectedObject" @select="objectSelected" :placeholder="selectStructureTxt" :disabled="objects.length < 1" :options="objects" track-by="id" label="name" :searchable="true" :allow-empty="false" :show-labels="false">
-                        <template slot="singleLabel" slot-scope="props">{{ props.option.name }}</template>
-                    <template slot="option" slot-scope="props">
-                        <span>{{ props.option.name }}</span>
-                    </template>
-                    </multiselect>
+                    <div class="filter-item-label flex-between">
+                    {{ structureTxt }}
+                        <label class="table_label" :class="{'labtest-disabled': !objects.length}">
+                            <span @click="toggleSelectAll('selectedObjects', 'objects')">
+                                <template v-if="selectedObjects.length < objects.length">
+                                       {{ trans.select_all }}
+                                </template>
+                                <template v-else>
+                                       {{ trans.unselect_all }}
+                                </template>
+                            </span>
+                        </label>
+                    </div>
+                    <multiselect 
+                        v-model="selectedObjects"  
+                        :placeholder="selectStructureTxt" 
+                        :disabled="objects.length < 1" 
+                        :options="objects" 
+                        label="name" 
+                        track-by="id"
+                        :multiple="true" 
+                        :hide-selected="false"
+                        :close-on-select="false"
+                        :clear-on-select="false"
+                        :preserve-search="true"
+                        :internal-search="true"
+                        :taggable="false"
+                        :show-labels="false"  
+                        @change=""                                     
+                        @select="onSelect($event, 'objects')"
+                        @remove="onRemove($event, 'objects')"
+                        >
+                        <span class="multiselect-checkbox-label" :class="{'checked': scope.option.checked}"  slot="option" slot-scope="scope" >
+                            <span class="multiselect-option-icon"><i class="q4bikon-tick"></i><span></span></span>
+                            <span class="multiselect-option-name">{{ scope.option.name }}</span>
+                        </span>
+                        <template slot='selection' slot-scope="{values, option, isOpen}"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ getMultiselectSelectionValue(values, false) }} </span></template>
+                        <template slot="tag">{{ '' }}</template>
+                    </multiselect> 
                 </div>
                 <div class="multiselect-col">
                     <label class="multiselect-label">{{ trans.type }}</label>
@@ -222,7 +254,7 @@ Vue.component('report-delivery', {
             time: [],
             selectedCompany: null,
             selectedProject: null,
-            selectedObject: null,
+            selectedObjects: [],
             selectedFloor: null,
             selectedPlace: null,
             selectedTypes: [],
@@ -338,7 +370,8 @@ Vue.component('report-delivery', {
             return this.items.findIndex(x => x.checked == true) < 0;
         },
         companySelected(option){
-            this.selectedProject = this.selectedObject = this.selectedFloor = this.selectedPlace = null;
+            this.selectedProject = this.selectedFloor = this.selectedPlace = null;
+            this.selectedObjects = [];
             this.projects = this.objects = this.floors = this.places = [];
             axios.get(this.siteUrl + 'entities/projects/' + option.id + '?fields=id,name')
                 .then(response => {
@@ -347,7 +380,8 @@ Vue.component('report-delivery', {
 
         },
         projectSelected(option){
-            this.selectedObject = this.selectedFloor = this.selectedPlace = null;
+            this.selectedFloor = this.selectedPlace = null;
+            this.selectedObjects = [];
             this.objects = this.floors = this.places = [];
             window.eventBus.$emit('deliveryProjectSelected', option.id);
             axios.get(this.siteUrl + 'entities/objects/' + option.id + '?fields=id,name')
@@ -375,13 +409,13 @@ Vue.component('report-delivery', {
         timeChanged(){
         },
         canShow(){
-            return this.selectedCompany != null && this.selectedProject != null && this.selectedObject != null && this.time[0] != null;
+            return this.selectedCompany != null && this.selectedProject != null && this.selectedObjects.length && this.time[0] != null;
         },
         getReports(){
             var data ={
                 'company_id' : this.selectedCompany.id,
                 'project_id': this.selectedProject.id,
-                'object_id' : this.selectedObject.id,
+                'object_ids' : this.selectedObjects.map(object => +object.id),
                 'from': this.time[0].toLocaleDateString("en-GB"),
                 'to': this.time[1].toLocaleDateString("en-GB")
             };
@@ -463,6 +497,22 @@ Vue.component('report-delivery', {
                 vals.push(!trans ? val.name : this.trans[val.name])
             });
             return vals.join(', ');
+        },
+        toggleSelectAll(selected, list) {
+            if (list.length) {
+                if (this[selected].length < this[list].length) {
+                    this[selected] = this[list].map((i) => {
+                        i.checked = true;
+                        return i
+                    });
+                } else {
+                    this[selected] = this[list].map((i) => {
+                        i.checked = false;
+                        return i
+                    });
+                    this[selected] = []
+                }
+            }
         },
     },
     mounted() {
