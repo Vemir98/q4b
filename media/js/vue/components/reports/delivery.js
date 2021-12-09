@@ -312,6 +312,18 @@ Vue.component('report-delivery', {
         date.setMonth(date.getMonth()-2);
         this.time = [date, new Date()];
     },
+    watch: {
+      selectedObjects(objects) {
+          if(objects.length !== 1) {
+              this.floors = [];
+              this.places = [];
+              this.selectedFloor = null;
+              this.selectedPlace = null;
+          } else {
+              this.objectSelected(objects[0]);
+          }
+      }
+    },
     methods: {
         getQCReportUrl(qcUrl) {
             const from = this.time[0].toLocaleDateString("en-GB");
