@@ -257,7 +257,9 @@ class Controller_Dashboard extends HDVP_Controller_Template
             'qc_report' => __('QC Report'),
             'place_report' => __('Place report'),
             'delivery_report' => __('Delivery report'),
-            'export' => __('Export')
+            'export' => __('Export'),
+            'report_range' => __('Report Range'),
+            'waiting' => __('waiting'),
         ];
 
         $filters = Arr::extract($_GET, [
@@ -265,13 +267,25 @@ class Controller_Dashboard extends HDVP_Controller_Template
             'range'
         ]);
 
+        if($filters['projectIds'] && $filters['range']) {
+            VueJs::instance()->addComponent('dashboard/print-pdf');
 
-        $this->template->content = View::make('dashboard/index', [
-            'translations' => $translations,
-            'projectIds' => $filters['projectIds'] ?: null,
-            'range' => $filters['range'] ?: null,
-            'userPreferencesTypes' => Enum_UserPreferencesTypes::toArray()
-        ]);
+            $this->template->content = View::make('dashboard/print_pdf', [
+                'translations' => $translations,
+                'projectIds' => $filters['projectIds'] ?: null,
+                'range' => $filters['range'] ?: null,
+                'userPreferencesTypes' => Enum_UserPreferencesTypes::toArray()
+            ]);
+        } else {
+            VueJs::instance()->includeJsPDF();
+
+            $this->template->content = View::make('dashboard/index', [
+                'translations' => $translations,
+                'projectIds' => $filters['projectIds'] ?: null,
+                'range' => $filters['range'] ?: null,
+                'userPreferencesTypes' => Enum_UserPreferencesTypes::toArray()
+            ]);
+        }
 
 //                $plansUrl = Route::url('site.dashboard.plansList',[
 //                    'lang' => Language::getCurrent()->slug,
@@ -715,12 +729,6 @@ class Controller_Dashboard extends HDVP_Controller_Template
     }
 
     public function action_print(){
-
-//        echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([Arr::extract($_GET, [
-//            'projectIds',
-//            'range'
-//        ])]); echo "</pre>"; exit;
-
         $this->auto_render = false;
 
         echo View::make('dashboard/print_pdf');
@@ -745,7 +753,6 @@ class Controller_Dashboard extends HDVP_Controller_Template
                 throw API_ValidationException::factory(500, 'Incorrect data');
             }
 
-//            $filePath = $this->_makePdf(URL::withLang('dashboard/print', $lang,'https').'?'.http_build_query($filters));
             $filePath = $this->_makePdf(URL::withLang('dashboard', $lang,'https').'?'.http_build_query($filters));
 
             header('Location: '.URL::withLang($filePath,'en'));exit;
@@ -762,8 +769,8 @@ class Controller_Dashboard extends HDVP_Controller_Template
             $client = Client::getInstance();
 
             $client->getEngine()->setPath(DOCROOT.'phantomjs-2.1.1-linux-x86_64/bin/phantomjs');
+            $client->getEngine()->addOption('--ignore-ssl-errors=true');
 
-//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($a); echo "</pre>"; exit;
 //        $client->getEngine()->setPath('/home/qforbnet/www/phantomjs-2.1.1-linux-x86_64/bin/phantomjs');
             $client->getEngine()->addOption('--cookies-file=cook.txt');
 
@@ -793,16 +800,14 @@ class Controller_Dashboard extends HDVP_Controller_Template
              * @see JonnyW\PhantomJs\Http\Response
              **/
             $response = $client->getMessageFactory()->createResponse();
-            $request->setDelay(3);
-//
 
+            $request->setDelay(3);
+            exec("chmod -R 777 /home/qforbnet/www/media/data/dashboard/statistics/".$uniqId.'pdf');
             // Send the request
             $client->send($request, $response);
 //            exec("chmod -R 777 ".DOCROOT.$filePath);
 //            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r("chmod -R 777 ".DOCROOT.'media/data/dashboard/statistics'); echo "</pre>"; exit;
 //            exec("chmod -R 777 ".DOCROOT.'media/data/dashboard/statistics');
-
-
 
             return $filePath;
         }  catch (Exception $e){

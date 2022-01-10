@@ -357,6 +357,7 @@ class Controller_Api_Projects extends HDVP_Controller_API
                     'placeId' => $plan['placeId'],
                     'objectId' => $plan['objectId'],
                     'professionId' => $plan['professionId'],
+                    'professionStatus' => $plan['professionStatus'],
                     'status' => $plan['status'],
                     'crafts' => [],
                     'floors' => [],

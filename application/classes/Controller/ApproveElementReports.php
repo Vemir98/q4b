@@ -122,7 +122,8 @@ class Controller_ApproveElementReports extends HDVP_Controller_Template
             'positions' => __('positions'),
             'manager_signature' => __('manager_signature'),
             'notes_description' => __('notes_description'),
-            'change_status?' => __('change_status?')
+            'change_status?' => __('change_status?'),
+            'primary_supervision' => __('primary_supervision')
         ];
 
 

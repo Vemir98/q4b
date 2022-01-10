@@ -161,6 +161,18 @@ class Api_DBUsers
             ->execute()->as_array();
     }
 
+    public static function getUsersByDeviceToken($deviceToken)
+    {
+        $query = 'SELECT
+            u.id
+            FROM users u
+            WHERE u.device_token=:deviceToken';
+
+        return DB::query(Database::SELECT, $query)
+            ->bind(':deviceToken', $deviceToken)
+            ->execute()->as_array();
+    }
+
     private static function toCamelCase($string) {
         return lcfirst(implode('', array_map('ucfirst', explode('_', $string))));
     }

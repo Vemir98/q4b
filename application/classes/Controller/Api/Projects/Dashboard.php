@@ -64,8 +64,8 @@ class Controller_Api_Projects_Dashboard extends HDVP_Controller_API
             throw API_Exception::factory(500,'Incorrect data');
         } catch (Exception $e){
             Database::instance()->rollback();
-//            throw API_Exception::factory(500,'Operation Error');
-            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$e->getMessage()]); echo "</pre>"; exit;
+            throw API_Exception::factory(500,'Operation Error');
+//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$e->getMessage()]); echo "</pre>"; exit;
         }
     }
 
@@ -149,8 +149,8 @@ class Controller_Api_Projects_Dashboard extends HDVP_Controller_API
             throw API_Exception::factory(500,'Incorrect data');
         } catch (Exception $e){
             Database::instance()->rollback();
-//            throw API_Exception::factory(500,'Operation Error');
-            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$e->getMessage()]); echo "</pre>"; exit;
+            throw API_Exception::factory(500,'Operation Error');
+//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$e->getMessage()]); echo "</pre>"; exit;
         }
     }
 
@@ -176,24 +176,53 @@ class Controller_Api_Projects_Dashboard extends HDVP_Controller_API
                 throw API_ValidationException::factory(500, 'missing required field');
             }
 
-            $earStatistics = Api_DBElApprovals::getProjectsElApprovalsStatistics($filters);
+            $appropriateEars = Api_DBElApprovals::getProjectsElApprovalsByAppropriate($filters, 1);
+            $notAppropriateEars = Api_DBElApprovals::getProjectsElApprovalsByAppropriate($filters, 0);
 
             $result = [
-                'total' => 0,
-                'appropriate' => 0,
-                'notAppropriate' => 0
+                'total' => [
+                    'total' => 0,
+                    'waiting' => 0,
+                    'approved' => 0
+                ],
+                'appropriate' => [
+                    'total' => 0,
+                    'waiting' => 0,
+                    'approved' => 0
+                ],
+                'notAppropriate' => [
+                    'total' => 0,
+                    'waiting' => 0,
+                    'approved' => 0
+                ]
             ];
 
-            foreach ($earStatistics as $earGroup) {
-                switch ((int)$earGroup['appropriate']) {
-                    case 0:
-                        $result['notAppropriate'] = (int)$earGroup['count'];
+            foreach ($appropriateEars as $appEarsGroup) {
+                switch ($appEarsGroup['status']) {
+                    case Enum_ApprovalStatus::Waiting:
+                        $result['appropriate']['waiting'] = (int)$appEarsGroup['count'];
+                        $result['appropriate']['total'] += (int)$appEarsGroup['count'];
+                        $result['total']['total'] += (int)$appEarsGroup['count'];
+                        $result['total']['waiting'] += (int)$appEarsGroup['count'];
                         break;
-                    case 1:
-                        $result['appropriate'] = (int)$earGroup['count'];
+                    case Enum_ApprovalStatus::Approved:
+                        $result['appropriate']['approved'] = (int)$appEarsGroup['count'];
+                        $result['appropriate']['total'] += (int)$appEarsGroup['count'];
+                        $result['total']['total'] += (int)$appEarsGroup['count'];
+                        $result['total']['approved'] += (int)$appEarsGroup['count'];
                         break;
                 }
-                $result['total'] += (int)$earGroup['count'];
+            }
+
+            foreach ($notAppropriateEars as $notAppEarsGroup) {
+                switch ($notAppEarsGroup['status']) {
+                    case Enum_ApprovalStatus::Waiting:
+                        $result['notAppropriate']['waiting'] = (int)$notAppEarsGroup['count'];
+                        $result['notAppropriate']['total'] += (int)$notAppEarsGroup['count'];
+                        $result['total']['total'] += (int)$notAppEarsGroup['count'];
+                        $result['total']['waiting'] += (int)$notAppEarsGroup['count'];
+                        break;
+                }
             }
 
             $this->_responseData = [
@@ -206,8 +235,8 @@ class Controller_Api_Projects_Dashboard extends HDVP_Controller_API
             throw API_Exception::factory(500,'Incorrect data');
         } catch (Exception $e){
             Database::instance()->rollback();
-//            throw API_Exception::factory(500,'Operation Error');
-            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$e->getMessage()]); echo "</pre>"; exit;
+            throw API_Exception::factory(500,'Operation Error');
+//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$e->getMessage()]); echo "</pre>"; exit;
         }
 
         return $result;
@@ -321,6 +350,7 @@ class Controller_Api_Projects_Dashboard extends HDVP_Controller_API
             throw API_Exception::factory(500,'Incorrect data');
         } catch (Exception $e){
             Database::instance()->rollback();
+//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($e->getMessage()); echo "</pre>"; exit;
             throw API_Exception::factory(500,'Operation Error');
         }
     }
@@ -377,8 +407,8 @@ class Controller_Api_Projects_Dashboard extends HDVP_Controller_API
             throw API_Exception::factory(500,'Incorrect data');
         } catch (Exception $e){
             Database::instance()->rollback();
-//            throw API_Exception::factory(500,'Operation Error');
-            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$e->getMessage()]); echo "</pre>"; exit;
+            throw API_Exception::factory(500,'Operation Error');
+//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$e->getMessage()]); echo "</pre>"; exit;
         }
     }
 
@@ -433,8 +463,8 @@ class Controller_Api_Projects_Dashboard extends HDVP_Controller_API
             throw API_Exception::factory(500,'Incorrect data');
         } catch (Exception $e){
             Database::instance()->rollback();
-//            throw API_Exception::factory(500,'Operation Error');
-            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$e->getMessage()]); echo "</pre>"; exit;
+            throw API_Exception::factory(500,'Operation Error');
+//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$e->getMessage()]); echo "</pre>"; exit;
         }
     }
 }

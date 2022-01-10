@@ -13,6 +13,14 @@ class Controller_Api_Notification extends HDVP_Controller_API {
     public function action_send()
     {
         try {
+
+//            $fpns = new HDVP\FirebasePushNotification();
+//            $fpns->notify(['f4XUrR3pQ5ulGWxW_gVPo5:APA91bF_skJlXW4U_H8AmaHfCKq6CKdnLp2AwtnWcDgrloh3_u6eU5Dn8KgsSH2Cvp3M6VsWXGgGmsL1G7GZ3hQ8WhFIwPg6Gh0KRzOa53uY_Z9ca9aY5vICB05XHgNNvybayJs6xV37'], [
+//                'type' => 'testType',
+//                'action' => 'testAction',
+//                'id' => 'testTypeId',
+//                'projectId' => 'testProjectId'
+//            ]);
 //
 //            $query = 'SELECT qc.id
 //	FROM quality_controls qc

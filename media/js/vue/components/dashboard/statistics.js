@@ -130,12 +130,12 @@ Vue.component('statistics', {
                                 </multiselect>
                             </div>
                         </div>
-<!--                        <div-->
-<!--                            v-if="canExport" -->
-<!--                            class="labtest_filters_export"-->
-<!--                        >-->
-<!--                            <a :href="getExportPdfUrl">{{ trans.export }}</a>-->
-<!--                        </div>-->
+                        <div
+                            class="labtest_filters_export"
+                            @click="printPdf"
+                        >
+                            <a>{{ trans.export }}</a>
+                        </div>
                     </div>
                 </div>
                 <div class="dashboard-filter-results">
@@ -195,7 +195,7 @@ Vue.component('statistics', {
                                 </table>
                             </div>
                         </div>
-                        <div class="dashboard-statistics-links"><a :href="siteUrl + '/reports#tab_qc_controls'" target="_blank">{{ trans.show_full_reports }}</a></div>
+                        <div class="dashboard-statistics-links" v-if="!exportPdf"><a :href="siteUrl + '/reports#tab_qc_controls'" target="_blank">{{ trans.show_full_reports }}</a></div>
                     </div>
                     <div v-show="showStatistics" class="dashboard-statistics-item">
                         <div class="dashboard-statistics-item-title">
@@ -252,7 +252,7 @@ Vue.component('statistics', {
                                 </table>
                             </div>
                         </div>
-                        <div class="dashboard-statistics-links"><a :href="siteUrl + '/reports/place'" target="_blank">{{ trans.show_full_reports }}</a></div>
+                        <div class="dashboard-statistics-links" v-if="!exportPdf"><a :href="siteUrl + '/reports/place'" target="_blank">{{ trans.show_full_reports }}</a></div>
                     </div>
                     <div v-show="showStatistics" class="dashboard-statistics-item">
                         <div class="dashboard-statistics-item-title">
@@ -358,7 +358,7 @@ Vue.component('statistics', {
                                 </table>
                             </div>
                         </div>
-                        <div class="dashboard-statistics-links"><a :href="siteUrl + '/reports/delivery'" target="_blank">{{ trans.show_full_reports }}</a></div>
+                        <div class="dashboard-statistics-links" v-if="!exportPdf"><a :href="siteUrl + '/reports/delivery'" target="_blank">{{ trans.show_full_reports }}</a></div>
                     </div>
                     <div v-show="showStatistics" class="dashboard-statistics-item">
                         <div class="dashboard-statistics-item-title">
@@ -372,10 +372,12 @@ Vue.component('statistics', {
                                 <canvas class="dashboard-chart" ref="ear-chart" width="200" height="200"></canvas>
                             </div>
                             <div v-if="statistics.ear.data" class="dashboard-statistics-item-data">
-                                <table>
+                                <table> 
                                     <tr>
                                         <th>&nbsp;</th>
                                         <th>{{ trans.total }}</th>
+                                        <th>{{ trans.waiting }}</th>
+                                        <th>{{ trans.approved }}</th>
                                     </tr>
                                     <tr>
                                         <td>
@@ -384,7 +386,9 @@ Vue.component('statistics', {
                                                 <div class="statistics-data-descr">{{ trans.ears_in_system }}</div>
                                             </div>
                                         </td>
-                                        <td><span class="black bold">{{ statistics.ear.data.total }}</span></td>
+                                        <td><span class="black bold">{{ statistics.ear.data.total.total }}</span></td>
+                                        <td><span class="black bold">{{ statistics.ear.data.total.waiting }}</span></td>
+                                        <td><span class="black bold">{{ statistics.ear.data.total.approved }}</span></td>
                                     </tr>
                                     <tr>
                                         <td>
@@ -393,7 +397,9 @@ Vue.component('statistics', {
                                                 <div class="statistics-data-descr">{{ trans.not_appropriate_ears }}</div>
                                             </div>
                                         </td>
-                                        <td><span class="red bold">{{ statistics.ear.data.notAppropriate }}</span></td>
+                                        <td><span class="red bold">{{ statistics.ear.data.notAppropriate.total }}</span></td>
+                                        <td><span class="red bold">{{ statistics.ear.data.notAppropriate.waiting }}</span></td>
+                                        <td><span class="red bold">-</span></td>
                                     </tr>
                                     <tr>
                                         <td>
@@ -402,12 +408,14 @@ Vue.component('statistics', {
                                                 <div class="statistics-data-descr">{{ trans.appropriate_ears }}</div>
                                             </div> 
                                         </td>
-                                        <td><span class="green bold">{{ statistics.ear.data.appropriate }}</span></td>
+                                        <td><span class="green bold">{{ statistics.ear.data.appropriate.total }}</span></td>
+                                        <td><span class="green bold">{{ statistics.ear.data.appropriate.waiting }}</span></td>
+                                        <td><span class="green bold">{{ statistics.ear.data.appropriate.approved }}</span></td>
                                     </tr>
                                 </table>
                             </div>
                         </div>
-                        <div class="dashboard-statistics-links"><a :href="siteUrl + '/reports/approve_element'" target="_blank">{{ trans.show_full_reports }}</a></div>
+                        <div class="dashboard-statistics-links" v-if="!exportPdf"><a :href="siteUrl + '/reports/approve_element'" target="_blank">{{ trans.show_full_reports }}</a></div>
                     </div>
                     <div v-show="showStatistics" class="dashboard-statistics-item">
                         <div class="dashboard-statistics-item-title">
@@ -456,7 +464,7 @@ Vue.component('statistics', {
                                 </table>
                             </div>
                         </div>
-                        <div class="dashboard-statistics-links"><a :href="siteUrl + '/reports/labtests'" target="_blank">{{ trans.show_full_reports }}</a></div>
+                        <div class="dashboard-statistics-links" v-if="!exportPdf"><a :href="siteUrl + '/reports/labtests'" target="_blank">{{ trans.show_full_reports }}</a></div>
                     </div>
                 </div>
             </div>
@@ -466,7 +474,8 @@ Vue.component('statistics', {
         translations: {required: true},
         siteUrl: {required: true},
         userPreferencesTypes: {required: true},
-        userId: {required: true}
+        userId: {required: true},
+        isMobile: {required: true}
     },
     components: {
         Multiselect: window.VueMultiselect.default,
@@ -485,10 +494,17 @@ Vue.component('statistics', {
             url += `&lang=${this.currentLang}`
             return url;
         },
+        getSelectedCompaniesNames() {
+            return this.selectedCompanies.map(company => company.name).join(', ')
+        },
+        getSelectedProjectsNames() {
+            return this.selectedProjects.map(project => project.name).join(', ')
+        }
     },
     data() {
         return {
             showLoader: false,
+            exportPdf: false,
             trans: JSON.parse(this.translations),
             companies: [],
             projects: [],
@@ -559,8 +575,8 @@ Vue.component('statistics', {
                 chart: null,
               },
             },
-            // companiesToIgnore: [13,15,31,66]
-            companiesToIgnore: [],
+            companiesToIgnore: [13,15,31,66],
+            // companiesToIgnore: [],
             userPrefTypes: JSON.parse(this.userPreferencesTypes),
             dashboardFilters: null
         }
@@ -749,16 +765,19 @@ Vue.component('statistics', {
 
 
             let params = `?${projectIds.join('&')}&from=${from}&to=${to}`;
-            if(!this.dashboardFilters) {
+            if(!this.dashboardFilters && this.canGenerateStatistics) {
                 this.setUserPreferencesAPI(this.userPrefTypes.Dashboard)
             }
 
-            this.getQcStatistics(params);
-            this.getPlaceStatistics(params);
-            this.getCertificatesStatistics(params);
-            this.getDeliveryStatistics(params);
-            this.getEarStatistics(params);
-            this.getLabControlStatistics(params);
+            if(this.canGenerateStatistics) {
+                this.getQcStatistics(params);
+                this.getPlaceStatistics(params);
+                this.getCertificatesStatistics(params);
+                this.getDeliveryStatistics(params);
+                this.getEarStatistics(params);
+                this.getLabControlStatistics(params);
+            }
+
             this.statisticsPeriodName = this.selectedRange.name;
         },
         getQcStatistics(params) {
@@ -843,18 +862,18 @@ Vue.component('statistics', {
                         'pie',
                         [
                             {
-                                data: this.statistics.ear.data.notAppropriate,
+                                data: this.statistics.ear.data.notAppropriate.total,
                                 backgroundColor: 'rgba(255, 0, 0, 1)',
                                 borderColor: 'rgba(255, 0, 0, 1)',
                             },
                             {
-                                data: this.statistics.ear.data.appropriate,
+                                data: this.statistics.ear.data.appropriate.total,
                                 backgroundColor: 'rgba(15, 154, 96, 1)',
                                 borderColor: 'rgba(15, 154, 96, 1)',
                             },
                         ],
                         [this.trans.not_appropriate, this.trans.appropriate],
-                        this.statistics.ear.data.total
+                        this.statistics.ear.data.total.total
                     );
                 })
         },
@@ -1098,22 +1117,97 @@ Vue.component('statistics', {
             qfetch(url, {method: 'POST', headers: {},  body: data})
                 .then(response => {
                 })
+        },
+        printPdf() {
+            // if pdf container already exists removing it
+            let oldPdfContainer = document.getElementsByClassName('dashboard-print');
+            if(oldPdfContainer.length) {
+                Array.from(oldPdfContainer).forEach(node => {
+                    document.body.removeChild(node)
+                })
+            }
+
+            let statistics = document.getElementsByClassName('dashboard-filter-results')[0];
+
+            let elements = statistics.children;
+            let elementsArray = Array.from(elements);
+
+            let pdfContainer = document.createElement('div')
+            pdfContainer.classList.add('dashboard-print')
+            pdfContainer.classList.add('new-styles')
+            pdfContainer.style.display = 'none';
+
+            let filtersContainer = document.createElement('div')
+            filtersContainer.classList.add('dashboard-print-container')
+
+            let filters = document.createElement('div');
+            filtersContainer.classList.add('dashboard-filters-pdf')
+
+            filters.innerHTML = `
+                <div>
+                    <span class="filter-title-pdf">${this.trans.report_range}:</span><span>${this.trans[this.selectedRange?.name]}</span>
+                </div>
+                <br>
+                <div>
+                    <span class="filter-title-pdf">${this.trans.companies}:</span><span>${this.getSelectedCompaniesNames}</span>
+                </div>
+                <br>
+                <div>
+                    <span class="filter-title-pdf">${this.trans.projects}:</span><span>${this.getSelectedProjectsNames}</span>
+                </div>`;
+
+            filtersContainer.appendChild(filters);
+            pdfContainer.appendChild(filtersContainer)
+
+            let statisticsContainer = document.createElement('div')
+            statisticsContainer.classList.add('dashboard-print-container')
+
+            for(let i = 0; i < elementsArray.length; i++) {
+                if((i % 2 === 0) && i !== 0) {
+                    pdfContainer.appendChild(statisticsContainer)
+                    statisticsContainer = document.createElement('div')
+                    statisticsContainer.classList.add('dashboard-print-container')
+                }
+                let newElement = elementsArray[i].cloneNode(true);
+                let oldCanvas = elementsArray[i].getElementsByTagName('canvas')[0];
+                let canvasToReplace = newElement.getElementsByTagName('canvas')[0];
+
+                let newCanvas = this.cloneCanvas(oldCanvas)
+                document.body.appendChild(newCanvas)
+                canvasToReplace.parentNode.replaceChild(newCanvas, canvasToReplace)
+
+                statisticsContainer.appendChild(newElement)
+
+                if(i === (elementsArray.length - 1)) {
+                    pdfContainer.appendChild(statisticsContainer)
+                }
+            }
+
+            document.body.appendChild(pdfContainer);
+            window.print();
+        },
+        cloneCanvas(oldCanvas) {
+            //create a new canvas
+            let newCanvas = document.createElement('canvas');
+            let context = newCanvas.getContext('2d');
+
+            //set dimensions
+            newCanvas.width = oldCanvas.width;
+            newCanvas.height = oldCanvas.height;
+            newCanvas.style.width = oldCanvas.style.width;
+            newCanvas.style.height = oldCanvas.style.height;
+
+            //apply the old canvas to the new one
+            context.drawImage(oldCanvas, 0, 0);
+
+            //return the new canvas
+            return newCanvas;
         }
     },
     created() {
         this.getCompanies();
     },
     mounted() {
-        // if(window.location.search) {
-        //     (function(){
-        //         if(window.opener) {
-        //             //window.opener.csrf = document.querySelector(Q4U.options.csrfTokenSelector).content;
-        //             window.print();
-        //             setTimeout(function () {
-        //                 window.close();
-        //             }, 1500);
-        //         }
-        //     })()
-        // }
+
     }
 });

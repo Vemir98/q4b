@@ -7,149 +7,10 @@
  * Time: 22:05
  */
 
-
-//$items = [
-//    [
-//        'slug' => 'quality_control/create',
-//        'text' => 'Create Quality Control',
-//        'tooltip' => 'Create Quality Control',
-//        'icon' => 'q4bikon-tick',
-//        'resource' => 'Controller_QualityControl',
-//        'priority' => Enum_UserPriorityLevel::Project,
-//        'disabled' => false,
-//        'active' => false
-//    ],
-//    [
-//        'slug' => 'labtests',
-//        'text' => 'Lab control menu',
-//        'icon' => 'q4bikon-lab',
-//        'resource' => 'Controller_LabTests',
-//        'priority' => Enum_UserPriorityLevel::Project,
-//        'children' => [
-//            [
-//                'slug' => 'labtests/project/:projectId',
-//                'text' => 'Lab control list',
-//                'resource' => 'Controller_LabTests',
-//                'priority' => Enum_UserPriorityLevel::Project,
-//                'disabled' => false,
-//                'active' => false
-//            ],
-//            [
-//                'slug' => 'labtests/project/:projectId/elements_type',
-//                'text' => 'Elements Type',
-//                'resource' => 'Controller_LabTests',
-//                'priority' => Enum_UserPriorityLevel::Project,
-//                'disabled' => false,
-//                'active' => false
-//            ],
-//            [
-//                'slug' => 'labtests/project/:projectId/elements_list',
-//                'text' => 'Elements List',
-//                'resource' => 'Controller_LabTests',
-//                'priority' => Enum_UserPriorityLevel::Project,
-//                'disabled' => false,
-//                'active' => false
-//            ]
-//        ],
-//        'disabled' => false,
-//        'active' => false
-//    ],
-//    [
-//        'slug' => 'dashboard',
-//        'text' => 'Dashboard',
-//        'tooltip' => 'Dashboard',
-//        'icon' => 'q4bikon-uncheked',
-//        'resource' => 'Controller_Dashboard',
-//        'priority' => Enum_UserPriorityLevel::Project,
-//        'disabled' => false,
-//        'active' => false
-//    ],
-//    [
-//        'slug' => 'companies',
-//        'text' => 'Companies',
-//        'tooltip' => 'Companies',
-//        'icon' => 'q4bikon-companies',
-//        'resource' => 'Controller_Companies',
-//        'priority' => Enum_UserPriorityLevel::Corporate,
-//        'disabled' => false,
-//        'active' => false
-//    ],
-//    [
-//        'slug' => 'projects',
-//        'text' => 'Menu _Projects',
-//        'tooltip' => 'Tooltip _Projects',
-//        'icon' => 'q4bikon-project',
-//        'resource' => 'Controller_Projects',
-//        'priority' => Enum_UserPriorityLevel::Project,
-//        'children' => [
-//            [
-//                'slug' => 'projects/update/:id/tasks',
-//                'text' => 'Tasks',
-//                'resource' => 'Controller_Projects',
-//                'priority' => Enum_UserPriorityLevel::Project,
-//                'disabled' => false,
-//                'active' => false
-//            ]
-//        ],
-//        'disabled' => false,
-//        'active' => false
-//    ],
-//    [
-//        'slug' => 'plans',
-//        'text' => 'Plans',
-//        'tooltip' => 'Plans',
-//        'icon' => 'q4bikon-file',
-//        'resource' => 'Controller_Plans',
-//        'priority' => Enum_UserPriorityLevel::Project,
-//        'disabled' => false,
-//        'active' => false
-//    ],
-//    [
-//        'slug' => 'reports/list',
-//        'text' => 'Reports',
-//        'tooltip' => 'Reports',
-//        'icon' => 'q4bikon-reports',
-//        'resource' => 'Controller_Reports',
-//        'priority' => Enum_UserPriorityLevel::Project,
-//        'disabled' => false,
-//        'active' => false
-//    ],
-//    [
-//        'slug' => 'consultants',
-//        'text' => 'Menu_Consultants And Auditors',
-//        'tooltip' => 'Tooltip_Consultants And Auditors',
-//        'icon' => 'q4bikon-public',
-//        'resource' => 'Controller_Consultants',
-//        'priority' => Enum_UserPriorityLevel::Company,
-//        'disabled' => false,
-//        'active' => false
-//    ],
-//    [
-//        'slug' => 'settings',
-//        'text' => 'Settings',
-//        'tooltip' => 'Settings',
-//        'icon' => 'q4bikon-settings2',
-//        'resource' => 'Controller_Settings',
-//        'priority' => Enum_UserPriorityLevel::General,
-//        'disabled' => false,
-//        'active' => false
-//    ],
-//    [
-//        'slug' => '',
-//        'text' => 'Archive',
-//        'icon' => 'q4bikon-archive',
-//        'resource' => 'Controller_Archive',
-//        'priority' => Enum_UserPriorityLevel::Company,
-//        'disabled' => false,
-//        'active' => false
-//    ],
-//
-//];
-
 $items = [];
 
-if(Usr::role() == 'super_admin') {
-    array_push($items, [
+if(in_array(Usr::role(), ['super_admin','project_admin', 'company_admin'])) {
+    $items[] = [
         'slug' => 'dashboard',
         'href' => 'dashboard',
         'text' => 'Dashboard_new',
@@ -164,10 +25,10 @@ if(Usr::role() == 'super_admin') {
         'disabled' => false,
         'active' => false,
         'hasActiveChild' => false
-    ]);
+    ];
 }
 
-array_push($items, [
+$items[] = [
     'slug' => 'companies/{any}',
     'href' => 'companies',
     'text' => 'Companies',
@@ -244,7 +105,7 @@ array_push($items, [
     'disabled' => false,
     'active' => false,
     'hasActiveChild' => false
-]);
+];
 
 $projectRoutes = [
     'slug' => 'projects/{any}',

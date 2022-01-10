@@ -377,6 +377,10 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         $qcs->on('qualitycontrol.place_id','=','pr_places.id');
         //$filteredCraftsListQuery['join'][] = 'INNER JOIN pr_places pp ON qc.place_id = pp.id';
 
+            if($advancedData['place_number']) {
+                $qcs->and_where('pr_places.custom_number','=', $advancedData['place_number']);
+//                $filteredCraftsListQuery['and'][] = 'AND qualitycontrol.custom_number ="'.$advancedData['place_number'].'"';
+            }
         if($data['sort_by_crafts']){
             $qcs->join('cmp_crafts','INNER');//---
             $qcs->on('qualitycontrol.craft_id','=','cmp_crafts.id');//---

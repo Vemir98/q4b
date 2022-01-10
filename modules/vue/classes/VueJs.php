@@ -74,7 +74,12 @@ class VueJs
 
     public function includeCharts(){
         $this->addScript("https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js",5);
-//        $this->addScript("https://unpkg.com/vue-chartjs/dist/vue-chartjs.min.js",5);
+    }
+
+    public function includeJsPDF(){
+//        $this->addScript("https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js",5);
+        $this->addScript("https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js",5);
+        $this->addScript("https://html2canvas.hertzen.com/dist/html2canvas.min.js",5);
     }
 
     public function includeAxios(){

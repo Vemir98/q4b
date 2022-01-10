@@ -20,6 +20,7 @@ class Api_DBQualityControl
             $query = "SELECT
             qc.id,
             qc.project_id as projectId,
+            p.company_id as companyId,
             qc.object_id as objectId,
             qc.floor_id as floorId,
             qc.place_id as placeId,
@@ -46,6 +47,7 @@ class Api_DBQualityControl
             qc.approval_status as approvalStatus
             FROM quality_controls qc
             LEFT JOIN el_approvals ea ON qc.el_approval_id=ea.id
+            LEFT JOIN projects p ON qc.project_id=p.id
             WHERE qc.id=:qcId";
 
         }

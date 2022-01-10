@@ -183,7 +183,7 @@ Vue.component('reports-list', {
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
-                                <td>&nbsp;</td>
+                                <td>{{ +speciality.primarySupervision ? trans.primary_supervision : '&nbsp;' }}</td>
                                 <td>{{ speciality.craftName }}</td>
                                 <td>&nbsp;</td>
                                 <td>{{ +speciality.appropriate ? trans.appropriate : trans.not_appropriate  }}</td>
@@ -299,8 +299,9 @@ Vue.component('reports-list', {
             let crafts = encodeURIComponent(JSON.stringify(this.filters.specialityIds));
             let from = this.filters.from ? this.filters.from : '';
             let to = this.filters.to ? this.filters.to : '';
+            let primarySupervision = this.filters.primarySupervision ? encodeURIComponent(JSON.stringify('1')) : encodeURIComponent(JSON.stringify('0'));
 
-            return `?from=${from}&to=${to}&objectIds=${objects}&floorIds=${floors}&placeIds=${places}&specialityIds=${crafts}&elementIds=${elements}&statuses=${statuses}&positions=${positions}&companyId=${this.company.id}&projectId=${this.project.id}`;
+            return `?from=${from}&to=${to}&objectIds=${objects}&floorIds=${floors}&placeIds=${places}&specialityIds=${crafts}&elementIds=${elements}&statuses=${statuses}&positions=${positions}&companyId=${this.company.id}&projectId=${this.project.id}&primarySupervision=${primarySupervision}`;
         },
         goToReportDetails(report) {
             this.$emit('toReportDetails', {

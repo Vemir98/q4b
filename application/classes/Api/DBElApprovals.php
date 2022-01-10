@@ -59,6 +59,7 @@ class Api_DBElApprovals
             eac.appropriate,
             cc.name as craftName,
             eac.notice,
+            eac.primary_supervision as primarySupervision,
             u.name as updatorName,
             eac.created_at as createdAt,
             eac.created_by as createdBy,
@@ -84,6 +85,7 @@ class Api_DBElApprovals
             eac.appropriate,
             cc.name as craftName,
             eac.notice,
+            eac.primary_supervision as primarySupervision,
             u.name as updatorName,
             eac.created_at as createdAt,
             eac.created_by as createdBy,
@@ -122,7 +124,8 @@ class Api_DBElApprovals
     {
         $query = "SELECT 
             ean.user_id as userId,
-            u.device_token as deviceToken
+            u.device_token as deviceToken,
+            u.os_type as osType
             FROM el_approvals_notifications ean
             LEFT JOIN users u ON ean.user_id=u.id
             WHERE ean.ell_app_id=:ellAppId";
@@ -208,6 +211,10 @@ class Api_DBElApprovals
             $to = $filters['to'];
             $query .= ' AND ea.created_at<=:to';
         }
+        if(isset($filters['primarySupervision']) && $filters['primarySupervision'] === '1'){
+            $primarySupervision = $filters['primarySupervision'];
+            $query .= ' AND eac.primary_supervision=:primarySupervision';
+        }
         $query .= ' ORDER BY ea.created_at DESC';
 
         if($paginate) {
@@ -226,6 +233,7 @@ class Api_DBElApprovals
         if(isset($positions)) $query->param(':positions', $positions);
         if(isset($from)) $query->param(':from', $from);
         if(isset($to)) $query->param(':to', $to);
+        if(isset($primarySupervision)) $query->param(':primarySupervision', $primarySupervision);
 
         if($paginate) {
             $query->parameters(array(
@@ -297,6 +305,10 @@ class Api_DBElApprovals
             $to = $filters['to'];
             $query .= ' AND ea.created_at<='.$filters['to'];
         }
+        if(isset($filters['primarySupervision']) && $filters['primarySupervision'] === '1'){
+            $primarySupervision = $filters['primarySupervision'];
+            $query .= ' AND eac.primary_supervision=:primarySupervision';
+        }
         $query .= ' ORDER BY ea.created_at DESC';
 
         $query =  DB::query(Database::SELECT, $query);
@@ -311,6 +323,7 @@ class Api_DBElApprovals
         if(isset($positions)) $query->param(':positions', $positions);
         if(isset($from)) $query->param(':from', $from);
         if(isset($to)) $query->param(':to', $to);
+        if(isset($primarySupervision)) $query->param(':primarySupervision', $primarySupervision);
 
         $query->parameters(array(
             ':companyId' => $filters['companyId'],
@@ -526,4 +539,26 @@ class Api_DBElApprovals
 
         return $query->execute()->as_array();
     }
+
+    public static function getProjectsElApprovalsByAppropriate($filters, $appropriate) : array
+    {
+        $query = "SELECT 
+            ea.status,
+            COUNT(DISTINCT ea.id) as count
+            FROM el_approvals ea
+            WHERE ea.project_id IN (:projectIds) AND (ea.created_at>=:from AND ea.created_at<=:to) AND ea.appropriate=:appropriate
+            GROUP BY ea.status";
+
+        $query =  DB::query(Database::SELECT, $query);
+
+        $query->parameters(array(
+            ':projectIds' => DB::expr(implode(',',$filters['projectIds'])),
+            ':from' => $filters['from'],
+            ':to' => $filters['to'],
+            ':appropriate' => $appropriate
+        ));
+
+        return $query->execute()->as_array();
+    }
+
 }

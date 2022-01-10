@@ -750,6 +750,8 @@ Vue.component('labtest-update', {
             let data = JSON.parse(JSON.stringify(this.ticket));
             data.status = this.labtest.status;
             data.images = this.images;
+            data.freshStrength = data.fresh_strength;
+            data.rollStrength = data.roll_strength;
 
             let url = `/projects/${this.project.id}/labtests/${this.labtest.id}/tickets`;
             this.editing = true;

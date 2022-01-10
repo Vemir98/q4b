@@ -170,6 +170,7 @@ FROM pr_objects po
   pp.created_at AS createdAt,
   u.email AS createdBy,
   pp.profession_id AS professionId,
+  cp.status as professionStatus,
   u1.email AS updatedBy,
   pp.updated_at AS updatedAt,
   pp.approved_by AS approvedBy,
@@ -181,6 +182,7 @@ FROM pr_plans pp
 INNER JOIN users u ON pp.created_by = u.id
 LEFT JOIN users u1 ON pp.updated_by = u1.id
 LEFT JOIN pr_plans_files ppf ON pp.id = ppf.plan_id
+LEFT JOIN cmp_professions cp ON pp.profession_id = cp.id
 LEFT JOIN files f ON ppf.file_id = f.id
 LEFT JOIN files_custom_names fcn ON fcn.file_id = f.id
 LEFT JOIN pr_plans_file_aliases_files pfa ON f.id = pfa.file_id

@@ -1,6 +1,6 @@
 Vue.component('report-item', {
     template: `
-    <section class='q4b-approve-el approve-el-view'>
+    <section class='q4b-approve-el approve-el-view new-styles'>
         <div v-if="showLoader" class="loader_backdrop_vue">
             <div class="loader"></div>
         </div>
@@ -151,6 +151,22 @@ Vue.component('report-item', {
                             <span class="approve-elv-report-status flex-start">
                                 <span class="approve-elv-report-status-title">{{ trans.status }}</span>
                                 <span class="approve-elv-report-status-value">{{ +speciality.appropriate ? trans.appropriate : trans.not_appropriate }}</span>
+                                <div class="filter-item-checkbox">
+                                    <span class="check-task">
+                                        <input 
+                                            type="checkbox" 
+                                            class="el-app-checkbox" 
+                                            :class="{'disabled': ((userRole !== 'super_admin') || (!canUpdate))}" 
+                                            :checked="+speciality.primarySupervision" 
+                                            @change="changePrimarySupervision(speciality)" 
+                                            :disabled="((userRole !== 'super_admin') || (!canUpdate))"
+                                        >
+                                        <span class="checkboxImg" :class="{'disabled': ((userRole !== 'super_admin') || (!canUpdate))}"></span>
+                                    </span>
+                                    <div class="approve-elv-report-status-title flex-between">
+                                        {{ trans.primary_supervision }}
+                                    </div>
+                                </div>
                             </span>
                             <span 
                                 class="approve-elv-report-view" 
@@ -376,7 +392,7 @@ Vue.component('report-item', {
         report: {
             handler() {
                 this.report.specialities.forEach((speciality, index) => {
-                    this.canUpdateSpeciality[index] = (speciality.canUpdateNote || speciality.canUpdateSignatures || speciality.canUpdateTaskStatuses)
+                    this.canUpdateSpeciality[index] = (speciality.canUpdateNote || speciality.canUpdateSignatures || speciality.canUpdateTaskStatuses || speciality.canUpdatePrimarySupervision)
                     this.report.updated = false;
                 })
             },
@@ -599,6 +615,7 @@ Vue.component('report-item', {
                     this.report.specialities[specialityIndex].canUpdateSignatures = false;
                     this.report.specialities[specialityIndex].canUpdateNote = false;
                     this.report.specialities[specialityIndex].canUpdateTaskStatuses = false;
+                    this.report.specialities[specialityIndex].canUpdatePrimarySupervision = false;
 
                     if(this.checkInitialReportAllTasksEnabled()) {
                         this.initialReport.appropriate = "1";
@@ -725,6 +742,29 @@ Vue.component('report-item', {
             })[0];
             console.log('this.selectedStatus', this.selectedStatus)
         },
+        changePrimarySupervision(speciality) {
+            if((this.userRole !== 'super_admin') || (!this.canUpdate)) return false;
+
+            const specialityIndex = this.initialReport.specialities.findIndex(spec => +spec.id === +speciality.id);
+
+
+            switch (speciality.primarySupervision) {
+                case "0":
+                    speciality.primarySupervision = "1";
+                    break;
+                case "1":
+                    speciality.primarySupervision = "0";
+                    break;
+            }
+
+            if(this.initialReport.specialities[specialityIndex].primarySupervision !== speciality.primarySupervision) {
+                speciality.canUpdatePrimarySupervision = true;
+                this.report.updated = true;
+            } else {
+                speciality.canUpdatePrimarySupervision = false;
+                this.report.updated = false;
+            }
+        }
     },
     mounted() {
         this.signaturePad = new SignaturePad(this.$refs['signaturePad'], {

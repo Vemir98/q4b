@@ -69,6 +69,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                         'el_app_id' => $elApprovalId,
                         'craft_id' => $speciality['id'],
                         'notice' => $speciality['note'] ?: null,
+                        'primary_supervision' => $speciality['primarySupervision'] ?: 0,
                         'created_at' => time(),
                         'created_by' => Auth::instance()->get_user()->id,
                         'updated_at' => time(),
@@ -219,6 +220,8 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                     'deletedSignatures',
                     'tasks'
                 ]);
+            Kohana::$log->add(Log::ERROR,'AZAZAZA'.  json_encode($clientData, JSON_PRETTY_PRINT));
+
 
             if(!empty($clientData['specialities'])) {
                 foreach ($clientData['specialities'] as $speciality) {
@@ -236,7 +239,8 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                     Database::instance()->begin();
 
                     $queryData = [
-                        'notice' => $speciality['notice'] ?: ""
+                        'notice' => $speciality['notice'] ?: "",
+                        'primary_supervision' => $speciality['primarySupervision']
                     ];
 
                     DB::update('el_approvals_crafts')
@@ -437,6 +441,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
         } catch (Exception $e){
             Database::instance()->rollback();
 //            throw API_Exception::factory(500,'Operation Error');
+            Kohana::$log->add(Log::ERROR, $e->getMessage());
             echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$e->getMessage()]); echo "</pre>"; exit;
         }
     }
@@ -505,6 +510,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                     'managerStatuses',
                     'statuses',
                     'positions',
+                    'primarySupervision'
                 ]);
 
             $filters['from'] = $_POST['from'] ? DateTime::createFromFormat('d/m/Y H:i',$_POST['from'] . ' 00:00')->getTimestamp() : null;
@@ -1010,6 +1016,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
             'specialityIds' => json_decode($_GET['specialityIds']),
             'companyId' => json_decode($_GET['companyId']),
             'positions' => json_decode($_GET['positions']),
+            'primarySupervision' => json_decode($_GET['primarySupervision'])
         ];
 
         $filters['from'] = $_GET['from'] ? DateTime::createFromFormat('d/m/Y H:i',$_GET['from'] . ' 00:00')->getTimestamp() : null;
@@ -1145,7 +1152,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                         '',
                         '',
                         '',
-                        '',
+                        $speciality['primarySupervision'] ? __('primary_supervision') : '',
                         $speciality['craftName'],
                         '',
                         $speciality['appropriate'] ? __('appropriate') : __('not_appropriate'),

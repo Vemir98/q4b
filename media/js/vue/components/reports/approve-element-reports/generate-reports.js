@@ -413,6 +413,20 @@ Vue.component('generate-reports', {
                         </multiselect>
                     </div>
                 </div>
+                <div class="filter-item-checkbox">
+                    <span class="check-task">
+                        <input type="checkbox" v-model="primarySupervision">
+                        <span class="checkboxImg"></span>
+                    </span>
+                    <div class="filter-item-label flex-between">
+                        {{ trans.primary_supervision }}
+                    </div>
+                </div>
+<!--                    <div class="filter-item-label flex-between">-->
+<!--                        {{ trans.primary_supervision }}-->
+<!--                    </div>-->
+<!--                    <input type="checkbox" class="el-app-checkbox" v-model="primarySupervision">-->
+<!--                </div>-->
                 <div class="filter-buttons">
                     <button 
                         class="filter-button generate"
@@ -459,6 +473,7 @@ Vue.component('generate-reports', {
             selectedManagerStatuses: [],
             selectedStatuses: [],
             selectedPositions: [],
+            primarySupervision: false,
             companies: [],
             cmpProjects: [],
             project: [],
@@ -813,7 +828,8 @@ Vue.component('generate-reports', {
                selectedManagerStatuses: this.selectedManagerStatuses,
                selectedStatuses: this.selectedStatuses,
                selectedPositions: this.selectedPositions,
-               time: this.time
+               time: this.time,
+               primarySupervision: this.primarySupervision
            }
         },
         getFiltersFromUrl() {
@@ -830,7 +846,8 @@ Vue.component('generate-reports', {
                 statuses: urlParams.get('statuses') ? JSON.parse(urlParams.get('statuses')) : null,
                 positions: urlParams.get('positions') ? JSON.parse(urlParams.get('positions')) : null,
                 from: urlParams.get('from') ? urlParams.get('from') : null,
-                to: urlParams.get('to') ? urlParams.get('to') : null
+                to: urlParams.get('to') ? urlParams.get('to') : null,
+                primarySupervision: urlParams.get('primarySupervision') ? urlParams.get('primarySupervision') : false
             }
         },
         generateReports() {
@@ -864,6 +881,7 @@ Vue.component('generate-reports', {
             this.selectedFloors = this.filters.selectedFloors
             this.selectedManagerStatuses = this.filters.selectedManagerStatuses
             this.selectedStatuses = this.filters.selectedStatuses
+            this.primarySupervision = this.filters.primarySupervision
 
             this.selectedPositions = this.filters.selectedPositions
             this.time = this.filters.time

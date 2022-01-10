@@ -147,7 +147,6 @@ return [
     'Building(s)'=>'בניין',
     'Parking(s)'=>'חניה',
     'Other'=>'אחר',
-    'Tasks'=>'מערך בדיקות',
     'Property'=>'מבנה',
     'Plans'=>'תוכניות',
     'Certifications'=>'אישורים/פתיחת מלאכות',
@@ -169,6 +168,7 @@ return [
     'pr_stage_16'=>'סטטוס עבודות לביצוע',
     'pr_stage_17'=>'טרום מסירות יזם',
     'pr_stage_18'=>'מסירות יזם',
+    'Tasks'=>'מערך בדיקות',
     'Project images'=>'תמונות הפרויקט',
     'Main Image'=>'תמונה ראשי',
     'Change main image'=>'החלפת תמונה ראשית',
@@ -983,5 +983,6 @@ return [
     'three_years' => 'שלוש שנים',
     'four_years' => 'ארבע שנים',
     'resend' => 'שלח שוב',
+    'primary_supervision' => 'פיקוח עליון',
     ''=>'',
 ];

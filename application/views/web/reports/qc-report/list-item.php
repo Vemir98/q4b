@@ -110,7 +110,7 @@
         </span>
 
         <span class="reports-prop-desc">
-            <i class="q4bikon-N"></i>
+            <i class="q4bikon-room-key"></i>
             <span class="reports-prop-res"><?
                 $placeNumber = !empty($q->place->custom_number) ? $q->place->custom_number : $q->place->number;
                 if($q->place->loaded()) echo  $placeNumber. ' ' . "<i class='q4bikon-".$q->place->type."' style='margin: 0 5px;'></i> ";
@@ -119,7 +119,7 @@
         </span>
 
         <span class="reports-prop-desc">
-            <i class="q4bikon-room-key"></i>
+            <i class="q4bikon-N"></i>
             <span class="reports-prop-res"><?=$q->space->type->name?> </span>
         </span>
 

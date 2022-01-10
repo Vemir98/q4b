@@ -301,7 +301,7 @@ class Controller_Api_Acceptance extends HDVP_Controller_API
             Database::instance()->commit();
             Queue::enqueue('DeliveryReportsPDF','Job_Report_DeliveryReportsPDF',[
                 'report' => $report->pk(),
-            ],\Carbon\Carbon::now()->addSeconds(30)->timestamp);
+            ],\Carbon\Carbon::now()->addSeconds(300)->timestamp);
         }catch (ORM_Validation_Exception $e){
             Database::instance()->rollback();
             Kohana::$log->add(Log::ERROR, '[ERROR CREATE PRE_DELIVERY (ORM_Validation_Exception)]: ' . $e->getMessage());

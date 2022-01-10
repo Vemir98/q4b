@@ -150,7 +150,6 @@ return [
     'Building(s)'=>'Building(s)',
     'Parking(s)'=>'Parking(s)',
     'Other'=>'Other',
-    'Tasks'=>'Tasks',
     'Property'=>'Structure',
     'Plans'=>'Plans',
     'Certifications'=>'Certifications',
@@ -172,6 +171,7 @@ return [
     'pr_stage_16'=>'Status of upcoming works',
     'pr_stage_17'=> 'Pre-delivery entrepreneur',
     'pr_stage_18'=> 'Delivery entrepreneur',
+    'Tasks'=>'Tasks',
     'Project images'=>'Project images',
     'Main Image'=>'Main Image',
     'Change main image'=>'Change main image',
@@ -983,5 +983,6 @@ return [
     'three_years' => 'Three years',
     'four_years' => 'Four years',
     'resend' => 'Resend',
+    'primary_supervision' => 'Primary supervision',
     ''=>'',0
 ];
