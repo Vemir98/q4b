@@ -581,7 +581,7 @@ class Controller_Projects extends HDVP_Controller_Template
 
     public function action_assign_users(){
         $this->_checkForAjaxOrDie();
-        $this->project = ORM::factory('Project',(int)$this->request->param('id'));
+        $this->project = ORM::factory('Project',(int)$this->request->param('projectId'));
         if( ! $this->project->loaded() OR !$this->_user->canUseProject($this->project)){
             throw new HTTP_Exception_404;
         }

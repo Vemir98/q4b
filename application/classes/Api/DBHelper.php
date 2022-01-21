@@ -162,6 +162,8 @@ FROM pr_objects po
   pfa.image AS imagePath,
   pfa.mobile AS mobilePath,
   pp.place_id AS placeId,
+  ppl.name as placeName,
+  ppl.number as placeNumber,
   pp.edition,
   pp.scope,
   pp.description,
@@ -170,6 +172,7 @@ FROM pr_objects po
   pp.created_at AS createdAt,
   u.email AS createdBy,
   pp.profession_id AS professionId,
+  cp.name as professionName,
   cp.status as professionStatus,
   u1.email AS updatedBy,
   pp.updated_at AS updatedAt,
@@ -184,6 +187,7 @@ LEFT JOIN users u1 ON pp.updated_by = u1.id
 LEFT JOIN pr_plans_files ppf ON pp.id = ppf.plan_id
 LEFT JOIN cmp_professions cp ON pp.profession_id = cp.id
 LEFT JOIN files f ON ppf.file_id = f.id
+LEFT JOIN pr_places ppl ON pp.place_id = ppl.id
 LEFT JOIN files_custom_names fcn ON fcn.file_id = f.id
 LEFT JOIN pr_plans_file_aliases_files pfa ON f.id = pfa.file_id
 
@@ -202,7 +206,7 @@ WHERE pp.id IN (SELECT max(pp1.id) id FROM pr_plans pp1 WHERE pp1.project_id='.$
 
     public static function getPlansFloors($planIds)
     {
-        return DB::query(Database::SELECT,'SELECT floor_id id, plan_id FROM pr_floors_pr_plans pfpp WHERE pfpp.plan_id IN ('.implode(',',$planIds).')')->execute()->as_array();
+        return DB::query(Database::SELECT,'SELECT pfpp.floor_id as id, pfpp.plan_id, pf.custom_name as floorName, pf.number as floorNumber FROM pr_floors_pr_plans pfpp LEFT JOIN pr_floors pf ON pfpp.floor_id = pf.id WHERE pfpp.plan_id IN ('.implode(',',$planIds).')')->execute()->as_array();
     }
 
     public static function getPlanFloors($planId)

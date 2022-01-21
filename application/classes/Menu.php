@@ -30,6 +30,7 @@ class Menu
             'labtests/project/:projectId/elements',
         ],
         'labtests' => [
+            'labtests/create/:projectId',
             'labtests/project/:projectId',
             'labtests/project/:projectId/edit/:id'
         ],

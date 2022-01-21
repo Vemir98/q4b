@@ -10,7 +10,7 @@
 class Controller_LabTests extends HDVP_Controller_Template
 {
     protected $_actions_perms = [
-        'index,edit,project,elements_type,elements_list' => [
+        'index,edit,project,elements_type,elements_list,create' => [
             'GET' => 'read'
         ],
     ];
@@ -20,6 +20,71 @@ class Controller_LabTests extends HDVP_Controller_Template
     public function before()
     {
         parent::before();
+
+    }
+
+    public function action_create() {
+        $projectId = $this->getUIntParamOrDie($this->request->param('projectId'));
+        $translations = [
+            'create_lab_control' => __('Create Lab Control'),
+            'structure' => __('Structure'),
+            'select_structure' => __('Select_structure'),
+            'floor' => __('Floor'),
+            'select_floor' => __('Select_floor'),
+            'place' => __('Place'),
+            'select_place' => __('Select_place'),
+            'element' => __('Element_item'),
+            'select_element' => __('Select element'),
+            'craft' => __('Craft'),
+            'select_craft' => __('Select_specialty'),
+            'sample_number' => __('Sample number (external)'),
+            'description' => __('Description'),
+            'essence_of_work' => __('Essence of work/standard'),
+            'strength_after' => __('Strength after/result'),
+            'lab_certificate' => __('Lab certificate'),
+            'create_date' => __('Create_Date'),
+            'delivery_certificates' => __('Delivery certificates'),
+            'add' => __('Add'),
+            'attached_files' => __('Attached files'),
+            'list_of_files' => __('list_of_files'),
+            'uploaded' => __('uploaded'),
+            'close' => __('Close'),
+            'save' => __('Save'),
+            'create' => __('Create'),
+            'enter_essence_of_work' => __('Enter essence of work/standard'),
+            'enter_certificate_number' => __('Enter certificate number'),
+            'enter_delivery_certificate' => __('Enter delivery certificate'),
+            'certificates' => __('Certificates'),
+            'notes' => __('Notes'),
+            'fresh_concrete_strength' => __('Fresh concrete strength'),
+            'roll_strength' => __('Roll strength'),
+            'amount_of_volume' => __('Amount of volume'),
+            'type' => __('Type'),
+            'sediment' => __('Sediment'),
+            'enter_the_amount_of_volume' => __('Enter the amount of volume'),
+            'enter_the_type' => __('Enter the type'),
+            'enter_the_sediment' => __('Enter the sediment'),
+            'enter_the' => __('Enter the'),
+            'plans' => __('Plans'),
+            'name_type' => __('Name/Type'),
+            'profession' => __('Profession'),
+            'place_name_number' => __('Element number'),
+            'edition' => __('Edition'),
+            'date' => __('Date'),
+            'image' => __('Image')
+        ];
+
+        VueJs::instance()->addComponent('labtests/create/create');
+        VueJs::instance()->addComponent('labtests/create/delivery-certificates-section');
+        VueJs::instance()->addComponent('labtests/create/certificates-section');
+        VueJs::instance()->addComponent('labtests/create/plans-section');
+        VueJs::instance()->includeMultiselect();
+        VueJs::instance()->includeDateTimePiker();
+
+        $this->template->content = View::make('labtests/create', [
+            'translations' => $translations,
+            'projectId' => $projectId
+        ]);
 
     }
 

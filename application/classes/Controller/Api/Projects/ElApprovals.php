@@ -329,11 +329,6 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                 }
 
                 $this->updateElementApproval($elApprovalId);
-                $f = fopen(DOCROOT.'testNotification.txt', 'a');
-                if($f) {
-                    fputs($f, '[zapros index.put if]'."\n");
-                }
-                fclose($f);
 
             } else {
                 $elApprovalCraftId = $clientData['id'];
@@ -425,11 +420,6 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                 }
 
                 $this->updateElementApproval($elApprovalId);
-                $f = fopen(DOCROOT.'testNotification.txt', 'a');
-                if($f) {
-                    fputs($f, '[zapros index.put else]'."\n");
-                }
-                fclose($f);
                 $this->updateElementApprovalCraft($clientData['id']);
 
                 Database::instance()->commit();
@@ -440,9 +430,9 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
             ];
         } catch (Exception $e){
             Database::instance()->rollback();
-//            throw API_Exception::factory(500,'Operation Error');
             Kohana::$log->add(Log::ERROR, $e->getMessage());
-            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$e->getMessage()]); echo "</pre>"; exit;
+            throw API_Exception::factory(500,'Operation Error');
+//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$e->getMessage()]); echo "</pre>"; exit;
         }
     }
 

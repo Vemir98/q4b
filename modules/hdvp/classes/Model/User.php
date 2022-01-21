@@ -236,7 +236,7 @@ class Model_User extends Model_Auth_User
         return array(
             'username' => array(
                 array('not_empty'),
-                array('max_length', array(':value', 32)),
+                array('max_length', array(':value', 50)),
                 array(array($this, 'unique'), array('username', ':value')),
             ),
             'password' => array(

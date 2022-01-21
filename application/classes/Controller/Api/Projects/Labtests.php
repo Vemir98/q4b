@@ -1164,7 +1164,6 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
      */
     public function action_bound_craft_params_get(){
         $id = $this->getUIntParamOrDie($this->request->param('id'));
-//        die('mtav');
         $fields = Arr::get($_GET,'fields');
         if(!empty($fields)){
             $fields = explode(',',$fields);

@@ -343,6 +343,7 @@ class Controller_Api_Projects extends HDVP_Controller_API
                     'id' => $plan['id'],
                     'name' => $plan['name'],
                     'file' => $this->planFileLink($plan),
+                    'fileOriginalName' => implode('/',[$plan['filePath'],$plan['fileName']]),
                     'createdAt' => $plan['createdAt'],
                     'createdBy' => $plan['createdBy'],
                     'updatedAt' => $plan['updatedAt'],
@@ -355,8 +356,11 @@ class Controller_Api_Projects extends HDVP_Controller_API
                     'edition' => $plan['edition'],
                     'scale' => $plan['scale'],
                     'placeId' => $plan['placeId'],
+                    'placeName' => $plan['placeName'],
+                    'placeNumber' => $plan['placeNumber'],
                     'objectId' => $plan['objectId'],
                     'professionId' => $plan['professionId'],
+                    'professionName' => $plan['professionName'],
                     'professionStatus' => $plan['professionStatus'],
                     'status' => $plan['status'],
                     'crafts' => [],
@@ -376,7 +380,9 @@ class Controller_Api_Projects extends HDVP_Controller_API
             if(count($floors)){
                 foreach ($floors as $floor){
                     $planItems[$floor['plan_id']]['floors'][] = [
-                        'id' => $floor['id']
+                        'id' => $floor['id'],
+                        'name' => $floor['floorName'],
+                        'number' => $floor['floorNumber']
                     ];
                 }
             }
@@ -456,10 +462,10 @@ class Controller_Api_Projects extends HDVP_Controller_API
 //        if(isset($clientData['element_id'])) {
             if ((empty($clientData['element_id']) or !(int)$clientData['element_id'])) {
                 unset($clientData['element_id']);
-                Kohana::$log->add(Log::ERROR, '[unset]: ');
+//                Kohana::$log->add(Log::ERROR, '[unset]: ');
 
             } else {
-                Kohana::$log->add(Log::ERROR, '[unset che]: ');
+//                Kohana::$log->add(Log::ERROR, '[unset che]: ');
 
                 $clientData['element_id'] = (int)$clientData['element_id'];
             }
@@ -585,6 +591,8 @@ class Controller_Api_Projects extends HDVP_Controller_API
 
 //                }
 //            }
+            Kohana::$log->add(Log::ERROR, '[QC-n SARQVEC]');
+
             $fs->sendLazyTasks();
         }catch (ORM_Validation_Exception $e){
             Database::instance()->rollback();

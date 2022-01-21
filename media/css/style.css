@@ -16684,6 +16684,12 @@ header .header_bottom .header_create_company .header_add_company {
     background-size: 100% 100%;
     position: relative;
   }
+  #labtests-create table td {
+    padding: 14px 10px !important;
+  }
+  #labtests-create table th {
+    padding: 14px 10px !important;
+  }
 }
 
 @media (max-width: 480px) {
@@ -17291,6 +17297,12 @@ header .header_bottom .header_create_company .header_add_company {
   }
   .settings-tasks-table .multi-select-box .select-imitation-title {
     width: 150px;
+  }
+  #labtests-create table td {
+    padding: 14px 5px !important;
+  }
+  #labtests-create table th {
+    padding: 14px 5px !important;
   }
 }
 
@@ -21029,7 +21041,7 @@ html.rtl .labtest_filters1 .labtest_filter_input:nth-last-of-type(1), .labtest_f
   margin-right: 32px;
 }
 
-.ltest_info_select input, .ltest_info_select select {
+.ltest_info_select input, .ltest_info_select select, #labtests-create .ltest-input input {
   width: 100%;
   border: none;
   border-bottom: 1px solid #0000003d;
@@ -21038,6 +21050,150 @@ html.rtl .labtest_filters1 .labtest_filter_input:nth-last-of-type(1), .labtest_f
   font-size: 16px;
   line-height: 22px;
   color: #9BA4B8;
+}
+
+#labtests-create .ltest-input input {
+  min-height: 48px;
+}
+
+#labtests-create .ltest-input, #labtests-create .filter-item.datepicker {
+  min-width: 277px;
+}
+
+#labtests-create .ltest-input-label {
+  font-size: 12px;
+  line-height: 22px;
+  letter-spacing: -0.0241176em;
+  color: rgba(82, 95, 127, 0.5);
+}
+
+#labtests-create .labtest-delivery-certificates-header {
+  display: flex;
+  align-items: flex-end;
+}
+
+
+#labtests-create .labtest-certificates-text-area-fields {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 30px;
+}
+
+#labtests-create .labtest_edit_textarea textarea {
+  width: 100%;
+}
+
+#labtests-create .labtest-certificates-text-area-field {
+  width: 40%;
+}
+
+.ltr #labtests-create .labtest-certificates-text-area-field {
+  margin-right: 20px;
+}
+
+.rtl #labtests-create .labtest-certificates-text-area-field {
+  margin-left: 20px;
+}
+
+#labtests-create .labtest-certificates-title,
+#labtests-create .labtest-plans-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #4B5371;
+  line-height: 22px;
+}
+
+#labtests-create .labtest-plans-title {
+  margin-bottom: 15px;
+}
+
+#labtests-create .labtest-delivery-certificates-list {
+  width: 100%;
+  height: 200px;
+  border: 1px solid #0000003d;
+  margin-top: 20px;
+  border-radius: 4px;
+  padding: 5px 0;
+  overflow: hidden;
+  overflow-y: auto;
+}
+
+#labtests-create .files-section {
+  display: flex;
+  align-items: flex-start;
+}
+
+#labtests-create .ltest-add-btn {
+  color: #F99C19;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.rtl #labtests-create .ltest-add-btn {
+  margin-right: 20px;
+}
+
+.ltr #labtests-create .ltest-add-btn {
+  margin-left: 20px;
+}
+
+#labtests-create .labtest-delete-icon {
+  background-image: url('../img/close_red.png');
+  background-size: contain;
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+}
+
+.ltr #labtests-create .labtest-delivery-certificates {
+  margin-right: 60px;
+  width: 327px;
+}
+
+.rtl #labtests-create .labtest-delivery-certificates {
+  margin-left: 24px;
+}
+
+#labtests-create .labtest-delivery-certificates-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 15px;
+  align-items: center;
+}
+
+/*#labtests-create .filter-item .multiselect {*/
+/*  min-height: auto !important;*/
+/*}*/
+
+#labtests-create .labtest-delivery-certificate-text {
+  width: 277px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#labtests-create .certificates-section {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+#labtests-create .labtest-plans-table {
+  max-height: 270px;
+  overflow-y: auto;
+}
+
+#labtests-create .labtest-plans-table thead {
+  position: sticky;
+  top: 0;
+}
+
+#labtests-create table td {
+  padding: 14px 20px;
+}
+
+html.rtl #labtests-create .multiselect__placeholder {
+  width: 100%;
+  text-align: right;
 }
 
 .ltest_info_plan {
@@ -21776,6 +21932,9 @@ html.rtl #elements-type .multiselect__option, html.rtl #labtests-projects .multi
 
 .ltest_info_select input::placeholder,
 .ltest_main_input input::placeholder {
+  font-size: 16px;
+}
+#labtests-create .ltest-input input::placeholder {
   font-size: 16px;
 }
 .ltest_main_info .help.is-danger{

@@ -156,12 +156,12 @@ Vue.component('report-item', {
                                         <input 
                                             type="checkbox" 
                                             class="el-app-checkbox" 
-                                            :class="{'disabled': ((userRole !== 'super_admin') || (!canUpdate))}" 
+                                            :class="{'disabled': ((!hasPermission) || (!canUpdate))}" 
                                             :checked="+speciality.primarySupervision" 
                                             @change="changePrimarySupervision(speciality)" 
-                                            :disabled="((userRole !== 'super_admin') || (!canUpdate))"
+                                            :disabled="((!hasPermission) || (!canUpdate))"
                                         >
-                                        <span class="checkboxImg" :class="{'disabled': ((userRole !== 'super_admin') || (!canUpdate))}"></span>
+                                        <span class="checkboxImg" :class="{'disabled': ((!hasPermission) || (!canUpdate))}"></span>
                                     </span>
                                     <div class="approve-elv-report-status-title flex-between">
                                         {{ trans.primary_supervision }}
@@ -386,6 +386,10 @@ Vue.component('report-item', {
         },
         canUpdateReportNote() {
             return this.initialReport.notice !== this.report.notice
+        },
+        hasPermission() {
+            let roles = ['super_admin', 'corporate_admin', 'corporate_infomanager', 'company_admin', 'company_infomanager', 'company_manager', 'general_admin', 'general_infomanager', 'project_admin'];
+            return (roles.includes(this.userRole))
         }
     },
     watch: {
@@ -743,7 +747,7 @@ Vue.component('report-item', {
             console.log('this.selectedStatus', this.selectedStatus)
         },
         changePrimarySupervision(speciality) {
-            if((this.userRole !== 'super_admin') || (!this.canUpdate)) return false;
+            if((!this.hasPermission) || (!this.canUpdate)) return false;
 
             const specialityIndex = this.initialReport.specialities.findIndex(spec => +spec.id === +speciality.id);
 

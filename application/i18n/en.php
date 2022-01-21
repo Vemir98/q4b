@@ -567,7 +567,7 @@ return [
     'Select_place'=>'Select place',
     'Select_space'=>'Select space',
 
-    'Select_specialty'=>'Select specialty',
+    'Select_specialty'=>'Select speciality',
     'Select_plan'=>'Select plan',
     'Tap_to_select'=>'Tap to select',
     'Add_description'=>'Add description',

@@ -52,6 +52,13 @@ Route::set('apiJsonV2.entities.labtests_projects','api/json/v2(/<appToken>)/proj
         'action' => 'labtests_projects_get'
     ]);
 
+Route::set('apiJsonV2.entities.plans','api/json/v2(/<appToken>)/projects/entities/plans/<id>')
+    ->defaults([
+        'controller' => 'Projects',
+        'directory' => 'Api',
+        'action' => 'plans'
+    ]);
+
 Route::set('apiJsonV2.projects.entities.default','api/json/v2(/<appToken>)/projects(/<projectId>)/entities/<action>(/<id>)(/page(/<page>))',['appToken' => '[a-f0-9]{32}','projectId' => '[0-9]+','action' => '[a-z0-9_]+', 'id' => '[0-9]+'])
     ->filter(function($route, $params, $request)
     {
@@ -63,15 +70,3 @@ Route::set('apiJsonV2.projects.entities.default','api/json/v2(/<appToken>)/proje
         'controller' => 'Entities',
         'directory' => 'Api/Projects',
     ]);
-
-//Route::set('apiJsonV2.projects.entities.default','api/json/v2(/<appToken>)/projects(/<projectId>)/entities/<action>(/<id>)(/page(/<page>))',['appToken' => '[a-f0-9]{32}','projectId' => '[0-9]+','action' => '[a-z0-9_]+', 'id' => '[0-9]+'])
-//    ->filter(function($route, $params, $request)
-//    {
-//        if(empty($params['action'])) return false;
-//        $params['action'] = $params['action'].'_'.strtolower($request->method());
-//        return $params;
-//    })
-//    ->defaults([
-//        'controller' => 'Entities',
-//        'directory' => 'Api/Projects',
-//    ]);

@@ -209,18 +209,18 @@ $projectRoutes['children'][] = [
     'priority' => Enum_UserPriorityLevel::Project,
     'deepLevel' => 2,
     'children' => [
-//        [
-//            'slug' => 'labtests/create/:projectId',
-//            'href' => 'labtests/create/:projectId',
-//            'text' => 'Create Lab Control',
-//            'resource' => 'Controller_LabTests',
-//            'priority' => Enum_UserPriorityLevel::Project,
-//            'deepLevel' => 3,
-//            'showIn' => Menu::CATEGORIES['labtests'],
-//            'disabled' => false,
-//            'active' => false,
-//            'hasActiveChild' => false
-//        ],
+        [
+            'slug' => 'labtests/create/:projectId',
+            'href' => 'labtests/create/:projectId',
+            'text' => 'Create Lab Control',
+            'resource' => 'Controller_LabTests',
+            'priority' => Enum_UserPriorityLevel::Project,
+            'deepLevel' => 3,
+            'showIn' => Menu::CATEGORIES['labtests'],
+            'disabled' => false,
+            'active' => false,
+            'hasActiveChild' => false
+        ],
         [
             'slug' => 'labtests/project/:projectId',
             'href' => 'labtests/project/:projectId',
