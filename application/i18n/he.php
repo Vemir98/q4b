@@ -878,7 +878,7 @@ return [
     'Create Lab Control' => 'יצירת בדיקת מעבדה',
     'Are you sure you want to delete this voice message?' => 'האם אתה בטוח שברצונך למחוק את ההודעה הקולית הזו?',
     'Lab certificate' => 'מס. ת. מעבדה/ דו"ח',
-    'Sample number (external)' => 'מספר בדיקה(חיצוני)',
+    'Sample number (external)' => 'ת.נטילה/ת.שדה',
     'Enter certificate number' => 'הזן מספר תעודה',
     'Delivery certificates' => 'תעודות משלוח',
     'Amount of volume' => 'כמות נפח',

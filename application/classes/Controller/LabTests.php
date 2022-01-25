@@ -29,7 +29,7 @@ class Controller_LabTests extends HDVP_Controller_Template
             'create_lab_control' => __('Create Lab Control'),
             'structure' => __('Structure'),
             'select_structure' => __('Select_structure'),
-            'floor' => __('Floor'),
+            'floor' => __('Floor/Level'),
             'select_floor' => __('Select_floor'),
             'place' => __('Place'),
             'select_place' => __('Select_place'),
@@ -54,7 +54,7 @@ class Controller_LabTests extends HDVP_Controller_Template
             'enter_essence_of_work' => __('Enter essence of work/standard'),
             'enter_certificate_number' => __('Enter certificate number'),
             'enter_delivery_certificate' => __('Enter delivery certificate'),
-            'certificates' => __('Certificates'),
+            'certificate' => __('Certificate'),
             'notes' => __('Notes'),
             'fresh_concrete_strength' => __('Fresh concrete strength'),
             'roll_strength' => __('Roll strength'),
@@ -71,7 +71,8 @@ class Controller_LabTests extends HDVP_Controller_Template
             'place_name_number' => __('Element number'),
             'edition' => __('Edition'),
             'date' => __('Date'),
-            'image' => __('Image')
+            'image' => __('Image'),
+            'sheet_number' => __('Sheet Number')
         ];
 
         VueJs::instance()->addComponent('labtests/create/create');

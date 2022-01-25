@@ -180,7 +180,8 @@ FROM pr_objects po
   pp.approved_at AS approvedAt,
   pp.scale,
   pp.status,
-  pp.approval_status AS approvalStatus
+  pp.approval_status AS approvalStatus,
+  pp.sheet_number as sheetNumber
 FROM pr_plans pp 
 INNER JOIN users u ON pp.created_by = u.id
 LEFT JOIN users u1 ON pp.updated_by = u1.id

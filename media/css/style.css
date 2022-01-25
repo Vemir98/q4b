@@ -2303,6 +2303,9 @@ html.rtl {
     margin-top: 10px;
     margin-bottom: 10px;
   }
+  #labtests-create .labtest-plans-table {
+    width: 643px !important;
+  }
 }
 
 @media (max-width: 768px) {
@@ -16337,6 +16340,9 @@ header .header_bottom .header_create_company .header_add_company {
   .report-status-list .report-status-result-multiple table.scrollable-tbody-content tr td:first-child {
     width: auto !important;
   }
+  #labtests-create .labtest-plans-table {
+    width: 437px !important;
+  }
 }
 
 @media (max-width: 640px) {
@@ -16354,6 +16360,9 @@ header .header_bottom .header_create_company .header_add_company {
   }
   .generate-reports .generate-reports-body #advanced-reports .multi-select-box .select-imitation-title {
     width: 330px;
+  }
+  #labtests-create .labtest-plans-table {
+    width: 320px !important;
   }
 }
 
@@ -21180,6 +21189,8 @@ html.rtl .labtest_filters1 .labtest_filter_input:nth-last-of-type(1), .labtest_f
 #labtests-create .labtest-plans-table {
   max-height: 270px;
   overflow-y: auto;
+  overflow-x: auto;
+  border-radius: 10px;
 }
 
 #labtests-create .labtest-plans-table thead {
@@ -21194,6 +21205,13 @@ html.rtl .labtest_filters1 .labtest_filter_input:nth-last-of-type(1), .labtest_f
 html.rtl #labtests-create .multiselect__placeholder {
   width: 100%;
   text-align: right;
+}
+
+#labtests-create .filter-item-label span,
+#labtests-create .ltest-input-label span {
+  color: #3fbae5;
+  font-weight: bold;
+  font-size: 14px;
 }
 
 .ltest_info_plan {
@@ -21660,7 +21678,6 @@ html.rtl .ltest_attachment_icon {
     width: 100%;
     flex: 1 1 100%;
   }
-
 }
 
 /* bug fixing */

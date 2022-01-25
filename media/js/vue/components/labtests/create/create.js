@@ -11,7 +11,7 @@ Vue.component('pr-labtests-create', {
                 <div class="filters-wraper flex-start">
                     <div class="filter-item">
                         <div class="multiselect-col">
-                            <div class="filter-item-label" >{{ trans.structure }}</div>
+                            <div class="filter-item-label" >{{ trans.structure }}<span>&nbsp;*</span></div>
                             <multiselect 
                                 v-model="selectedStructure"
                                 :option-height="104" 
@@ -36,7 +36,7 @@ Vue.component('pr-labtests-create', {
                     </div>
                     <div class="filter-item">
                         <div class="multiselect-col">
-                            <div class="filter-item-label" >{{ trans.floor }}</div>
+                            <div class="filter-item-label" >{{ trans.floor }}<span>&nbsp;*</span></div>
                             <multiselect 
                                 v-model="selectedFloor"
                                 :option-height="104" 
@@ -86,7 +86,7 @@ Vue.component('pr-labtests-create', {
                     </div>
                     <div class="filter-item">
                         <div class="multiselect-col">
-                            <div class="filter-item-label" >{{ trans.element }}</div>
+                            <div class="filter-item-label" >{{ trans.element }}<span>&nbsp;*</span></div>
                             <multiselect 
                                 v-model="selectedElement"
                                 :option-height="104" 
@@ -111,7 +111,7 @@ Vue.component('pr-labtests-create', {
                     </div>
                     <div class="filter-item">
                         <div class="multiselect-col">
-                            <div class="filter-item-label" >{{ trans.craft }}</div>
+                            <div class="filter-item-label" >{{ trans.craft }}<span>&nbsp;*</span></div>
                             <multiselect 
                                 v-model="selectedCraft"
                                 :option-height="104" 
@@ -136,19 +136,19 @@ Vue.component('pr-labtests-create', {
                     </div>
                     <div class="filter-item">
                          <div class="ltest-input">
-                            <div class="input_item_label ltest-input-label">{{ trans.sample_number }}</div>
+                            <div class="input_item_label ltest-input-label">{{ trans.sample_number }}<span>&nbsp;*</span></div>
                             <input type="number" v-model="sampleNumber" autocomplete="off" :placeholder="trans.enter_certificate_number" class="">
                          </div>
                     </div>
                     <div class="filter-item">
                          <div class="ltest-input">
-                            <div class="input_item_label ltest-input-label">{{ trans.essence_of_work }}</div>
+                            <div class="input_item_label ltest-input-label">{{ trans.essence_of_work }}<span>&nbsp;*</span></div>
                             <input type="text" v-model="essenceOfWork" autocomplete="off" :placeholder="trans.enter_essence_of_work" class="">
                          </div>
                     </div>
                     <div class="filter-item">
                         <div class="multiselect-col">
-                            <div class="filter-item-label" >{{ trans.strength_after }}</div>
+                            <div class="filter-item-label" >{{ trans.strength_after }}<span>&nbsp;*</span></div>
                             <multiselect 
                                     v-model="strengthAfterOption" 
                                     :option-height="104" 
@@ -168,7 +168,7 @@ Vue.component('pr-labtests-create', {
                         </div>
                     </div>
                     <div class="filter-item datepicker">
-                            <div class="filter-item-label" >{{ trans.create_date }}</div>
+                            <div class="filter-item-label" >{{ trans.create_date }}<span>&nbsp;*</span></div>
                             <date-picker 
                                 v-model="time"
                                 :lang="langs[currentLang]"
@@ -207,10 +207,10 @@ Vue.component('pr-labtests-create', {
                     />
                 </div>
                 <certificates-section
-                        :projectId="projectId"
-                        :translations="translations"
-                        @currentCertificateChanged="currentCertificate = $event"
-                    />
+                    :projectId="projectId"
+                    :translations="translations"
+                    @currentCertificateChanged="currentCertificate = $event"
+                />
                 <div class="filters-wraper files-section">
                     <div class="labtest_attachment">
                         <div class="ltest-input-label">{{ trans.attached_files }}</div>
@@ -283,7 +283,7 @@ Vue.component('pr-labtests-create', {
             selectedPlace: null,
             selectedElement: null,
             selectedCraft: null,
-            strengthAfterOption: null,
+            strengthAfterOption: 0,
             sampleNumber: '',
             essenceOfWork: '',
             currentCertificate: null,
@@ -390,7 +390,6 @@ Vue.component('pr-labtests-create', {
         Object.assign(config, window.EDITOR_CONFIG )
         this.editor = new PixelPerfect('#pixel-perfect-editor',config);
 
-        console.log('STATUSES', this.taskStatuses)
     },
     watch: {
         selectedStructure(structure) {
@@ -436,7 +435,6 @@ Vue.component('pr-labtests-create', {
                 } else {
                     this.params = [];
                 }
-                console.log('PARAMS', this.params)
 
                 this.getMatchedPlans(craft)
             }
@@ -455,7 +453,6 @@ Vue.component('pr-labtests-create', {
                         this.getCraftsWithParamsAPI();
                         this.getProjectPlansAPI();
                     }
-                    console.log('PROJECT', this.selectedProject)
                 })
         },
         getTasksAPI() {
@@ -484,7 +481,6 @@ Vue.component('pr-labtests-create', {
                 .then(response => {
                     this.elements = response.items;
                     this.showLoader = false;
-                    console.log('ELEMENTS', this.elements)
                 })
         },
         getStructureFloorsAPI() {
@@ -516,7 +512,6 @@ Vue.component('pr-labtests-create', {
                         return craft;
                     });
                     this.showLoader = false;
-                    console.log('CRAFTS', this.crafts)
                 })
         },
         getCraftsWithParamsAPI() {
@@ -526,7 +521,6 @@ Vue.component('pr-labtests-create', {
                 .then(response => {
                     this.craftsWithParams = response;
                     this.showLoader = false;
-                    console.log('CRAFT_PARAMS', response)
                 })
         },
         getProjectPlansAPI() {
@@ -536,7 +530,6 @@ Vue.component('pr-labtests-create', {
                 .then(response => {
                     this.projectPlans = response.items;
                     this.showLoader = false;
-                    console.log('PLANS', this.projectPlans)
                 })
         },
         setDatePickerDefaultTime() {
@@ -546,7 +539,6 @@ Vue.component('pr-labtests-create', {
             // date.setMonth(date.getMonth()-6);
             // end.setDate(end.getDate() + 1);
             this.time = new Date();
-            console.log('TIME', this.time)
         },
         handleAttachFileClick() {
             document.getElementById('fileInput').click()
@@ -651,8 +643,9 @@ Vue.component('pr-labtests-create', {
                 })
 
                 return ((hasSameFloor.length > 0) || ((+specialityPlan.placeId === +this.selectedPlace?.id) && (+this.selectedPlace?.id !== 0)))
-            }, this)
-            console.log('FILTERED PLANS', this.plans)
+            }, this).filter(plan => {
+                return (plan.fileOriginalName.endsWith('.jpg') || plan.fileOriginalName.endsWith('.png') || plan.fileOriginalName.endsWith('.jpeg'))
+            })
         },
         createLabControl() {
             let formData = {

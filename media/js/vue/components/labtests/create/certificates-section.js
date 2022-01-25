@@ -1,11 +1,11 @@
 Vue.component('certificates-section', {
     template: `
         <div class="labtest-certificates">
-            <div class="labtest-certificates-title">{{ trans.certificates }}</div>
+            <div class="labtest-certificates-title">{{ trans.certificate }}</div>
             <div class="labtest-certificates-header">
                 <div class="labtest-certificates-text-area-fields">
                     <div class="labtest-certificates-text-area-field">
-                        <div class="input_item_label ltest-input-label">{{ trans.description }}</div>
+                        <div class="input_item_label ltest-input-label">{{ trans.description }}<span>&nbsp;*</span></div>
                         <div class="labtest_edit_textarea">
                             <textarea cols="30" rows="10" @input="descriptionChanged">{{ currentCertificate.description }}</textarea>
                         </div>

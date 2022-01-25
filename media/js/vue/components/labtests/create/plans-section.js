@@ -9,6 +9,7 @@ Vue.component('plans-section', {
                         <th>{{ trans.name_type }}</th>
                         <th>{{ trans.profession }}</th>
                         <th>{{ trans.place_name_number }}</th>
+                        <th>{{ trans.sheet_number }}</th>
                         <th>{{ trans.date }}</th>
                         <th>{{ trans.image }}</th>
                     </tr>
@@ -18,6 +19,7 @@ Vue.component('plans-section', {
                         <td>{{ plan.name }}</td>
                         <td>{{ plan.professionName }}</td>
                         <td>{{ plan.placeName ? plan.placeName : plan.placeNumber }}</td>
+                        <td>{{ plan.sheetNumber }}</td>
                         <td>{{ convertTimestampToDate(plan.createdAt) }}</td>
                         <td><div class="ltest_attachment_icon" v-if="plan.fileOriginalName"><i class="icon q4bikon-file" @click="openImage(plan.fileOriginalName)"></i></div></td>
                     </tr>
@@ -79,7 +81,6 @@ Vue.component('plans-section', {
                 let baseUrlWithoutLanguage = a.join('/');
                 url = baseUrlWithoutLanguage + '/' + url
             }
-            console.log('URL', url)
             this.showLoader = true;
             let response = await fetch(url);
             let data = await response.blob();
