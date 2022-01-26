@@ -734,7 +734,7 @@ $(document).ready(function() {
     $('.report-plan-item').find('.report-plan-item-image').outerHeight(planHeight);
     $('.report-plan-item').find('.report-plan-item-image').css('line-height', planHeight + 'px');
 
-    $(document).on('click', '.reports-prop-title a', function(e) {
+    $(document).on('click', '.reports-prop-title h3 a', function(e) {
         e.preventDefault();
         Q4U.ajaxGetRequest($(this).data('url'), {
             successCallback: function(data) {

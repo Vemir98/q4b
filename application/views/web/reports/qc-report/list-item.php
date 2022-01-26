@@ -25,7 +25,7 @@
                 <?if($q->el_approval_id):?>
                     <div class="qc_status_cont">
                         <span class="reports-prop-title-status"><?=__('Element_item')?>: </span>
-                        <span class="reports-prop-title-status-value statistic-orange"><?=$qcElementNames[$qcKey]?></span>
+                        <a class="reports-prop-title-status-value statistic-orange" href="<?=URL::site('reports/approve_element?el_app_id=' . $q->el_approval_id)?>"><?=$qcElementNames[$qcKey]?></a>
                     </div>
                 <?elseif($q->element_id):?>
                     <div class="qc_status_cont">

@@ -36,8 +36,8 @@ Vue.component('approve-elements-tab', {
                     :data="report"
                     :filters="filters"
                     :translations='translations'
-                    @toReportsList="activeTab = 'reports-list'"
-                    @reportDeleted="activeTab = 'reports-list'"
+                    @toReportsList="toReportsList"
+                    @reportDeleted="toReportsList"
                 />
             </template>
         </div>
@@ -58,12 +58,12 @@ Vue.component('approve-elements-tab', {
     },
     data() {
         return {
-            activeTab: 'generate-reports',
+            activeTab: '',
             report: {},
             project: {},
             company: {},
             filters: null,
-            transformedFilters: {},
+            transformedFilters: null,
             page: 1
         }
     },
@@ -92,22 +92,22 @@ Vue.component('approve-elements-tab', {
             await this.getCompanies(this.transformedFilters.companyId)
             this.activeTab = 'reports-list';
         },
-        getProject(id) {
+        getProject(projectId) {
             this.showLoader = true;
-            let url = `/projects/${id}/entities/project?fields=id,name`;
+            let url = `/projects/${projectId}/entities/project?fields=id,name`;
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
                     this.project = response.item;
                     this.showLoader = false;
                 })
         },
-        getCompanies(){
+        getCompanies(companyId){
             this.showLoader = true;
             let url = '/companies/entities/for_current_user';
 
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
-                    this.company = response.items.filter(company => +company.id === +this.transformedFilters.companyId)[0]
+                    this.company = response.items.filter(company => +company.id === +companyId)[0]
                     this.showLoader = false;
                 })
         },
@@ -122,6 +122,36 @@ Vue.component('approve-elements-tab', {
 
             this.page = data.page;
             this.activeTab = 'report-item';
+        },
+        getReportAPI(reportId) {
+            this.showLoader = true;
+            let url = '/el-approvals/'+reportId;
+
+            qfetch(url, {method: 'GET', headers: {}})
+                .then(async (response) => {
+                    await this.getProject(response.item.projectId)
+                    await this.getCompanies(response.item.companyId)
+                    this.showLoader = false;
+                    this.goToReportDetails({
+                        report: response.item,
+                        page: 1
+                    })
+                })
+        },
+        toReportsList() {
+            this.activeTab = 'reports-list'
+        }
+    },
+    mounted() {
+        if(window.location.search) {
+            const urlParams = new URLSearchParams(window.location.search);
+
+            const elAppId = urlParams.get('el_app_id') ? urlParams.get('el_app_id') : null;
+            if(elAppId) {
+                this.getReportAPI(elAppId)
+            }
+        } else {
+            this.activeTab = 'generate-reports';
         }
     }
 });

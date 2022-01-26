@@ -96,7 +96,7 @@ Vue.component('reports-list', {
                             {{ trans.structures_quantity }}
                         </span>
                         <span class="light-blue">
-                            {{ filters.objectIds.length }}
+                            {{ filters?.objectIds?.length }}
                         </span>
                     </li>
                     <li>
@@ -104,7 +104,7 @@ Vue.component('reports-list', {
                             {{ trans.report_range }}
                         </span>
                         <span class="light-blue ">
-                            <span>{{ filters.from }} - {{filters.to}}</span>
+                            <span>{{ filters?.from }} - {{filters?.to}}</span>
                         </span>
                     </li>
                 </ul>
@@ -113,12 +113,8 @@ Vue.component('reports-list', {
         <div class="report-buttons">
             <div class="report-buttons-wraper" :class="{'open': toggleExportButton}" @click="toggleExportButton = !toggleExportButton">
                 <span class="report-buttons-headline"><i class="q4bikon-share"></i>{{ trans.export }}</span>
-<!--                <a class="report-button pdf" :href="getExportPdfHref"><i class="q4bikon-file1" download="element-approval-reports.pdf"></i>PDF</a>-->
                 <a class="report-button pdf" style="opacity: .5;cursor: auto"><i class="q4bikon-file1"></i>PDF</a>
-<!--                <a  class="report-button excel" :href="getExportExcelHref" download="element-approval-reports.xls"><i class="q4bikon-report"></i>Excel</a>-->
                 <a  class="report-button excel" :href="getExportExcelHref"><i class="q4bikon-report"></i>Excel</a>
-<!--                <a :href="getExportHref" download="lab-reports.xls">{{ trans.export }}</a>-->
-
             </div>
         </div>
 
@@ -290,18 +286,22 @@ Vue.component('reports-list', {
             this.getFilteredReports();
         },
         getQueryParamsOfFiltersForUrl() {
-            let elements = encodeURIComponent(JSON.stringify(this.filters.elementIds));
-            let floors = encodeURIComponent(JSON.stringify(this.filters.floorIds));
-            let statuses = encodeURIComponent(JSON.stringify(this.filters.statuses));
-            let positions = encodeURIComponent(JSON.stringify(this.filters.positions));
-            let objects = encodeURIComponent(JSON.stringify(this.filters.objectIds));
-            let places = encodeURIComponent(JSON.stringify(this.filters.placeIds));
-            let crafts = encodeURIComponent(JSON.stringify(this.filters.specialityIds));
-            let from = this.filters.from ? this.filters.from : '';
-            let to = this.filters.to ? this.filters.to : '';
-            let primarySupervision = this.filters.primarySupervision ? encodeURIComponent(JSON.stringify('1')) : encodeURIComponent(JSON.stringify('0'));
+            if(this.filters) {
+                let elements = encodeURIComponent(JSON.stringify(this.filters.elementIds));
+                let floors = encodeURIComponent(JSON.stringify(this.filters.floorIds));
+                let statuses = encodeURIComponent(JSON.stringify(this.filters.statuses));
+                let positions = encodeURIComponent(JSON.stringify(this.filters.positions));
+                let objects = encodeURIComponent(JSON.stringify(this.filters.objectIds));
+                let places = encodeURIComponent(JSON.stringify(this.filters.placeIds));
+                let crafts = encodeURIComponent(JSON.stringify(this.filters.specialityIds));
+                let from = this.filters.from ? this.filters.from : '';
+                let to = this.filters.to ? this.filters.to : '';
+                let primarySupervision = this.filters.primarySupervision ? encodeURIComponent(JSON.stringify('1')) : encodeURIComponent(JSON.stringify('0'));
 
-            return `?from=${from}&to=${to}&objectIds=${objects}&floorIds=${floors}&placeIds=${places}&specialityIds=${crafts}&elementIds=${elements}&statuses=${statuses}&positions=${positions}&companyId=${this.company.id}&projectId=${this.project.id}&primarySupervision=${primarySupervision}`;
+                return `?from=${from}&to=${to}&objectIds=${objects}&floorIds=${floors}&placeIds=${places}&specialityIds=${crafts}&elementIds=${elements}&statuses=${statuses}&positions=${positions}&companyId=${this.company.id}&projectId=${this.project.id}&primarySupervision=${primarySupervision}`;
+            } else {
+                return '';
+            }
         },
         goToReportDetails(report) {
             this.$emit('toReportDetails', {
@@ -377,7 +377,12 @@ Vue.component('reports-list', {
         },
     },
     mounted() {
-        this.getFilteredReports();
+        if(!this.filters) {
+            window.history.replaceState({}, document.title, window.location.toString().split("?")[0]);
+            this.$emit('tabChanged')
+        } else {
+            this.getFilteredReports();
+        }
     }
 });
 

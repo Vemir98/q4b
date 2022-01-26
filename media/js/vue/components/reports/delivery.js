@@ -526,12 +526,18 @@ Vue.component('report-delivery', {
                 }
             }
         },
+        getCompanies(){
+            let url = '/companies/entities/for_current_user';
+
+            qfetch(url, {method: 'GET', headers: {}})
+                .then(response => {
+                    this.companies = response.items ? response.items : [];
+                    console.log('COMPANIES', this.companies)
+                })
+        },
     },
     mounted() {
-        axios.get(this.siteUrl + 'entities/companies?fields=id,name')
-            .then(response => {
-                this.companies = response.data.items;
-            });
+        this.getCompanies();
     }
 });
 
