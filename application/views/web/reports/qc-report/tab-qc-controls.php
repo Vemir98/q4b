@@ -14,7 +14,8 @@
                 'q' => $q,
                 'qcKey' => $qcKey,
                 'tasks' => $tasks,
-                'qcElementNames' => $qcElementNames
+                'qcElementNames' => $qcElementNames,
+                'qcCertificates' => $qcCertificates
             ])?>
     <?endforeach?>
     <?=$pagination?>

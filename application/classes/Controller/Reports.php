@@ -183,14 +183,21 @@ class Controller_Reports extends HDVP_Controller_Template
         $tasks = [];
 
         if($data['el_app_id']) {
-//            $tasks = $this->project->getTasksByModuleName('Approve Element')->where('prtask.status','=',Enum_Status::Enabled)->find_all();
+            $tasks = $this->project->getTasksByModuleName('Approve Element')->where('prtask.status','=',Enum_Status::Enabled)->find_all();
             $qcs->and_where('qualitycontrol.el_approval_id', '=', $data['el_app_id']);
+
+//            $tasks = $this->project->getModuleTasksByModuleNameAndCraftId('Approve Element')->where('prtask.status','=',Enum_Status::Enabled)->find_all();
+//            $qcs->and_where('qualitycontrol.el_approval_id', '=', $data['el_app_id']);
         }
-//        elseif ($data['del_rep_id']) {
-//            $tasks = $this->project->getTasksByModuleName('Delivery Report')->where('prtask.status','=',Enum_Status::Enabled)->find_all();
-//        } else {
-        $tasks = $this->project->getTasksByModuleName('Quality Control')->where('prtask.status','=',Enum_Status::Enabled)->find_all();
-//        }
+        elseif ($data['del_rep_id']) {
+            $tasks = $this->project->getTasksByModuleName('Delivery Report')->where('prtask.status','=',Enum_Status::Enabled)->find_all();
+//            $tasks = $this->project->getModuleTasksByModuleNameAndCraftId('Delivery Report')->where('prtask.status','=',Enum_Status::Enabled)->find_all();
+
+        } else {
+            $tasks = $this->project->getTasksByModuleName('Quality Control')->where('prtask.status','=',Enum_Status::Enabled)->find_all();
+//            $tasks = $this->project->getModuleTasksByModuleNameAndCraftId('Quality Control')->where('prtask.status','=',Enum_Status::Enabled)->find_all();
+
+        }
 
         if(!empty($data['statuses'])){
             if(!is_array($data['statuses'])){
@@ -417,13 +424,18 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
 
 
         $qcElementNames = [];
+        $qcCertificates = [];
         foreach ($qcsTotal as $qcKey => $qc) {
             if($qc->el_approval_id) {
                 $element = Api_DBElApprovals::getElApprovalElementByElAppId($qc->el_approval_id);
-                $qcElementNames[$qcKey] = $element[0]['name'];
+                $qcElementNames[$qc->id] = $element[0]['name'];
             } elseif($qc->element_id) {
                 $element = ORM::factory('Element')->where('id', '=', $qc->element_id)->find();
-                $qcElementNames[$qcKey] = $element->name;
+                $qcElementNames[$qc->id] = $element->name;
+            }
+            if($qc->cert_id) {
+                $certificate = Controller_Api_Projects_Certificates::getCertificatesExpandedData(Api_DBProjectCertificates::getProjectCertificatesByCertificatesIds([$qc->cert_id]))[0];
+                $qcCertificates[$qc->id] = $certificate;
             }
         }
         $report = [];
@@ -598,7 +610,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
         }
 
 //        $qcs = (object)$qcs;
-
+//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($qcCertificates); echo "</pre>"; exit;
             if(Request::current()->is_initial()){
                 if( ! empty(Session::instance()->get('token')))
                     $sendReportsEmailUrl = URL::site('reports/send_reports/'.$this->project->id.'/'.Session::instance()->get('token')->token);
@@ -618,7 +630,8 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                         'craftsList' => $craftsList,
                         'filteredCraftsList' => $filteredCraftsList,
                         'del_rep_id' => (int)$data['del_rep_id'],
-                        'qcElementNames' => $qcElementNames
+                        'qcElementNames' => $qcElementNames,
+                        'qcCertificates' => $qcCertificates
                     ]);
             }
             else{
@@ -633,7 +646,8 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                         'craftsList' => $craftsList,
                         'filteredCraftsList' => $filteredCraftsList,
                         'data' => json_decode($tparams,true),
-                        'qcElementNames' => $qcElementNames
+                        'qcElementNames' => $qcElementNames,
+                        'qcCertificates' => $qcCertificates
                     ]);
             }
         }else{
@@ -847,6 +861,18 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                 $isSubcontractor = true;
             }
 
+            $qcModuleName = '';
+
+            if(!is_null($qc->del_rep_id)) {
+                $qcModuleName = 'Delivery Report';
+            } elseif (!is_null($qc->el_approval_id)) {
+                $qcModuleName = 'Approve Element';
+            } else {
+                $qcModuleName = 'Quality Control';
+            }
+//            echo "line: ".__LINE__." ".__FILE__."<pre>"; var_dump($qc->del_rep_id); echo "</pre>";
+//            echo "line: ".__LINE__." ".__FILE__."<pre>"; var_dump($qc->el_approval_id); echo "</pre>"; exit;
+
             $this->setResponseData('modal',View::make('reports/quality-control',
                 [
                     'item' => $qc,
@@ -862,7 +888,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                     'approveUsr' => $qc->approveUser,
                     'project' => $qc->project,
                     'projectStages' => Enum_ProjectStage::toArray(),
-                    'tasks' => $qc->project->getTasksByModuleName('Quality Control')->where('prtask.status','=',Enum_Status::Enabled)->find_all(),
+                    'tasks' => $qc->project->getTasksByModuleName($qcModuleName)->where('prtask.status','=',Enum_Status::Enabled)->find_all(),
                     'professions' => $qc->project->company->professions->where('status','=',Enum_Status::Enabled)->find_all(),
                     'crafts' => $qc->project->company->crafts->where('status','=',Enum_Status::Enabled)->order_by('name')->find_all(),
                     'plan' => $qc->plan,

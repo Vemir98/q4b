@@ -319,7 +319,7 @@ class Controller_Entities extends HDVP_Controller_Template
         $this->_responseData['items'] = $craftsData;
     }
 
-    public function action_certifications(){
+    public function action_certifications_old(){
         $id = $this->getUIntParamOrDie($this->request->param('id'));
         $id2 = $this->getUIntParamOrDie($this->request->param('id2'));
         $crafts = ORM::factory('CmpCraft')->where('company_id','=',$id)->and_where('status','=',Enum_Status::Enabled)->order_by('name','ASC')->find_all();
@@ -346,6 +346,40 @@ class Controller_Entities extends HDVP_Controller_Template
                 'id' => $craft->id,
                 'name' => $craft->name,
                 'items' => $regData,
+                'checked' => false
+            ];
+        }
+
+        $this->_responseData['items'] = $craftsData;
+    }
+
+    public function action_certifications(){
+        $id = $this->getUIntParamOrDie($this->request->param('id'));
+        $id2 = $this->getUIntParamOrDie($this->request->param('id2'));
+        $crafts = ORM::factory('CmpCraft')->where('company_id','=',$id)->and_where('status','=',Enum_Status::Enabled)->order_by('name','ASC')->find_all();
+        $craftsData = [];
+        foreach ($crafts as $craft){
+//            $certifications = $craft->instructions->where('project_id','=',$id2)->find_all();
+//            $regData = [];
+//            foreach ($certifications as $r){
+//                $regData[] = [
+//                    'id' => $r->id,
+//                    'craftId' => $craft->id,
+//                    'companyId' => $r->company_id,
+//                    'projectId' => $r->project_id,
+//                    'desc' => $r->desc,
+//                    'status' => array('val' => $r->status, 'label' => __($r->status)),
+//                    'file' => strpos($r->file,'fs.qforb.net') === false ?  ($r->file ? '/media/data/projects/' . $r->project_id . '/certifications/'.$r->file : null) : $r->file,
+//                    'created' => $r->created_at,
+//                    'uploaded' => $r->uploaded ? date('d/m/Y',$r->uploaded) : null,
+//                    'edited' => false,
+//                    'inEditMode' => false,
+//                ];
+//            }
+            $craftsData[] = [
+                'id' => $craft->id,
+                'name' => $craft->name,
+//                'items' => $regData,
                 'checked' => false
             ];
         }

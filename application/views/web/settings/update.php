@@ -200,7 +200,7 @@
             </div>
             <div class="panel_content">
                 <div class="panel_body container-fluid">
-                    <universal-certification
+                    <regulations
                             items-url="<?=URL::site('/entities/regulations')?>"
                             delete-url="<?=URL::site('/certifications/delete_regulation')?>"
                             save-url="<?=URL::site('/certifications/save_regulations')?>"

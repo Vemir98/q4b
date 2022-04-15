@@ -21,6 +21,27 @@ class Api_DBCompanies
         SELECT id, status FROM cmp_crafts WHERE TRIM(`name`)='{$craftName}' AND `company_id`={$cmpId}")->execute()->as_array();
     }
 
+    public static function getCompanyCraftById($craftId){
+        $query = 'SELECT
+            cc.id,
+            cc.company_id as companyId,
+            cc.name,
+            cc.catalog_number as catalogNumber,
+            cc.status,
+            cc.related_id as relatedId
+            FROM cmp_crafts cc
+            WHERE cc.id = :craftId AND cc.status= :status';
+
+        $query =  DB::query(Database::SELECT, $query);
+
+        $query->parameters(array(
+            ':craftId' => $craftId,
+            ':status' => Enum_Status::Enabled
+        ));
+
+        return $query->execute()->as_array();
+    }
+
     public static function getUserCompaniesByProjects($id) {
         $query = 'SELECT
         c.id AS id,

@@ -31,7 +31,7 @@ class Controller_Settings extends HDVP_Controller_Template
         VueJs::instance()->addComponent('reserve-materials');
         VueJs::instance()->addComponent('transferable-items');
         VueJs::instance()->addComponent('texts');
-        VueJs::instance()->addComponent('certifications/universal-certification');
+        VueJs::instance()->addComponent('regulations/regulations');
         VueJs::instance()->includeMultiselect();
         $this->template->content = View::make('settings/update',
             [

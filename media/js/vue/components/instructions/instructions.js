@@ -1,4 +1,4 @@
-Vue.component('universal-certification', {
+Vue.component('instructions', {
     template: `
         <div class="universal-certification">
             <div class="universal-certification-copyTo">

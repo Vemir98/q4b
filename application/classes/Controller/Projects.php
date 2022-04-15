@@ -502,28 +502,88 @@ class Controller_Projects extends HDVP_Controller_Template
             $tab = Arr::get($_GET,'tab');
 
             Breadcrumbs::add(Breadcrumb::factory()->set_title($this->project->name));
-            VueJs::instance()->addComponent('certifications/universal-certification');
-            VueJs::instance()->includeMultiselect();
 
+            switch ($tab) {
+                case 'certificates_old':
+                    VueJs::instance()->addComponent('certifications-old/certifications');
+                break;
+                case 'certificates':
+                    VueJs::instance()->addComponent('certifications/certifications');
+                    VueJs::instance()->addComponent('certifications/certificate-participants');
+                    VueJs::instance()->addComponent('certifications/certificate-chapter');
+
+                    VueJs::instance()->addComponent('certifications/modals/create-certification');
+                    VueJs::instance()->addComponent('certifications/modals/update-certification');
+
+                    VueJs::instance()->addComponent('certifications/popups/certificate-chapter-content-popup');
+                    VueJs::instance()->addComponent('certifications/popups/certificate-chapter-images-popup');
+
+                    VueJs::instance()->addComponent('file-control');
+                    VueJs::instance()->addComponent('q4b-confirm-popup');
+                break;
+            }
+
+            VueJs::instance()->includeMultiselect();
 
             VueJs::instance()->addComponent('tabs');
             VueJs::instance()->addComponent('reserve-materials');
             VueJs::instance()->addComponent('transferable-items');
             VueJs::instance()->addComponent('texts');
-            VueJs::instance()->includeMultiselect();
+
+            $translations = [
+                'delete' => __('Delete'),
+                'cancel' => __('Cancel'),
+                'confirm' => __('Confirm'),
+                'sample_required' => __('sample_required'),
+                'update_date' => __('Update Date'),
+                'image' => __('Image'),
+                'approved_by' => __('Approved by'),
+                'status' => __('status'),
+                'attached_files' => __('Attached files'),
+                'list_of_files' => __('list_of_files'),
+                'uploaded' => __('uploaded'),
+                'update' => __('Update'),
+                'add' => __('Add'),
+                'waiting' => __('waiting'),
+                'approved' => __('Approved'),
+                'edit' => __('Edit'),
+                'export' => __('Export'),
+                'create' => __('Create'),
+                'content' => __('content'),
+                'certificate_description' => __('certificate_description'),
+                'enter_certificate_description' => __('enter_certificate_description'),
+                'participant_name' => __('participant_name'),
+                'enter_participant_name' => __('enter_participant_name'),
+                'participant_position' => __('participant_position'),
+                'enter_participant_position' => __('enter_participant_position'),
+                'chapter' => __('chapter'),
+                'choose_chapter' => __('choose_chapter'),
+                'chapter_content' => __('chapter_content'),
+                'enter_chapter_content' => __('enter_chapter_content'),
+                'add_chapter' => __('add_chapter'),
+                'create_certificate_for' => __('create_certificate_for'),
+                'update_certificate_for' => __('update_certificate_for'),
+                'are_you_sure_you_want_to_delete_this_certificate' => __('are_you_sure_you_want_to_delete_this_certificate'),
+                'close' => __('Close'),
+                'file_size_text' => __('file_size_text')
+            ];
 
             if($tab) {
                 $this->template->content = View::make('projects/sub-tabs/'.$tab)
                     ->set('companies',$companies)
                     ->set('objectsCount',$projectObjectsCount)
                     ->set('users',$this->project->users->find_all())
-                    ->set('tasks',$this->project->tasks->order_by('id','DESC')->find_all());
+                    ->set('tasks',$this->project->tasks->order_by('id','DESC')->find_all())
+                    ->set('userRole',$this->_user->getRelevantRole('name'))
+                    ->set('translations', $translations);
             } else {
                 $this->template->content = View::make('projects/update')
                     ->set('companies',$companies)
                     ->set('objectsCount',$projectObjectsCount)
                     ->set('users',$this->project->users->find_all())
-                    ->set('tasks',$this->project->tasks->order_by('id','DESC')->find_all());
+                    ->set('tasks',$this->project->tasks->order_by('id','DESC')->find_all())
+                    ->set('userRole',$this->_user->getRelevantRole('name'))
+                    ->set('translations', $translations);
             }
         }
     }

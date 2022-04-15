@@ -25,12 +25,12 @@
                 <?if($q->el_approval_id):?>
                     <div class="qc_status_cont">
                         <span class="reports-prop-title-status"><?=__('Element_item')?>: </span>
-                        <a class="reports-prop-title-status-value statistic-orange" href="<?=URL::site('reports/approve_element?el_app_id=' . $q->el_approval_id)?>"><?=$qcElementNames[$qcKey]?></a>
+                        <a class="reports-prop-title-status-value statistic-orange" href="<?=URL::site('reports/approve_element?el_app_id=' . $q->el_approval_id)?>"><?=$qcElementNames[$q->id]?></a>
                     </div>
                 <?elseif($q->element_id):?>
                     <div class="qc_status_cont">
                         <span class="reports-prop-title-status"><?=__('Element_item')?>: </span>
-                        <span class="reports-prop-title-status-value statistic-orange"><?=$qcElementNames[$qcKey]?></span>
+                        <span class="reports-prop-title-status-value statistic-orange"><?=$qcElementNames[$q->id]?></span>
                     </div>
                 <?endif;?>
             </div>
@@ -168,6 +168,55 @@
             <?endforeach?>
         </div>
     </div>
+<!--certificate section-->
+    <?if($q->cert_id):?>
+        <div class="report_certificate">
+            <div style="display: flex;margin-bottom: 15px;">
+                <h4 class="reports-tasks-box-title"
+                    style="color: rgba(0, 0, 0, 0.7);-webkit-touch-callout: none;-webkit-user-select: none;-khtml-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;"
+                >
+                <i class="plus-minus q4bikon-plus" style="cursor: pointer"></i>
+                </h4>
+                <div><span><?=$qcCertificates[$q->id]['name']?></span></div>
+                <?if($qcCertificates[$q->id]['sampleRequired'] === "1"):?>
+                    <div class="report_certificate_sample-required"><span>(<?=__('sample_required')?>)</span></div>
+                <?endif;?>
+                <?if($qcCertificates[$q->id]['approvedBy']):?>
+                    <div class="report_certificate_approved-by"><span>Approved by</span></div>
+                    <div class="report_certificate_approver-name"><span><?=$qcCertificates[$q->id]['approverName']?></span></div>
+                <?endif;?>
+            </div>
+            <div class="report_certificate_wraper" style="display: none;">
+                <?foreach ($qcCertificates[$q->id]['chapters'] as $chapter):?>
+                    <div class="report_certificate_chapter_name"><?=$chapter['name']?></div>
+                    <div class="q4b-textarea" style="padding: 15px 15px 15px 15px;">
+                        <div class="q4b-input-label">Chapter content</div>
+                        <textarea cols="30" rows="10" readonly><?=$chapter['text']?></textarea>
+                    </div>
+                    <div class="report_certificate_chapter_images">
+                        <div class="row">
+                            <?foreach ($chapter['images'] as $image):?>
+                                <div class="col-md-6 rtl-float-right">
+                                    <div class="report_certificate_chapter_image">
+                                        <h4 class="report_certificate_chapter_image_title"><?=$image['originalName']?> <span class="report_certificate_chapter_image_title_uploaded">(<?=__('uploaded')?>: <?=date('d.m.y H:i', $image['createdAt'])?> )</span></h4>
+                                        <div class="report_certificate_chapter_image_image">
+                                            <a href="<?=$image['fullPath']?>" target="_blank">
+                                                <?if ($_SERVER['SERVER_NAME'] === 'qforb.net') :?>
+                                                    <img src="<?=$image['fullPath']?>?<?=rand(100000,99999999)?>" alt="<?=$image['originalName']?>">
+                                                <?else:?>
+                                                    <img src="<?=$image['fullPath'] . '?' . uniqid()?>" alt="<?=$image['originalName']?>">
+                                                <?endif?>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?endforeach;?>
+                        </div>
+                    </div>
+                <?endforeach;?>
+            </div>
+        </div>
+    <?endif;?>
     <div class="report-plans">
         <div class="report-plan-top">
             <div class="report-desc-approve">

@@ -29,6 +29,7 @@ class Api_DBQualityControl
             qc.profession_id as professionId,
             qc.element_id as elementId,
             qc.craft_id as craftId,
+            qc.cert_id as certId,
             qc.del_rep_id as delRepId,
             qc.el_approval_id as elApprovalId,
             qc.place_type as placeType,

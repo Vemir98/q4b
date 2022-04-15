@@ -16,7 +16,7 @@
             </div>
             <div class="panel_content open">
                 <div class="panel_body container-fluid">
-                    <universal-certification
+                    <certifications
                         items-url="<?=URL::site('/entities/certifications/'. $_PROJECT->company->id.'/'.$_PROJECT->id)?>"
                         projects-url="<?=URL::site('/entities/projects')?>"
                         delete-url="<?=URL::site('/certifications/delete_regulation')?>"
@@ -39,7 +39,9 @@
                         select-company-txt="<?=__('Select Company')?>"
                         select-project-txt="<?=__('Select project')?>"
                         v-bind:status-options="[{val: '<?=Enum_ApprovalStatus::Waiting?>',label: '<?=__(Enum_ApprovalStatus::Waiting)?>'},{val: '<?=Enum_ApprovalStatus::Approved?>',label: '<?=__(Enum_ApprovalStatus::Approved)?>'}]"
-
+                        translations='<?=json_encode($translations)?>'
+                        statuses='<?=json_encode(Enum_ApprovalStatus::toArray())?>'
+                        user-role='<?=$userRole?>'
                     />
                 </div>
 

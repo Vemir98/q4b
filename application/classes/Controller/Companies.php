@@ -266,7 +266,7 @@ class Controller_Companies extends HDVP_Controller_Template
                 }
             }
 
-            VueJs::instance()->addComponent('certifications/universal-certification');
+            VueJs::instance()->addComponent('instructions/instructions');
             VueJs::instance()->includeMultiselect();
 
             if($tab) {
@@ -534,7 +534,7 @@ class Controller_Companies extends HDVP_Controller_Template
             try{
                 Database::instance()->begin();
                 foreach ($usersData as $uid => $u){
-                    $u = Arr::extract($u,['name','email','phone','role','profession','status']);
+                    $u = Arr::extract($u,['name','email','phone','role','profession','status', 'password', 'password_confirm']);
                     $usrProf = $usrRole = null;
                     foreach ($allowedRoles as $urole){
                         if($u['role'] == $urole->id){
@@ -558,6 +558,20 @@ class Controller_Companies extends HDVP_Controller_Template
                     if( ! ($usrProf instanceof ORM)){
                         throw new HDVP_Exception('Incorrect profession');
                     }
+
+                    $passwordNotEmptyCheck = Validation::factory($u);
+                    $passwordConfirmNotEmptyCheck = Validation::factory($u);
+                    $passwordsValidationCheck = Validation::factory($u);
+
+                    $passwordNotEmptyCheck
+                        ->rule('password', 'not_empty');
+                    $passwordConfirmNotEmptyCheck
+                        ->rule('password_confirm', 'not_empty');
+
+                    $passwordsValidationCheck
+                        ->rule('password', 'not_empty')
+                        ->rule('password', 'min_length', array(':value', 8))
+                        ->rule('password_confirm', 'matches', array(':validation', ':field', 'password'));
 
                     if(is_numeric($uid)){//обновление пользователя
                         $user = ORM::factory('user',$this->getUIntParamOrDie($uid));
@@ -589,6 +603,14 @@ class Controller_Companies extends HDVP_Controller_Template
                             $user->set('phone',$u['phone']);
                         }
 
+                        if($passwordNotEmptyCheck->check() || $passwordConfirmNotEmptyCheck->check()) {
+                            if ($passwordsValidationCheck->check()) {
+                                $user->set('password', $u['password']);
+                            } else {
+                                throw new HDVP_Exception("Password validation error");
+                            }
+                        }
+
                         if($user->getRelevantRole()->outspread != Enum_RoleOutspread::Super AND $usrRole->outspread == Enum_RoleOutspread::Super){
                             throw new HDVP_Exception('Can\'t upgrade user standard role to general');
                         }
@@ -603,6 +625,19 @@ class Controller_Companies extends HDVP_Controller_Template
                             ->set('email',$u['email'])
                             ->set('password',Text::random())
                             ->set('company_id',$this->company->id);
+
+
+                        if($passwordNotEmptyCheck->check() || $passwordConfirmNotEmptyCheck->check()) {
+                            if ($passwordsValidationCheck->check()) {
+                                $user->set('password', $u['password']);
+                            } else {
+                                throw new HDVP_Exception("Password validation error");
+                            }
+                        } else {
+                            $user->set('password', Text::random());
+                            $user->set('status', Enum_UserStatus::Active);
+                        }
+
                         if($this->_user->getRelevantRole('outspread') != Enum_UserOutspread::General){
                             if($this->_user->client_id != $this->company->client->pk()){
                                 //todo: тревога!!! блокировка пользователя
@@ -653,8 +688,8 @@ class Controller_Companies extends HDVP_Controller_Template
                     if(!empty($val)){
                         foreach ($val as $item){
                             if($key == 'added'){
-                                Event::instance()->fire('onUserAdded',['sender' => $this,'item' => $item]);
-                                Event::instance()->fire('onItemAdded',['sender' => $this,'item' => $item]);
+//                                Event::instance()->fire('onUserAdded',['sender' => $this,'item' => $item]);
+//                                Event::instance()->fire('onItemAdded',['sender' => $this,'item' => $item]);
                             }
                             else if($key == 'logout'){
                                 Event::instance()->fire('onAuthExpires',['sender' => $this,'item' => $item]);

@@ -518,6 +518,9 @@ ul li.tab_panel .panel_header h2, ul li.tab-panel .panel_header h2 {
     line-height: 19px;
     color: #525F7F;
 }
+#certifications.new-styles table  td{
+    padding: 10px 20px;
+}
 .new-styles table tbody tr{
     background: #fff;
 
@@ -617,10 +620,10 @@ ul li.tab_panel .panel_header h2, ul li.tab-panel .panel_header h2 {
     object-fit: contain;
 }
 .ltr .edit-box{
-    left: -165px;
+    left: -150px;
 }
 .rtl .edit-box{
-    right: -165px;
+    right: -150px;
 }
 .edit-box{
     box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.15);
@@ -994,6 +997,9 @@ ul li.tab_panel .panel_header h2, ul li.tab-panel .panel_header h2 {
 }
 .new-styles .craft-table td:nth-child(1) {
     width: 42%;
+}
+#certifications.new-styles .craft-table td:nth-child(1) {
+    width: auto;
 }
 .new-styles .craft-table .multiselect-col{
     min-width: 200px;

@@ -24,6 +24,7 @@ class Menu
             'projects/update/:projectId?tab=structures',
             'projects/update/:projectId?tab=delivery-items',
             'projects/update/:projectId?tab=users',
+            'projects/update/:projectId?tab=certificates_old',
             'projects/update/:projectId?tab=certificates',
             'projects/update/:projectId/tasks',
             'plans/update/:projectId',
@@ -37,7 +38,8 @@ class Menu
         'elements' => [
             'labtests/project/:projectId/elements_list',
             'labtests/project/:projectId/elements_type',
-            'reports/approve_element/:projectId'
+            'reports/approve_element/:projectId',
+            'reports/approve_element/:projectId/create',
         ],
         'reports' => [
             'reports',

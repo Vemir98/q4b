@@ -288,6 +288,18 @@ $projectRoutes['children'][] = [
             'active' => false,
             'hasActiveChild' => false
         ],
+        [
+            'slug' => 'reports/approve_element/:projectId/create',
+            'href' => 'reports/approve_element/:projectId/create',
+            'text' => 'Create Approval element',
+            'resource' => 'Controller_LabTests',
+            'priority' => Enum_UserPriorityLevel::Project,
+            'deepLevel' => 3,
+            'showIn' => Menu::CATEGORIES['elements'],
+            'disabled' => false,
+            'active' => false,
+            'hasActiveChild' => false
+        ],
     ],
     'showIn' => array_merge(
         Menu::CATEGORIES['projects'],
@@ -300,6 +312,24 @@ $projectRoutes['children'][] = [
 ];
 
 if(!Auth::instance()->get_user()->is('project_adviser')) {
+    if(Usr::role() === 'super_admin') {
+        $projectRoutes['children'][] = [
+            'slug' => 'projects/update/:projectId?tab=certificates_old',
+            'href' => 'projects/update/:projectId?tab=certificates_old',
+            'text' => 'old_certificates',
+            'resource' => 'Controller_Projects',
+            'priority' => Enum_UserPriorityLevel::Project,
+            'deepLevel' => 2,
+            'showIn' => array_merge(
+                Menu::CATEGORIES['projects'],
+                Menu::CATEGORIES['labtests'],
+                Menu::CATEGORIES['elements']
+            ),
+            'disabled' => false,
+            'active' => false,
+            'hasActiveChild' => false
+        ];
+    }
     $projectRoutes['children'][] = [
         'slug' => 'projects/update/:projectId?tab=certificates',
         'href' => 'projects/update/:projectId?tab=certificates',

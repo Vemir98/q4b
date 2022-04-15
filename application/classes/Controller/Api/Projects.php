@@ -457,17 +457,17 @@ class Controller_Api_Projects extends HDVP_Controller_API
                 'message',
                 'unique_token',
                 'del_rep_id',
+                'cert_id',
                 'el_approval_id'
             ]);
+
+//        Kohana::$log->add(Log::ERROR, '[QC TEST TEST]: ' . json_encode($clientData, JSON_PRETTY_PRINT));
+
 
 //        if(isset($clientData['element_id'])) {
             if ((empty($clientData['element_id']) or !(int)$clientData['element_id'])) {
                 unset($clientData['element_id']);
-//                Kohana::$log->add(Log::ERROR, '[unset]: ');
-
             } else {
-//                Kohana::$log->add(Log::ERROR, '[unset che]: ');
-
                 $clientData['element_id'] = (int)$clientData['element_id'];
             }
 //        }
@@ -477,6 +477,8 @@ class Controller_Api_Projects extends HDVP_Controller_API
         }else{
             $clientData['el_approval_id'] = (int) $clientData['el_approval_id'];
         }
+
+        $clientData['cert_id'] = $clientData['cert_id'] ? (int) $clientData['cert_id'] : 0;
 
         $isDebug = Arr::get($_POST,'debug',false);
         $clientData['plan_id'] *=1;
@@ -532,7 +534,6 @@ class Controller_Api_Projects extends HDVP_Controller_API
                 }
             }
             $qc = ORM::factory('QualityControl');
-            Kohana::$log->add(Log::ERROR, '[$clientData]: '. json_encode($clientData, JSON_PRETTY_PRINT));
 
             $qc->values($clientData);
             $qc->place_id = $place->id;
@@ -592,23 +593,29 @@ class Controller_Api_Projects extends HDVP_Controller_API
 
 //                }
 //            }
-            Kohana::$log->add(Log::ERROR, '[QC-n SARQVEC]');
 
             $fs->sendLazyTasks();
         }catch (ORM_Validation_Exception $e){
             Database::instance()->rollback();
             Kohana::$log->add(Log::ERROR, '[ERROR CREATE QC (ORM_Validation_Exception)]: ' . $e->getMessage());
+            if($clientData) {
+                Kohana::$log->add(Log::ERROR, '[$clientData]: '. json_encode($clientData, JSON_PRETTY_PRINT));
+            }
 
             throw API_Exception::factory(500,'Incorrect data');
         }catch (HDVP_Exception $e){
             Database::instance()->rollback();
             Kohana::$log->add(Log::ERROR, '[ERROR CREATE QC (HDVP_Exception)]: ' . $e->getMessage());
-
+            if($clientData) {
+                Kohana::$log->add(Log::ERROR, '[$clientData]: '. json_encode($clientData, JSON_PRETTY_PRINT));
+            }
             throw API_Exception::factory(500,'Incorrect data');
         }catch (Exception $e){
             Database::instance()->rollback();
             Kohana::$log->add(Log::ERROR, '[ERROR CREATE QC (Exception)]: ' . $e->getMessage());
-
+            if($clientData) {
+                Kohana::$log->add(Log::ERROR, '[$clientData]: '. json_encode($clientData, JSON_PRETTY_PRINT));
+            }
             throw API_Exception::factory(500,'Operation Error');
         }
     }
@@ -628,6 +635,7 @@ class Controller_Api_Projects extends HDVP_Controller_API
                 'severity_level',
                 'condition_list',
                 'plan_id',
+                'cert_id',
                 'project_stage',
                 'craft_id',
                 'tasks',
@@ -635,6 +643,7 @@ class Controller_Api_Projects extends HDVP_Controller_API
                 'craft_id',
                 'message'
             ]);
+
         $clientData['plan_id'] *= 1;
 
         $clientData['tasks'] = array_values($clientData['tasks']);
@@ -688,6 +697,7 @@ class Controller_Api_Projects extends HDVP_Controller_API
             $qc->profession_id = $clientData['profession_id'];
             $qc->project_stage = $clientData['project_stage'];
             $qc->approved_by = Auth::instance()->get_user()->id;
+            $qc->cert_id = $clientData['cert_id'] ? (int) $clientData['cert_id'] : 0;
             $qc->approved_at = time();
             $qc->save();
             $fs = new FileServer();
@@ -746,17 +756,23 @@ class Controller_Api_Projects extends HDVP_Controller_API
         }catch (ORM_Validation_Exception $e){
             Database::instance()->rollback();
             Kohana::$log->add(Log::ERROR, '[ERROR UPDATE QC (ORM_Validation_Exception)]: ' . $e->getMessage());
-
+            if($clientData) {
+                Kohana::$log->add(Log::ERROR, '[$clientData]: '. json_encode($clientData, JSON_PRETTY_PRINT));
+            }
             throw API_Exception::factory(500,'Incorrect data');
         }catch (HDVP_Exception $e){
             Database::instance()->rollback();
             Kohana::$log->add(Log::ERROR, '[ERROR UPDATE QC (ORM_Validation_Exception)]: ' . $e->getMessage());
-
+            if($clientData) {
+                Kohana::$log->add(Log::ERROR, '[$clientData]: '. json_encode($clientData, JSON_PRETTY_PRINT));
+            }
             throw API_Exception::factory(500,'Incorrect data');
         }catch (Exception $e){
             Database::instance()->rollback();
             Kohana::$log->add(Log::ERROR, '[ERROR UPDATE QC (ORM_Validation_Exception)]: ' . $e->getMessage());
-
+            if($clientData) {
+                Kohana::$log->add(Log::ERROR, '[$clientData]: '. json_encode($clientData, JSON_PRETTY_PRINT));
+            }
             throw API_Exception::factory(500,'Operation Error');
         }
     }
@@ -817,6 +833,7 @@ class Controller_Api_Projects extends HDVP_Controller_API
                 'files' => $this->getQualityControlImages($q),
                 'professionId' => $q->profession_id,
                 'craftId' => $q->craft_id,
+                'certId' => $q->cert_id,
                 'placeType' => $q->place_type,
                 'projectStage' => $q->project_stage,
                 'severityLevel' => $q->severity_level,
@@ -935,6 +952,7 @@ class Controller_Api_Projects extends HDVP_Controller_API
                 'files' => $this->getQualityControlImages($q),
                 'professionId' => $q->profession_id,
                 'craftId' => $q->craft_id,
+                'certId' => $q->cert_id,
                 'placeType' => $q->place_type,
                 'projectStage' => $q->project_stage,
                 'severityLevel' => $q->severity_level,
