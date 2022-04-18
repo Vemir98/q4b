@@ -154,6 +154,7 @@ class Controller_PlaceReports extends HDVP_Controller_Template
         foreach ($objects as $obj){
             $objectsData[$obj->id]['object'] = $obj;
             $objectsData[$obj->id]['qcs'] = ORM::factory('QualityControl')->where('object_id','=',$objectsData[$obj->id]['object']->id)->and_where('craft_id','IN',DB::expr('('.implode(',',$data['crafts']).')'))->find_all();
+            $objectsData[$obj->id]['craftsForStats'] = [];
 
             foreach ($objectsData[$obj->id]['qcs'] as $qc){
                 $objectsData[$obj->id]['floors'][] = $qc->floor_id;
@@ -314,7 +315,8 @@ class Controller_PlaceReports extends HDVP_Controller_Template
         }
         
 
-        $query->order_by('id','DESC');
+//        $query->order_by('id','DESC');
+        $query->order_by(DB::expr('FIELD(status, \'invalid\', \'repaired\', \'existing\', \'normal\')'),'ASC');
 
         $items = $query->find_all();
 

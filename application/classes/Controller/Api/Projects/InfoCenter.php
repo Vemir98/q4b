@@ -129,6 +129,10 @@ class Controller_Api_Projects_InfoCenter extends HDVP_Controller_API
                     ->execute($this->_db);
             }
 
+            $messageData = Api_DBInfoCenter::getProjectMessages([$messageId])[0];
+            $projectMessagesHistoryData = Api_DBInfoCenter::getProjectMessagesHistory([$messageId]);
+            $messageData['history'] = $projectMessagesHistoryData;
+
             $messageProjectIds = array_column(Api_DBInfoCenter::getMessageProjects($messageId), 'projectId');
             PushNotification::notifyInfoCenterMessageUsers($messageId, $messageProjectIds, Enum_NotifyAction::Created);
 
@@ -137,6 +141,7 @@ class Controller_Api_Projects_InfoCenter extends HDVP_Controller_API
             $this->_responseData = [
                 'status' => 'success',
                 'id' => $messageId,
+                'item' => $messageData
             ];
 
         } catch (API_ValidationException $e){
@@ -336,12 +341,17 @@ class Controller_Api_Projects_InfoCenter extends HDVP_Controller_API
 
             Database::instance()->commit();
 
+            $messageData = Api_DBInfoCenter::getProjectMessages([$messageId])[0];
+            $projectMessagesHistoryData = Api_DBInfoCenter::getProjectMessagesHistory([$messageId]);
+            $messageData['history'] = $projectMessagesHistoryData;
+
             $messageProjectIds = array_column(Api_DBInfoCenter::getMessageProjects($messageId), 'projectId');
             PushNotification::notifyInfoCenterMessageUsers($messageId, $messageProjectIds, Enum_NotifyAction::Updated);
 
 
             $this->_responseData = [
-                'status' => "success"
+                'status' => "success",
+                'item' => $messageData
             ];
 
         } catch (API_ValidationException $e){

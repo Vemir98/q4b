@@ -104,6 +104,20 @@ class Model_Project extends MORM
             ->where('modules_tasks_crafts.module_id', '=', $moduleId)->group_by('prtask.id');
         return $result;
     }
+
+    public function getModuleTasksByModuleNameAndCraftId($moduleName, $craftId)
+    {
+        $moduleId = DB::query(Database::SELECT,"SELECT id FROM modules WHERE `name`='{$moduleName}'")->execute()->as_array()[0]['id'];
+
+        $result = $this->tasks->join('pr_tasks_crafts')
+            ->on('prtask.id', '=', 'pr_tasks_crafts.task_id')
+            ->join('modules_tasks_crafts')
+            ->on('pr_tasks_crafts.id', '=', 'modules_tasks_crafts.tc_id')
+            ->where('modules_tasks_crafts.module_id', '=', $moduleId)
+            ->and_where('pr_tasks_crafts.craft_id', '=', $craftId)
+            ->group_by('prtask.id');
+        return $result;
+    }
 //
 //    public function getTasks()
 //    {

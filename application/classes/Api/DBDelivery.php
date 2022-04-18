@@ -30,4 +30,52 @@ class Api_DBDelivery
 
         return $query->execute()->as_array();
     }
+
+    public static function getDeliveryReportQcs($delRepId) :array
+    {
+        $query = 'SELECT
+            id
+            FROM quality_controls qc
+            WHERE qc.del_rep_id=:delRepId';
+
+        $query =  DB::query(Database::SELECT, $query);
+
+        $query->parameters(array(
+            ':delRepId' => $delRepId
+        ));
+
+        return $query->execute()->as_array();
+    }
+
+    public static function getDeliveryReportQcsCount($delRepId) :array
+    {
+        $query = 'SELECT
+            COUNT(qc.id) as count
+            FROM quality_controls qc
+            WHERE qc.del_rep_id=:delRepId';
+
+        $query =  DB::query(Database::SELECT, $query);
+
+        $query->parameters(array(
+            ':delRepId' => $delRepId
+        ));
+
+        return $query->execute()->as_array();
+    }
+
+    public static function getDeliveryReportQcsExpectedCount($delRepId) :array
+    {
+        $query = 'SELECT
+            expected_qc_count as count
+            FROM delivery_reports dr
+            WHERE dr.id=:delRepId';
+
+        $query =  DB::query(Database::SELECT, $query);
+
+        $query->parameters(array(
+            ':delRepId' => $delRepId
+        ));
+
+        return $query->execute()->as_array();
+    }
 }

@@ -290,8 +290,8 @@ class QualityReport
             }
         }
 
-        $this->_stats['total'] = $this->calculateStats($this->_stats['total']);
-        $this->_stats['filtered'] = $this->calculateStats($this->_stats['filtered']);
+        $this->_stats['total'] = $this->calculateStats($this->_stats['total'], 'root');
+        $this->_stats['filtered'] = $this->calculateStats($this->_stats['filtered'], 'root');
 
 
         //for projects
@@ -304,6 +304,7 @@ class QualityReport
                     Enum_QualityControlStatus::Normal => $this->placesQueryPieceForProject($projectID, ORM::factory('QualityControl'))->and_where('status','=',Enum_QualityControlStatus::Normal)->count_all(),
                     Enum_QualityControlStatus::Repaired => $this->placesQueryPieceForProject($projectID, ORM::factory('QualityControl'))->and_where('status','=',Enum_QualityControlStatus::Repaired)->count_all(),
                     Enum_QualityControlStatus::Invalid => $this->placesQueryPieceForProject($projectID, ORM::factory('QualityControl'))->and_where('status','=',Enum_QualityControlStatus::Invalid)->count_all(),
+                    self::STATUS_EXISTING_AND_FOR_REPAIR => $this->placesQueryPieceForProject($projectID, ORM::factory('QualityControl'))->and_where('status','=',Enum_QualityControlStatus::Existing)->and_where('approval_status','=',Enum_QualityControlApproveStatus::ForRepair)->count_all(),
                 ];
 
                 $this->_stats['projects'][$projectID]['filtered']['statuses'] = [
@@ -311,6 +312,7 @@ class QualityReport
                     Enum_QualityControlStatus::Normal => $this->craftsQueryPiece($this->placesQueryPieceForProject($projectID, ORM::factory('QualityControl'))->and_where('status','=',Enum_QualityControlStatus::Normal)->and_where('qualitycontrol.updated_at','BETWEEN',DB::expr($this->_from.' AND '.$this->_to))),
                     Enum_QualityControlStatus::Repaired => $this->craftsQueryPiece($this->placesQueryPieceForProject($projectID, ORM::factory('QualityControl'))->and_where('status','=',Enum_QualityControlStatus::Repaired)->and_where('qualitycontrol.updated_at','BETWEEN',DB::expr($this->_from.' AND '.$this->_to))),
                     Enum_QualityControlStatus::Invalid => $this->craftsQueryPiece($this->placesQueryPieceForProject($projectID, ORM::factory('QualityControl'))->and_where('status','=',Enum_QualityControlStatus::Invalid)->and_where('qualitycontrol.updated_at','BETWEEN',DB::expr($this->_from.' AND '.$this->_to))),
+                    self::STATUS_EXISTING_AND_FOR_REPAIR => $this->craftsQueryPiece($this->placesQueryPieceForProject($projectID, ORM::factory('QualityControl'))->and_where('status','=',Enum_QualityControlStatus::Existing)->and_where('qualitycontrol.updated_at','BETWEEN',DB::expr($this->_from.' AND '.$this->_to))->and_where('qualitycontrol.approval_status','=',Enum_QualityControlApproveStatus::ForRepair)),
                 ];
 
                 foreach ($this->_stats['projects'][$projectID]['filtered'] as $k => $vArr){
@@ -323,8 +325,8 @@ class QualityReport
                     }
                 }
 
-                $this->_stats['projects'][$projectID]['total'] = $this->calculateStats($this->_stats['projects'][$projectID]['total']);
-                $this->_stats['projects'][$projectID]['filtered'] = $this->calculateStats($this->_stats['projects'][$projectID]['filtered']);
+                $this->_stats['projects'][$projectID]['total'] = $this->calculateStats($this->_stats['projects'][$projectID]['total'], 'projects');
+                $this->_stats['projects'][$projectID]['filtered'] = $this->calculateStats($this->_stats['projects'][$projectID]['filtered'], 'projects');
 
 
                 $this->_stats['projects'][$projectID]['crafts'] = DB::query(Database::SELECT,'SELECT cc.id, cc.name, count(craft_id) `count` FROM quality_controls qc JOIN cmp_crafts cc ON qc.craft_id = cc.id WHERE qc.project_id = '.$projectID.' AND qc.craft_id IN ('.implode(',',$this->_craftsID).') AND cc.status="'.Enum_Status::Enabled.'" AND cc.company_id='.$this->_companyID.' GROUP BY qc.craft_id')->execute()->as_array('id');
@@ -418,23 +420,42 @@ class QualityReport
 
     }
 
-    private function calculateStats($data){
+    private function calculateStats($data, $from){
         $totalStatuses = array_sum($data['statuses']);
         $data['percents'] = [
             Enum_QualityControlStatus::Existing => $totalStatuses ? round($data['statuses'][Enum_QualityControlStatus::Existing] * 100 / $totalStatuses) : 0,
             Enum_QualityControlStatus::Normal => $totalStatuses ? round($data['statuses'][Enum_QualityControlStatus::Normal] * 100 / $totalStatuses) : 0,
             Enum_QualityControlStatus::Repaired => $totalStatuses ? round($data['statuses'][Enum_QualityControlStatus::Repaired] * 100 / $totalStatuses) : 0,
             Enum_QualityControlStatus::Invalid => $totalStatuses ? round($data['statuses'][Enum_QualityControlStatus::Invalid] * 100 / $totalStatuses) : 0,
+            QualityReport::STATUS_EXISTING_AND_FOR_REPAIR => $totalStatuses ? round($data['statuses'][QualityReport::STATUS_EXISTING_AND_FOR_REPAIR] * 100 / $totalStatuses) : 0,
         ];
 
-        $data['statuses']['a'] = $data['statuses'][Enum_QualityControlStatus::Existing] + $data['statuses'][Enum_QualityControlStatus::Normal];
-        $data['statuses']['b'] = $data['statuses'][Enum_QualityControlStatus::Existing] + $data['statuses'][Enum_QualityControlStatus::Normal] + $data['statuses'][Enum_QualityControlStatus::Repaired];
-        $data['statuses']['fixed'] = $data['statuses'][Enum_QualityControlStatus::Repaired];
 
-        $data['percents']['a'] = $totalStatuses ? round(($data['statuses'][Enum_QualityControlStatus::Existing] + $data['statuses'][Enum_QualityControlStatus::Normal]) * 100 / $totalStatuses) : 0;
-        $data['percents']['b'] = $totalStatuses ? round(($data['statuses'][Enum_QualityControlStatus::Existing] + $data['statuses'][Enum_QualityControlStatus::Normal] + $data['statuses'][Enum_QualityControlStatus::Repaired]) * 100 / $totalStatuses) : 0;
+        $data['statuses']['a'] = ($data['statuses'][Enum_QualityControlStatus::Existing] + $data['statuses'][Enum_QualityControlStatus::Normal]);
+        $data['statuses']['b'] = ($data['statuses'][Enum_QualityControlStatus::Existing] + $data['statuses'][Enum_QualityControlStatus::Normal] + $data['statuses'][Enum_QualityControlStatus::Repaired]);
+
+        $data['percents']['a'] = $totalStatuses ? round((($data['statuses'][Enum_QualityControlStatus::Existing] + $data['statuses'][Enum_QualityControlStatus::Normal])) * 100 / $totalStatuses) : 0;
+        $data['percents']['b'] = $totalStatuses ? round((($data['statuses'][Enum_QualityControlStatus::Existing] + $data['statuses'][Enum_QualityControlStatus::Normal] + $data['statuses'][Enum_QualityControlStatus::Repaired])) * 100 / $totalStatuses) : 0;
+
+
+        if($from !== 'root') {
+            $data['statuses']['a'] -= $data['statuses'][QualityReport::STATUS_EXISTING_AND_FOR_REPAIR];
+            $data['statuses']['b'] -= $data['statuses'][QualityReport::STATUS_EXISTING_AND_FOR_REPAIR];
+
+            $data['percents']['a'] = $totalStatuses ? round((($data['statuses'][Enum_QualityControlStatus::Existing] + $data['statuses'][Enum_QualityControlStatus::Normal]) - $data['statuses'][QualityReport::STATUS_EXISTING_AND_FOR_REPAIR]) * 100 / $totalStatuses) : 0;
+            $data['percents']['b'] = $totalStatuses ? round((($data['statuses'][Enum_QualityControlStatus::Existing] + $data['statuses'][Enum_QualityControlStatus::Normal] + $data['statuses'][Enum_QualityControlStatus::Repaired]) - $data['statuses'][QualityReport::STATUS_EXISTING_AND_FOR_REPAIR]) * 100 / $totalStatuses) : 0;
+        }
+
+        $data['statuses']['fixed'] = $data['statuses'][Enum_QualityControlStatus::Repaired];
         $data['percents']['fixed'] = round($data['statuses'][Enum_QualityControlStatus::Repaired] * 100 / ($data['statuses'][Enum_QualityControlStatus::Repaired] + $this->_stats['total']['statuses'][Enum_QualityControlStatus::Invalid]));
 
+//        $data['statuses']['a'] = ($data['statuses'][Enum_QualityControlStatus::Existing] + $data['statuses'][Enum_QualityControlStatus::Normal]);
+//        $data['statuses']['b'] = ($data['statuses'][Enum_QualityControlStatus::Existing] + $data['statuses'][Enum_QualityControlStatus::Normal] + $data['statuses'][Enum_QualityControlStatus::Repaired]);
+//        $data['statuses']['fixed'] = $data['statuses'][Enum_QualityControlStatus::Repaired];
+//
+//        $data['percents']['a'] = $totalStatuses ? round((($data['statuses'][Enum_QualityControlStatus::Existing] + $data['statuses'][Enum_QualityControlStatus::Normal])) * 100 / $totalStatuses) : 0;
+//        $data['percents']['b'] = $totalStatuses ? round((($data['statuses'][Enum_QualityControlStatus::Existing] + $data['statuses'][Enum_QualityControlStatus::Normal] + $data['statuses'][Enum_QualityControlStatus::Repaired])) * 100 / $totalStatuses) : 0;
+//        $data['percents']['fixed'] = round($data['statuses'][Enum_QualityControlStatus::Repaired] * 100 / ($data['statuses'][Enum_QualityControlStatus::Repaired] + $this->_stats['total']['statuses'][Enum_QualityControlStatus::Invalid]));
         return $data;
     }
 
@@ -486,8 +507,8 @@ class QualityReport
             }
         }
 
-        $this->_stats['total'] = $this->calculateStats($this->_stats['total']);
-        $this->_stats['filtered'] = $this->calculateStats($this->_stats['filtered']);
+        $this->_stats['total'] = $this->calculateStats($this->_stats['total'], 'root');
+        $this->_stats['filtered'] = $this->calculateStats($this->_stats['filtered'], 'root');
 
 
         //for objects
@@ -500,6 +521,7 @@ class QualityReport
                     Enum_QualityControlStatus::Normal => $this->placesQueryPieceForObject($objectID, ORM::factory('QualityControl'))->and_where('status','=',Enum_QualityControlStatus::Normal)->count_all(),
                     Enum_QualityControlStatus::Repaired => $this->placesQueryPieceForObject($objectID, ORM::factory('QualityControl'))->and_where('status','=',Enum_QualityControlStatus::Repaired)->count_all(),
                     Enum_QualityControlStatus::Invalid => $this->placesQueryPieceForObject($objectID, ORM::factory('QualityControl'))->and_where('status','=',Enum_QualityControlStatus::Invalid)->count_all(),
+                    self::STATUS_EXISTING_AND_FOR_REPAIR => $this->placesQueryPieceForObject($objectID, ORM::factory('QualityControl'))->and_where('status','=',Enum_QualityControlStatus::Existing)->and_where('approval_status','=',Enum_QualityControlApproveStatus::ForRepair)->count_all(),
                 ];
 
                 $this->_stats['objects'][$objectID]['filtered']['statuses'] = [
@@ -507,6 +529,7 @@ class QualityReport
                     Enum_QualityControlStatus::Normal => $this->craftsQueryPiece($this->placesQueryPieceForObject($objectID, ORM::factory('QualityControl'))->and_where('status','=',Enum_QualityControlStatus::Normal)->and_where('qualitycontrol.updated_at','BETWEEN',DB::expr($this->_from.' AND '.$this->_to))),
                     Enum_QualityControlStatus::Repaired => $this->craftsQueryPiece($this->placesQueryPieceForObject($objectID, ORM::factory('QualityControl'))->and_where('status','=',Enum_QualityControlStatus::Repaired)->and_where('qualitycontrol.updated_at','BETWEEN',DB::expr($this->_from.' AND '.$this->_to))),
                     Enum_QualityControlStatus::Invalid => $this->craftsQueryPiece($this->placesQueryPieceForObject($objectID, ORM::factory('QualityControl'))->and_where('status','=',Enum_QualityControlStatus::Invalid)->and_where('qualitycontrol.updated_at','BETWEEN',DB::expr($this->_from.' AND '.$this->_to))),
+                    self::STATUS_EXISTING_AND_FOR_REPAIR => $this->craftsQueryPiece($this->placesQueryPieceForObject($objectID, ORM::factory('QualityControl'))->and_where('status','=',Enum_QualityControlStatus::Existing)->and_where('qualitycontrol.updated_at','BETWEEN',DB::expr($this->_from.' AND '.$this->_to))->and_where('qualitycontrol.approval_status','=',Enum_QualityControlApproveStatus::ForRepair)),
                 ];
 
                 foreach ($this->_stats['objects'][$objectID]['filtered'] as $k => $vArr){
@@ -519,8 +542,8 @@ class QualityReport
                     }
                 }
 
-                $this->_stats['objects'][$objectID]['total'] = $this->calculateStats($this->_stats['objects'][$objectID]['total']);
-                $this->_stats['objects'][$objectID]['filtered'] = $this->calculateStats($this->_stats['objects'][$objectID]['filtered']);
+                $this->_stats['objects'][$objectID]['total'] = $this->calculateStats($this->_stats['objects'][$objectID]['total'], 'objects');
+                $this->_stats['objects'][$objectID]['filtered'] = $this->calculateStats($this->_stats['objects'][$objectID]['filtered'], 'objects');
 
 
                 $this->_stats['objects'][$objectID]['crafts'] = DB::query(Database::SELECT,'SELECT cc.id, cc.name, count(craft_id) `count` FROM quality_controls qc JOIN cmp_crafts cc ON qc.craft_id = cc.id WHERE qc.object_id = '.$objectID.' AND qc.craft_id IN ('.implode(',',$this->_craftsID).') AND cc.status="'.Enum_Status::Enabled.'" AND cc.company_id='.$this->_companyID.' GROUP BY qc.craft_id')->execute()->as_array('id');

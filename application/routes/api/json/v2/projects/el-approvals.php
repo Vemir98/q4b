@@ -72,6 +72,17 @@ Route::set('apiJsonV2.el-approvals.change-status','api/json/v2/(<appToken>/)el-a
         'directory' => 'Api/Projects'
     ]);
 
+Route::set('apiJsonV2.el-approvals.partial-process','api/json/v2/(<appToken>/)el-approvals/<id>/partial-process',['appToken' => '[a-f0-9]{32}', 'id' => '[0-9]+',])
+    ->filter(function($route, $params, $request)
+    {
+        $params['action'] = 'partial_process_'.strtolower($request->method());
+        return $params;
+    })
+    ->defaults([
+        'controller' => 'ElApprovals',
+        'directory' => 'Api/Projects'
+    ]);
+
 Route::set('apiJsonV2.el-approvals.change-note','api/json/v2/(<appToken>/)el-approvals/<id>/note',['appToken' => '[a-f0-9]{32}'])
     ->filter(function($route, $params, $request)
     {

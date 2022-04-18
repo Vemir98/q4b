@@ -20,7 +20,8 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                 'elementId',
                 'note',
                 'specialities',
-                'notify'
+                'notify',
+                'partialProcess'
             ]);
 
         try {
@@ -51,6 +52,8 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                 'updated_at' => time(),
                 'updated_by' => Auth::instance()->get_user()->id,
             ];
+
+            $queryData['partial_process'] = $clientData['partialProcess'] ?: "0";
 
             $elApprovalId = DB::insert('el_approvals')
                 ->columns(array_keys($queryData))
@@ -500,7 +503,8 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                     'managerStatuses',
                     'statuses',
                     'positions',
-                    'primarySupervision'
+                    'primarySupervision',
+                    'partialProcess'
                 ]);
 
             $filters['from'] = $_POST['from'] ? DateTime::createFromFormat('d/m/Y H:i',$_POST['from'] . ' 00:00')->getTimestamp() : null;
@@ -661,7 +665,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
     }
 
     /**
-     * returns specific speciality of element approval
+     * add signature
      * https://qforb.net/api/json/<appToken>/el-approvals/<el_app_id>/add_signature(/<craftId>)
      */
     public function action_add_signature_post()
@@ -805,11 +809,10 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                 throw API_Exception::factory(500,'Invalid ear id');
             }
 
-            if( ($elApproval['appropriate'] === '0') && ($status === Enum_ApprovalStatus::Approved) ) {
-                throw API_Exception::factory(500,'Can\'t update Ear manager status to approved');
-            }
+//            if( ($elApproval['appropriate'] === '0') && ($status === Enum_ApprovalStatus::Approved) ) {
+//                throw API_Exception::factory(500,'Can\'t update Ear manager status to approved');
+//            }
 
-//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($elApproval); echo "</pre>"; exit;
 
             Database::instance()->begin();
 
@@ -824,16 +827,25 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                 ->where('id', '=', $elApprovalId)
                 ->execute($this->_db);
 
+            $elApproval = Api_DBElApprovals::getElApprovalById($elApprovalId)[0];
+
+            if(($elApproval['status'] === Enum_ApprovalStatus::Waiting) && $elApproval['partialProcess'] === "1") {
+                DB::update('el_approvals')
+                    ->set(['partial_process' => "0"])
+                    ->where('id', '=', $elApprovalId)
+                    ->execute($this->_db);
+            }
+
             $this->updateElementApproval($elApprovalId);
             Database::instance()->commit();
-
 
             $this->_responseData = [
                 'status' => "success"
             ];
         } catch (Exception $e){
             Database::instance()->rollback();
-            throw API_Exception::factory(500,'Operation Error');
+//            throw API_Exception::factory(500,'Operation Error');
+            throw API_Exception::factory(500,$e->getMessage());
 //            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$e->getMessage()]); echo "</pre>"; exit;
         }
     }
@@ -985,6 +997,50 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
     }
 
     /**
+     * update EAR partialProcess property
+     * https://qforb.net/api/json/<appToken>/el-approvals/<id>/partial-process
+     */
+    public function action_partial_process_put() {
+        $elApprovalId = $this->getUIntParamOrDie($this->request->param('id'));
+
+        try {
+
+            $elApproval = Api_DBElApprovals::getElApprovalById($elApprovalId)[0];
+
+            if($elApproval['status'] === Enum_ApprovalStatus::Approved) {
+                throw API_ValidationException::factory(500, 'Can\'t modify readable EAR');
+            }
+
+            $partialProcess = Arr::get($this->put(),'partialProcess');
+
+            Database::instance()->begin();
+
+            DB::update('el_approvals')
+                ->set(['partial_process' => $partialProcess])
+                ->where('id', '=', $elApprovalId)
+                ->execute($this->_db);
+
+            $this->updateElementApproval($elApprovalId);
+
+            $users = Api_DBElApprovals::getElApprovalUsersListForNotify($elApprovalId);
+
+            PushNotification::notifyElAppUsers($elApprovalId, $users, $elApproval['projectId'], Enum_NotifyAction::Updated);
+
+            Database::instance()->commit();
+
+            $this->_responseData = [
+                'status' => "success"
+            ];
+
+        } catch (Exception $e){
+            Database::instance()->rollback();
+            Kohana::$log->add(Log::ERROR, '[ERROR [action_partial_process_put] (Exception)]: ' . $e->getMessage());
+            throw API_Exception::factory(500,'Operation Error');
+//            throw API_Exception::factory(500,$e->getMessage());
+        }
+    }
+
+    /**
      * exports EAR as xls
      * https://qforb.net/api/json/<appToken>/projects/<project_id>/el-approvals/export_xls
      */
@@ -1006,7 +1062,8 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
             'specialityIds' => json_decode($_GET['specialityIds']),
             'companyId' => json_decode($_GET['companyId']),
             'positions' => json_decode($_GET['positions']),
-            'primarySupervision' => json_decode($_GET['primarySupervision'])
+            'primarySupervision' => json_decode($_GET['primarySupervision']),
+            'partialProcess' => json_decode($_GET['partialProcess'])
         ];
 
         $filters['from'] = $_GET['from'] ? DateTime::createFromFormat('d/m/Y H:i',$_GET['from'] . ' 00:00')->getTimestamp() : null;
@@ -1104,7 +1161,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                     $elApproval['notice'],
                     '',
                     $elApproval['floorName'] ?: $elApproval['floorNumber'],
-                    $elApproval['appropriate'] ? __('appropriate') : __('not_appropriate'),
+                    ($elApproval['partialProcess'] === '1') ? __('partial_process') : ($elApproval['appropriate'] ? __('appropriate') : __('not_appropriate')),
                     !empty($elApproval['managerSignature']) ? date('d/m/Y', $elApproval['managerSignature']['createdAt']) : '',
                     !empty($elApproval['managerSignature']) ? $elApproval['managerSignature']['position'] : '',
                     !empty($elApproval['managerSignature']) ? $elApproval['managerSignature']['name'] : '',

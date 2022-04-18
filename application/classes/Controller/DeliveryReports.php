@@ -45,6 +45,7 @@ class Controller_DeliveryReports extends HDVP_Controller_Template
             'Pre-delivery' => __('pre_delivery'),
             'select_all' => __('select all'),
             'unselect_all' => __('unselect all'),
+            'protocol_not_ready' => __('protocol_not_ready')
         ];
 
         $this->template->content = View::make('reports/delivery/main', ['translations' => $translations]);
@@ -112,7 +113,8 @@ class Controller_DeliveryReports extends HDVP_Controller_Template
         $items = [];
         foreach ($delReports as $r){
             $place = $r->place;
-            $items[] = array(
+
+            $delReport = [
                 'id' => $r->id,
                 'customer' => $r->customers->find()->full_name,
                 'place' => str_replace("'"," ",$place->name.' ('.$place->custom_number.')'),
@@ -125,7 +127,21 @@ class Controller_DeliveryReports extends HDVP_Controller_Template
                 'print'=> URL::site('reports/delivery/print/'.$r->id),
                 'edited' => false,
                 'isPreDelivery' => $r->is_pre_delivery
-            );
+            ];
+
+            $delReport['canCreatePdf'] = false;
+
+            if(!is_null($r->expected_qc_count) && !is_null($r->qc_count)) {
+                if((int)$r->expected_qc_count === (int)$r->qc_count) {
+                    $delReport['canCreatePdf'] = true;
+                }
+            } else {
+                $delReport['canCreatePdf'] = true;
+            }
+
+            $items[] = $delReport;
+
+
             if($places->type == 'public'){
                 $simpleStat['protocols']['public']++;
             }else{

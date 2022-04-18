@@ -226,6 +226,7 @@ if($_USER->is('project_supervisor') || $isSubcontractor){//запрет на и�
                     <div class="plans-modal-dialog-top relative error-handler">
                         <h4 class="table-modal-label-h4"><?=__('Tasks List')?></h4>
                         <div class="tasks-full-description-box">
+<!--                            <h1>barev1</h1>-->
                             <ul class="tasks-full-description qc-tasks-list">
                                 <?$arrayTasks = [];
                                 foreach ($itemTasks as $task) {

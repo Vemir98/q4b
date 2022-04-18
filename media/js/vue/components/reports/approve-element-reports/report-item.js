@@ -33,41 +33,59 @@ Vue.component('report-item', {
 
             </div>
         </div>
-        <div class="approve-elv-filter flex-end">
-            <div v-if="report.managerSignature" class="sign-section">
-                <div class="filter-item-label">{{ trans.manager_signature }}</div>
-                <div class="sign-content">
-                    <img 
-                        :src="report.managerSignature ? imageUrl+report.managerSignature.image : ''"
-                    > 
-               </div>
-            </div>
-            <div class="filter-item">
-                <div class="filter-item-label">{{ trans.manager_status }}</div>
-                <div class="multiselect-col">
-                    <multiselect 
-                        v-model="selectedStatus"
-                        :option-height="104" 
-                        :placeholder="trans.select_status"
-                        :disabled="(elStatuses.length < 1) || !checkInitialReportAllTasksEnabled() || this.nothingToUpdate() || (!canUpdate && (userRole !== 'super_admin') )" 
-                        :options="elStatuses" 
-                        track-by="id" 
-                        label="name"
-                        @select="ReportStatusChanged($event)"
-                        :searchable="true" 
-                        :allow-empty="false"
-                        :show-labels="false"
+        <div class="approve-elv-filter flex-between">
+            <div class="filter-item-checkbox">
+                <span class="check-task">
+                    <input 
+                        type="checkbox" 
+                        class="el-app-checkbox" 
+                        v-model="partialProcess" 
+                        :class="{'disabled': ((!hasPermission) || (!canUpdate))}" 
+                        :disabled="((!hasPermission) || (!canUpdate))"
+                        @change="changePartialProcess" 
                     >
-                        <template slot="singleLabel" slot-scope="props">
-                            {{ trans[props.option.name] }}
-                        </template>
-                        <template slot="option" slot-scope="props">
-                            <span>{{ trans[props.option.name] }}</span>
-                        </template>
-                        <template slot="option-selected" slot-scope="props">
-                            <span>{{ trans[props.option.name] }}</span>
-                        </template>
-                    </multiselect>
+                    <span class="checkboxImg" :class="{'disabled': ((!hasPermission) || (!canUpdate))}"></span>
+                </span>
+                <div class="approve-elv-report-status-title flex-between">
+                    {{ trans.partial_process }}
+                </div>
+            </div>
+            <div style="display: flex">
+                <div v-if="report.managerSignature" class="sign-section">
+                    <div class="filter-item-label">{{ trans.manager_signature }}</div>
+                    <div class="sign-content">
+                        <img 
+                            :src="report.managerSignature ? imageUrl+report.managerSignature.image : ''"
+                        > 
+                   </div>
+                </div>
+                <div class="filter-item">
+                    <div class="filter-item-label">{{ trans.manager_status }}</div>
+                    <div class="multiselect-col">
+                        <multiselect 
+                            v-model="selectedStatus"
+                            :option-height="104" 
+                            :placeholder="trans.select_status"
+                            :disabled="(report.partialProcess === '0') && ((report.partialProcess === '1') || ( (elStatuses.length < 1) || !checkInitialReportAllTasksEnabled() || this.nothingToUpdate() || (!canUpdate && (userRole !== 'super_admin'))))" 
+                            :options="elStatuses" 
+                            track-by="id" 
+                            label="name"
+                            @select="ReportStatusChanged($event)"
+                            :searchable="true" 
+                            :allow-empty="false"
+                            :show-labels="false"
+                        >
+                            <template slot="singleLabel" slot-scope="props">
+                                {{ trans[props.option.name] }}
+                            </template>
+                            <template slot="option" slot-scope="props">
+                                <span>{{ trans[props.option.name] }}</span>
+                            </template>
+                            <template slot="option-selected" slot-scope="props">
+                                <span>{{ trans[props.option.name] }}</span>
+                            </template> 
+                        </multiselect>
+                    </div>
                 </div>
             </div>
         </div>
@@ -306,7 +324,7 @@ Vue.component('report-item', {
                       {{ trans.sign }}
                     </button>
                     <button
-                        v-if="popupWasOpenFrom !== 'managerSignature'" 
+                        v-if="!['managerSignature', 'partialProcess'].includes(popupWasOpenFrom)" 
                         :class="['modul-popup-Cancel', {'labtest-disabled': (canSign && canUpdate) ? false : true}]" 
                         @click="addSignature"
                     >
@@ -370,10 +388,10 @@ Vue.component('report-item', {
             currentSignerPosition: '',
             keepOtherSignatures: false,
             canUpdateSpeciality: {},
-            canChangeManagerStatus: false,
             signatureDrawn: false,
             signaturePad: null,
             selectedStatus: {},
+            partialProcess: (this.data.partialProcess === "1")
         }
     },
     components: { Multiselect: window.VueMultiselect.default },
@@ -381,6 +399,7 @@ Vue.component('report-item', {
         canSign() {
             return (this.signatureDrawn && (this.currentSignerName !== "") && (this.currentSignerPosition !== ""))
         },
+
         canUpdate() {
             return (this.report.status === 'waiting')
         },
@@ -390,6 +409,13 @@ Vue.component('report-item', {
         hasPermission() {
             let roles = ['super_admin', 'corporate_admin', 'corporate_infomanager', 'company_admin', 'company_infomanager', 'company_manager', 'general_admin', 'general_infomanager', 'project_admin'];
             return (roles.includes(this.userRole))
+        },
+        canChangeManagerStatus() {
+            // if(this.report.partialProcess === "1") {
+            //     return true
+            // } else {
+                return (this.elStatuses.length < 1) || !this.checkInitialReportAllTasksEnabled() || this.nothingToUpdate() || (!this.canUpdate && (this.userRole !== 'super_admin'))
+            // }
         }
     },
     watch: {
@@ -426,15 +452,18 @@ Vue.component('report-item', {
                     case 'button':
                         break;
                     case 'ticket':
-                        if(this.popupWasOpenFrom === 'ticket') {
-                            if(this.currentTask && keepOthers  &&  closingWithoutSign) {
-                                const specialityIndex = this.initialReport.specialities.findIndex(spec => +spec.id === +this.currentSpeciality.id);
-                                const taskIndex = this.initialReport.specialities[specialityIndex].tasks.findIndex(task => +task.id === +this.currentTask.id);
-                                this.report.specialities[specialityIndex].tasks[taskIndex].appropriate = "0";
-                                this.report.specialities[specialityIndex].appropriate = "0";
-                                this.report.specialities[specialityIndex].canUpdateTaskStatuses = !this.report.specialities[specialityIndex].canUpdateTaskStatuses;
-                                this.report.updated = true;
-                            }
+                        if(this.currentTask && keepOthers  &&  closingWithoutSign) {
+                            const specialityIndex = this.initialReport.specialities.findIndex(spec => +spec.id === +this.currentSpeciality.id);
+                            const taskIndex = this.initialReport.specialities[specialityIndex].tasks.findIndex(task => +task.id === +this.currentTask.id);
+                            this.report.specialities[specialityIndex].tasks[taskIndex].appropriate = "0";
+                            this.report.specialities[specialityIndex].appropriate = "0";
+                            this.report.specialities[specialityIndex].canUpdateTaskStatuses = !this.report.specialities[specialityIndex].canUpdateTaskStatuses;
+                            this.report.updated = true;
+                        }
+                        break;
+                    case 'partialProcess':
+                        if(closingWithoutSign) {
+                            this.partialProcess = false;
                         }
                         break;
                     default:
@@ -478,7 +507,13 @@ Vue.component('report-item', {
                         'image': this.signaturePad.toDataURL(),
                     }
                     break;
-
+                case "partialProcess":
+                    this.managerSignature = {
+                        'name': this.currentSignerName,
+                        'position': this.currentSignerPosition,
+                        'image': this.signaturePad.toDataURL(),
+                    }
+                    break;
                 default:
                     this.newSignatures.push({
                         'elAppId': this.report.id,
@@ -502,6 +537,9 @@ Vue.component('report-item', {
             switch(this.popupWasOpenFrom) {
                 case "managerSignature":
                     this.updateManagerSignature()
+                    break;
+                case "partialProcess":
+                    this.updateReportPartialProcess(this.partialProcess);
                     break;
                 default:
                     this.report.specialities.forEach(speciality => {
@@ -646,6 +684,7 @@ Vue.component('report-item', {
         updateManagerSignature() {
             this.showLoader = true;
             let url = `/el-approvals/${this.report.id}/add_signature`;
+
             qfetch(url, {method: 'POST', headers: {}, body:this.managerSignature})
                 .then(response => {
                     this.report.managerSignature = response.item ? response.item :null;
@@ -658,6 +697,22 @@ Vue.component('report-item', {
                     this.selectedStatus = this.elStatuses.filter(elStatus => {
                         return elStatus.name !== status.name;
                     })[0];
+                    this.showLoader = false;
+                })
+        },
+        updateReportPartialProcess(partialProcess) {
+            this.showLoader = true;
+            let url = `/el-approvals/${this.report.id}/partial-process`;
+            qfetch(url, {method: 'PUT', headers: {}, body:{partialProcess: partialProcess ? "1" : "0"}})
+                .then(response => {
+                    this.initialReport.partialProcess = partialProcess ? "1" : "0";
+                    this.report.partialProcess = partialProcess ? "1" : "0";
+                    this.selectedStatus = this.elStatuses[1]
+                    this.updateManagerSignature()
+                    this.showLoader = false;
+                })
+                .catch(error => {
+                    this.report.partialProcess = this.initialReport.partialProcess;
                     this.showLoader = false;
                 })
         },
@@ -683,6 +738,9 @@ Vue.component('report-item', {
                     this.report.status = status.name;
                     if(this.report.status === 'waiting') {
                         this.report.managerSignature = null;
+                        this.report.partialProcess = "0";
+                        this.initialReport.partialProcess = "0";
+                        this.partialProcess = false;
                     }
                     this.report.updated = true;
                     this.showLoader = false;
@@ -767,6 +825,15 @@ Vue.component('report-item', {
             } else {
                 speciality.canUpdatePrimarySupervision = false;
                 this.report.updated = false;
+            }
+        },
+
+        changePartialProcess() {
+            if((!this.hasPermission) || (!this.canUpdate)) return false;
+
+            console.log('PARTIAL PROCESS', this.partialProcess)
+            if(this.partialProcess) {
+                this.togglePopup(null,true, false, 'partialProcess')
             }
         }
     },

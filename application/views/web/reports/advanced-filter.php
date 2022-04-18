@@ -61,7 +61,15 @@ $selectedSpace = $selectedArray["space"] ? $selectedArray["space"] : '';
                     <?foreach($props as $prop):?>
                     <?=$obj=ORM::factory('PrObject',$prop['id']);?>
                     <?$selected = in_array($prop['id'], $selectedObjects) ? "selected":""?>
-                        <option value="<?= $prop['id'] ?>" <?=$selected?> data-floornames='<?=json_encode($obj->floorNumbersWithNames())?>' data-floor-from="<?=$prop['smaller_floor']?>" data-floor-to="<?=$prop['bigger_floor']?>"><?=$prop['type']?> - <?=$prop['name']?></option>
+                        <option
+                            value="<?= $prop['id'] ?>"
+                            <?=$selected?>
+                            data-floornames='<?=json_encode($obj->floorNumbersWithNames())?>'
+                            data-floor-from="<?=$prop['smaller_floor']?>"
+                            data-floor-to="<?=$prop['bigger_floor']?>"
+                        >
+                            <?=$prop['type']?> - <?=$prop['name']?>
+                        </option>
                     <?endforeach?>
                 </select>
             </div>
@@ -162,8 +170,15 @@ $selectedSpace = $selectedArray["space"] ? $selectedArray["space"] : '';
         </div>
         <div class="form-group col-md-2 rtl-float-right">
             <label class="table_label"><?=__('Element number')?></label>
-            <input type="text" class="table_input  <?=($selectedObjects && $selectedPlaceType!="all" )? '':'disabled-input'?> " name="place_number" data-url="<?=URL::site('reports/get_spaces/')?>">
+            <div class="select-wrapper"><i class="q4bikon-arrow_bottom"></i>
+                <select class="q4-select q4-form-input <?=($selectedObjects && $selectedPlaceType!="all" )? '':'disabled-input'?> " name="place_number" data-url="<?=URL::site('reports/get_spaces/')?>">
+                </select>
+            </div>
         </div>
+<!--        <div class="form-group col-md-2 rtl-float-right">-->
+<!--            <label class="table_label">--><?//=__('Element number')?><!--</label>-->
+<!--            <input type="text" class="table_input  --><?//=($selectedObjects && $selectedPlaceType!="all" )? '':'disabled-input'?><!-- " name="place_number" data-url="--><?//=URL::site('reports/get_spaces/')?><!--">-->
+<!--        </div>-->
         <div class="form-group col-md-2 rtl-float-right">
             <label class="table_label"><?=__('Element id')?></label>
             <input type="text" class="table_input  <?=($selectedObjects && $selectedPlaceType!="all" )? '':'disabled-input'?> " name="custom_number" data-url="<?=URL::site('reports/get_spaces/')?>">

@@ -64,7 +64,7 @@
                         </figure>
                     </div>
 <!--                --><?//endif;?>
-                <?if(Usr::can(Usr::READ_PERM,'Controller_DeliveryReports',Enum_UserPriorityLevel::General) OR in_array(Auth::instance()->get_user()->email,['avia.maccabi@avney-derech.co.il','eldar5390@gmail.com','adirr@sh-av.co.il','eyal@sh-av.co.il','ori@sh-av.co.il','Shay.Y@Avney-Derech.co.il','Eli.k@Avney-Derech.co.il','Moshe.S@Avney-Derech.co.il','Vladimir@Avney-Derech.co.il','yael@Avney-Derech.co.il','Yosi.Z@Avney-Derech.co.il','Harel@Avney-Derech.co.il','liron@sh-av.co.il'])):?>
+                <?if(Usr::can(Usr::READ_PERM,'Controller_DeliveryReports',Enum_UserPriorityLevel::General) OR in_array(strtolower(Auth::instance()->get_user()->email),['avia.maccabi@avney-derech.co.il','eldar5390@gmail.com','adirr@sh-av.co.il','eyal@sh-av.co.il','ori@sh-av.co.il','shay.y@avney-derech.co.il','eli.k@avney-derech.co.il','moshe.s@avney-derech.co.il','vladimir@avney-derech.co.il','yael@avney-derech.co.il','yosi.z@avney-derech.co.il','harel@avney-derech.co.il','liron@sh-av.co.il','daniel@avney-derech.co.il','shnir.yakuv@avney-derech.co.il'])):?>
                 <div class="item">
                     <figure class="mobile-figure">
                         <a href="<?=URL::site('reports/delivery')?>">

@@ -94,14 +94,30 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <label class="table_label"><?=__('Password')?></label>
+                            <div class="form_row">
+                                <input type="password" class="q4-form-input symbol modal_input" value="" name="user_<?=$item->id?>_password" />
+                                <i class="input_icon q4bikon-password"></i>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="table_label"><?=__('confirm password')?></label>
+                            <div class="form_row">
+                                <input type="password" class="q4-form-input symbol modal_input" value="" name="user_<?=$item->id?>_password_confirm"  />
+                                <i class="input_icon q4bikon-password"></i>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer text-align">
                     <?if($item->status == Enum_UserStatus::Pending):?>
                         <a href="#" class="q4-btn-lg light-blue-bg mr_30 invite-usr" data-url="<?=URL::site('companies/invite_user/'.$companyId.'/'.$item->id)?>"><?=__('Invite')?></a>
                     <?endif?>
-                    <?if($item->status == Enum_UserStatus::Active):?>
-                        <a href="#" class="q4-btn-lg dark-blue-bg reset-usr-pwd mr_30" data-url="<?=URL::site('companies/reset_user_password/'.$companyId.'/'.$item->id)?>"><?=__('Reset Password')?></a>
-                    <?endif?>
+                    <?//if($item->status == Enum_UserStatus::Active):?>
+<!--                        <a href="#" class="q4-btn-lg dark-blue-bg reset-usr-pwd mr_30" data-url="--><?//=URL::site('companies/reset_user_password/'.$companyId.'/'.$item->id)?><!--">--><?//=__('Reset Password')?><!--</a>-->
+                    <?//endif?>
                     <a href="#" class="q4-btn-lg orange submit"><?=__('Update')?></a>
                 </div>
                 <input type="hidden" name="secure_tkn" value="<?=$secure_tkn?>">

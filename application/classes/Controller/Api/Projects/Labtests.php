@@ -44,7 +44,9 @@ class Controller_Api_Projects_Labtests extends HDVP_Controller_API
             $crafts = Api_DBElements::getElementsCrafts($elIds);
             if(count($crafts)){
                 foreach ($crafts as $craft){
-                    $elItems[$craft['element_id']]['crafts'][] = $craft['id'];
+                    if(!in_array($craft['id'], $elItems[$craft['element_id']]['crafts'])) {
+                        $elItems[$craft['element_id']]['crafts'][] = $craft['id'];
+                    }
                 }
             }
         }

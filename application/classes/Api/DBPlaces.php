@@ -62,4 +62,32 @@ class Api_DBPlaces
 
         return $query->execute()->as_array();
     }
+
+    public static function getPlaces($filters) {
+        $query = 'SELECT
+            pp.id,
+            pp.project_id as projectId,
+            pp.object_id as objectId,
+            pp.floor_id as floorId,
+            pp.name,
+            pp.icon,
+            pp.type,
+            pp.number,
+            pp.ordering,
+            pp.custom_number as customNumber
+            FROM pr_places pp
+            INNER JOIN pr_floors pf ON pp.floor_id=pf.id
+            WHERE pp.project_id =:projectId AND pp.object_id =:objectId AND pf.number IN (:floorNumbers) AND pp.type =:placeType';
+
+        $query =  DB::query(Database::SELECT, $query);
+
+        $query->parameters(array(
+            ':projectId' => $filters['projectId'],
+            ':objectId' => $filters['objectId'],
+            ':floorNumbers' => DB::expr(implode(',',$filters['floorNumbers'])),
+            ':placeType' => $filters['placeType']
+        ));
+
+        return $query->execute()->as_array();
+    }
 }

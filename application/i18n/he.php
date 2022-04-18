@@ -1005,6 +1005,6 @@ return [
     'update_certificate_for' => 'עדכן את הפתיחת מלאכה',
     'are_you_sure_you_want_to_delete_this_certificate' => 'האם אתה בטוח שברצונך למחוק את פתיחת מלאכה?',
     'old_certificates' => 'ישן אישורים/פתיחת מלאכות',
-    'file_size_text' => 'גודל קובץ מקסימלי 1MB',
+    'file_size_text' => 'גודל  מקסימלי של הקובץ: 1MB',
     ''=>'',
 ];

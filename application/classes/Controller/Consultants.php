@@ -80,9 +80,33 @@ class Controller_Consultants extends HDVP_Controller_Template
                     throw new HDVP_Exception("Projects can not be empty");
                 }
                 Database::instance()->begin();
-                $user->values($this->post(),['email','name','phone']);
+
+                $clientData = Arr::extract($this->post(),
+                    [
+                        'email',
+                        'name',
+                        'phone',
+                        'password',
+                        'password_confirm'
+                    ]);
+
+                $passwordsValidation = Validation::factory($clientData);
+
+                $passwordsValidation
+                    ->rule('password', 'not_empty')
+                    ->rule('password', 'min_length', array(':value', 8))
+                    ->rule('password_confirm', 'matches', array(':validation', ':field', 'password'));
+
+                if (!$passwordsValidation->check()) {
+                    throw new HDVP_Exception("Password validation error");
+                }
+
+
+                $user->values($this->post(),['email','name','phone','password']);
+
+
                 $user->username = $user->email;
-                $user->set('password',Text::random());
+                $user->status = Enum_UserStatus::Active;
                 $user->save();
                 $user->remove('projects');
                 if(!empty($projectsData)){
@@ -96,8 +120,8 @@ class Controller_Consultants extends HDVP_Controller_Template
                 }
                 $user->add('roles',ORM::factory('Role')->where('name','=','login')->find()->id);
                 $user->add('roles',Arr::get($this->post(),'role_id'));
-                Event::instance()->fire('onItemAdded',['sender' => $this,'item' => $user]);
-                Event::instance()->fire('onUserAdded',['sender' => $this,'item' => $user]);
+//                Event::instance()->fire('onItemAdded',['sender' => $this,'item' => $user]);
+//                Event::instance()->fire('onUserAdded',['sender' => $this,'item' => $user]);
                 Database::instance()->commit();
                 $this->setResponseData('triggerEvent','usersListUpdated');
                 $this->setResponseData('usersList',View::make('consultants/list',
@@ -148,7 +172,35 @@ class Controller_Consultants extends HDVP_Controller_Template
                     throw new HDVP_Exception("Projects can not be empty");
                 }
                 Database::instance()->begin();
-                $user->values($this->post(),['name','phone'])->save();
+
+                $userData = Arr::extract($this->post(),['name','phone','password','password_confirm']);
+
+                $passwordNotEmptyCheck = Validation::factory($userData);
+                $passwordConfirmNotEmptyCheck = Validation::factory($userData);
+                $passwordsValidationCheck = Validation::factory($userData);
+
+                $passwordNotEmptyCheck
+                    ->rule('password', 'not_empty');
+                $passwordConfirmNotEmptyCheck
+                    ->rule('password_confirm', 'not_empty');
+
+                $passwordsValidationCheck
+                    ->rule('password', 'not_empty')
+                    ->rule('password', 'min_length', array(':value', 8))
+                    ->rule('password_confirm', 'matches', array(':validation', ':field', 'password'));
+
+                $user->set('name', $userData['name']);
+                $user->set('phone', $userData['phone']);
+
+                if($passwordNotEmptyCheck->check() || $passwordConfirmNotEmptyCheck->check()) {
+                    if ($passwordsValidationCheck->check()) {
+                        $user->set('password', $userData['password']);
+                    } else {
+                        throw new HDVP_Exception("Password validation error");
+                    }
+                }
+
+                $user->save();
                 $user->remove('projects');
                 if(!empty($projectsData)){
                     foreach($projectsData as $projId){

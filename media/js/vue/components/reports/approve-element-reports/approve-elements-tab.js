@@ -85,7 +85,8 @@ Vue.component('approve-elements-tab', {
                 'positions': this.filters.selectedPositions.map(position => position.name),
                 'from': this.filters.time[0] ? this.filters.time[0].toLocaleDateString("en-GB") : '',
                 'to': this.filters.time[1] ? this.filters.time[1].toLocaleDateString("en-GB") : '',
-                'primarySupervision': this.filters.primarySupervision
+                'primarySupervision': this.filters.primarySupervision,
+                'partialProcess': this.filters.partialProcess
             };
 
             await this.getProject(this.transformedFilters.projectId)

@@ -70,3 +70,14 @@ Route::set('apiJsonV2.projects.entities.default','api/json/v2(/<appToken>)/proje
         'controller' => 'Entities',
         'directory' => 'Api/Projects',
     ]);
+
+Route::set('apiJsonV1.projects.entities.floors.filtered-places','api/json/v2(/<appToken>)/projects/entities/floors/filtered-places',['appToken' => '[a-f0-9]{32}'])
+    ->filter(function($route, $params, $request)
+    {
+        $params['action'] = 'filtered_places_'.strtolower($request->method());
+        return $params;
+    })
+    ->defaults([
+        'controller' => 'Entities',
+        'directory' => 'Api/Projects',
+    ]);

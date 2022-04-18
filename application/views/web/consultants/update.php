@@ -71,6 +71,24 @@
                                 </div>
                             </div>
                             <div class="row">
+                                <div class="form-group">
+                                    <div class="col-md-6">
+                                        <label class="table_label"><?=__('New password')?></label>
+                                        <div class="form_row">
+                                            <input type="password" class="q4-form-input symbol modal_input" value="" name="password" />
+                                            <i class="input_icon q4bikon-password"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="table_label"><?=__('confirm password')?></label>
+                                        <div class="form_row">
+                                            <input type="password" class="q4-form-input symbol modal_input" value="" name="password_confirm"  />
+                                            <i class="input_icon q4bikon-password"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-md-12 form_row">
                                     <div class="consultants-ud-scroll-wrap">
                                         <label class="table_label"><?=__('Member in')?></label>

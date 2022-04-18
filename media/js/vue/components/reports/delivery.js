@@ -186,10 +186,16 @@ Vue.component('report-delivery', {
                         </td>
                         <td>{{ item.isPreDelivery === '1' ? trans['Pre-delivery'] : trans.Delivery }}</td>
                         <td>
-                            <a :href="item.protocol" target="_blank">
+                            <a v-if="item.canCreatePdf" :href="item.protocol" target="_blank">
                                 <div class="img">
                                     <img src="/media/img/new-images/protocol.svg" alt="Protocol">
                                 </div>
+                            </a>
+                            <a v-else>
+<!--                                <div class="img" style="opacity: 0.2;cursor: auto">-->
+<!--                                    <img src="/media/img/new-images/protocol.svg" alt="Protocol">-->
+<!--                                </div>-->
+                                {{ trans.protocol_not_ready }}
                             </a>
                         </td>
                         <td>

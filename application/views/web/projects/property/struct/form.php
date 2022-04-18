@@ -104,8 +104,12 @@
                                         <span class="bottom-box">
                                                 <div class="apartment-box-input">
                                                 <?$title = !empty($place->custom_number) ? "title='".$place->custom_number."'" : '';?>
-                                               <span data-url="<?=URL::site('projects/property_item_quality_control_list/'.$place->id)?>" class="apartment-number <?=($place->quality_control->count_all() ? 'quality-control-list' : '')?>"
-                                                    <?=$title?>><?= !empty($place->custom_number) ? mb_substr($place->custom_number,0,5) : ($place->type == 'public'? 'PB' : 'N').$place->number?>
+                                               <span
+                                                   data-url="<?=URL::site('projects/property_item_quality_control_list/'.$place->id)?>"
+                                                   class="apartment-number <?=($place->quality_control->count_all() ? 'quality-control-list' : '')?>"
+                                                   <?=$title?>
+                                               >
+                                                   <?= !empty($place->custom_number) ? (mb_substr(htmlspecialchars_decode($place->custom_number),0,5)) : ($place->type == 'public'? 'PB' : 'N').htmlspecialchars_decode($place->number)?>
                                                </span>
                                             </div>
                                         </span>

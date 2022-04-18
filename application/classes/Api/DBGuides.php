@@ -1,19 +1,8 @@
 <?php
 
-class Api_DBModules
+class Api_DBGuides
 {
-    public static function getModules()
-    {
-        return DB::query(Database::SELECT,'SELECT * FROM modules')->execute()->as_array();
-    }
-
-    public static function getModulesForTasks()
-    {
-        $moduleIds = implode(',',array(3));
-        return DB::query(Database::SELECT,"SELECT * FROM modules WHERE id NOT IN($moduleIds)")->execute()->as_array();
-    }
-
-    public static function getModulesGuides($guideType) : array
+    public static function getGuides($guideType) : array
     {
         $query = 'SELECT
             g.id,
@@ -26,7 +15,7 @@ class Api_DBModules
             f.path as filePath,
             mg.module_id as moduleId
             FROM guides g
-            INNER JOIN modules_guides mg on g.id = mg.guide_id
+            LEFT JOIN modules_guides mg on g.id = mg.guide_id
             LEFT JOIN files f on f.id = g.file_id
             WHERE g.type=:guideType';
 

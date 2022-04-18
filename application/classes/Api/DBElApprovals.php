@@ -21,6 +21,7 @@ class Api_DBElApprovals
             ea.appropriate,
             ea.notice,
             ea.status,
+            ea.partial_process as partialProcess,
             ea.created_at as createdAt,
             ea.created_by as createdBy,
             ea.updated_at as updatedAt, 
@@ -148,6 +149,7 @@ class Api_DBElApprovals
             ea.appropriate,
             ea.notice,
             ea.status,
+            ea.partial_process as partialProcess,
             ea.created_at as createdAt,
             ea.created_by as createdBy,
             ea.updated_at as updatedAt, 
@@ -215,6 +217,10 @@ class Api_DBElApprovals
             $primarySupervision = $filters['primarySupervision'];
             $query .= ' AND eac.primary_supervision=:primarySupervision';
         }
+        if(isset($filters['partialProcess']) && $filters['partialProcess'] === '1'){
+            $partialProcess = $filters['partialProcess'];
+            $query .= ' AND ea.partial_process=:partialProcess';
+        }
         $query .= ' ORDER BY ea.created_at DESC';
 
         if($paginate) {
@@ -234,6 +240,7 @@ class Api_DBElApprovals
         if(isset($from)) $query->param(':from', $from);
         if(isset($to)) $query->param(':to', $to);
         if(isset($primarySupervision)) $query->param(':primarySupervision', $primarySupervision);
+        if(isset($partialProcess)) $query->param(':partialProcess', $partialProcess);
 
         if($paginate) {
             $query->parameters(array(
@@ -309,6 +316,10 @@ class Api_DBElApprovals
             $primarySupervision = $filters['primarySupervision'];
             $query .= ' AND eac.primary_supervision=:primarySupervision';
         }
+        if(isset($filters['partialProcess']) && $filters['partialProcess'] === '1'){
+            $partialProcess = $filters['partialProcess'];
+            $query .= ' AND ea.partial_process=:partialProcess';
+        }
         $query .= ' ORDER BY ea.created_at DESC';
 
         $query =  DB::query(Database::SELECT, $query);
@@ -324,6 +335,7 @@ class Api_DBElApprovals
         if(isset($from)) $query->param(':from', $from);
         if(isset($to)) $query->param(':to', $to);
         if(isset($primarySupervision)) $query->param(':primarySupervision', $primarySupervision);
+        if(isset($partialProcess)) $query->param(':partialProcess', $partialProcess);
 
         $query->parameters(array(
             ':companyId' => $filters['companyId'],
@@ -403,6 +415,7 @@ class Api_DBElApprovals
             ea.appropriate,
             ea.notice,
             ea.status,
+            ea.partial_process as partialProcess,
             ea.created_at as createdAt,
             ea.created_by as createdBy,
             ea.updated_at as updatedAt, 
@@ -546,7 +559,7 @@ class Api_DBElApprovals
             ea.status,
             COUNT(DISTINCT ea.id) as count
             FROM el_approvals ea
-            WHERE ea.project_id IN (:projectIds) AND (ea.created_at>=:from AND ea.created_at<=:to) AND ea.appropriate=:appropriate
+            WHERE ea.project_id IN (:projectIds) AND (ea.created_at>=:from AND ea.created_at<=:to) AND ea.appropriate=:appropriate AND ea.partial_process=:partialProcess
             GROUP BY ea.status";
 
         $query =  DB::query(Database::SELECT, $query);
@@ -555,7 +568,29 @@ class Api_DBElApprovals
             ':projectIds' => DB::expr(implode(',',$filters['projectIds'])),
             ':from' => $filters['from'],
             ':to' => $filters['to'],
-            ':appropriate' => $appropriate
+            ':appropriate' => $appropriate,
+            ':partialProcess' => 0
+        ));
+
+        return $query->execute()->as_array();
+    }
+
+    public static function getProjectsPartialProcessElApprovals($filters) : array
+    {
+        $query = "SELECT 
+            ea.status,
+            COUNT(DISTINCT ea.id) as count
+            FROM el_approvals ea
+            WHERE ea.project_id IN (:projectIds) AND (ea.created_at>=:from AND ea.created_at<=:to) AND ea.partial_process=:partialProcess
+            GROUP BY ea.status";
+
+        $query =  DB::query(Database::SELECT, $query);
+
+        $query->parameters(array(
+            ':projectIds' => DB::expr(implode(',',$filters['projectIds'])),
+            ':from' => $filters['from'],
+            ':to' => $filters['to'],
+            ':partialProcess' => 1
         ));
 
         return $query->execute()->as_array();

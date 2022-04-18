@@ -206,6 +206,40 @@ class Controller_Api_Projects_Entities extends HDVP_Controller_API
         $this->_responseData['items'] = $places;
 
     }
+
+    /**
+     * Get filtered places list (filtered by projectId, objectId, floorId, placeType)
+     */
+    public function action_filtered_places_post(){
+//        die('mtav');
+        $filters = Arr::extract($_POST, [
+            'projectId',
+            'objectId',
+            'floorNumbers',
+            'placeType'
+        ]);
+
+//        echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($filters); echo "</pre>"; exit;
+
+        $valid = Validation::factory($filters);
+
+        $valid
+            ->rule('projectId', 'not_empty')
+            ->rule('objectId', 'not_empty')
+            ->rule('floorNumbers', 'not_empty')
+            ->rule('placeType', 'not_empty');
+
+        if (!$valid->check()) {
+            throw API_ValidationException::factory(500, 'missing required field');
+        }
+
+        $places = Api_DBPlaces::getPlaces($filters);
+
+        $this->_responseData = [
+            'status' => 'success',
+            'items' => $places
+        ];
+    }
     public function action_labtest_craft_params_get() {
         $labtestId = $this->getUIntParamOrDie($this->request->param('id'));
         $labtestCraftParams = Api_DBLabtests::getLabCraftParams($labtestId);

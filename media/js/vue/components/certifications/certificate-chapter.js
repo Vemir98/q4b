@@ -89,7 +89,9 @@ Vue.component('certificate-chapter', {
         this.initialChapter = JSON.parse(JSON.stringify(this.chapter))
     },
     mounted() {
-        this.$refs['certificateChapter_'+this.certificateChapter.uid].scrollIntoView({block: "center", behavior: "smooth"})
+        if(!this.certificateChapter.id) {
+            this.$refs['certificateChapter_'+this.certificateChapter.uid].scrollIntoView({block: "center", behavior: "smooth"})
+        }
 
         this.chapterText = this.chapter.text;
         this.selectedChapter = this.chapter.selectedChapter;

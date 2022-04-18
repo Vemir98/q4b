@@ -126,7 +126,10 @@
                 <div class="property-structure-list">
                     <ul id="structure-<?=$floor->id?>" class="property-structure-list-items">
                         <?foreach ($floor->places->order_by('ordering',($floor->number < 0) ? 'DESC' :'ASC')->find_all() as $place):?>
-                        <li data-crafts="<?=@$placeCrafts[$place->id]?>">
+                            <?php
+                                $hasInvalidQc = $place->quality_control->where('status', '=', 'invalid')->count_all();
+                            ?>
+                            <li data-crafts="<?=@$placeCrafts[$place->id]?>" data-has-invalid-qc="<?=($hasInvalidQc)?>">
                             <div class="apartment-box">
                                 <div class="apartment-box-top <?if($place->type == Enum_ProjectPlaceType::PrivateS):?>blue<?else:?>gray<?endif?>">
                                     <span class="apartment-box-top-icon"><i class="q4bikon-<?=$place->type?>"></i></span>
@@ -292,10 +295,15 @@
                 }
 
                 if(needDisable){
-                    $(this).find('.bottom-box .create-quality-control').removeClass('orange').addClass('gray');
+                    $(this).find('.bottom-box .create-quality-control').removeClass('orange').removeClass('red').addClass('gray');
                     $(this).find('.apartment-number').removeClass('quality-control-list');
                 }else{
-                    $(this).find('.bottom-box .create-quality-control').removeClass('gray').addClass('orange');
+                    let hasInvalidQc = +$(this).data('has-invalid-qc');
+                    if(hasInvalidQc > 0) {
+                        $(this).find('.bottom-box .create-quality-control').removeClass('gray').removeClass('orange').addClass('red');
+                    } else {
+                        $(this).find('.bottom-box .create-quality-control').removeClass('gray').removeClass('red').addClass('orange');
+                    }
                     $(this).find('.apartment-number').addClass('quality-control-list');
                 }
 
@@ -333,10 +341,15 @@
                 }
 
                 if(needDisable){
-                    $(this).find('.bottom-box .create-quality-control').removeClass('orange').addClass('gray');
+                    $(this).find('.bottom-box .create-quality-control').removeClass('orange').removeClass('red').addClass('gray');
                     $(this).find('.apartment-number').removeClass('quality-control-list');
                 }else{
-                    $(this).find('.bottom-box .create-quality-control').removeClass('gray').addClass('orange');
+                    let hasInvalidQc = +$(this).data('has-invalid-qc');
+                    if(hasInvalidQc > 0) {
+                        $(this).find('.bottom-box .create-quality-control').removeClass('gray').removeClass('orange').addClass('red');
+                    } else {
+                        $(this).find('.bottom-box .create-quality-control').removeClass('gray').removeClass('red').addClass('orange');
+                    }
                     $(this).find('.apartment-number').addClass('quality-control-list');
                 }
 

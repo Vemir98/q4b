@@ -291,9 +291,9 @@ $(document).ready(function() {
             $(document).find('#advanced-reports').append(data.advancedReportsHtml);
             $(document).find('#advanced-reports').show();
             if($(document).find('[name="place_number"]') &&  !$(document).find('[name="place_number"]').hasClass('disabled-input')){
-
-                $(document).find('[name=place_number]').val(custom.place_number)
-                $(document).find('[name=place_number]').trigger('change')
+                getPlaces(custom.place_number);
+                // $(document).find('[name=place_number]').val(custom.place_number)
+                // $(document).find('[name=place_number]').trigger('change')
             }
         });
 
@@ -318,8 +318,10 @@ $(document).ready(function() {
                 let floorNames = {};
                 if (selected && selected.length === 1) {
                     $('.floors-list').removeClass('disabled-input');
-                    if($(document).find('[name=place_type]').val() != 'all')
-                        $(document).find('[name=place_number]').removeClass('disabled-input').removeAttr('disabled');
+                    // if($(document).find('[name=place_type]').val() != 'all') {
+                    //     enablePlaceNumbersSelect();
+                    // } else {
+                    // }
                     for (var idx in selected) {
                         floorNames = select.find('option[value=' + selected[idx] + ']').data('floornames');
                         var from = select.find('option[value=' + selected[idx] + ']').data('floor-from');
@@ -356,13 +358,25 @@ $(document).ready(function() {
 
                     parentSelector.find('select').html(floorsSelectOptions);
                 } else {
+                    // $('select[name="floors[]"]').val('').trigger('change');
                     $('.floors-list').addClass('disabled-input');
                     $('.floors-list').closest('.multi-select-col').find('.checkbox-wrapper-multiple.checked').each(function() {
                         if ($(this).hasClass('checked')) $(this).trigger('click');
                     });
-
-                    $(document).find('[name=place_number]').addClass('disabled-input').attr('disabled', 'disabled');
                 }
+                clearAndDisablePlaceNumbersSelect();
+                let spacesSelect = $('select[name=space]');
+                spacesSelect.html('');
+                spacesSelect.addClass('disabled-input').attr('disabled', 'disabled');
+                // let objectsSelect = $('select[name="object_id[]"]');
+                // const oneSelected = !!(objectsSelect.val() && (objectsSelect.val().length === 1))
+
+                // if(oneSelected && $('select[name=place_type]').val() !== 'all' && ) {
+                //     enablePlaceNumbersSelect();
+                //     getPlaces();
+                // } else {
+                //     clearAndDisablePlaceNumbersSelect();
+                // }
             }, 50);
         });
 
@@ -378,7 +392,7 @@ $(document).ready(function() {
         $(document).on('change', '[name=place_id]', function() {
             var number = parseInt($(this).val());
             if(number){
-                $(document).find('[name=place_number]').addClass('disabled-input');
+                clearAndDisablePlaceNumbersSelect();
                 var props = $(document).find('.pr-object select').val();
                 if (props) {
                     props = number + '/' + props.join('-');
@@ -402,7 +416,7 @@ $(document).ready(function() {
             }
 
             else{
-                $(document).find('[name=place_number]').removeClass('disabled-input');
+                enablePlaceNumbersSelect();
             }
         });
 
@@ -438,11 +452,12 @@ $(document).ready(function() {
 
         $(document).on('change', 'select[name=place_type]', function() {
 
-            if($(document).find('[name=place_type]').val() != 'all'){
-                $(document).find('[name=place_number]').removeClass('disabled-input');
+            if(($(document).find('[name=place_type]').val() != 'all') && $('select[name="floors[]"]').val()){
+                enablePlaceNumbersSelect();
                 $(document).find('[name=place_id]').removeClass('disabled-input');
+                getPlaces();
             }else{
-                $(document).find('[name=place_number]').addClass('disabled-input');
+                clearAndDisablePlaceNumbersSelect();
                 $(document).find('[name=place_id]').addClass('disabled-input');
             }
             var number = parseInt($(document).find('[name=place_number]').val());
@@ -911,10 +926,75 @@ $(document).ready(function() {
             }
             parent.find('.select-imitation .select-imitation-title').html(result);
         }
+
+        let floorsSelect = $('select[name="floors[]"]');
+        const isSelected = !!(floorsSelect.val() && (floorsSelect.val().length > 0) && !floorsSelect.hasClass('disabled-input') && ($('.floors-list').closest('.multi-select-col').find('.checkbox-wrapper-multiple.checked').length > 0));
+        if(isSelected && $('select[name=place_type]').val() !== 'all') {
+            enablePlaceNumbersSelect();
+            getPlaces();
+        } else {
+            clearAndDisablePlaceNumbersSelect();
+        }
     }
 
     $(document).on('click', '.floors-list .checkbox-list-row', function() {
         setupFloorsMultiselect($(this));
     });
+
+    function getPlaces(placeNumber) {
+        let url = '/projects/entities/floors/filtered-places';
+
+        // let CraftsSelect = $('.pr-object').find('select');
+
+        let data = {
+            'projectId': $(document).find('.rpt-project').val(),
+            'floorNumbers': $(document).find('select[name="floors[]"]').val(),
+            'placeType': $(document).find('select[name=place_type]').val()
+        };
+
+        if($(document).find('select[name="object_id[]"]').val()) {
+            data.objectId = $(document).find('select[name="object_id[]"]').val()[0];
+
+            qfetch(url, {method: 'POST', headers: {}, body: data})
+                .then(response => {
+                    let placeNumbersSelect = $('select[name="place_number"]');
+                    let places = response.items;
+                    let options = ``;
+                    if(!placeNumbersSelect.hasClass('disabled-input')) {
+                        places.forEach(place => {
+                            options += `<option value="${place.customNumber}">${place.name} (${place.customNumber})</option>`
+                        })
+                        placeNumbersSelect.html(options)
+                        if(placeNumber) {
+                            placeNumbersSelect.val(placeNumber)
+                        }
+                        placeNumbersSelect.trigger('change')
+                    }
+                })
+
+        }
+        // data.floorIds = $(document).find('select[name="floors[]"]').val().map(number => {
+        //     // console.log('NUMBER', number)
+        //     // console.log('EL-DATA', CraftsSelect.find('option[value=' + data.objectId + ']').data('floor-ids'))
+        //     return CraftsSelect.find('option[value=' + data.objectId + ']').data('floor-ids').filter(floor => {
+        //         return floor.number === number
+        //     })[0]['id'];
+        // })
+        // console.log('DATA', data)
+        // console.log('DATA', CraftsSelect.find('option[value=' + data.objectId + ']').data('floor-ids'))
+
+
+    }
+
+    function clearAndDisablePlaceNumbersSelect() {
+        let placeNumbersSelect = $('select[name="place_number"]');
+        placeNumbersSelect.html('');
+        placeNumbersSelect.addClass('disabled-input').attr('disabled', 'disabled');
+    }
+
+    function enablePlaceNumbersSelect() {
+        let placeNumbersSelect = $('select[name="place_number"]');
+        placeNumbersSelect.removeClass('disabled-input').attr('disabled', false);
+    }
 
 });

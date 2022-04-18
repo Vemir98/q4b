@@ -412,6 +412,17 @@ Vue.component('statistics', {
                                         <td><span class="green bold">{{ statistics.ear.data.appropriate.waiting }}</span></td>
                                         <td><span class="green bold">{{ statistics.ear.data.appropriate.approved }}</span></td>
                                     </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="statistics-data-item">
+                                                <div class="statistics-data-icon orange"></div>
+                                                <div class="statistics-data-descr">{{ trans.partial_process }}</div>
+                                            </div> 
+                                        </td>
+                                        <td><span class="orange bold">{{ statistics.ear.data.partialProcess.total }}</span></td>
+                                        <td><span class="orange bold">-</span></td>
+                                        <td><span class="orange bold">{{ statistics.ear.data.partialProcess.approved }}</span></td>
+                                    </tr>
                                 </table>
                             </div>
                         </div>
@@ -871,8 +882,13 @@ Vue.component('statistics', {
                                 backgroundColor: 'rgba(15, 154, 96, 1)',
                                 borderColor: 'rgba(15, 154, 96, 1)',
                             },
+                            {
+                                data: this.statistics.ear.data.partialProcess.total,
+                                backgroundColor: 'rgba(255, 144, 0, 1)',
+                                borderColor: 'rgba(255 ,144 , 0, 1)',
+                            },
                         ],
-                        [this.trans.not_appropriate, this.trans.appropriate],
+                        [this.trans.not_appropriate, this.trans.appropriate, this.trans.partial_process],
                         this.statistics.ear.data.total.total
                     );
                 })
