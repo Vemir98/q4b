@@ -8,7 +8,6 @@
 Route::set('apiJsonV2.projects.dashboard.statistics','api/json/v2/(<appToken>/)projects/statistics/<action>',['appToken' => '[a-f0-9]{32}', 'action' => '[a-z0-9_]+'])
     ->filter(function($route, $params, $request)
     {
-        if(strtolower($request->method()) !== 'get') return false;
         if(empty($params['action'])) return false;
         $params['action'] = 'statistics_'.$params['action'].'_'.strtolower($request->method());
         return $params;

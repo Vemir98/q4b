@@ -41,14 +41,26 @@ class Api_DBElApprovals
             LEFT JOIN pr_objects o ON ea.object_id=o.id
             WHERE ea.id= :elAppId';
 
+        if(isset($filters['projectId'])) {
+            $projectId = $filters['projectId'];
+            $query .= ' AND ea.project_id = :projectId';
+        }
+
         if(isset($filters['status'])) {
+            $status = $filters['status'];
             $query .= ' AND ea.status = :status';
         }
 
-        return DB::query(Database::SELECT, $query)
-            ->bind(':elAppId', $elApprovalId)
-            ->bind(':status', $filters['status'])
-            ->execute()->as_array();
+        $query = DB::query(Database::SELECT, $query);
+
+        if(isset($projectId)) $query->param(':projectId', $projectId);
+        if(isset($status)) $query->param(':status', $status);
+
+        $query->parameters(array(
+            ':elAppId' => $elApprovalId,
+        ));
+
+        return $query->execute()->as_array();
     }
 
     public static function getElApprovalCraftsByElAppIds($elApprovalIds)
@@ -548,6 +560,96 @@ class Api_DBElApprovals
             ':projectIds' => DB::expr(implode(',',$filters['projectIds'])),
             ':from' => $filters['from'],
             ':to' => $filters['to']
+        ));
+
+        return $query->execute()->as_array();
+    }
+
+    public static function getProjectsElApprovalsByAppropriate1($filters) : array
+    {
+        $query = "SELECT 
+            ea.status,
+            COUNT(DISTINCT ea.id) as count
+            FROM el_approvals ea 
+            LEFT JOIN el_approvals_crafts eac ON ea.id=eac.el_app_id
+            LEFT JOIN el_app_signatures eas ON eac.id=eas.el_app_craft_id
+            LEFT JOIN pr_floors f ON ea.floor_id=f.id
+            LEFT JOIN pr_places p ON ea.place_id=p.id
+            LEFT JOIN users u ON ea.created_by=u.id
+            LEFT JOIN pr_objects o ON ea.object_id=o.id
+            LEFT JOIN elements e ON ea.element_id=e.id
+            LEFT JOIN el_approvals_notifications ean ON ean.ell_app_id=ea.id";
+
+        $query .= ' WHERE ea.company_id=:companyId AND ea.project_id=:projectId';
+
+        if(isset($filters['objectIds']) && !empty($filters['objectIds'])){
+            $objectIds = DB::expr(implode(',',$filters['objectIds']));
+            $query .= ' AND ea.object_id IN (:objectIds)';
+        }
+        if(isset($filters['placeIds']) && !empty($filters['placeIds'])){
+            $placeIds = DB::expr(implode(',',$filters['placeIds']));
+            $query .= ' AND ea.place_id IN (:placeIds)';
+        }
+        if(isset($filters['elementIds']) && !empty($filters['elementIds'])){
+            $elementIds = DB::expr(implode(',',$filters['elementIds']));
+            $query .= ' AND ea.element_id IN (:elementIds)';
+        }
+        if(isset($filters['floorIds']) && !empty($filters['floorIds'])){
+            $floorIds = DB::expr(implode(',',$filters['floorIds']));
+            $query .= ' AND ea.floor_id IN (:floorIds)';
+        }
+        if(isset($filters['specialityIds']) && !empty($filters['specialityIds'])){
+            $specialityIds = DB::expr(implode(',',$filters['specialityIds']));
+            $query .= ' AND eac.craft_id IN (:specialityIds)';
+        }
+        if(isset($filters['managerStatuses']) && !empty($filters['managerStatuses'])){
+            $managerStatuses = DB::expr(implode('","', $filters['managerStatuses']));
+            $query .= ' AND ea.status IN (":managerStatuses")';
+        }
+        if(isset($filters['statuses']) && !empty($filters['statuses'])){
+            $statuses = DB::expr(implode(',',$filters['statuses']));
+            $query .= ' AND ea.appropriate IN (:statuses)';
+        }
+        if(isset($filters['positions']) && !empty($filters['positions'])){
+            $positions = DB::expr(implode('","', $filters['positions']));
+            $query .= ' AND eas.position IN (":positions")';
+        }
+        if(isset($filters['from'])){
+            $from = $filters['from'];
+            $query .= ' AND ea.created_at>='.$filters['from'];
+        }
+        if(isset($filters['to'])){
+            $to = $filters['to'];
+            $query .= ' AND ea.created_at<='.$filters['to'];
+        }
+        if(isset($filters['primarySupervision']) && $filters['primarySupervision'] === '1'){
+            $primarySupervision = $filters['primarySupervision'];
+            $query .= ' AND eac.primary_supervision=:primarySupervision';
+        }
+        if(isset($filters['partialProcess']) && $filters['partialProcess'] === '1'){
+            $partialProcess = $filters['partialProcess'];
+            $query .= ' AND ea.partial_process=:partialProcess';
+        }
+
+        $query .= ' GROUP BY ea.status';
+        $query =  DB::query(Database::SELECT, $query);
+
+        if(isset($objectIds)) $query->param(':objectIds', $objectIds);
+        if(isset($placeIds)) $query->param(':placeIds', $placeIds);
+        if(isset($elementIds)) $query->param(':elementIds', $elementIds);
+        if(isset($floorIds)) $query->param(':floorIds', $floorIds);
+        if(isset($specialityIds)) $query->param(':specialityIds', $specialityIds);
+        if(isset($managerStatuses)) $query->param(':managerStatuses', $managerStatuses);
+        if(isset($statuses)) $query->param(':statuses', $statuses);
+        if(isset($positions)) $query->param(':positions', $positions);
+        if(isset($from)) $query->param(':from', $from);
+        if(isset($to)) $query->param(':to', $to);
+        if(isset($primarySupervision)) $query->param(':primarySupervision', $primarySupervision);
+        if(isset($partialProcess)) $query->param(':partialProcess', $partialProcess);
+
+        $query->parameters(array(
+            ':companyId' => $filters['companyId'],
+            ':projectId' => $filters['projectId'],
         ));
 
         return $query->execute()->as_array();

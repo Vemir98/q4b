@@ -71,10 +71,18 @@
                 </li>
                 <li class="q4-list-item">
                     <figure>
-                        <a href="<?=URL::site('reports/labtests')?>"><img src="/media/img/approve_element_report_icon.svg" alt="LAB CONTROL REPORTS"></a>
+                        <a href="<?=URL::site('reports/labtests')?>"><img src="/media/img/lab-control.svg" alt="<?=__('lab_control_reports')?>" style="width: 75%"></a>
                         <figcaption><a href="<?=URL::site('reports/labtests')?>"><?=__('lab_control_reports')?></a></figcaption>
                     </figure>
                 </li>
+                <?if(Usr::can(Usr::READ_PERM,'Controller_CertificatesReports')):?>
+                <li class="q4-list-item">
+                    <figure>
+                        <a href="<?=URL::site('reports/certificates')?>"><img src="/media/img/certificate.svg" alt="<?=__('certificates_reports')?>" style="width: 75%;margin-top: 7px;"></a>
+                        <figcaption><a href="<?=URL::site('reports/certificates')?>"><?=__('certificates_reports')?></a></figcaption>
+                    </figure>
+                </li>
+                <?endif;?>
             </ul>
 
         </div>

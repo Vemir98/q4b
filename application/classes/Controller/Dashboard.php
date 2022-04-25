@@ -260,6 +260,7 @@ class Controller_Dashboard extends HDVP_Controller_Template
             'export' => __('Export'),
             'report_range' => __('Report Range'),
             'waiting' => __('waiting'),
+            'partial_process' => __('partial_process')
         ];
 
         $filters = Arr::extract($_GET, [

@@ -171,9 +171,9 @@ class Controller_Api_Projects_Certificates extends HDVP_Controller_API
 
         }  catch (Exception $e) {
             Database::instance()->rollback();
-            Kohana::$log->add(Log::ERROR, '[ERROR [action_project_certificates_post][test] (Exception)]: ' . $e->getMessage());
-            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($e->getMessage()); echo "</pre>"; exit;
-//            throw API_Exception::factory(500,'Operation Error');
+            Kohana::$log->add(Log::ERROR, '[ERROR [action_project_certificate_post](Exception)]: ' . $e->getMessage());
+//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($e->getMessage()); echo "</pre>"; exit;
+            throw API_Exception::factory(500,'Operation Error');
         }
     }
 
@@ -344,7 +344,7 @@ class Controller_Api_Projects_Certificates extends HDVP_Controller_API
 
         }  catch (Exception $e) {
             Database::instance()->rollback();
-            Kohana::$log->add(Log::ERROR, '[ERROR [action_project_certificates_copy_post][test] (Exception)]: ' . $e->getMessage());
+            Kohana::$log->add(Log::ERROR, '[ERROR [action_project_certificates_copy_post] (Exception)]: ' . $e->getMessage());
 //            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($e->getMessage()); echo "</pre>"; exit;
             throw API_Exception::factory(500,'Operation Error');
         }
@@ -631,7 +631,7 @@ class Controller_Api_Projects_Certificates extends HDVP_Controller_API
 
         }  catch (Exception $e) {
             Database::instance()->rollback();
-            Kohana::$log->add(Log::ERROR, '[ERROR [action_project_certificate_put][test] (Exception)]: ' . $e->getMessage());
+            Kohana::$log->add(Log::ERROR, '[ERROR [action_project_certificate_put] (Exception)]: ' . $e->getMessage());
 //            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($e->getMessage()); echo "</pre>"; exit;
             throw API_Exception::factory(500,'Operation Error');
         }
@@ -657,9 +657,9 @@ class Controller_Api_Projects_Certificates extends HDVP_Controller_API
 
         }  catch (Exception $e) {
             Database::instance()->rollback();
-            Kohana::$log->add(Log::ERROR, '[ERROR [action_project_certificate_get][test] (Exception)]: ' . $e->getMessage());
-            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($e->getMessage()); echo "</pre>"; exit;
-//            throw API_Exception::factory(500,'Operation Error');
+            Kohana::$log->add(Log::ERROR, '[ERROR [action_project_certificate_get] (Exception)]: ' . $e->getMessage());
+//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($e->getMessage()); echo "</pre>"; exit;
+            throw API_Exception::factory(500,'Operation Error');
         }
     }
 
@@ -682,9 +682,9 @@ class Controller_Api_Projects_Certificates extends HDVP_Controller_API
 
         }  catch (Exception $e) {
 //            Database::instance()->rollback();
-            Kohana::$log->add(Log::ERROR, '[ERROR [action_project_certificate_delete][test] (Exception)]: ' . $e->getMessage());
-            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($e->getMessage()); echo "</pre>"; exit;
-//            throw API_Exception::factory(500,'Operation Error');
+            Kohana::$log->add(Log::ERROR, '[ERROR [action_project_certificate_delete] (Exception)]: ' . $e->getMessage());
+//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($e->getMessage()); echo "</pre>"; exit;
+            throw API_Exception::factory(500,'Operation Error');
         }
     }
 
@@ -708,7 +708,67 @@ class Controller_Api_Projects_Certificates extends HDVP_Controller_API
 
         }  catch (Exception $e) {
             Database::instance()->rollback();
-            Kohana::$log->add(Log::ERROR, '[ERROR [action_project_certificates_get][test] (Exception)]: ' . $e->getMessage());
+            Kohana::$log->add(Log::ERROR, '[ERROR [action_project_certificates_get] (Exception)]: ' . $e->getMessage());
+//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($e->getMessage()); echo "</pre>"; exit;
+            throw API_Exception::factory(500,'Operation Error');
+        }
+    }
+
+    /**
+     * Get Filtered Certificates
+     * @post
+     * https://qforb.net/api/json/<appToken>/projects/certificates
+     */
+    public function action_filtered_certificates_post()
+    {
+        try {
+            $limit = 5;
+//            $params = array_diff(Arr::merge(Request::current()->param(),['page' => '']),array(''));
+//            $page = isset(Request::current()->param()['page']) && Request::current()->param()['page'] ? Request::current()->param()['page'] : 1;
+
+            $filters = Arr::extract($_POST,
+                [
+                    'companyId',
+                    'projectId',
+                    'specialityIds',
+                    'statuses',
+                    'sampleRequired'
+                ]);
+
+//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($filters); echo "</pre>"; exit;
+            $valid = Validation::factory($filters);
+
+            $valid
+                ->rule('companyId', 'not_empty')
+                ->rule('projectId', 'not_empty')
+                ->rule('specialityIds', 'not_empty');
+
+            if (!$valid->check()) {
+                throw API_ValidationException::factory(500, 'missing required field');
+            }
+
+//            $reportsCount = Api_DBProjectCertificates::getFilteredCertificatesCount($filters)[0]['reportsCount'];
+
+//            $pagination = Pagination::factory(array(
+//                    'total_items'    => $reportsCount,
+//                    'items_per_page' => $limit,
+//                )
+//            )
+//                ->route_params($params);
+
+//            $certificates = Api_DBProjectCertificates::getFilteredCertificates($pagination->items_per_page, $pagination->offset, $filters, true);
+            $certificates = Api_DBProjectCertificates::getFilteredCertificates($filters);
+            $certificates = $this->getCertificatesExpandedData($certificates);
+
+
+            $this->_responseData = [
+                'status' => 'success',
+                'items' => $certificates,
+            ];
+
+        }  catch (Exception $e) {
+            Database::instance()->rollback();
+            Kohana::$log->add(Log::ERROR, '[ERROR [action_filtered_certificates_post] (Exception)]: ' . $e->getMessage());
 //            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($e->getMessage()); echo "</pre>"; exit;
             throw API_Exception::factory(500,'Operation Error');
         }
@@ -785,7 +845,6 @@ class Controller_Api_Projects_Certificates extends HDVP_Controller_API
             ->where('id', '=', $certificateId)
             ->execute($this->_db);
     }
-
 
     private function saveImageAndGetQueryData($images, $pathToSave) :array
     {

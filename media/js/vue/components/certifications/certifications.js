@@ -98,14 +98,11 @@ Vue.component('certifications', {
                                                 @click="showChapterContent(idx, rIdx, chapterIndex)"
                                             >
                                             </div>
-<!--                                            <div-->
-<!--                                                @click="showChapterContent(idx, rIdx, chapterIndex)"-->
-<!--                                                style="width: 20px;height: 20px;background: red;cursor: pointer"-->
-<!--                                            ></div>-->
                                             <certificate-chapter-content-popup
                                                 :translations="translations"
                                                 :chapter="chapter"
                                                 v-if="chapter.showContent"
+                                                @onClose="hideChapterImagesAndContents"
                                             />
                                         </td>
                                         <td>&nbsp;</td>
@@ -121,6 +118,7 @@ Vue.component('certifications', {
                                                 :translations="translations"
                                                 :images="chapter.images"
                                                 v-if="chapter.showImages && (chapter.images.length > 0)"
+                                                @onClose="hideChapterImagesAndContents"
                                             />
                                         </td>
                                         <td>&nbsp;</td>
@@ -298,8 +296,6 @@ Vue.component('certifications', {
             const requestData = {
                 certificatesIds: data.items.map(certificate => certificate.id)
             }
-            console.log('requestData', requestData);
-            console.log('DATA FOR COPY', data);
 
             if(requestData.certificatesIds.length > 0) {
                 this.copyCertificatesAPI(data)
@@ -594,13 +590,28 @@ Vue.component('certifications', {
             })
         },
         showChapterContent(craftIndex, certificateIndex, chapterIndex) {
+            this.hideChapterImagesAndContents()
             let items = [].concat(this.items);
             items[craftIndex].items[certificateIndex].chapters[chapterIndex].showContent = !items[craftIndex].items[certificateIndex].chapters[chapterIndex].showContent;
             this.items = items;
         },
         showChapterImages(craftIndex, certificateIndex, chapterIndex) {
+            this.hideChapterImagesAndContents()
             let items = [].concat(this.items);
             items[craftIndex].items[certificateIndex].chapters[chapterIndex].showImages = !items[craftIndex].items[certificateIndex].chapters[chapterIndex].showImages;
+            this.items = items;
+        },
+        hideChapterImagesAndContents() {
+            let items = [].concat(this.items);
+            items.map((craft) => {
+                return craft.items.map(certificate => {
+                    return certificate.chapters.map(chapter => {
+                        chapter.showContent = false;
+                        chapter.showImages = false;
+                        return chapter;
+                    })
+                })
+            })
             this.items = items;
         }
     },
@@ -616,7 +627,6 @@ Vue.component('certifications', {
     },
     mounted() {
         this.init();
-        console.log('USER_ROLE', this.userRole)
         // window.addEventListener('load', () => {
         //     var parentWidth = $(".scrollable-table").width();
         //     console.log(parentWidth - 40)

@@ -521,6 +521,11 @@ ul li.tab_panel .panel_header h2, ul li.tab-panel .panel_header h2 {
 #certifications.new-styles table  td{
     padding: 10px 20px;
 }
+
+#certificates-reports .new-styles table td{
+    padding: 10px 20px;
+}
+
 .new-styles table tbody tr{
     background: #fff;
 
@@ -968,6 +973,11 @@ ul li.tab_panel .panel_header h2, ul li.tab-panel .panel_header h2 {
     padding-left: 30px !important;
 
 }
+
+.ltr #certificates-reports .craft-label {
+    padding: 0 !important;
+}
+
 .rtl .craft-label{
     padding-right: 30px !important;
 }

@@ -159,6 +159,15 @@ class Controller_Api_Projects_Dashboard extends HDVP_Controller_API
         $filters = Arr::extract($_GET,
             [
                 'projectIds',
+//                'objectIds',
+//                'placeIds',
+//                'elementIds',
+//                'specialityIds',
+//                'managerStatuses',
+//                'statuses',
+//                'positions',
+//                'primarySupervision',
+//                'partialProcess',
                 'from',
                 'to'
             ]);
@@ -176,9 +185,6 @@ class Controller_Api_Projects_Dashboard extends HDVP_Controller_API
                 throw API_ValidationException::factory(500, 'missing required field');
             }
 
-            $appropriateEars = Api_DBElApprovals::getProjectsElApprovalsByAppropriate($filters, 1);
-            $notAppropriateEars = Api_DBElApprovals::getProjectsElApprovalsByAppropriate($filters, 0);
-
             $result = [
                 'total' => [
                     'total' => 0,
@@ -194,8 +200,31 @@ class Controller_Api_Projects_Dashboard extends HDVP_Controller_API
                     'total' => 0,
                     'waiting' => 0,
                     'approved' => 0
+                ],
+                'partialProcess' => [
+                    'total' => 0,
+                    'waiting' => 0,
+                    'approved' => 0
                 ]
             ];
+
+//            $appropriateEars = null;
+//            $notAppropriateEars = null;
+//            $partialProcessEars = null;
+
+//            if(!is_null($filters['statuses']) || !is_null($filters['partialProcess'])) {
+//                die('mtav');
+//            } else {
+//            if(!is_null($filters['statuses'])) {
+//                die('mtav');
+//            }
+                $appropriateEars = Api_DBElApprovals::getProjectsElApprovalsByAppropriate($filters, 1);
+                $notAppropriateEars = Api_DBElApprovals::getProjectsElApprovalsByAppropriate($filters, 0);
+                $partialProcessEars = Api_DBElApprovals::getProjectsPartialProcessElApprovals($filters);
+//            }
+//            $appropriateEars = Api_DBElApprovals::getProjectsElApprovalsByAppropriate($filters, 1);
+//            $notAppropriateEars = Api_DBElApprovals::getProjectsElApprovalsByAppropriate($filters, 0);
+//            $partialProcessEars = Api_DBElApprovals::getProjectsPartialProcessElApprovals($filters);
 
             foreach ($appropriateEars as $appEarsGroup) {
                 switch ($appEarsGroup['status']) {
@@ -225,6 +254,17 @@ class Controller_Api_Projects_Dashboard extends HDVP_Controller_API
                 }
             }
 
+            foreach ($partialProcessEars as $partProcEarsGroup) {
+                switch ($partProcEarsGroup['status']) {
+                    case Enum_ApprovalStatus::Approved:
+                        $result['partialProcess']['approved'] = (int)$partProcEarsGroup['count'];
+                        $result['partialProcess']['total'] += (int)$partProcEarsGroup['count'];
+                        $result['total']['total'] += (int)$partProcEarsGroup['count'];
+                        $result['total']['approved'] += (int)$partProcEarsGroup['count'];
+                        break;
+                }
+            }
+
             $this->_responseData = [
                 'status' => "success",
                 'item' => $result
@@ -237,6 +277,77 @@ class Controller_Api_Projects_Dashboard extends HDVP_Controller_API
             Database::instance()->rollback();
             throw API_Exception::factory(500,'Operation Error');
 //            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$e->getMessage()]); echo "</pre>"; exit;
+        }
+
+        return $result;
+    }
+
+    public function action_statistics_ear_post() {
+
+        $filters = Arr::extract($_POST,
+            [
+                'companyId',
+                'projectId',
+                'objectIds',
+                'placeIds',
+                'elementIds',
+                'specialityIds',
+                'managerStatuses',
+                'statuses',
+                'positions',
+                'primarySupervision',
+                'partialProcess'
+            ]);
+
+        try {
+
+            $filters['from'] = $_POST['from'] ? DateTime::createFromFormat('d/m/Y H:i',$_POST['from'] . ' 00:00')->getTimestamp() : null;
+            $filters['to'] = $_POST['to'] ? DateTime::createFromFormat('d/m/Y H:i',$_POST['to'] . ' 23:59')->getTimestamp() : null;
+//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($filters); echo "</pre>"; exit;
+
+            $valid = Validation::factory($filters);
+
+            $valid
+                ->rule('companyId', 'not_empty')
+                ->rule('projectId', 'not_empty');
+
+            if (!$valid->check()) {
+                throw API_ValidationException::factory(500, 'missing required field');
+            }
+
+            $result = [
+                'total' => 0,
+                'approved' => 0,
+                'notApproved' => 0
+            ];
+
+            $ears = Api_DBElApprovals::getProjectsElApprovalsByAppropriate1($filters);
+
+            foreach ($ears as $earsGroup) {
+                switch ($earsGroup['status']) {
+                    case Enum_ApprovalStatus::Waiting:
+                        $result['total'] += (int)$earsGroup['count'];
+                        $result['notApproved'] += (int)$earsGroup['count'];
+                        break;
+                    case Enum_ApprovalStatus::Approved:
+                        $result['total'] += (int)$earsGroup['count'];
+                        $result['approved'] += (int)$earsGroup['count'];
+                        break;
+                }
+            }
+
+            $this->_responseData = [
+                'status' => "success",
+                'item' => $result
+            ];
+
+        } catch (API_ValidationException $e){
+            Database::instance()->rollback();
+            throw API_Exception::factory(500,'Incorrect data');
+        } catch (Exception $e){
+            Database::instance()->rollback();
+//            throw API_Exception::factory(500,'Operation Error');
+            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$e->getMessage()]); echo "</pre>"; exit;
         }
 
         return $result;
@@ -417,6 +528,9 @@ class Controller_Api_Projects_Dashboard extends HDVP_Controller_API
         $filters = Arr::extract($_GET,
             [
                 'projectIds',
+                'specialitiesIds',
+                'sampleRequired',
+                'statuses',
                 'from',
                 'to'
             ]);
@@ -425,15 +539,13 @@ class Controller_Api_Projects_Dashboard extends HDVP_Controller_API
             $valid = Validation::factory($filters);
 
             $valid
-                ->rule('projectIds', 'not_empty')
-                ->rule('from', 'not_empty')
-                ->rule('to', 'not_empty');
+                ->rule('projectIds', 'not_empty');
 
             if (!$valid->check()) {
                 throw API_ValidationException::factory(500, 'missing required field');
             }
 
-            $certificates = Api_DBCertificates::getProjectsCertificatesCountsByType($filters);
+            $certificates = Api_DBProjectCertificates::getProjectsCertificatesCountsByType($filters);
 
             $result = [
                 'total' => 0,
@@ -445,10 +557,10 @@ class Controller_Api_Projects_Dashboard extends HDVP_Controller_API
                 switch ($certificateGroup['status']) {
                     case Enum_ApprovalStatus::Approved:
                         $result['approved'] = (int)$certificateGroup['count'];
-                    break;
+                        break;
                     case Enum_ApprovalStatus::Waiting:
                         $result['notApproved'] = (int)$certificateGroup['count'];
-                    break;
+                        break;
                 }
                 $result['total'] += (int)$certificateGroup['count'];
             }

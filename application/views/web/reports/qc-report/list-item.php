@@ -170,7 +170,7 @@
     </div>
 <!--certificate section-->
     <?if($q->cert_id):?>
-        <div class="report_certificate">
+        <div class="qc_certificate">
             <div style="display: flex;margin-bottom: 15px;">
                 <h4 class="reports-tasks-box-title"
                     style="color: rgba(0, 0, 0, 0.7);-webkit-touch-callout: none;-webkit-user-select: none;-khtml-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;"
@@ -179,27 +179,27 @@
                 </h4>
                 <div><span><?=$qcCertificates[$q->id]['name']?></span></div>
                 <?if($qcCertificates[$q->id]['sampleRequired'] === "1"):?>
-                    <div class="report_certificate_sample-required"><span>(<?=__('sample_required')?>)</span></div>
+                    <div class="qc_sample-required"><span>(<?=__('sample_required')?>)</span></div>
                 <?endif;?>
                 <?if($qcCertificates[$q->id]['approvedBy']):?>
-                    <div class="report_certificate_approved-by"><span>Approved by</span></div>
-                    <div class="report_certificate_approver-name"><span><?=$qcCertificates[$q->id]['approverName']?></span></div>
+                    <div class="qc_approved-by"><span><?=__('Approved by')?></span></div>
+                    <div class="qc_approver-name"><span><?=$qcCertificates[$q->id]['approverName']?></span></div>
                 <?endif;?>
             </div>
-            <div class="report_certificate_wraper" style="display: none;">
+            <div class="qc_certificate_wraper" style="display: none;">
                 <?foreach ($qcCertificates[$q->id]['chapters'] as $chapter):?>
-                    <div class="report_certificate_chapter_name"><?=$chapter['name']?></div>
+                    <div class="qc_certificate_chapter_name"><?=$chapter['name']?></div>
                     <div class="q4b-textarea" style="padding: 15px 15px 15px 15px;">
-                        <div class="q4b-input-label">Chapter content</div>
+                        <div class="q4b-input-label"><?=__('chapter_content')?></div>
                         <textarea cols="30" rows="10" readonly><?=$chapter['text']?></textarea>
                     </div>
-                    <div class="report_certificate_chapter_images">
+                    <div class="qc_certificate_chapter_images">
                         <div class="row">
                             <?foreach ($chapter['images'] as $image):?>
                                 <div class="col-md-6 rtl-float-right">
-                                    <div class="report_certificate_chapter_image">
-                                        <h4 class="report_certificate_chapter_image_title"><?=$image['originalName']?> <span class="report_certificate_chapter_image_title_uploaded">(<?=__('uploaded')?>: <?=date('d.m.y H:i', $image['createdAt'])?> )</span></h4>
-                                        <div class="report_certificate_chapter_image_image">
+                                    <div class="qc_certificate_chapter_image">
+                                        <h4 class="qc_certificate_chapter_image_title"><?=$image['originalName']?> <span class="qc_certificate_chapter_image_title_uploaded">(<?=__('uploaded')?>: <?=date('d.m.y H:i', $image['createdAt'])?> )</span></h4>
+                                        <div class="qc_certificate_chapter_image_image">
                                             <a href="<?=$image['fullPath']?>" target="_blank">
                                                 <?if ($_SERVER['SERVER_NAME'] === 'qforb.net') :?>
                                                     <img src="<?=$image['fullPath']?>?<?=rand(100000,99999999)?>" alt="<?=$image['originalName']?>">

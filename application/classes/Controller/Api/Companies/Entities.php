@@ -173,6 +173,19 @@ class Controller_Api_Companies_Entities extends HDVP_Controller_API
         $crafts = Api_DBCompanies::getCompanyCrafts($companyId, $fields);
         $this->_responseData['items'] = $crafts;
     }
+
+    public function action_crafts_by_ids_post(){
+        $craftsIds = Arr::get($_POST,'specialityIds');
+
+        if(empty($craftsIds)) {
+            throw API_ValidationException::factory(500, 'empty required data');
+        }
+
+        $crafts = Api_DBCompanies::getCraftsByIds($craftsIds);
+
+//        echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($crafts); echo "</pre>"; exit;
+        $this->_responseData['items'] = $crafts;
+    }
     public function action_projects_get(){
         $id = $this->getUIntParamOrDie($this->request->param('companyId'));
 

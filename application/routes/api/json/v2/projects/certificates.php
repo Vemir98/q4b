@@ -17,6 +17,17 @@ Route::set('apiJsonV2.project-certificates-actions','api/json/v2/(<appToken>/)pr
         'directory' => 'Api/Projects'
     ]);
 
+Route::set('apiJsonV2.filtered-certificates-actions','api/json/v2/(<appToken>/)projects/certificates(/page/<page>)',['appToken' => '[a-f0-9]{32}', 'page' => '[0-9]+'])
+    ->filter(function($route, $params, $request)
+    {
+        $params['action'] = 'filtered_certificates'.'_'.strtolower($request->method());
+        return $params;
+    })
+    ->defaults([
+        'controller' => 'Certificates',
+        'directory' => 'Api/Projects'
+    ]);
+
 Route::set('apiJsonV2.project-certificate-projectId-actions','api/json/v2/(<appToken>/)projects/<projectId>/certificate',['appToken' => '[a-f0-9]{32}', 'projectId' => '[0-9]+'])
     ->filter(function($route, $params, $request)
     {

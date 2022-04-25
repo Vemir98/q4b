@@ -1006,5 +1006,12 @@ return [
     'are_you_sure_you_want_to_delete_this_certificate' => 'האם אתה בטוח שברצונך למחוק את פתיחת מלאכה?',
     'old_certificates' => 'ישן אישורים/פתיחת מלאכות',
     'file_size_text' => 'גודל  מקסימלי של הקובץ: 1MB',
+    'certificates_reports' => 'דו״ח פתיחות מלאכה',
+    'chapters_list' => 'רשימת נושאים',
+    'participants_list' => 'רשימת משתתפים',
+    'chapters_required' => 'צריך להוסיף לפחות נושא אחד',
+    'participants_required' => 'צריך להוסיף לפחות משתתף אחד',
+    'certificates_search_placeholder' => 'חיפוש פ. מלאכה',
+    'no_search_results' => 'לא נמצאו תוצאות חיפוש',
     ''=>'',
 ];

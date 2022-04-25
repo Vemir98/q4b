@@ -110,14 +110,29 @@ Vue.component('reports-list', {
                 </ul>
             </div>
         </div>
+        <div class="report-statistics">
+            <div class="report-statistics-item"><span>{{ trans.total }}:</span><span class="q4b-text-bold"> {{ reportsStatistics?.total }}</span></div>
+            <div class="report-statistics-item"><span>{{ trans.approved }}:</span><span class="q4b-text-bold"> {{ reportsStatistics?.approved }}</span></div>
+            <div class="report-statistics-item"><span>{{ trans.waiting }}:</span><span class="q4b-text-bold"> {{ reportsStatistics?.notApproved }}</span></div>
+        </div>
         <div class="report-buttons">
+            <div class="report-search">
+                <input type="text" v-model="searchValue" :placeholder="trans.certificates_search_placeholder" @keydown.enter="getReportById">
+                <i @click="getReportById">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="14" viewBox="0 0 20 14"
+                         fill="none">
+                        <path fill-rule="evenodd" clip-rule="evenodd"
+                              d="M20 7.00567C20 6.8388 19.9312 6.67942 19.8169 6.55942L13.63 0.310044C13.3856 0.063169 12.99 0.063794 12.7462 0.310044C12.5019 0.556294 12.5019 0.956294 12.7462 1.20254L17.8669 6.37442H0.625C0.28 6.37442 0 6.65692 0 7.00567C0 7.35442 0.28 7.63692 0.625 7.63692H17.8663L12.7462 12.8088C12.5019 13.055 12.5025 13.455 12.7462 13.7013C12.9906 13.9475 13.3863 13.9475 13.63 13.7013L19.8169 7.45192C19.9338 7.33379 19.9981 7.1713 20 7.00567Z"
+                              fill="#9FA2B4" />
+                    </svg>
+                </i>
+            </div>
             <div class="report-buttons-wraper" :class="{'open': toggleExportButton}" @click="toggleExportButton = !toggleExportButton">
                 <span class="report-buttons-headline"><i class="q4bikon-share"></i>{{ trans.export }}</span>
                 <a class="report-button pdf" style="opacity: .5;cursor: auto"><i class="q4bikon-file1"></i>PDF</a>
                 <a  class="report-button excel" :href="getExportExcelHref"><i class="q4bikon-report"></i>Excel</a>
             </div>
         </div>
-
         <div class="report-list-wraper">
             <table class="table">
                 <thead>
@@ -147,7 +162,7 @@ Vue.component('reports-list', {
                             <td class="tab-description">{{ report.notice }}</td>
                             <td>&nbsp;</td>
                             <td class="td-floor">{{ report.floorName ? report.floorName : report.floorNumber  }}</td>
-                            <td class="text-capitalize"> {{ +report.appropriate === 1 ? trans.appropriate : trans.not_appropriate }}</td>
+                            <td class="text-capitalize"> {{ getReportStatus(report) }}</td>
                             <td>{{ report.managerSignature ? convertTimestampToDate(report.managerSignature.createdAt) : '&nbsp;' }}</td>
 <!--                            <td>{{ report.managerSignature ? report.managerSignature.position : '&nbsp;' }}</td>-->
                             <td>{{ report.managerSignature ? report.managerSignature.name : '&nbsp;' }} {{ report.managerSignature ? report.managerSignature.position : '&nbsp;' }}</td>
@@ -175,10 +190,7 @@ Vue.component('reports-list', {
                         </tr>
                         <template v-for="speciality in report.specialities">
                             <tr class="child-tr" v-if="report.showSpecialities">
-                                <td scope="row">&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
+                                <td style="word-break: break-all" colspan="4">{{ speciality.notice }}</td>
                                 <td>{{ +speciality.primarySupervision ? trans.primary_supervision : '&nbsp;' }}</td>
                                 <td>{{ speciality.craftName }}</td>
                                 <td>&nbsp;</td>
@@ -207,6 +219,12 @@ Vue.component('reports-list', {
             :options="{chunk:5,'chunksNavigation':'fixed'}"
         >          
         </pagination>
+        <warning-popup
+            v-if="showWarningPopup"
+            :message="''"
+            :translations="translations"
+            @onClose="showWarningPopup = false"
+        />
     </section>
     `,
     props: {
@@ -231,6 +249,10 @@ Vue.component('reports-list', {
             currentPage: this.page,
             total: 0,
             limit: 0,
+            reportsStatistics: null,
+            projectId: this.project.id,
+            searchValue: '',
+            showWarningPopup: false
         }
     },
 
@@ -249,7 +271,14 @@ Vue.component('reports-list', {
             url += this.getQueryParamsOfFiltersForUrl();
             url += `&lang=${this.currentLang}`
             return url;
-        },
+        }
+    },
+    watch: {
+      // project(project) {
+      //     if(this.filters) {
+      //         this.getEarStatistics(project.id);
+      //     }
+      // }
     },
     methods: {
         toggleReportSpecialities(report) {
@@ -375,6 +404,42 @@ Vue.component('reports-list', {
                 window.open(url);
             }
         },
+        getReportStatus(report) {
+            if(report.partialProcess === "1") {
+                return this.trans.partial_process;
+            } else {
+                return (report.appropriate === "1") ? this.trans.appropriate : this.trans.not_appropriate;
+            }
+        },
+        getEarStatistics(projectId) {
+            this.showLoader = true;
+
+            let url = '/projects/statistics/ear';
+            qfetch(url, {method: 'POST', headers: {}, body: this.filters})
+                .then(response => {
+                    this.reportsStatistics = response.item;
+                    this.showLoader = false;
+                })
+        },
+        getReportById() {
+            this.showLoader = true;
+            let url = `/projects/${this.project.id}/el-approvals/${this.searchValue}`;
+
+            qfetch(url, {method: 'GET', headers: {}})
+                .then((response) => {
+                    if(response.item) {
+                        this.goToReportDetails(response.item)
+                    } else {
+                        this.showWarningPopup = true;
+                    }
+                    this.showLoader = false;
+
+                })
+                .catch((error) => {
+                    this.showWarningPopup = true;
+                    this.showLoader = false;
+                });
+        }
     },
     mounted() {
         if(!this.filters) {
@@ -382,6 +447,7 @@ Vue.component('reports-list', {
             this.$emit('tabChanged')
         } else {
             this.getFilteredReports();
+            this.getEarStatistics();
         }
     }
 });

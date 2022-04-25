@@ -2491,14 +2491,14 @@ $(document).ready(function(){
 
         })
     })
-    $('.report_certificate').each(function(){
+    $('.qc_certificate').each(function(){
         $(this).find('.plus-minus').click(function(e){
             e.preventDefault ? e.preventDefault() : e.stopPropagation()
             if($(this).hasClass('q4bikon-plus')){
-                $(this).parents('.report_certificate').find('.report_certificate_wraper').show()
+                $(this).parents('.qc_certificate').find('.qc_certificate_wraper').show()
                 $(this).removeClass('q4bikon-plus').addClass('q4bikon-minus')
             }else{
-                $(this).parents('.report_certificate').find('.report_certificate_wraper').hide()
+                $(this).parents('.qc_certificate').find('.qc_certificate_wraper').hide()
                 $(this).removeClass('q4bikon-minus').addClass('q4bikon-plus')
             }
 

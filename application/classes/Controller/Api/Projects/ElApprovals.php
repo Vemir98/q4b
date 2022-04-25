@@ -481,6 +481,30 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
     }
 
     /**
+     * Get Project Element approval
+     * https://qforb.net/api/json/<appToken>/projects/<projectId>/el-approvals/<elApprovalId>
+     */
+    public function action_project_index_get(){
+        $projectId = $this->getUIntParamOrDie($this->request->param('projectId'));
+        $elApprovalId = $this->getUIntParamOrDie($this->request->param('elApprovalId'));
+
+        try {
+            $filters['projectId'] = $projectId;
+            $elApproval = Api_DBElApprovals::getElApprovalById($elApprovalId, $filters)[0];
+            $elApproval = $this->getApproveElementsExpandedData([$elApproval])[0];
+
+            $this->_responseData = [
+                'status' => "success",
+                'item' => $elApproval
+            ];
+        }  catch (Exception $e){
+            Kohana::$log->add(Log::ERROR, '[ERROR [ElApprovals][action_project_index_get][test] (Exception)]: ' . $e->getMessage());
+            throw API_Exception::factory(500,'Operation Error');
+//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$e->getMessage()]); echo "</pre>"; exit;
+        }
+    }
+
+    /**
      * returns element approvals filtered list
      * returned data will be as rows[{}],pages: {total,offset,limit}
      * https://qforb.net/api/json/<appToken>/el-approvals/list

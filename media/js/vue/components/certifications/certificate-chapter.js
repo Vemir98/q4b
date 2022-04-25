@@ -7,7 +7,7 @@ Vue.component('certificate-chapter', {
                     :class="{'q4b-disabled': !canChange}"
                     @click="removeCertificateChapter"
                 >
-            </div>
+                </div>
             </div>
             <div class="certificate-chapter-data">
                 <div>
@@ -18,6 +18,8 @@ Vue.component('certificate-chapter', {
                                 v-model="selectedChapter"
                                 :option-height="104" 
                                 :placeholder="trans.choose_chapter"
+                                v-validate.immediate="'required'"
+                                name="certificateChapterName"
                                 :disabled="!canChange" 
                                 :options="globalChapters" 
                                 track-by="id" 
@@ -35,6 +37,7 @@ Vue.component('certificate-chapter', {
                                 </template>
                             </multiselect>
                         </div>
+                        <span v-show="errors.has('certificateChapterName') && showErrors" class="q4b-error-text">{{ errors.first('certificateChapterName') }}</span>
                     </div>
                     <file-control
                         :translations="translations"
@@ -49,14 +52,18 @@ Vue.component('certificate-chapter', {
                     <div class="q4b-textarea" style="height: 100%; padding-bottom: 23px">
                         <div class="q4b-input-label">{{ trans.chapter_content }}</div>
                         <textarea
+                            :class="{'q4b-textarea-error-border': (errors.has('certificateChapterContent') && showErrors)}"
                             style="max-height: none;min-height: auto;height: 100%"
                             cols="30"
                             rows="10"
                             :readonly="!canChange"
                             :placeholder="trans.enter_chapter_content"
                             v-model="chapterText"
+                            name="certificateChapterContent"
+                            v-validate.immediate="'required'"
                         ></textarea>
                     </div>
+                    <span v-show="errors.has('certificateChapterContent') && showErrors" class="q4b-error-text">{{ errors.first('certificateChapterContent') }}</span>
                 </div>
             </div>
         </div>
@@ -65,7 +72,9 @@ Vue.component('certificate-chapter', {
         translations: {required: true},
         globalChapters: {required: true},
         certificateChapter: {required: true},
-        canChange: {required: true}
+        canChange: {required: true},
+        showErrors: {required: true},
+        scrollToChapter: {required: false}
     },
     data() {
         return {
@@ -108,6 +117,12 @@ Vue.component('certificate-chapter', {
             if(!this.canChange) return false;
             this.chapter.text = chapterText;
             this.$emit('chapterUpdated', this.chapter);
+        },
+        scrollToChapter(value) {
+            if(value) {
+                this.$refs['certificateChapter_'+this.certificateChapter.uid].scrollIntoView({block: "center", behavior: "smooth"})
+                this.$emit('scrolled')
+            }
         }
     },
     methods: {

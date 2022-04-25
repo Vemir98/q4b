@@ -12,6 +12,27 @@ class Api_DBCompanies
         return DB::query(Database::SELECT,'
         SELECT ' . implode(",",$fields) . ' FROM cmp_crafts WHERE company_id='.$cmpId.' AND status="'.Enum_Status::Enabled.'" ORDER BY name ASC')->execute()->as_array();
     }
+    public static function getCraftsByIds($craftsIds){
+        $query = 'SELECT
+            cc.id,
+            cc.company_id as companyId,
+            cc.name,
+            cc.catalog_number as catalogNumber,
+            cc.status,
+            cc.related_id as relatedId
+            FROM cmp_crafts cc
+            WHERE cc.id IN (:craftsIds) AND cc.status= :status';
+
+        $query =  DB::query(Database::SELECT, $query);
+
+        $craftsIds = DB::expr(implode(',',$craftsIds));
+        $query->parameters(array(
+            ':craftsIds' => $craftsIds,
+            ':status' => Enum_Status::Enabled
+        ));
+
+        return $query->execute()->as_array();
+    }
     public static function getCmpProjects($id) {
         return DB::query(Database::SELECT,'
         SELECT * FROM projects WHERE company_id='.$id)->execute()->as_array();

@@ -979,5 +979,12 @@ return [
     'are_you_sure_you_want_to_delete_this_certificate' => 'Вы уверены, что хотите удалить этот сертификат?',
     'old_certificates' => 'Старые сертификаты',
     'file_size_text' => 'Максимальный размер файла 1 МБ',
+    'certificates_reports' => 'Отчет по сертификатам',
+    'chapters_list' => 'Содержание',
+    'participants_list' => 'Список участников',
+    'chapters_required' => 'Нужно добавить хотя бы одну главу',
+    'participants_required' => 'Необходимо добавить хотя бы одного участника',
+    'certificates_search_placeholder' => 'Поиск сертификатов',
+    'no_search_results' => 'Нет результатов поиска',
     ''=>'',
 ];

@@ -10,15 +10,19 @@ Vue.component('create-certification', {
                     <div class="create-certificate-form">
                         <div class="certificate-form">
                             <div class="certificate-data">
-                                <div class="q4b-input-text">
+                                <div class="q4b-input-text" ref="certificateDescription">
                                     <div class="q4b-input-label">{{ trans.certificate_description }}</div>
                                     <input 
                                         type="text"
                                         autocomplete="off"
                                         class="q4b-input-text"
+                                        :class="{'q4b-input-error-border': (errors.has('certificateDescription') && showErrors)}"
+                                        v-validate.immediate="'required'"
+                                        name="certificateDescription"
                                         :placeholder="trans.enter_certificate_description"
                                         v-model="certificate.name"
                                     >
+                                    <span v-show="errors.has('certificateDescription') && showErrors" class="q4b-error-text">{{ errors.first('certificateDescription') }}</span>
                                 </div>
                                 <div class="filter-item-checkbox" style="margin-top: 30px">
                                     <span class="check-task">
@@ -32,12 +36,15 @@ Vue.component('create-certification', {
                                     <div class="filter-item-label flex-between">{{ trans.sample_required }}</div>
                                 </div>
                             </div>
-                            <certificate-participants
-                                :translations="translations"
-                                :data="[]"
-                                :canChange="true"
-                                @participantsUpdated="updateCertificateParticipants($event)"
-                            />
+                            <div ref="certificateParticipants">
+                                <certificate-participants
+                                    :translations="translations"
+                                    :data="[]"
+                                    :canChange="true"
+                                    :showErrors="showErrors"
+                                    @participantsUpdated="updateCertificateParticipants($event)"
+                                />
+                            </div>
                         </div>
                         <div class="certificate-chapters-form">
                             <template v-for="(certificateChapter, chapterIndex) in certificate.chapters">
@@ -46,9 +53,12 @@ Vue.component('create-certification', {
                                     :certificateChapter="certificateChapter"
                                     :globalChapters="filteredGlobalChapters"
                                     :canChange="true"
+                                    :showErrors="showErrors"
+                                    :scrollToChapter="(scrollToChapter === chapterIndex)"
                                     @chapterUpdated="updateCertificateChapter($event)"
                                     @chapterDeleted="deleteCertificateChapter($event)"
-                                    :key="chapterIndex"
+                                    @scrolled="scrollToChapter = null"
+                                    :key="certificateChapter.uid"
                                 />
                             </template>
                         </div>
@@ -61,10 +71,15 @@ Vue.component('create-certification', {
                         :class="{'q4b-disabled': !canCreateChapter}"
                         @click="addCertificateChapter"
                     >{{ trans.add_chapter }}</button>
+                    <span v-show="errors.has('certificateChaptersRequired') && showErrors" class="q4b-error-text">{{ errors.first('certificateChaptersRequired') }}</span>
                     <div class="modal-footer-buttons">
+<!--                        <button -->
+<!--                            class="q4b-btn-success"-->
+<!--                            :class="{'q4b-disabled': !canCreateCertificate}"-->
+<!--                            @click="createCertificate(certificate)"-->
+<!--                        >{{ trans.create }}</button>-->
                         <button 
                             class="q4b-btn-success"
-                            :class="{'q4b-disabled': !canCreateCertificate}"
                             @click="createCertificate(certificate)"
                         >{{ trans.create }}</button>
                         <button 
@@ -90,30 +105,14 @@ Vue.component('create-certification', {
                 chapters: [],
                 participants: [],
                 chaptersUpdated: false
-            }
+            },
+            showErrors: false,
+            scrollToChapter: null
         }
     },
     computed: {
         canCreateChapter() {
             return (this.certificate.chapters.length < this.globalChapters.length)
-        },
-        canCreateCertificate() {
-            // return false;
-            if(!((this.certificate.name.trim()).length > 0)) return false;
-
-            if(!(this.certificate.participants?.length > 0)) return false;
-
-            if(!(this.certificate.chapters.length > 0)) return false;
-
-            let chaptersValid = true;
-            if(this.certificate.chaptersUpdated) this.certificate.chaptersUpdated = false;
-
-            this.certificate.chapters.forEach(chapter => {
-                if(!chapter.selectedChapter) chaptersValid = false;
-                if(!(chapter.text.length > 0)) chaptersValid = false;
-            })
-
-            return chaptersValid;
         },
         filteredGlobalChapters() {
             if(this.certificate.chaptersUpdated) this.certificate.chaptersUpdated = false;
@@ -129,6 +128,62 @@ Vue.component('create-certification', {
 
     },
     methods: {
+        canCreateCertificate() {
+            // return false;
+
+            let valid = true;
+
+            if(!((this.certificate.name.trim()).length > 0)) {
+                valid = false;
+            }
+
+            if(!(this.certificate.participants?.length > 0)) {
+                this.errors.add({
+                    field: 'certificateParticipantsRequired',
+                    msg: this.trans.participants_required
+                })
+                valid = false;
+            } else {
+                this.errors.remove('certificateParticipantsRequired')
+            }
+
+
+            if(!(this.certificate.chapters?.length > 0)) {
+                this.errors.add({
+                    field: 'certificateChaptersRequired',
+                    msg: this.trans.chapters_required
+                })
+                valid = false;
+            } else {
+                this.errors.remove('certificateChaptersRequired')
+            }
+
+            if(this.certificate.chaptersUpdated) this.certificate.chaptersUpdated = false;
+
+            this.certificate.chapters.forEach((chapter, chapterIndex) => {
+                if(!chapter.selectedChapter) {
+                    this.errors.add({
+                        field: `certificateChapterName_${chapterIndex}`,
+                        msg: 'azaza'
+                    });
+                    valid = false;
+                } else {
+                    this.errors.remove(`certificateChapterName_${chapterIndex}`)
+                }
+
+                if(!(chapter.text.length > 0)) {
+                    this.errors.add({
+                        field: `certificateChapterContent_${chapterIndex}`,
+                        msg: 'azaza'
+                    });
+                    valid = false;
+                } else {
+                    this.errors.remove(`certificateChapterContent_${chapterIndex}`)
+                }
+            })
+
+            return valid;
+        },
         addCertificateChapter() {
             if(!this.canCreateChapter) return false
 
@@ -140,6 +195,8 @@ Vue.component('create-certification', {
                 images: []
             }
             this.certificate.chapters.push(chapterData)
+            this.errors.remove('certificateChaptersRequired')
+            this.showErrors = false;
         },
         updateCertificateChapter(chapterData) {
             this.certificate.chapters.forEach((certificateChapter, index) => {
@@ -161,10 +218,42 @@ Vue.component('create-certification', {
             })
         },
         createCertificate(certificateForm) {
-            if(!this.canCreateCertificate) return false;
+            if(!this.canCreateCertificate()) {
+                this.showErrors = true;
+                this.scrollToError();
+                return false;
+            } else {
+                this.showErrors = false;
+            }
             certificateForm.craftId = this.craft.id;
             this.$emit('certificateCreated', certificateForm);
             this.$emit('onClose');
+        },
+        scrollToError() {
+            if(this.errors.has('certificateDescription')) {
+                this.$refs['certificateDescription'].scrollIntoView({block: "center", behavior: "smooth"})
+                return true;
+            }
+
+            if(this.errors.has('certificateParticipantsRequired')) {
+                this.$refs['certificateParticipants'].scrollIntoView({block: "center", behavior: "smooth"})
+                return true;
+            }
+
+            this.certificate.chapters.some((chapter, chapterIndex) => {
+                if(this.errors.has(`certificateChapterName_${chapterIndex}`)) {
+                    this.scrollToChapter = chapterIndex;
+                    this.errors.remove(`certificateChapterName_${chapterIndex}`)
+                    return true;
+                }
+
+                if(this.errors.has(`certificateChapterContent_${chapterIndex}`)) {
+                    this.scrollToChapter = chapterIndex;
+                    this.errors.remove(`certificateChapterContent_${chapterIndex}`)
+
+                    return true;
+                }
+            })
         },
         getRandomInt(min, max) {
             min = Math.ceil(min);
@@ -173,6 +262,7 @@ Vue.component('create-certification', {
         },
     },
     mounted() {
+        this.$validator.localize('msg');
     }
 });
 

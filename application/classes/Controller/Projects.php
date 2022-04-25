@@ -565,7 +565,9 @@ class Controller_Projects extends HDVP_Controller_Template
                 'update_certificate_for' => __('update_certificate_for'),
                 'are_you_sure_you_want_to_delete_this_certificate' => __('are_you_sure_you_want_to_delete_this_certificate'),
                 'close' => __('Close'),
-                'file_size_text' => __('file_size_text')
+                'file_size_text' => __('file_size_text'),
+                'chapters_required' => __('chapters_required'),
+                'participants_required' => __('participants_required'),
             ];
 
             if($tab) {

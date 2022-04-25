@@ -1006,5 +1006,12 @@ return [
     'are_you_sure_you_want_to_delete_this_certificate' => 'Are you sure you want to delete this certificate?',
     'old_certificates' => 'Old Certificates',
     'file_size_text' => 'Maximum file size 1MB',
+    'certificates_reports' => 'Certificates Reports',
+    'chapters_list' => 'Chapters list',
+    'participants_list' => 'Participants list',
+    'chapters_required' => 'Must be at least one chapter',
+    'participants_required' => 'Participants field is required',
+    'certificates_search_placeholder' => 'Search certificates',
+    'no_search_results' => 'No search results',
     ''=>'',0
 ];

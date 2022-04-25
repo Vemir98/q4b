@@ -2,8 +2,22 @@ Vue.component('file-control', {
     template: `
         <div class="filters-wraper files-section">
             <div class="labtest_attachment">
-                <div class="ltest-input-label" style="padding: 5px">{{ trans.attached_files }} (jpeg, jpg, png)</div>
-                <div class="ltest-input-label" style="padding: 5px">( {{ trans.file_size_text }} )</div>
+                <div 
+                    class="ltest-input-label" 
+                    style="padding: 5px;font-size: 16px !important;"
+                    :class="{'q4b-error-text': (errors.has('fileControl_invalidFormat') && showErrors)}"
+                >
+                    {{ trans.attached_files }} (jpeg, jpg, png)
+                </div>
+                <div 
+                    class="ltest-input-label"
+                    style="padding: 5px;font-size: 16px !important;"
+                    :class="{'q4b-error-text': (errors.has('fileControl_maxSize') && showErrors)}"
+                >
+                    ( {{ trans.file_size_text }} )
+                </div>
+<!--                <span v-show="errors.has('fileControl_invalidFormat') && showErrors" class="q4b-error-text">{{ errors.first('fileControl_invalidFormat') }}</span>-->
+<!--                <span v-show="errors.has('fileControl_maxSize') && showErrors" class="q4b-error-text">{{ errors.first('fileControl_maxSize') }}</span>-->
                 <div class="attach_file"
                     :class="{'q4b-disabled': !canChange}"
                     @click="handleAttachFileClick()"
@@ -59,7 +73,8 @@ Vue.component('file-control', {
             openedFileIndex: null,
             showEditor: false,
             trans: JSON.parse(this.translations),
-            fileInputName: 'fileInput_'+ (+(new Date()))
+            fileInputName: 'fileInput_'+ (+(new Date())),
+            showErrors: false
         }
     },
     watch: {
@@ -86,9 +101,26 @@ Vue.component('file-control', {
                 }
                 if(this.allowedFormats.length) {
                     if(!this.allowedFormats.includes(ext)) {
+                        this.errors.add({
+                            field: 'fileControl_invalidFormat',
+                            msg: 'sxal format'
+                        })
+                        this.errors.remove('fileControl_maxSize')
+
+                        this.showErrors = true;
                         return false;
                     }
                 }
+                if(file.size >= 1000000) {
+                    this.errors.add({
+                        field: 'fileControl_maxSize',
+                        msg: 'chap@ shata'
+                    })
+                    this.errors.remove('fileControl_invalidFormat')
+                    this.showErrors = true;
+                    return false;
+                }
+                this.showErrors = false;
                 let fileReader = new FileReader();
                 fileReader.onload = (e) => {
                     this.files.unshift({

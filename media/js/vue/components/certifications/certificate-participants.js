@@ -32,9 +32,12 @@ Vue.component('certificate-participants', {
                 </div>
             </div>
             <div class="certificate-participants-body">
-                <div class="certificate-participants-list">
+                <div 
+                    class="certificate-participants-list"
+                    :class="{'q4b-textarea-error-border': (errors.has('certificateParticipantsRequired') && showErrors)}"
+                >
                     <div 
-                        class="certificate-participants-item" 
+                        class="certificate-participants-item"
                         v-for="participant in participants" 
                         :key="participant.uid"
                     >
@@ -49,13 +52,15 @@ Vue.component('certificate-participants', {
                         ></div>
                     </div>
                 </div>
+                <span v-show="errors.has('certificateParticipantsRequired') && showErrors" class="q4b-error-text">{{ errors.first('certificateParticipantsRequired') }}</span>
             </div>
         </div>
     `,
     props: {
         translations: {required: true},
         data: {required: true},
-        canChange: {required: true}
+        canChange: {required: true},
+        showErrors: {required: true}
     },
     components: {
     },
@@ -87,6 +92,14 @@ Vue.component('certificate-participants', {
     },
     watch: {
         participants(participants) {
+            if(!(this.participants.length > 0)) {
+                this.errors.add({
+                    field: 'certificateParticipantsRequired',
+                    msg: this.trans.participants_required
+                })
+            } else {
+                this.errors.remove('certificateParticipantsRequired')
+            }
             this.$emit('participantsUpdated', participants)
         }
     },
