@@ -27,6 +27,7 @@ class Controller_ApproveElementReports extends HDVP_Controller_Template
     public function action_index()
     {
         VueJs::instance()->addComponent('./confirm-modal');
+        VueJs::instance()->addComponent('./q4b-warning-popup');
         VueJs::instance()->addComponent('reports/approve-element-reports/approve-elements-tab');
         VueJs::instance()->addComponent('reports/approve-element-reports/generate-reports');
         VueJs::instance()->addComponent('reports/approve-element-reports/reports-list');
@@ -123,7 +124,13 @@ class Controller_ApproveElementReports extends HDVP_Controller_Template
             'manager_signature' => __('manager_signature'),
             'notes_description' => __('notes_description'),
             'change_status?' => __('change_status?'),
-            'primary_supervision' => __('primary_supervision')
+            'primary_supervision' => __('primary_supervision'),
+            'partial_process' => __('partial_process'),
+            'no_search_results' => __('no_search_results'),
+            'close' => __('Close'),
+            'certificates_search_placeholder' => __('certificates_search_placeholder'),
+            'total' => __('Total'),
+
         ];
 
 
@@ -132,6 +139,82 @@ class Controller_ApproveElementReports extends HDVP_Controller_Template
             'userProfession' => $this->_user->professions->find()->name,
             'userRole' =>  $this->_user->getRelevantRole('name'),
             'projectId' => Request::current()->param('projectId')
+        ]);
+    }
+
+    public function action_create() {
+        $projectId = $this->getUIntParamOrDie($this->request->param('projectId'));
+
+        VueJs::instance()->addComponent('reports/approve-element-reports/create/create');
+        VueJs::instance()->addComponent('reports/approve-element-reports/create/report-speciality');
+        VueJs::instance()->includeDateTimePiker();
+        VueJs::instance()->includeMultiselect();
+        VueJs::instance()->includeSignaturePad();
+
+        $translations = [
+            'notes_description' => __('notes_description'),
+            "crafts" => __('Crafts'),
+            "status" => __('Status'),
+            "userPosition" => __($this->_user->getRelevantRole('name')),
+            'appropriate' => __('appropriate'),
+            'not_appropriate' => __('not_appropriate'),
+            'primary_supervision' => __('primary_supervision'),
+
+
+            'create_lab_control' => __('Create Lab Control'),
+            'structure' => __('Structure'),
+            'select_structure' => __('Select_structure'),
+            'floor' => __('Floor/Level'),
+            'select_floor' => __('Select_floor'),
+            'place' => __('Place'),
+            'select_place' => __('Select_place'),
+            'element' => __('Element_item'),
+            'select_element' => __('Select element'),
+            'craft' => __('Craft'),
+            'select_craft' => __('Select_specialty'),
+            'sample_number' => __('Sample number (external)'),
+            'description' => __('Description'),
+            'essence_of_work' => __('Essence of work/standard'),
+            'strength_after' => __('Strength after/result'),
+            'lab_certificate' => __('Lab certificate'),
+            'create_date' => __('Create_Date'),
+            'delivery_certificates' => __('Delivery certificates'),
+            'add' => __('Add'),
+            'attached_files' => __('Attached files'),
+            'list_of_files' => __('list_of_files'),
+            'uploaded' => __('uploaded'),
+            'close' => __('Close'),
+            'save' => __('Save'),
+            'create' => __('Create'),
+            'enter_essence_of_work' => __('Enter essence of work/standard'),
+            'enter_certificate_number' => __('Enter certificate number'),
+            'enter_delivery_certificate' => __('Enter delivery certificate'),
+            'certificate' => __('Certificate'),
+            'notes' => __('Notes'),
+            'fresh_concrete_strength' => __('Fresh concrete strength'),
+            'roll_strength' => __('Roll strength'),
+            'amount_of_volume' => __('Amount of volume'),
+            'type' => __('Type'),
+            'sediment' => __('Sediment'),
+            'enter_the_amount_of_volume' => __('Enter the amount of volume'),
+            'enter_the_type' => __('Enter the type'),
+            'enter_the_sediment' => __('Enter the sediment'),
+            'enter_the' => __('Enter the'),
+            'plans' => __('Plans'),
+            'name_type' => __('Name/Type'),
+            'profession' => __('Profession'),
+            'place_name_number' => __('Element number'),
+            'edition' => __('Edition'),
+            'date' => __('Date'),
+            'image' => __('Image'),
+            'sheet_number' => __('Sheet Number')
+        ];
+
+        $this->template->content = View::make('reports/approve-element/create', [
+            'translations' => $translations,
+            'userProfession' => $this->_user->professions->find()->name,
+            'userRole' =>  $this->_user->getRelevantRole('name'),
+            'projectId' => $projectId
         ]);
     }
 }

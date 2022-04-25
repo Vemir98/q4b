@@ -301,7 +301,7 @@ Vue.component('statistics', {
                                 </table>
                             </div>
                         </div>
-<!--                        <div class="dashboard-statistics-links"><a href="#">{{ trans.show_full_reports }}</a></div>-->
+                        <div class="dashboard-statistics-links" v-if="!exportPdf"><a :href="siteUrl + '/reports/certificates'" target="_blank">{{ trans.show_full_reports }}</a></div>
                     </div>
                     <div v-show="showStatistics" class="dashboard-statistics-item">
                         <div class="dashboard-statistics-item-title">

@@ -17,6 +17,18 @@ Route::set('site.approveElement.reports','reports/approve_element(/<projectId>(/
         'controller' => 'ApproveElementReports',
     ]);
 
+//certificates reports
+Route::set('site.certificates.reports','reports/certificates(/<action>)',['action' => '[a-z0-9_]+'])
+    ->defaults([
+        'controller' => 'CertificatesReports',
+    ]);
+
+Route::set('site.approveElementReports.create','reports/approve_element/create',['action' => '[a-z0-9_]+'])
+    ->defaults([
+        'controller' => 'ApproveElementReports',
+        'action' => 'create'
+    ]);
+
 //labtests
 Route::set('site.labtest.reports','reports/labtests(/<action>(/<id>))',['action' => '[a-z0-9_]+', 'id' => '[0-9]+'])
     ->defaults([

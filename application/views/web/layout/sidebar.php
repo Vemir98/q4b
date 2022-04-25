@@ -311,8 +311,11 @@ $projectRoutes['children'][] = [
     'hasActiveChild' => false
 ];
 
+// need to change
+$testRoles = ['super_admin', 'corporate_admin', 'corporate_infomanager', 'company_admin', 'company_infomanager', 'company_manager', 'general_admin', 'general_infomanager', 'project_admin'];
+
 if(!Auth::instance()->get_user()->is('project_adviser')) {
-    if(Usr::role() === 'super_admin') {
+    if(in_array(Usr::role(), $testRoles)) {
         $projectRoutes['children'][] = [
             'slug' => 'projects/update/:projectId?tab=certificates_old',
             'href' => 'projects/update/:projectId?tab=certificates_old',
@@ -329,23 +332,23 @@ if(!Auth::instance()->get_user()->is('project_adviser')) {
             'active' => false,
             'hasActiveChild' => false
         ];
+        $projectRoutes['children'][] = [
+            'slug' => 'projects/update/:projectId?tab=certificates',
+            'href' => 'projects/update/:projectId?tab=certificates',
+            'text' => 'Certificates',
+            'resource' => 'Controller_Projects',
+            'priority' => Enum_UserPriorityLevel::Project,
+            'deepLevel' => 2,
+            'showIn' => array_merge(
+                Menu::CATEGORIES['projects'],
+                Menu::CATEGORIES['labtests'],
+                Menu::CATEGORIES['elements']
+            ),
+            'disabled' => false,
+            'active' => false,
+            'hasActiveChild' => false
+        ];
     }
-    $projectRoutes['children'][] = [
-        'slug' => 'projects/update/:projectId?tab=certificates',
-        'href' => 'projects/update/:projectId?tab=certificates',
-        'text' => 'Certificates',
-        'resource' => 'Controller_Projects',
-        'priority' => Enum_UserPriorityLevel::Project,
-        'deepLevel' => 2,
-        'showIn' => array_merge(
-            Menu::CATEGORIES['projects'],
-            Menu::CATEGORIES['labtests'],
-            Menu::CATEGORIES['elements']
-        ),
-        'disabled' => false,
-        'active' => false,
-        'hasActiveChild' => false
-    ];
 }
 
 if(Usr::role() == 'super_admin') {
