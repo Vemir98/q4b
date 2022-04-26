@@ -4,7 +4,7 @@
 <div id="update-plan-modal" class="modal fade" data-backdrop="static" data-keyboard="false" role="dialog">
     <div class="modal-dialog q4_project_modal modal-dialog-1170">
         <form class="q4_form" action="<?=$action?>" data-ajax="true" method="post">
-        <input type="hidden" value="" name="x-form-secure-tkn"/>
+            <input type="hidden" value="" name="x-form-secure-tkn"/>
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header q4_modal_header">
@@ -31,7 +31,7 @@
                             </div>
                             <div class="form-group col-28 rtl-float-right">
                                 <label class="table_label"><?=__('Property')?></label>
-                                 <div class="select-wrapper"><i class="q4bikon-arrow_bottom"></i>
+                                <div class="select-wrapper"><i class="q4bikon-arrow_bottom"></i>
                                     <select class="q4-select q4-form-input qc-prop<?=$disabled?> disabled-input" name="object_id">
                                         <?foreach($_PROJECT->objects->find_all() as $obj):?>
                                             <? if($item->object_id == $obj->id) $defaultObject = $obj?>
@@ -71,17 +71,17 @@
                             <div class="form-group col-28 rtl-float-right multi-select-col floornum">
 
                                 <label class="table_label"><?=__('Floors')?>
-                                     <?if(!$disabled):?>
+                                    <?if(!$disabled):?>
                                         <span class="check-all-links" data-seltxt="<?=__('select all')?>" data-unseltxt="<?=__('unselect all')?>"><?=__('select all')?></span>
-                                     <?endif?>
+                                    <?endif?>
                                 </label>
                                 <div class="multi-select-box comma floors-list">
                                     <div class="select-imitation table_input floor-numbers<?=$disabled?>">
                                         <span class="select-imitation-title"><i class="q4bikon-baseline-stairs"></i></span>
                                         <div class="over-select"></div><i class="arrow-down q4bikon-arrow_bottom"></i>
                                     </div>
-                                    <?$floorNumbers = $item->floorNumbers();
-                                    $floorNumbersWithNames = $item->object->floorNumbersWithNames()?>
+                                    <?$floorNumbers = $item->floorNumbers();?>
+                                    <?$floorNumbersWithNames = $item->object->floorNumbersWithNames()?>
 
                                     <div class="checkbox-list">
                                         <?for($i = $defaultObject->smaller_floor; $i <= $defaultObject->bigger_floor; $i++):?>
@@ -91,7 +91,7 @@
                                                     <span class="checkbox-replace"></span>
                                                     <i class="checkbox-list-tick q4bikon-tick"></i>
                                                 </label>
-                                                <?if($floorNumbersWithNames[$i]):?>
+                                                <?if(isset($floorNumbersWithNames[$i])):?>
                                                     <span class="checkbox-text-content" data-val="<?=$i?>">
                                                         <?=$floorNumbersWithNames[$i]?>
                                                     </span>
@@ -106,8 +106,8 @@
                                     </div>
                                     <select class="hidden-select" name="floors" multiple>
                                         <?for($i = $defaultObject->smaller_floor; $i <= $defaultObject->bigger_floor; $i++):?>
-                                            <option <?=in_array($i,$floorNumbers) ? 'selected="selected"' : ''?> value="<?=$i?>" data-text="<?=$i?>">
-                                                <?=$floorNumbersWithNames[$i] ? $floorNumbersWithNames[$i] : $i?>
+                                            <option <?=in_array($i,$floorNumbers) ? 'selected="selected"' : ''?> value="<?=$i?>">
+                                                <?=isset($floorNumbersWithNames[$i]) ? $floorNumbersWithNames[$i] : $i?>
                                             </option>
                                         <?endfor?>
                                     </select>
@@ -121,11 +121,11 @@
                                 <input name="place_number" value="<?=$item->place->id?>" type="hidden">
                             </div>
                             <?
-                                $selectedCrafts = $item->crafts->find_all();
-                                $selCraftArray = [];
-                                foreach ($selectedCrafts as $craft) {
-                                    $selCraftArray[$craft->id] = $craft->name;
-                                }
+                            $selectedCrafts = $item->crafts->find_all();
+                            $selCraftArray = [];
+                            foreach ($selectedCrafts as $craft) {
+                                $selCraftArray[$craft->id] = $craft->name;
+                            }
                             ?>
                             <div class="form-group col-28 rtl-float-right multi-select-col">
 
@@ -139,7 +139,7 @@
                                     <div class="select-imitation<?=$disabled?>">
                                         <span class="select-imitation-title">
                                             <?foreach ($selCraftArray as $craft) {
-                                               echo $craft.',';
+                                                echo $craft.',';
                                             } ?></span>
                                         <div class="over-select"></div>
                                         <i class="arrow-down q4bikon-arrow_bottom"></i>
@@ -151,8 +151,8 @@
                                             <?
                                             $crafts = $profession->crafts->where('status','=',Enum_Status::Enabled)->order_by('name','ASC')->find_all();
                                             $c = [];
-                                                foreach ($crafts as $cr):?>
-                                                    <div class="checkbox-list-row<?=$profession->id == $item->profession_id  ? '' : ' hidden'?>" data-profession=<?=$profession->id?>>
+                                            foreach ($crafts as $cr):?>
+                                                <div class="checkbox-list-row<?=$profession->id == $item->profession_id  ? '' : ' hidden'?>" data-profession=<?=$profession->id?>>
                                                         <span class="checkbox-text">
                                                             <label data-val="<?=$cr->id?>" class="checkbox-wrapper-multiple inline <?=in_array($cr->id,array_keys($selCraftArray)) ? 'checked' : ''?>">
                                                                 <span class="checkbox-replace "></span>
@@ -160,7 +160,7 @@
                                                             </label>
                                                             <?=$cr->name?>
                                                         </span>
-                                                    </div>
+                                                </div>
                                             <?endforeach; ?>
                                         <?endforeach ?>
 
@@ -174,11 +174,11 @@
                                             $crafts = $profession->crafts->where('status','=',Enum_Status::Enabled)->find_all();
                                             $c = [];
                                             foreach ($crafts as $cr):?>
-                                            <?if(!isset($craftsArray[$cr->id])):?>
-                                                <?$craftsArray[$cr->id]=$cr->id?>
-                                                <option value="<?=$cr->id?>" <?=in_array($cr->id,array_keys($selCraftArray)) ? ' selected="selected"':''?> data-profession="<?=$profession->id?>"><?=__($cr->name)?></option>
+                                                <?if(!isset($craftsArray[$cr->id])):?>
+                                                    <?$craftsArray[$cr->id]=$cr->id?>
+                                                    <option value="<?=$cr->id?>" <?=in_array($cr->id,array_keys($selCraftArray)) ? ' selected="selected"':''?> data-profession="<?=$profession->id?>"><?=__($cr->name)?></option>
 
-                                            <?endif?>
+                                                <?endif?>
                                             <?endforeach; ?>
 
                                         <?endforeach;?>
@@ -221,19 +221,19 @@
 
 
                     <div class="plans-modal-dialog-bottom">
- <?//if(Auth::instance()->get_user()->is('general_admin') OR Auth::instance()->get_user()->is('super_admin') OR Auth::instance()->get_user()->is('general_infomanager')):?>
+                        <?//if(Auth::instance()->get_user()->is('general_admin') OR Auth::instance()->get_user()->is('super_admin') OR Auth::instance()->get_user()->is('general_infomanager')):?>
                         <?if(true):?>
-                        <div class="row">
-                             <div class="col-md-12">
-                                 <div class="form-group">
-                                     <label class="table_label"><?=__('Tracking details')?></label>
-                                 </div>
-                             </div>
-                         </div>
-                        <div class="row">
-                            <div class="form-group col-md-12">
-                                <table class="responsive_table table scrollable-tbody">
-                                    <thead>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="table_label"><?=__('Tracking details')?></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <table class="responsive_table table scrollable-tbody">
+                                        <thead>
                                         <tr>
                                             <th data-field="Tracking ID" class="td-100"><?=__('Tracking ID')?></th>
                                             <th data-field="Print Date" class="td-100"><?=__('Print date')?></th>
@@ -241,8 +241,8 @@
                                             <th data-field="Recipient person" class="td-175"><?=__('Recipient person')?></th>
                                             <th data-field="Recieved date" class="td-100"><?=__('Received date')?></th>
                                         </tr>
-                                    </thead>
-                                    <tbody class="qc-v-scroll-small">
+                                        </thead>
+                                        <tbody class="qc-v-scroll-small">
                                         <?foreach ($trackingItems as $track):?>
                                             <tr>
                                                 <td data-th="Tracking ID" class="td-100">
@@ -276,11 +276,11 @@
                                             </tr>
                                         <?endforeach; ?>
 
-                                    </tbody>
-                                </table>
+                                        </tbody>
+                                    </table>
 
+                                </div>
                             </div>
-                        </div>
                         <?endif?>
 
                         <div class="row">
@@ -317,7 +317,7 @@
         <?foreach ($places as $place):?>
         <?//$name = str_replace("'","\'",html_entity_decode($place->custom_number)).' '.__('floor').' '.$place->floor->number?>
         <?$name = str_replace("'","\'",html_entity_decode($place->custom_number))?>
-        <?$p[] = "{name: '{$name}', placeName: '{$place->name}', id: '{$place->id}',floorId :'{$place->floor->number}',floorName :'".__('floor')." {$place->floor->number}'}"?>
+        <?$p[] = "{name: '{$name}', id: '{$place->id}',floorId :'{$place->floor->number}',floorName :'".__('floor')." {$place->floor->number}'}"?>
         <?endforeach;?>
         <? $p = implode(",\n",$p)?>
         var PLACES_DATA = [
@@ -337,7 +337,8 @@
             });
             $.each(PLACES_DATA, function(key, place) {
                 if(floors.indexOf(place.floorId + "") != -1 || floors.length < 1){
-                    places.push({'value': place.name + "  (" + place.placeName +")", 'data': place.id});
+                    let pName = place.name;
+                    places.push({'value': pName, 'data': place.id});
                 }
             });
             placeInput.autocomplete({
@@ -392,7 +393,7 @@
         });
         floorsSelect.on('change',function(){
             if($(this).val() != null)
-            placeInput.val('').blur();
+                placeInput.val('').blur();
             makeAutocomplete();
         });
     });

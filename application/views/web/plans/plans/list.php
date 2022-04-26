@@ -313,7 +313,7 @@ $icons = [
                                                 <div class="upload-icon-box q4-file-upload">
                                                     <span class="upload-icon up-box">
                                                         <div class="hide-upload">
-                                                            <input type="file" class="upload-user-logo" accept=".jpg,.jpe,.jpeg,.png,.gif,.tif,.tiff" name="plan_<?=$item->id?>_file"/>
+                                                            <input type="file" class="upload-user-logo" accept="application/pdf" name="plan_<?=$item->id?>_file"/>
                                                         </div>
 
                                                         <div class="attention-bg camera-default-image">

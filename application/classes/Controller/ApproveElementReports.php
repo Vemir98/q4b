@@ -130,7 +130,7 @@ class Controller_ApproveElementReports extends HDVP_Controller_Template
             'close' => __('Close'),
             'certificates_search_placeholder' => __('certificates_search_placeholder'),
             'total' => __('Total'),
-
+            'search_by_element_number' => __('search_by_element_number')
         ];
 
 

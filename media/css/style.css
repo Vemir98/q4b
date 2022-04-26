@@ -10140,6 +10140,10 @@ table.scrollable-tbody tr:nth-child(odd) {
 
 .modal {
   overflow: auto !important;
+
+}
+
+#approve-element .modal {
   z-index: 999999 !important;
 }
 
@@ -25448,12 +25452,20 @@ html.rtl #approve-elements-content .parent-tr td.td-floor{
   color: #FF0000 !important;
 }
 
+.dashboard-statistics-item-data td span.purple {
+  color: #d515d3 !important;
+}
+
 .statistics-data-icon.red {
   background: #FF0000 !important;
 }
 
 .statistics-data-icon.blue {
   background: #9D9CC9 !important;
+}
+
+.statistics-data-icon.purple {
+  background: #d515d3 !important;
 }
 
 #dashboard table td, #dashboard table,

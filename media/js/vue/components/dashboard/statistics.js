@@ -186,6 +186,15 @@ Vue.component('statistics', {
                                     <tr>
                                         <td>
                                             <div class="statistics-data-item">
+                                                <div class="statistics-data-icon purple"></div>
+                                                <div class="statistics-data-descr">{{ trans.existing_and_for_repair_qc_in_system }}</div>
+                                            </div>
+                                        </td>
+                                        <td><span class="purple bold">{{ statistics.qc.data.existingAndForRepair }}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="statistics-data-item">
                                                 <div class="statistics-data-icon blue"></div>
                                                 <div class="statistics-data-descr">{{ trans.other_qc_in_system }}</div>
                                             </div>
@@ -813,12 +822,17 @@ Vue.component('statistics', {
                                 borderColor: 'rgba(15, 154, 96, 1)',
                             },
                             {
+                                data: this.statistics.qc.data.existingAndForRepair,
+                                backgroundColor: 'rgba(213, 21, 211, 1)',
+                                borderColor: 'rgba(213, 21, 211, 1)',
+                            },
+                            {
                                 data: this.statistics.qc.data.others,
                                 backgroundColor: 'rgba(157, 156, 201, 1)',
                                 borderColor: 'rgba(157, 156, 201, 1)',
                             }
                         ],
-                        [this.trans.invalid, this.trans.repaired, this.trans.other],
+                        [this.trans.invalid, this.trans.repaired, this.trans.existing_and_for_repair_qc_in_system, this.trans.other],
                         this.statistics.qc.data.total
                     );
                 })

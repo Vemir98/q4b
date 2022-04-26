@@ -36,7 +36,8 @@ class Controller_Api_Projects_Dashboard extends HDVP_Controller_API
                 'total' => 0,
                 'invalid' => 0,
                 'repaired' => 0,
-                'others' => 0
+                'others' => 0,
+                'existingAndForRepair' => 0
             ];
 
             foreach ($qcStatistics as $item) {
@@ -53,6 +54,16 @@ class Controller_Api_Projects_Dashboard extends HDVP_Controller_API
                 }
                 $result['total'] += (int)$item['count'];
             }
+
+            $existingForRepairQcs = Api_DBQualityControl::getProjectsExistingAndForRepairQcListCounts($filters)[0];
+
+            if((int)$existingForRepairQcs['count'] > 0) {
+                $result['existingAndForRepair'] = (int)$existingForRepairQcs['count'];
+                $result['others'] -= (int)$existingForRepairQcs['count'];
+            }
+
+//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($result); echo "</pre>";
+//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($filters); echo "</pre>";exit;
 
             $this->_responseData = [
                 'status' => "success",
@@ -502,7 +513,10 @@ class Controller_Api_Projects_Dashboard extends HDVP_Controller_API
                         $result['approved'] = (int)$labControlsGroup['count'];
                         break;
                     case Enum_LabtestStatus::Waiting:
-                        $result['notApproved'] = (int)$labControlsGroup['count'];
+                        $result['notApproved'] += (int)$labControlsGroup['count'];
+                        break;
+                    case Enum_LabtestStatus::NonApprove:
+                        $result['notApproved'] += (int)$labControlsGroup['count'];
                         break;
                 }
                 $result['total'] += (int)$labControlsGroup['count'];

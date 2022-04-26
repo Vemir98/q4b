@@ -117,7 +117,7 @@ Vue.component('reports-list', {
         </div>
         <div class="report-buttons">
             <div class="report-search">
-                <input type="text" v-model="searchValue" :placeholder="trans.certificates_search_placeholder" @keydown.enter="getReportById">
+                <input type="text" v-model="searchValue" :placeholder="trans.search_by_element_number" @keydown.enter="getReportById">
                 <i @click="getReportById">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="14" viewBox="0 0 20 14"
                          fill="none">

@@ -23,7 +23,13 @@ Vue.component('file-control', {
                     @click="handleAttachFileClick()"
                 >
                 </div>
-                <input type="file" :id="fileInputName" @change="fileChange($event)" style="display: none" />
+                <input 
+                    type="file" 
+                    :id="fileInputName" 
+                    @change="fileChange($event)" 
+                    style="display: none"
+                    :accept="allowedFormatMimes"
+                />
                 <div class="q4b-attachment-wrapper">
                     <div v-if="files.length" class="q4b-attachment-title">{{ trans.list_of_files }}</div>
                     <template v-for="(file, index) in files">
@@ -74,13 +80,31 @@ Vue.component('file-control', {
             showEditor: false,
             trans: JSON.parse(this.translations),
             fileInputName: 'fileInput_'+ (+(new Date())),
-            showErrors: false
+            showErrors: false,
+            fileFormatMimes: {
+                jpeg: 'image/jpeg',
+                png: 'image/png',
+                jpg: 'image/jpg',
+                pdf: 'application/pdf'
+            }
         }
     },
     watch: {
         files(files) {
           this.$emit('filesUpdated', files)
       }
+    },
+    computed: {
+        allowedFormatMimes() {
+            let formatsMimes = [];
+            this.allowedFormats.forEach(format => {
+                if(this.fileFormatMimes[format]) {
+                    formatsMimes.push(this.fileFormatMimes[format])
+                }
+            })
+
+            return formatsMimes.join(', ')
+        }
     },
     methods: {
         handleAttachFileClick() {
@@ -174,7 +198,7 @@ Vue.component('file-control', {
             this.editorOpenedFromPlans = false;
             this.openedFileIndex = null;
             this.showEditor = false;
-        }
+        },
     },
     mounted() {
     }

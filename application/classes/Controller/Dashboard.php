@@ -226,6 +226,7 @@ class Controller_Dashboard extends HDVP_Controller_Template
             'invalid_qc_in_system' => __('invalid_qc_in_system'),
             'repaired_qc_in_system' => __('repaired_qc_in_system'),
             'other_qc_in_system' => __('other_qc_in_system'),
+            'existing_and_for_repair_qc_in_system' => __('existing && for_repair'),
             'places_in_system' => __('places_in_system'),
             'private_places' => __('private_places'),
             'public_places' => __('public_places'),

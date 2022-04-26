@@ -986,5 +986,6 @@ return [
     'participants_required' => 'Необходимо добавить хотя бы одного участника',
     'certificates_search_placeholder' => 'Поиск сертификатов',
     'no_search_results' => 'Нет результатов поиска',
+    'search_by_element_number' => 'Поиск по номеру элемента',
     ''=>'',
 ];

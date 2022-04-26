@@ -117,6 +117,26 @@ class Api_DBQualityControl
             ->execute()->as_array();
     }
 
+    public static function getProjectsExistingAndForRepairQcListCounts($filters) {
+        $query = 'SELECT
+            count(qc.id) as count
+            FROM quality_controls qc
+            WHERE qc.project_id IN (:projectIds) AND (qc.created_at>=:from AND qc.created_at<=:to) AND qc.approval_status=:approvalStatus AND qc.status=:status
+            GROUP BY qc.status';
+
+        $query =  DB::query(Database::SELECT, $query);
+
+        $query->parameters(array(
+            ':projectIds' => DB::expr(implode(',',$filters['projectIds'])),
+            ':from' => $filters['from'],
+            ':to' => $filters['to'],
+            ':approvalStatus' => Enum_QualityControlApproveStatus::ForRepair,
+            ':status' => Enum_QualityControlStatus::Existing
+        ));
+
+        return $query->execute()->as_array();
+    }
+
     public static function getProjectsQcListCountsByStatus($filters) {
         $query = 'SELECT
             qc.status,

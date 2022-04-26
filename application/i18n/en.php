@@ -1013,5 +1013,6 @@ return [
     'participants_required' => 'Participants field is required',
     'certificates_search_placeholder' => 'Search certificates',
     'no_search_results' => 'No search results',
+    'search_by_element_number' => 'Search by element number',
     ''=>'',0
 ];
