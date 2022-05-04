@@ -81,6 +81,20 @@ class Controller_Api_Auth extends HDVP_Controller_API
                 $this->_responseData['user']['hasSpecialDeliveryPermission'] = ((Usr::can(Usr::READ_PERM,'Controller_DeliveryReports',Enum_UserPriorityLevel::General))  || (in_array(strtolower(Auth::instance()->get_user()->email), $emails))) ? "1" : "0";
                 $this->_responseData['user']['forceUpdateVersionCode'] = 319;
 
+                $subcontractors = Kohana::$config->load('subcontractors')->as_array();
+                $userRoleName = $this->_user->getRelevantRole('name');
+                $isSubContractor = false;
+                if (array_key_exists($userRoleName, $subcontractors)) {
+//                    echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($subcontractors[$userRoleName]); echo "</pre>"; exit;
+                    if($userRoleName === 'project_general_subcontractor') {
+                        $this->_responseData['user']['isGeneralSubcontractor'] = true;
+                    } else {
+                        $this->_responseData['user']['isSubcontractor'] = true;
+                    }
+
+                    $this->_responseData['user']['subcontractorSpecialities'] = $subcontractors[$userRoleName]['specialties'];
+                }
+
                 $this->_responseData['user']['permissions'] = $permissions;
 
                 $this->_responseData['user']['professions'] = [];

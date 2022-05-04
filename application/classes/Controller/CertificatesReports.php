@@ -29,6 +29,10 @@ class Controller_CertificatesReports extends HDVP_Controller_Template
         VueJs::instance()->addComponent('reports/certificates/index');
         VueJs::instance()->addComponent('reports/certificates/generate');
         VueJs::instance()->addComponent('reports/certificates/list');
+        VueJs::instance()->addComponent('certifications/print/certificates-pdf');
+
+        VueJs::instance()->addComponent('q4b-print-pdf');
+
 
         VueJs::instance()->includeMultiselect();
         $translations = [
@@ -65,7 +69,10 @@ class Controller_CertificatesReports extends HDVP_Controller_Template
             "project" => __('Project'),
             'participants_list' => __('participants_list'),
             'chapters_list' => __('chapters_list'),
-            'total' => __('Total')
+            'total' => __('Total'),
+            'certificate_description' => __('certificate_description'),
+            'chapter_content' => __('chapter_content'),
+            'chapter' => __('chapter'),
         ];
 
 

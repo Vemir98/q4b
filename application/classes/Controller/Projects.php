@@ -514,12 +514,15 @@ class Controller_Projects extends HDVP_Controller_Template
 
                     VueJs::instance()->addComponent('certifications/modals/create-certification');
                     VueJs::instance()->addComponent('certifications/modals/update-certification');
+                    VueJs::instance()->addComponent('certifications/print/certificates-pdf');
+                    VueJs::instance()->addComponent('certifications/print/certificate-pdf');
 
                     VueJs::instance()->addComponent('certifications/popups/certificate-chapter-content-popup');
                     VueJs::instance()->addComponent('certifications/popups/certificate-chapter-images-popup');
 
                     VueJs::instance()->addComponent('file-control');
                     VueJs::instance()->addComponent('q4b-confirm-popup');
+                    VueJs::instance()->addComponent('q4b-print-pdf');
                 break;
             }
 
@@ -568,6 +571,18 @@ class Controller_Projects extends HDVP_Controller_Template
                 'file_size_text' => __('file_size_text'),
                 'chapters_required' => __('chapters_required'),
                 'participants_required' => __('participants_required'),
+                'description' => __('Description1'),
+                'participants_list' => __('participants_list'),
+                'chapters_list' => __('chapters_list'),
+                "company_name" => __('company name'),
+                "project_name" => __('Project name'),
+                "owner" => __('Owner'),
+                "start_date" => __('Start Date'),
+                "end_date" => __('End Date'),
+                "project_id" => __('Project ID'),
+                "project_status" => __('project status'),
+                "address" => __('Address'),
+
             ];
 
             if($tab) {
@@ -577,6 +592,7 @@ class Controller_Projects extends HDVP_Controller_Template
                     ->set('users',$this->project->users->find_all())
                     ->set('tasks',$this->project->tasks->order_by('id','DESC')->find_all())
                     ->set('userRole',$this->_user->getRelevantRole('name'))
+                    ->set('projectId',$this->project->id)
                     ->set('translations', $translations);
             } else {
                 $this->template->content = View::make('projects/update')

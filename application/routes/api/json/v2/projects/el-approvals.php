@@ -105,7 +105,7 @@ Route::set('apiJsonV2.el-approvals.delete','api/json/v2/(<appToken>/)el-approval
         'directory' => 'Api/Projects'
     ]);
 
-Route::set('apiJsonV2.project.el-approval','api/json/v2/(<appToken>/)projects/<projectId>/el-approvals/<elApprovalId>',['appToken' => '[a-f0-9]{32}'])
+Route::set('apiJsonV2.project.el-approval','api/json/v2/(<appToken>/)projects/<projectId>/el-approvals/<elApprovalId>',['appToken' => '[a-f0-9]{32}', 'elApprovalId' => '[0-9]+'])
     ->filter(function($route, $params, $request)
     {
         $params['action'] = 'project_index_'.strtolower($request->method());

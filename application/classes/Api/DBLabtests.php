@@ -613,22 +613,96 @@ class Api_DBLabtests
         return $query->execute()->as_array();
     }
 
+//    public static function getProjectsLabTestsCountsGroupsByStatus($filters) :array
+//    {
+//        $query = 'SELECT
+//            lt.status,
+//            COUNT(DISTINCT lt.id) as count
+//            FROM labtests lt
+//            WHERE lt.project_id IN (:projectIds) AND (lt.created_at>=:from AND lt.created_at<=:to)
+//            GROUP BY lt.status';
+//
+//        $query =  DB::query(Database::SELECT, $query);
+//
+//        $query->parameters(array(
+//            ':projectIds' => DB::expr(implode(',',$filters['projectIds'])),
+//            ':from' => $filters['from'],
+//            ':to' => $filters['to']
+//        ));
+//
+//        return $query->execute()->as_array();
+//    }
+
     public static function getProjectsLabTestsCountsGroupsByStatus($filters) :array
     {
         $query = 'SELECT 
             lt.status,
             COUNT(DISTINCT lt.id) as count
             FROM labtests lt
-            WHERE lt.project_id IN (:projectIds) AND (lt.created_at>=:from AND lt.created_at<=:to)
-            GROUP BY lt.status';
+            LEFT JOIN (SELECT id, number,labtest_id FROM labtests_tickets) AS lbt ON labtest_id=lt.id
+            INNER JOIN users u ON lt.created_by = u.id 
+            LEFT JOIN users u1 ON lt.updated_by = u1.id
+            LEFT JOIN pr_objects po ON lt.building_id=po.id 
+            LEFT JOIN elements el ON lt.element_id=el.id 
+            LEFT JOIN cmp_crafts cr ON lt.craft_id=cr.id 
+            LEFT JOIN pr_floors fl ON lt.floor_id=fl.id';
+
+        $query .= ' WHERE lt.project_id IN (:projectIds)';
+
+        if(isset($filters['statuses']) && !empty($filters['statuses'])){
+            $statuses = DB::expr(implode('","', $filters['statuses']));
+            $query .= ' AND lt.status IN (":statuses")';
+        }
+//        if(isset($filters['search']) && trim($filters['search'] !== '')){
+        if(isset($filters['search'])){
+            $search = trim($filters['search']);
+            $query .= ' AND (lt.id=:search OR lt.cert_number=:search OR lbt.number=:search)';
+        }
+        if(isset($filters['elementIds']) && !empty($filters['elementIds'])){
+            $elementIds = DB::expr(implode(",", $filters["elementIds"]));
+            $query .= ' AND element_id IN (:elementIds)';
+        }
+        if(isset($filters['floorIds']) && !empty($filters['floorIds'])){
+            $floorIds = DB::expr(implode(",", $filters["floorIds"]));
+            $query .= ' AND floor_id IN (:floorIds)';
+        }
+        if(isset($filters['placeIds']) && !empty($filters['placeIds'])){
+            $placeIds = DB::expr(implode(",", $filters["placeIds"]));
+            $query .= ' AND place_id IN (:placeIds)';
+        }
+        if(isset($filters['objectIds']) && !empty($filters['objectIds'])){
+            $objectIds = DB::expr(implode(",", $filters["objectIds"]));
+            $query .= ' AND building_id IN (:objectIds)';
+        }
+        if(isset($filters['craftIds']) && !empty($filters['craftIds'])){
+            $craftIds = DB::expr(implode(",", $filters["craftIds"]));
+            $query .= ' AND craft_id IN (:craftIds)';
+        }
+        if(isset($filters['from'])){
+            $from = $filters['from'];
+            $query .= ' AND lt.create_date>=:from';
+        }
+        if(isset($filters['to'])){
+            $to = $filters['to'];
+            $query .= ' AND lt.create_date<=:to';
+        }
+        $query .= ' GROUP BY lt.status';
+
+//        echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($query); echo "</pre>"; exit;
 
         $query =  DB::query(Database::SELECT, $query);
 
-        $query->parameters(array(
-            ':projectIds' => DB::expr(implode(',',$filters['projectIds'])),
-            ':from' => $filters['from'],
-            ':to' => $filters['to']
-        ));
+        if(isset($statuses)) $query->param(':statuses', $statuses);
+        if(isset($search)) $query->param(':search', $search);
+        if(isset($elementIds)) $query->param(':elementIds', $elementIds);
+        if(isset($floorIds)) $query->param(':floorIds', $floorIds);
+        if(isset($placeIds)) $query->param(':placeIds', $placeIds);
+        if(isset($objectIds)) $query->param(':objectIds', $objectIds);
+        if(isset($craftIds)) $query->param(':craftIds', $craftIds);
+        if(isset($from)) $query->param(':from', $from);
+        if(isset($to)) $query->param(':to', $to);
+
+        $query->param(':projectIds', DB::expr(implode(',',$filters['projectIds'])));
 
         return $query->execute()->as_array();
     }

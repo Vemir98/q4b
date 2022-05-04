@@ -332,7 +332,7 @@ class Controller_Api_Projects_Dashboard extends HDVP_Controller_API
                 'notApproved' => 0
             ];
 
-            $ears = Api_DBElApprovals::getProjectsElApprovalsByAppropriate1($filters);
+            $ears = Api_DBElApprovals::getProjectsElApprovalsByFilters($filters);
 
             foreach ($ears as $earsGroup) {
                 switch ($earsGroup['status']) {
@@ -532,8 +532,78 @@ class Controller_Api_Projects_Dashboard extends HDVP_Controller_API
             throw API_Exception::factory(500,'Incorrect data');
         } catch (Exception $e){
             Database::instance()->rollback();
-            throw API_Exception::factory(500,'Operation Error');
-//            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$e->getMessage()]); echo "</pre>"; exit;
+//            throw API_Exception::factory(500,'Operation Error');
+            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$e->getMessage()]); echo "</pre>"; exit;
+        }
+    }
+
+    public function action_statistics_labtests_post() {
+
+        $filters = Arr::extract($_POST,
+            [
+                'projectIds',
+                'statuses',
+                'objectIds',
+                'floorIds',
+                'placeIds',
+                'elementIds',
+                'craftIds'
+            ]);
+
+        try {
+
+            $valid = Validation::factory($filters);
+
+            $valid
+                ->rule('projectIds', 'not_empty');
+
+            if (!$valid->check()) {
+                throw API_ValidationException::factory(500, 'missing required field');
+            }
+
+            try{
+                $filters['search'] = $_POST['search'] ? $_POST['search'] : null;
+                $filters['from'] = $_POST['from'] ? DateTime::createFromFormat('d/m/Y H:i',$_POST['from'] . ' 00:00')->getTimestamp() : null;
+                $filters['to'] = $_POST['to'] ? DateTime::createFromFormat('d/m/Y H:i',$_POST['to'] . ' 23:59')->getTimestamp() : null;
+            }catch(Exception $e){
+                throw new HTTP_Exception_404();
+            }
+
+            $labControls = Api_DBLabtests::getProjectsLabTestsCountsGroupsByStatus($filters);
+
+            $result = [
+                'total' => 0,
+                'approved' => 0,
+                'notApproved' => 0,
+            ];
+
+            foreach ($labControls as $labControlsGroup) {
+                switch ($labControlsGroup['status']) {
+                    case Enum_LabtestStatus::Approve:
+                        $result['approved'] = (int)$labControlsGroup['count'];
+                        break;
+                    case Enum_LabtestStatus::Waiting:
+                        $result['notApproved'] += (int)$labControlsGroup['count'];
+                        break;
+                    case Enum_LabtestStatus::NonApprove:
+                        $result['notApproved'] += (int)$labControlsGroup['count'];
+                        break;
+                }
+                $result['total'] += (int)$labControlsGroup['count'];
+            }
+
+            $this->_responseData = [
+                'status' => "success",
+                'item' => $result
+            ];
+
+        } catch (API_ValidationException $e){
+            Database::instance()->rollback();
+            throw API_Exception::factory(500,'Incorrect data');
+        } catch (Exception $e){
+            Database::instance()->rollback();
+//            throw API_Exception::factory(500,'Operation Error');
+            echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r([$e->getMessage()]); echo "</pre>"; exit;
         }
     }
 

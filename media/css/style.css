@@ -12664,6 +12664,101 @@ ul.q4-unordered-list>li .q4-nested-list>li:last-child {
   .dashboard-print {
     display: block !important;
   }
+  .print-container {
+    display: block !important;
+  }
+  .print-container * {
+    direction: rtl;
+  }
+  .test {
+    display: block !important;
+  }
+  .q4b-textarea textarea {
+    border: none !important;
+  }
+  .q4b-print-label-inline {
+    color: #1EBCE8 !important;
+    font-weight: bold !important;
+  }
+  .q4b-print-text-bold {
+    font-weight: bold;
+  }
+  .print-project-image {
+    margin-left: 30px !important;
+  }
+  .print-project-image img {
+    max-height: 200px;
+  }
+  .print-project-wrapper {
+    height: 100% !important;
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-content: center !important;
+  }
+
+  .print-project {
+    margin-top: 400px !important;
+    display: flex;
+    justify-content: space-around;
+    align-content: center;
+  }
+  .print-project-description-section div {
+    margin-bottom: 7px;
+  }
+
+
+  /* Certificate pdf start */
+
+  .craft-cert {
+    background: #FFFFFF !important;
+    box-shadow: 0px 4px 20px rgb(0 0 0 / 6%) !important;
+    border-radius: 10px !important;
+    padding: 20px !important;
+    margin-bottom: 15px !important;
+  }
+  .print-craft-certificates {
+    /*border: 1px solid red !important;*/
+    /*padding: 15px !important;*/
+  }
+
+  .print-certificate-wrapper {
+    /*border: 1px solid blue !important;*/
+    /*padding: 15px !important;*/
+    background: #FFFFFF !important;
+    box-shadow: 0px 4px 20px rgb(0 0 0 / 6%) !important;
+    border-radius: 10px !important;
+    padding: 20px !important;
+    margin-bottom: 15px !important;
+  }
+
+  .print-certificate-participants-wrapper {
+    /*border: 1px solid green !important;*/
+    /*padding: 15px !important;*/
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+
+  .print-certificate-participants-title,
+  .print-certificate-chapters-title {
+    margin-bottom: 10px;
+
+  }
+  .print-certificate-chapters-wrapper {
+    /*border: 1px solid purple !important;*/
+    /*padding: 15px !important;*/
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+
+  .print-certificate-chapter {
+    /*border: 1px solid cornflowerblue !important;*/
+    /*padding: 15px !important;*/
+    margin-bottom: 15px;
+  }
+
+  /* Certificate pdf end */
+
 }
 
 @media print and (max-width: 600px) {
@@ -21060,10 +21155,22 @@ html.rtl .labtest_filters1 .labtest_filter_input:nth-last-of-type(1), .labtest_f
   margin-left: 0;
 }
 
-.labtest_filters_print button, .labtest_filters_export a {
+.labtest_filters_print button {
   padding-left: 16px;
   padding-right: 45px;
   background-position: 83% center;
+}
+
+.ltr .labtest_filters_export a {
+  padding-left: 16px;
+  padding-right: 45px;
+  background-position: 83% center;
+}
+
+.rtl .labtest_filters_export a {
+  padding-left: 46px;
+  padding-right: 15px;
+  background-position: 15% center;
 }
 
 /* lab test edit page */
@@ -24977,6 +25084,10 @@ html.rtl .approve-elv-task-status {
   overflow: hidden;
 }
 
+#pr-labtests-list .element_table {
+  margin-top: 15px;
+}
+
 #approve-element .prev_arrow a  {
   background-image: url('../img/pagination_prew.png')!important;
   background-position: center;
@@ -26154,6 +26265,12 @@ html.rtl #approve-elements-content .parent-tr td.td-floor{
   width: 100%;
 }
 
+#certifications .top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .certificate-chapter-content-popup,
 .certificate-chapter-images-popup {
   width: 600px;
@@ -26356,6 +26473,11 @@ html.rtl #approve-elements-content .parent-tr td.td-floor{
   margin-top: 10px;
 }
 
+.q4b-text-wrapped {
+  white-space: pre-wrap;
+  unicode-bidi: isolate;
+}
+
 
 .q4b-remove-image-icon {
   background-image: url('../img/close_red.png');
@@ -26363,6 +26485,14 @@ html.rtl #approve-elements-content .parent-tr td.td-floor{
   width: 15px;
   height: 15px;
   cursor: pointer;
+}
+
+.q4b-pdf-icon {
+  background-image: url('../img/q4b_pdf.svg') !important;
+  background-size: contain !important;
+  width: 60px !important;
+  height: 60px !important;
+  cursor: pointer !important;
 }
 
 .q4b-attachment-data {
@@ -26589,6 +26719,4 @@ html.rtl .q4b-attachment-icon {
   #certifications .craft-table {
     overflow: auto;
   }
-
-
 }

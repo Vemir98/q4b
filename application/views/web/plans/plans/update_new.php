@@ -337,8 +337,7 @@
             });
             $.each(PLACES_DATA, function(key, place) {
                 if(floors.indexOf(place.floorId + "") != -1 || floors.length < 1){
-                    let pName = place.name;
-                    places.push({'value': pName, 'data': place.id});
+                    places.push({'value': `${place.name} (${place.floorName})`, 'data': place.id});
                 }
             });
             placeInput.autocomplete({

@@ -1097,7 +1097,6 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
 
         $elApprovals = $this->getApproveElementsExpandedData($elApprovals);
 
-
         if (!empty($elApprovals)) {
             $ws = new Spreadsheet(array(
                 'author'       => 'Q4B',
@@ -1219,7 +1218,7 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
 
                 foreach ($elApproval['specialities'] as $speciality) {
                     $elAppCraftRow = [
-                        '',
+                        $speciality['notice'],
                         '',
                         '',
                         '',

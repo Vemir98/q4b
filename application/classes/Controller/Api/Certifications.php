@@ -23,7 +23,7 @@ class Controller_Api_Certifications extends HDVP_Controller_API
                     'craftName' => $craft->name,
                     'desc' => $r->desc,
                     'status' => $r->status,
-                    'file' => !empty($r->file) ? str_replace('/home/qforbnet/public_html','',self::REGULATIONS_PATH.str_replace('.pdf','.jpg',$r->file)) : null,
+                    'file' => !empty($r->file) ? str_replace('/var/www/vhosts/sunrisedvp.systems/qforb.sunrisedvp.systems','',self::REGULATIONS_PATH.str_replace('.pdf','.jpg',$r->file)) : null,
                     'createdAt' => $r->created_at,
                     'updatedAt' => $r->updated_at,
                     'createdBy' => $r->created_by,
@@ -31,7 +31,6 @@ class Controller_Api_Certifications extends HDVP_Controller_API
                 ];
             }
         }
-
         $this->_responseData['items'] = $regData;
     }
 

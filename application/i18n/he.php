@@ -1013,6 +1013,6 @@ return [
     'participants_required' => 'צריך להוסיף לפחות משתתף אחד',
     'certificates_search_placeholder' => 'חיפוש פ. מלאכה',
     'no_search_results' => 'לא נמצאו תוצאות חיפוש',
-    'search_by_element_number' => 'חפש לפי מספר אלמנט',
+    'search_by_element_number' => 'חפש לפי מספר בדיקה',
     ''=>'',
 ];

@@ -72,7 +72,7 @@ class Controller_LabTests extends HDVP_Controller_Template
             'edition' => __('Edition'),
             'date' => __('Date'),
             'image' => __('Image'),
-            'sheet_number' => __('Sheet Number')
+            'sheet_number' => __('Sheet Number'),
         ];
 
         VueJs::instance()->addComponent('labtests/create/create');
@@ -128,7 +128,9 @@ class Controller_LabTests extends HDVP_Controller_Template
             'select_company' => __('Select Company'),
             'select_project' => __('Select project'),
             'company' => __('company'),
-            'project' => __('project')
+            'project' => __('project'),
+            'total' => __('Total'),
+            "approved" => __('Approved'),
         ];
         if($this->request->param('projectId')) {
             $id = $this->getUIntParamOrDie($this->request->param('projectId'));

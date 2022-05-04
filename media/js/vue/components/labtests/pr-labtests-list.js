@@ -1,14 +1,14 @@
 Vue.component('pr-labtests-list', {
     template: `
         <section class='labtest_list'>
-        <div class="elements_title_sec" v-if="items.length">
+        <div class="elements_title_sec">
             <div class="lt_page_title">{{ trans.project_name }} / <span class="project_name"> {{ selectedProject ? selectedProject.name : '' }}</span></div>
-            <div class="elements_title_left">
+            <div class="elements_title_left" v-if="selectedProject">
                 <form class="elements-form" action="">
                     <i class="q4bikon-search1 icon"></i>
-                    <input type="text" v-on:keyup.enter="getLabtests()" v-on:keydown.enter="getLabtests()"  v-model="search" class="qc-id-to-show q4-form-input" :placeholder="trans.search + '...'"
+                    <input type="text" v-on:keyup.enter="getLabtests(); getLabtestsStatistics();" v-on:keydown.enter="getLabtests(); getLabtestsStatistics();"  v-model="search" class="qc-id-to-show q4-form-input" :placeholder="trans.search + '...'"
                         value="">
-                    <a class="qc_serarch_btn rotate-180 cursor-pointer" @click.stop="getLabtests()">
+                    <a class="qc_serarch_btn rotate-180 cursor-pointer" @click.stop="getLabtests(); getLabtestsStatistics();">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="14" viewBox="0 0 20 14"
                          fill="none">
                             <path fill-rule="evenodd" clip-rule="evenodd"
@@ -111,7 +111,7 @@ Vue.component('pr-labtests-list', {
                             </multiselect>                                 
                         </div>
 <!--                        <div class="labtest_filter_input">-->
-                            <button class="labtest_filter_show_btn" @click="getLabtests()">{{ trans.show }}</button>
+                            <button class="labtest_filter_show_btn" @click="getLabtests();getLabtestsStatistics();">{{ trans.show }}</button>
 <!--                        </div>-->
                         <div class="labtest_filters_export" v-if="items.length" style="margin-left: 20px">
                             <a :href="getExportHref" download="lab-reports.xls">{{ trans.export }}</a>
@@ -322,6 +322,11 @@ Vue.component('pr-labtests-list', {
 
                 </div>
             </div>
+        <div class="report-statistics" v-if="reportsStatistics !== null">
+            <div class="report-statistics-item"><span>{{ trans.total }}:</span><span class="q4b-text-bold"> {{ reportsStatistics?.total }}</span></div>
+            <div class="report-statistics-item"><span>{{ trans.approved }}:</span><span class="q4b-text-bold"> {{ reportsStatistics?.approved }}</span></div>
+            <div class="report-statistics-item"><span>{{ trans.waiting }}:</span><span class="q4b-text-bold"> {{ reportsStatistics?.notApproved }}</span></div>
+        </div>
             <div class="element_table" :class="{'empty': !showLoader && !items.length}">
                 <div class="loader_backdrop" v-if="showLoader">
                     <div class="loader"></div>
@@ -388,6 +393,7 @@ Vue.component('pr-labtests-list', {
             search: '',
             time: [],
             items: [],
+            reportsStatistics: null,
             page: +sessionStorage.getItem('labtests-page') || 1,
             total: 0,
             limit: 0,
@@ -481,6 +487,7 @@ Vue.component('pr-labtests-list', {
                     await this.getElements();
                     await this.getCompanyCrafts();
                     if(this.projectId) {
+                        this.getLabtestsStatistics();
                         await this.getLabtests();
                     }
                 })()
@@ -714,6 +721,29 @@ Vue.component('pr-labtests-list', {
                     this.showLoader = false;
                 });
         },
+        getLabtestsStatistics() {
+            this.showLoader = true;
+            let url = '/projects/statistics/labtests';
+
+            let filters = {
+                projectIds: [this.selectedProject.id],
+                statuses: this.selectedStatus.map(status => status.name),
+                objectIds: this.selectedStructure.map(structure => structure.id),
+                floorIds: this.selectedFloor.map(floor => floor.id),
+                placeIds: this.selectedPlace.map(place => place.id),
+                elementIds: this.selectedElement.map(element => element.id),
+                craftIds: this.selectedCraft.map(craft => craft.id),
+                search: this.search,
+                from: this.time && this.time[0] ? this.time[0].toLocaleDateString("en-GB") : '',
+                to: this.time && this.time[1] ? this.time[1].toLocaleDateString("en-GB") : ''
+            }
+
+            qfetch(url, {method: 'POST', headers: {}, body: filters})
+                .then(response => {
+                    this.reportsStatistics = response.item;
+                    this.showLoader = false;
+                });
+        }
     },
 });
 

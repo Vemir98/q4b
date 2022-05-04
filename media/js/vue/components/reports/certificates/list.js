@@ -102,7 +102,7 @@ Vue.component('certificates-list', {
         <div class="report-buttons">
             <div class="report-buttons-wraper" :class="{'open': toggleExportButton}" @click="toggleExportButton = !toggleExportButton">
                 <span class="report-buttons-headline"><i class="q4bikon-share"></i>{{ trans.export }}</span>
-                <a class="report-button pdf" style="opacity: .5;cursor: auto"><i class="q4bikon-file1"></i>PDF</a>
+                <a class="report-button pdf" @click="printPdf = true"><i class="q4bikon-file1"></i>PDF</a>
                 <a class="report-button excel" style="opacity: .5;cursor: auto"><i class="q4bikon-report"></i>Excel</a>
             </div>
         </div>
@@ -111,7 +111,7 @@ Vue.component('certificates-list', {
             <div class="craft-cert" v-for="(craft, craftIndex) in crafts" :key="craft.id">
                 <h2 class="craft-label">{{craft.name}}</h2><br>
                 <div class="table craft-table">
-                    <table v-if="craft?.certificates?.length > 0" id="cert-table">
+                    <table v-if="craft?.items?.length > 0" id="cert-table">
                         <thead>
                             <th>
                                 {{ trans.description }}
@@ -130,7 +130,7 @@ Vue.component('certificates-list', {
                             </th>
                         </thead>
                         <tbody>
-                            <template v-for="(certificate, certificateIndex) in craft.certificates">
+                            <template v-for="(certificate, certificateIndex) in craft.items">
                                 <tr class="parent-tr" :class="{'openParent': certificate.showChapters}" :key="certificate.id">
                                     <td class="parent-td" @click="toggleCertificateChapters(craftIndex, certificateIndex)" >
                                         <span>{{ certificate.name }}</span>
@@ -202,6 +202,18 @@ Vue.component('certificates-list', {
                 </div>
             </div>
         </div>
+        <print-pdf
+            :translations="translations"
+            v-if="printPdf"
+            @onClose="printPdf = false"
+        >
+            <certificates-pdf
+                :translations="translations"
+                :crafts="crafts"
+                :project="project"
+                :company="company"
+            />
+        </print-pdf>
 <!--        <pagination -->
 <!--            v-model="currentPage" -->
 <!--            :records="total" -->
@@ -236,7 +248,8 @@ Vue.component('certificates-list', {
             limit: 0,
             statistics: null,
             projectId: this.project.id,
-            certificateStatistics: null
+            certificateStatistics: null,
+            printPdf: false
         }
     },
     computed: {
@@ -254,7 +267,7 @@ Vue.component('certificates-list', {
             qfetch(url, {method: 'POST', headers: {}, body: this.filters})
                 .then((response) => {
                     this.crafts.map(craft => {
-                        craft.certificates = response.items.filter(certificate => {
+                        craft.items = response.items.filter(certificate => {
                             return +certificate.craftId === +craft.id
                         })
                         return craft;
@@ -311,7 +324,7 @@ Vue.component('certificates-list', {
         },
         toggleCertificateChapters(craftIndex, certificateIndex) {
             let crafts = [].concat(this.crafts);
-            crafts[craftIndex].certificates[certificateIndex].showChapters = !crafts[craftIndex].certificates[certificateIndex].showChapters;
+            crafts[craftIndex].items[certificateIndex].showChapters = !crafts[craftIndex].items[certificateIndex].showChapters;
             this.crafts = crafts;
         },
     },

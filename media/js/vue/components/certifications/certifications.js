@@ -23,6 +23,9 @@ Vue.component('certifications', {
             </div>
             <div class="top-bar selectAll-craft">
                 <input type="checkbox" id="is-all" @change="toggleSelection" v-model="selectAll"> <label for="is-all" class="craft-label">{{selectAllTxt}}</label>
+                <div class="labtest_filters_export" @click="makeCraftsAndCertificatesPdf">
+                    <a>{{ trans.export }} PDF</a>
+                </div>
                 <!--<a href="#" @click.prevent="deleteSelected" v-if="hasCheckedItem" style="float: right;">Delete ICON</a>-->
             </div>
             <div class="craft-cert" v-for="craft,idx in items" :key="craft.id">
@@ -82,7 +85,7 @@ Vue.component('certifications', {
                                             <div class="edit-box hide">
 
                                                 <span style="color: #7985A5;" @click="openUpdateCertificateModal(craft, item)">{{ trans.edit }}</span>
-<!--                                                <span class="delete-btn">{{ trans.export }}</span> -->
+                                                <span style="color: #F99C19;" @click="makeCertificatePdf(item)">{{ trans.export }}</span> 
                                                 <span class="delete-btn" @click.prevent="openDeleteCertificatePopup(item)">{{deleteTxt}}</span> 
                                             </div>  
                                         </div>
@@ -158,6 +161,26 @@ Vue.component('certifications', {
                 @onClose="deleteCertificationPopupDisplay = false"
                 @onConfirm="deleteCertificateAPI($event)"
             />
+            <print-pdf
+                v-if="printPdf"
+                :translations="translations"
+                @onClose="printPdf = false"
+            >
+                <certificates-pdf
+                    v-if="printCraftsPdf"
+                    :translations="translations"
+                    :crafts="crafts"
+                    :project="project"
+                    :company="company"
+                />
+                <certificate-pdf
+                    v-else-if="printCertificatePdf"
+                    :translations="translations"
+                    :certificate="certificateToPrint"
+                    :project="project"
+                    :company="company"
+                />
+            </print-pdf>
         </div>
     `,
     props: {
@@ -188,7 +211,7 @@ Vue.component('certifications', {
         },
         translations: {required: true},
         statuses: {required: true},
-        userRole: {required: true}
+        userRole: {required: true},
     },
     components: {
         Multiselect: window.VueMultiselect.default
@@ -218,14 +241,15 @@ Vue.component('certifications', {
             deleteCertificationPopupDisplay: false,
             certificateToDelete: null,
             certificateToUpdate: null,
+            certificateToPrint: null,
             globalChapters: [],
             certificateStatuses: JSON.parse(this.statuses),
+            printPdf: false,
+            printCertificatePdf: false,
+            printCraftsPdf: false
         };
     },
     watch: {
-        testSelect1SelectedOption(option) {
-            this.testSelect2SelectedOption = this.testSelect2Options.find(item => +item.id === +option.id)
-        }
     },
     created() {
         axios.defaults.headers.post['X-Requested-With'] = 'XMLHttpRequest';
@@ -244,6 +268,7 @@ Vue.component('certifications', {
                 axios.get(this.companiesUrl)
                     .then(response => {
                         this.companies = response.data.items;
+                        this.getProject();
                         if(this.companyId){
                             for(var i = 0; i < this.companies.length; i++){
                                 if( ! this.projectId && this.companies[i].id == this.companyId){
@@ -613,6 +638,31 @@ Vue.component('certifications', {
                 })
             })
             this.items = items;
+        },
+        makeCraftsAndCertificatesPdf() {
+
+            this.printCertificatePdf = false;
+            this.printCraftsPdf = true;
+            this.printPdf = true;
+        },
+        makeCertificatePdf(certificate) {
+
+            this.printCraftsPdf = false;
+            this.certificateToPrint = certificate;
+            this.printCertificatePdf = true;
+            this.printPdf = true;
+        },
+        getProject() {
+            this.showLoader = true;
+            let url = `/projects/${this.projectId}/entities/project`;
+            qfetch(url, {method: 'GET', headers: {}})
+                .then(response => {
+                    this.project = response.item;
+                    this.company = this.companies.filter(company => +company.id === +this.project.company_id)[0]
+                    this.showLoader = false;
+                    console.log('PROJECT', this.project)
+                    console.log('COMPANY', this.company)
+                })
         }
     },
     computed: {

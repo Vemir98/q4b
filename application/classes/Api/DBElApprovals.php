@@ -565,7 +565,7 @@ class Api_DBElApprovals
         return $query->execute()->as_array();
     }
 
-    public static function getProjectsElApprovalsByAppropriate1($filters) : array
+    public static function getProjectsElApprovalsByFilters($filters) : array
     {
         $query = "SELECT 
             ea.status,
