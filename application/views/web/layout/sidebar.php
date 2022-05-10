@@ -475,7 +475,7 @@ foreach ($items as $key => $i){
         unset($items[$key]); // Just add Plans page for Mobile devices
     } // Just add Plans page for Mobile devices
     if ($isSubcontractor) {
-        if($i['slug'] !== 'reports/list'){
+        if($i['slug'] !== 'reports'){
             unset($items[$key]);
         }
     } else {
