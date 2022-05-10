@@ -362,7 +362,10 @@ if($_USER->is('project_supervisor') || $isSubcontractor){//запрет на и�
 
                                                 <td data-th="Image">
                                                     <span class="modal-tasks-image-action">
-                                                        <a data-url="<?=$image->originalFilePath()?>"
+                                                        <a
+                                                           href="<?=$image->originalFilePath()?>"
+                                                           target="_blank"
+                                                           data-url="<?=$image->originalFilePath()?>"
                                                            data-controller="update_quality_control_image"
                                                            data-ext="<?=$image->mime?>"
                                                            data-fileid="<?=$image->id?>"

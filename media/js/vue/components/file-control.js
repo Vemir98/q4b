@@ -7,7 +7,7 @@ Vue.component('file-control', {
                     style="padding: 5px;font-size: 16px !important;"
                     :class="{'q4b-error-text': (errors.has('fileControl_invalidFormat') && showErrors)}"
                 >
-                    {{ trans.attached_files }} (jpeg, jpg, png)
+                    {{ trans.attached_files }} (jpeg, jpg, png, pdf)
                 </div>
                 <div 
                     class="ltest-input-label"
@@ -16,8 +16,6 @@ Vue.component('file-control', {
                 >
                     ( {{ trans.file_size_text }} )
                 </div>
-<!--                <span v-show="errors.has('fileControl_invalidFormat') && showErrors" class="q4b-error-text">{{ errors.first('fileControl_invalidFormat') }}</span>-->
-<!--                <span v-show="errors.has('fileControl_maxSize') && showErrors" class="q4b-error-text">{{ errors.first('fileControl_maxSize') }}</span>-->
                 <div class="attach_file"
                     :class="{'q4b-disabled': !canChange}"
                     @click="handleAttachFileClick()"
@@ -40,10 +38,12 @@ Vue.component('file-control', {
                             <div v-else class="q4b-attachment-icon">
                                 
                                 <a v-if="file.id" :href="file.src" target="_blank" style="text-decoration: none;">
-                                    <img :src="file.src">
+                                    <img v-if="file.ext === 'pdf'" class="q4b-pdf-icon">
+                                    <img v-else :src="file.src">
                                 </a>
                                 <a v-else="file.id" style="text-decoration: none;cursor: auto">
-                                    <img :src="file.src">
+                                    <img v-if="file.ext === 'pdf'" class="q4b-pdf-icon">
+                                    <img v-else :src="file.src">
                                 </a>
                             </div>
                             <div class="q4b-attachment-data">
@@ -135,15 +135,28 @@ Vue.component('file-control', {
                         return false;
                     }
                 }
-                if(file.size >= 1000000) {
-                    this.errors.add({
-                        field: 'fileControl_maxSize',
-                        msg: 'chap@ shata'
-                    })
-                    this.errors.remove('fileControl_invalidFormat')
-                    this.showErrors = true;
-                    return false;
+                if(ext === 'pdf') {
+                    if(file.size >= 15000000) {
+                        this.errors.add({
+                            field: 'fileControl_maxSize',
+                            msg: 'chap@ shata'
+                        })
+                        this.errors.remove('fileControl_invalidFormat')
+                        this.showErrors = true;
+                        return false;
+                    }
+                } else {
+                    if(file.size >= 1000000) {
+                        this.errors.add({
+                            field: 'fileControl_maxSize',
+                            msg: 'chap@ shata'
+                        })
+                        this.errors.remove('fileControl_invalidFormat')
+                        this.showErrors = true;
+                        return false;
+                    }
                 }
+
                 this.showErrors = false;
                 let fileReader = new FileReader();
                 fileReader.onload = (e) => {
@@ -157,6 +170,7 @@ Vue.component('file-control', {
                     });
                 }
                 fileReader.readAsDataURL(file);
+                console.log('FILES', this.files)
             }
         },
         openModal(index){

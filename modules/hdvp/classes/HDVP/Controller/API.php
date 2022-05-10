@@ -208,7 +208,7 @@ class HDVP_Controller_API extends Controller
 
     public function getUIntParamOrDie($param){
         $val = (int)$param;
-        if(($val != $param) OR ($val < 0)){
+        if(($val != $param) OR ($val <= 0)){
             Security::block_client();
             throw API_Exception::factory(404,'blocked');
         }
@@ -303,6 +303,19 @@ class HDVP_Controller_API extends Controller
 
             if (!in_array($type, [ 'jpg', 'jpeg', 'png' ])) {
                 throw new \Exception('invalid image type');
+            }
+            $data = str_replace( ' ', '+', $data );
+            $data = base64_decode($data);
+
+            if ($data === false) {
+                throw new \Exception('base64_decode failed');
+            }
+        } elseif(preg_match('/^data:application\/(\w+);base64,/', $src, $type)) {
+            $data = substr($src, strpos($src, ',') + 1);
+            $type = strtolower($type[1]); // jpg, png, gif
+
+            if (!in_array($type, [ 'pdf' ])) {
+                throw new \Exception('invalid pdf type');
             }
             $data = str_replace( ' ', '+', $data );
             $data = base64_decode($data);

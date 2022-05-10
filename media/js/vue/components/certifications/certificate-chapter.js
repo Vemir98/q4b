@@ -44,7 +44,7 @@ Vue.component('certificate-chapter', {
                         :data="chapter.images"
                         :includeEditor="false"
                         :canChange="canChange"
-                        :allowedFormats="['png','jpeg','jpg']"
+                        :allowedFormats="['png','jpeg','jpg','pdf']"
                         @filesUpdated="updateChapterImages($event)"
                     />
                 </div>
