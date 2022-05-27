@@ -78,8 +78,8 @@ Vue.component('certificate-pdf', {
                                             <bdi><span>{{ chapter.name }}</span></bdi>
                                         </div>
                                         <div class="q4b-textarea">
-<!--                                            <div class="q4b-input-label">{{ trans.chapter_content }}</div>-->
-                                            <div class="q4b-text-wrapped"><bdo dir="rtl"><span>{{ chapter.text }}</span></bdo></div>
+                                            <div class="q4b-input-label">{{ trans.chapter_content }}</div>
+                                            <div class="q4b-text-wrapped"><span>{{ chapter.text }}</span></div>
                                         </div>
                                     </div>
                                 </div>
