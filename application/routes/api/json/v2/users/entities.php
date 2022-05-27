@@ -5,6 +5,18 @@
  * Date: 26.08.2021
  * Time: 16:56
  */
+Route::set('apiJsonV2.user.entities','api/json/v2/<appToken>/user',['appToken' => '[a-f0-9]{32}'])
+    ->filter(function($route, $params, $request)
+    {
+        $params['action'] = 'user_'.strtolower($request->method());
+        return $params;
+    })
+    ->defaults([
+        'controller' => 'Entities',
+        'directory' => 'Api/Users',
+    ]);
+
+
 Route::set('apiJsonV2.users.entities.list','api/json/v2(/<appToken>)/users/list',['appToken' => '[a-f0-9]{32}','id' => '[0-9]+'])
     ->filter(function($route, $params, $request)
     {

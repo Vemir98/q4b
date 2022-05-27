@@ -9,6 +9,23 @@
 class Controller_Api_Users_Entities extends HDVP_Controller_API
 {
     /**
+     * Returns current user based on appToken
+     * @url https://qforb.net/api/json/v2/{token}/user
+     * @method GET
+     */
+    public function action_user_get(){
+        try {
+            $appToken = $this->request->param('appToken');
+            $user = Model_UToken::getUserFromApplicationToken($appToken);
+            if(!$user) throw API_Exception::factory(500,'Operation Error');
+
+            $this->_responseData['user'] = Controller_Api_Auth::getUserData($user, $appToken);
+        } catch (Exception $e){
+            throw API_Exception::factory(500,'Operation Error');
+        }
+
+    }
+    /**
      * Returns all users list with relevant role
      * Returned users data have all fields except password,device_token,os_type
      * All underscore values are in camelcase

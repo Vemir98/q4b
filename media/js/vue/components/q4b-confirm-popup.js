@@ -1,7 +1,11 @@
 Vue.component('confirm-popup', {
     template: `
         <div class="modal modal-cover" @click="$emit('onClose')">
-            <div class="q4b-confirm-popup" @click.stop>
+            <div 
+                class="q4b-confirm-popup" 
+                @click.stop
+                :style="{width: (width || baseWidth)}"
+                >
                 <div class="q4b-confirm-popup-header">
                     <h1>{{ trans.confirm }}</h1>
                 </div>
@@ -12,11 +16,11 @@ Vue.component('confirm-popup', {
                     <button 
                         class="q4b-confirm-popup-btn" 
                         @click="$emit('onConfirm', item)"
-                    >{{ trans.delete }}</button>
+                    >{{ confirmText }}</button>
                     <button 
                         class="q4b-cancel-popup-btn" 
                         @click="$emit('onClose')"
-                    >{{ trans.cancel }}</button>
+                    >{{ cancelText }}</button>
                 </div>
             </div>
         </div>
@@ -25,14 +29,17 @@ Vue.component('confirm-popup', {
         translations: { required: true },
         message: { required: true },
         item: { required: true },
-
+        confirmText: {required: true},
+        cancelText: {required: true},
+        width: {required: false}
     },
     computed: {
 
     },
     data() {
         return {
-            trans: JSON.parse(this.translations)
+            trans: JSON.parse(this.translations),
+            baseWidth: '400px'
         }
     },
     watch: {
@@ -42,6 +49,7 @@ Vue.component('confirm-popup', {
 
     },
     mounted() {
+        console.log(`'modal barev`)
     }
 });
 

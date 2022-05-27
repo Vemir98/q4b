@@ -1305,6 +1305,9 @@ $(document).ready(function() {
     }
     $(document).on('click', '.qc-tasks-list li', function(e) {
         e.preventDefault();
+        if($(this).hasClass('disabled-selected')) {
+            return false;
+        }
         var el = $(document).find('.modal').find('select[name=tasks] option[value=' + $(this).children('a').data('id') + ']');
         if (el.is(':selected')) {
             if ($(this).hasClass('used-task')) {

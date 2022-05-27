@@ -110,7 +110,9 @@ Vue.component('transferable-items', {
         moreTxt: {required: true},
         editTxt: {required: true},
         deleteTxt: {required: true},
-        projectId : {}
+        projectId : {},
+        type: {required: true},
+        translations: {required: true}
     },
     components: {
         Multiselect: window.VueMultiselect.default
@@ -125,7 +127,8 @@ Vue.component('transferable-items', {
             projects: [],
             checkedItems: [],
             showDropDown: false,
-            selectAll: false
+            selectAll: false,
+            trans: JSON.parse(this.translations),
         };
     },
     created() {
@@ -161,7 +164,7 @@ Vue.component('transferable-items', {
             this.editModeOffForAll();
             var idx = this.items.findIndex(x => x.text.trim() === "" && x.isNew == true);
             if(idx <= 0){
-                this.items.push({id : '_' + Math.random().toString(36).substr(2, 9), text : "", checked : false, inEditMode : true, isNew: true, edited: true});
+                this.items.push({id : '_' + Math.random().toString(36).substr(2, 9), text : "", checked : false, inEditMode : true, isNew: true, edited: true, type: this.type});
                 this.focusInput();
             }else{
                 this.editRm(this.items[idx]);

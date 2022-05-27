@@ -364,6 +364,17 @@ Vue.component('statistics', {
                                         <td><span class="green bold">{{ statistics.delivery.data.public.preDelivery }}</span></td>
                                         <td><span class="green bold">{{ statistics.delivery.data.private.preDelivery }}</span></td>
                                     </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="statistics-data-item">
+                                                <div class="statistics-data-icon purple"></div>
+                                                <div class="statistics-data-descr">{{ trans.public_deliveries_done }}</div>
+                                            </div>
+                                        </td>
+                                        <td><span class="purple bold">{{ statistics.delivery.data.total.publicDelivery }}</span></td>
+                                        <td><span class="purple bold">{{ statistics.delivery.data.public.publicDelivery }}</span></td>
+                                        <td><span class="purple bold">{{ statistics.delivery.data.private.publicDelivery }}</span></td>
+                                    </tr>
                                 </table>
                             </div>
                         </div>
@@ -935,6 +946,14 @@ Vue.component('statistics', {
                                     this.statistics.delivery.data.public.preDelivery,
                                 ],
                                 backgroundColor: 'rgba(15, 154, 96, 1)',
+                            },
+                            {
+                                label: this.trans.public_deliveries_done,
+                                data: [
+                                    this.statistics.delivery.data.private.publicDelivery,
+                                    this.statistics.delivery.data.public.publicDelivery,
+                                ],
+                                backgroundColor: 'rgba(213, 21, 211, 1)',
                             },
                         ],
                         [this.trans.private, this.trans.public],

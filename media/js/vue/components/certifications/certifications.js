@@ -158,6 +158,8 @@ Vue.component('certifications', {
                 :translations="translations"
                 :message="trans.are_you_sure_you_want_to_delete_this_certificate"
                 :item="certificateToDelete"
+                :confirmText="trans.delete"
+                :cancelText="trans.cancel"
                 @onClose="deleteCertificationPopupDisplay = false"
                 @onConfirm="deleteCertificateAPI($event)"
             />

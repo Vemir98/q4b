@@ -400,17 +400,20 @@ class Controller_Api_Projects_Dashboard extends HDVP_Controller_API
                 'total' => [
                     'total' => 0,
                     'delivery' => 0,
-                    'preDelivery' => 0
+                    'preDelivery' => 0,
+                    'publicDelivery' => 0,
                 ],
                 'public' => [
                     'total' => 0,
                     'delivery' => 0,
-                    'preDelivery' => 0
+                    'preDelivery' => 0,
+                    'publicDelivery' => 0,
                 ],
                 'private' => [
                     'total' => 0,
                     'delivery' => 0,
-                    'preDelivery' => 0
+                    'preDelivery' => 0,
+                    'publicDelivery' => 0,
                 ],
             ];
 
@@ -432,14 +435,18 @@ class Controller_Api_Projects_Dashboard extends HDVP_Controller_API
                 $publicDeliveryPlaces = Api_DBDelivery::getProjectsDeliveryPlacesCountsByType($filters, Enum_ProjectPlaceType::PublicS);
 
                 foreach ($publicDeliveryPlaces as $publicDelGroup) {
-                    switch ((int)$publicDelGroup['isPreDelivery']) {
-                        case 0:
+                    switch ((int)$publicDelGroup['type']) {
+                        case Enum_DeliveryReportTypes::Delivery:
                             $result[Enum_ProjectPlaceType::PublicS]['delivery'] = (int)$publicDelGroup['count'];
                             $result['total']['delivery'] += (int)$publicDelGroup['count'];
                             break;
-                        case 1:
+                        case Enum_DeliveryReportTypes::PreDelivery:
                             $result[Enum_ProjectPlaceType::PublicS]['preDelivery'] = (int)$publicDelGroup['count'];
                             $result['total']['preDelivery'] += (int)$publicDelGroup['count'];
+                            break;
+                        case Enum_DeliveryReportTypes::PublicDelivery:
+                            $result[Enum_ProjectPlaceType::PublicS]['publicDelivery'] = (int)$publicDelGroup['count'];
+                            $result['total']['publicDelivery'] += (int)$publicDelGroup['count'];
                             break;
                     }
                 }
@@ -449,13 +456,17 @@ class Controller_Api_Projects_Dashboard extends HDVP_Controller_API
 
                 foreach ($privateDeliveryPlaces as $privateDelGroup) {
                     switch ((int)$privateDelGroup['isPreDelivery']) {
-                        case 0:
+                        case Enum_DeliveryReportTypes::Delivery:
                             $result[Enum_ProjectPlaceType::PrivateS]['delivery'] = (int)$privateDelGroup['count'];
                             $result['total']['delivery'] += (int)$privateDelGroup['count'];
                             break;
-                        case 1:
+                        case Enum_DeliveryReportTypes::PreDelivery:
                             $result[Enum_ProjectPlaceType::PrivateS]['preDelivery'] = (int)$privateDelGroup['count'];
                             $result['total']['preDelivery'] += (int)$privateDelGroup['count'];
+                            break;
+                        case Enum_DeliveryReportTypes::PublicDelivery:
+                            $result[Enum_ProjectPlaceType::PrivateS]['publicDelivery'] = (int)$privateDelGroup['count'];
+                            $result['total']['publicDelivery'] += (int)$privateDelGroup['count'];
                             break;
                     }
                 }

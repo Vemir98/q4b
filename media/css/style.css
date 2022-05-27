@@ -11665,6 +11665,16 @@ a.present-modal {
   font-family: "proxima_nova_rgregular", Arial, Helvetica, sans-serif;
 }
 
+.tasks-full-description li.selected.disabled-selected {
+  background: #e7e7e7;
+  border: 1px solid #979999;
+  cursor: auto;
+}
+
+.tasks-full-description li.selected.disabled-selected a {
+  cursor: auto;
+}
+
 .tasks-full-description li.used-task .selected-tick {
   display: inline-block;
 }
@@ -11698,6 +11708,11 @@ a.present-modal {
   font-weight: normal;
   font-style: normal;
   font-family: "proxima_nova_rgregular", Arial, Helvetica, sans-serif;
+}
+
+.tasks-full-description li.selected.disabled-selected .selected-tick {
+  background: #bfc2c3;
+  border: 1px solid #979999;
 }
 
 .tasks-full-description li .selected-tick i {
@@ -12758,7 +12773,10 @@ ul.q4-unordered-list>li .q4-nested-list>li:last-child {
   }
 
   /* Certificate pdf end */
-
+  .print-rtl-text {
+    color:red !important;
+    direction: rtl !important;
+  }
 }
 
 @media print and (max-width: 600px) {
@@ -25985,7 +26003,9 @@ html.rtl #approve-elements-content .parent-tr td.td-floor{
 
 #info-center .modal-cover,
 #certifications .modal-cover,
-#approve-element .modal-cover {
+#approve-element .modal-cover,
+#tasks-list .modal-cover
+{
   display: block;
   background: rgba(0,0,0,0.5);
 }

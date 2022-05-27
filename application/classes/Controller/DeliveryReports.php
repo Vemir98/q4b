@@ -45,7 +45,10 @@ class Controller_DeliveryReports extends HDVP_Controller_Template
             'Pre-delivery' => __('pre_delivery'),
             'select_all' => __('select all'),
             'unselect_all' => __('unselect all'),
-            'protocol_not_ready' => __('protocol_not_ready')
+            'protocol_not_ready' => __('protocol_not_ready'),
+            'delivery' => __('Delivery'),
+            'pre_delivery' => __('pre_delivery'),
+            'public_delivery' => __('public_delivery')
         ];
 
         $this->template->content = View::make('reports/delivery/main', ['translations' => $translations]);
@@ -55,6 +58,7 @@ class Controller_DeliveryReports extends HDVP_Controller_Template
         $this->auto_render = false;
         $data = Arr::extract($this->post(),['company_id','project_id','object_ids','floor_id','place_id','from','to','types']);
 
+//        echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r(implode('","',$data['types'])); echo "</pre>"; exit;
         if(empty($data['company_id']) OR empty($data['project_id']) OR empty($data['object_ids'])){
             throw new HTTP_Exception_404();
         }
@@ -80,7 +84,7 @@ class Controller_DeliveryReports extends HDVP_Controller_Template
         }
 
         if(!empty($data['types'])) {
-            $query->and_where('is_pre_delivery', 'IN', DB::expr('('.implode(',',$data['types']).')'));
+            $query->and_where('type', 'IN', DB::expr('("'.implode('","',$data['types']).'")'));
         }
         $query->order_by('created_at','DESC');
 
@@ -126,7 +130,7 @@ class Controller_DeliveryReports extends HDVP_Controller_Template
                 'qcReport'=> URL::site('reports/delivery/go_to_qc_report/'.$r->id),
                 'print'=> URL::site('reports/delivery/print/'.$r->id),
                 'edited' => false,
-                'isPreDelivery' => $r->is_pre_delivery
+                'type' => $r->type
             ];
 
             $delReport['canCreatePdf'] = false;
@@ -202,10 +206,16 @@ class Controller_DeliveryReports extends HDVP_Controller_Template
         $this->auto_render = false;
         $report = ORM::factory('DeliveryReport',$this->request->param('id'));
 
-        if($report->is_pre_delivery) {
-            echo View::make('reports/delivery/pre_delivery_print',['report' => $report]);
-        } else {
-            echo View::make('reports/delivery/print',['report' => $report]);
+        switch($report->type) {
+            case Enum_DeliveryReportTypes::PreDelivery:
+                echo View::make('reports/delivery/pre_delivery_print',['report' => $report]);
+            break;
+            case Enum_DeliveryReportTypes::Delivery:
+                echo View::make('reports/delivery/print',['report' => $report]);
+            break;
+            case Enum_DeliveryReportTypes::PublicDelivery:
+                echo View::make('reports/delivery/public_delivery_print',['report' => $report]);
+            break;
         }
     }
 

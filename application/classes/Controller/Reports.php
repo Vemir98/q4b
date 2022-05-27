@@ -861,8 +861,6 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                 $isSubcontractor = true;
             }
 
-            $qcModuleName = '';
-
             if(!is_null($qc->del_rep_id)) {
                 $qcModuleName = 'Delivery Report';
             } elseif (!is_null($qc->el_approval_id)) {
@@ -870,8 +868,6 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
             } else {
                 $qcModuleName = 'Quality Control';
             }
-//            echo "line: ".__LINE__." ".__FILE__."<pre>"; var_dump($qc->del_rep_id); echo "</pre>";
-//            echo "line: ".__LINE__." ".__FILE__."<pre>"; var_dump($qc->el_approval_id); echo "</pre>"; exit;
 
             $this->setResponseData('modal',View::make('reports/quality-control',
                 [
@@ -888,7 +884,7 @@ AND cc.company_id='.$data['company'].' '.($filteredCraftsListQuery['and'] ?: nul
                     'approveUsr' => $qc->approveUser,
                     'project' => $qc->project,
                     'projectStages' => Enum_ProjectStage::toArray(),
-                    'tasks' => $qc->project->getTasksByModuleName($qcModuleName)->where('prtask.status','=',Enum_Status::Enabled)->find_all(),
+                    'tasks' => $qc->project->getTasksByModuleName($qcModuleName)->find_all(),
                     'professions' => $qc->project->company->professions->where('status','=',Enum_Status::Enabled)->find_all(),
                     'crafts' => $qc->project->company->crafts->where('status','=',Enum_Status::Enabled)->order_by('name')->find_all(),
                     'plan' => $qc->plan,

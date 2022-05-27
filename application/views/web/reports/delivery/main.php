@@ -33,6 +33,7 @@
     no-items-text="<?=__('No items to show')?>"
     more-txt="<?=__('More')?>"
     translations='<?=json_encode($translations)?>'
+    delivery-report-types='<?=json_encode(Enum_DeliveryReportTypes::toArray())?>'
     />
 </div>
 <div id="send-reports-modal">

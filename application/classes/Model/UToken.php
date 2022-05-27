@@ -67,4 +67,16 @@ class Model_UToken extends ORM
         }
         return ORM::factory('UToken')->set('user_id',$userId)->set('type',Enum_UToken::Application)->set('token',md5(uniqid(null,true)))->set('expires',time() + Date::YEAR * 5)->save();
     }
+
+    public static function getUserFromApplicationToken($appToken){
+        if(is_null($appToken) || $appToken === '') {
+            return false;
+        } else {
+            $tokenData = ORM::factory('UToken',['token' => $appToken,'type' => Enum_UToken::Application])->as_array();
+            if(!$tokenData['user_id']) return false;
+            $user = ORM::factory('User',$tokenData['user_id']);
+            if(!$user->loaded()) return false;
+            return $user;
+        }
+    }
 }

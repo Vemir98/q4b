@@ -184,7 +184,7 @@ Vue.component('report-delivery', {
                                 <img src="/media/img/new-images/quality.png" alt="Quality">
                             </div>
                         </td>
-                        <td>{{ item.isPreDelivery === '1' ? trans['Pre-delivery'] : trans.Delivery }}</td>
+                        <td>{{ trans[item.type] }}</td>
                         <td>
                             <a v-if="item.canCreatePdf" :href="item.protocol" target="_blank">
                                 <div class="img">
@@ -246,7 +246,8 @@ Vue.component('report-delivery', {
         saveTxt: {required: true},
         noItemsText: {required: true},
         moreTxt: {required: true},
-        translations: {required:true}
+        translations: {required:true},
+        deliveryReportTypes: {required: true}
     },
     components: {
         Multiselect: window.VueMultiselect.default,
@@ -269,10 +270,7 @@ Vue.component('report-delivery', {
             objects: [],
             floors: [],
             places: [],
-            types: [
-                {id: 0, name: 'Delivery'},
-                {id: 1, name: 'Pre-delivery'}
-            ],
+            types: [],
             trans: JSON.parse(this.translations),
             txtPrivateResult : "",
             txtPublicResult : "",
@@ -447,7 +445,7 @@ Vue.component('report-delivery', {
             }
 
             if(this.selectedTypes.length){
-                data['types'] = this.selectedTypes.map(type => type.id);
+                data['types'] = this.selectedTypes.map(type => type.name);
             }
             this.requested = false;
             this.items = [];
@@ -544,6 +542,13 @@ Vue.component('report-delivery', {
     },
     mounted() {
         this.getCompanies();
+        this.types = Object.values(JSON.parse(this.deliveryReportTypes)).map((type, typeIndex) => {
+            return {
+                id: typeIndex+1,
+                name: type
+            }
+        })
+        console.log('TYPES', this.types)
     }
 });
 

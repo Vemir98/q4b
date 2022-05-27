@@ -247,8 +247,23 @@ if($_USER->is('project_supervisor') || $isSubcontractor){//запрет на и�
                                 foreach ($crafts as $cr){
                                     $c []= $cr->id;
                                 }
+
+                                $visibilityClass = '';
+                                $disabledButSelectedClass = '';
+
+                                if(in_array($task->id, $arrayTasks)) {
+                                    $visibilityClass = 'selected';
+                                    if($task->status === Enum_Status::Disabled) {
+                                        $disabledButSelectedClass = 'disabled-selected';
+                                    }
+                                } else {
+                                    if(($task->status === Enum_Status::Disabled) || (!in_array($item->craft_id,$c))) {
+                                        $visibilityClass = 'hidden';
+                                    }
+                                }
+
                                 ?>
-                                <li class="1-class<?=in_array($task->id, $arrayTasks) ? ' selected' :  (in_array($item->craft_id,$c) ? '' : ' hidden' )?>" >
+                                <li class="1-class <?=$visibilityClass?> <?=$disabledButSelectedClass?>">
                                     <a href="#" data-id="<?=$task->id?>" >
                                         <span class="selected-tick"><i class="q4bikon-tick"></i></span>
                                         <h4><?=__('Task')?> <?=$task->id?></h4>

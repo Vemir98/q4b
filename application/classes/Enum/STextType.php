@@ -14,4 +14,7 @@ class Enum_STextType extends Enum
     const Type4 = 's_text_type_4';
     const Type5 = 's_text_type_5';
     const Type6 = 's_text_type_6';
+    const Type7 = 's_text_type_7';
+    const Type8 = 's_text_type_8';
+    const Type9 = 's_text_type_9';
 }

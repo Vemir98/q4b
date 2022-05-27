@@ -12,12 +12,12 @@ class Api_DBDelivery
     public static function getProjectsDeliveryPlacesCountsByType($filters, $type) :array
     {
         $query = 'SELECT
-            dr.is_pre_delivery as isPreDelivery,
+            dr.type,
             COUNT(DISTINCT dr.id) as count
             FROM delivery_reports dr
 	        INNER JOIN pr_places pp ON dr.place_id=pp.id 
             WHERE dr.project_id IN (:projectIds) AND (dr.created_at>=:from AND dr.created_at<=:to) AND pp.type=:placeType
-            GROUP BY dr.is_pre_delivery';
+            GROUP BY dr.type';
 
         $query =  DB::query(Database::SELECT, $query);
 

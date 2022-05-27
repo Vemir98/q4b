@@ -38,69 +38,8 @@ class Controller_Api_Auth extends HDVP_Controller_API
                 throw new API_Exception('Your Account is deactivated! Please contact Your Manager');
             } else {
                 $this->_user = $this->_auth->get_user();
-                $utkn = Model_UToken::makeApplicationToken($this->_user->id);
-                $permissions = [];
-                $this->_responseData['user'] = Arr::toCamelCase($this->_user->as_array());
-                unset($this->_responseData['user']['id'], $this->_responseData['user']['password'], $this->_responseData['user']['logins']);
-                $this->_responseData['user']['token'] = $utkn->as_array()['token'];
-                $this->_responseData['user']['role'] = $this->_user->getRelevantRole()->as_array();
-                unset($this->_responseData['role']['id']);
-
-                $acl = HDVP_Core::instance()->acl();
-                $privileges = ORM::factory('ACL_Privilege')->find_all();
-                foreach ($privileges as $priv) {
-                    foreach ($acl->getResources() as $res) {
-                        if ($this->_user->can($priv->alias, $res)) {
-                            $permissions[$priv->alias][] = strtolower(str_ireplace('Controller_','',$res));
-                        }
-                    }
-                }
-                $permissions = array_diff($permissions,array(''));
-
-
-                $emails = [
-                    'avia.maccabi@avney-derech.co.il',
-                    'eldar5390@gmail.com',
-                    'adirr@sh-av.co.il',
-                    'eyal@sh-av.co.il',
-                    'ori@sh-av.co.il',
-                    'shay.y@avney-derech.co.il',
-                    'eli.k@avney-derech.co.il',
-                    'moshe.s@avney-derech.co.il',
-                    'vladimir@avney-derech.co.il',
-                    'yael@avney-derech.co.il',
-                    'yosi.z@avney-derech.co.il',
-                    'harel@avney-derech.co.il',
-                    'liron@sh-av.co.il',
-                    'andranik@constant-tech.biz',
-                    'araqsya@constant-tech.biz',
-                    'daniel@avney-derech.co.il',
-                    'shnir.yakuv@avney-derech.co.il'
-                ];
-
-                $this->_responseData['user']['hasSpecialDeliveryPermission'] = ((Usr::can(Usr::READ_PERM,'Controller_DeliveryReports',Enum_UserPriorityLevel::General))  || (in_array(strtolower(Auth::instance()->get_user()->email), $emails))) ? "1" : "0";
-                $this->_responseData['user']['forceUpdateVersionCode'] = 319;
-
-                $subcontractors = Kohana::$config->load('subcontractors')->as_array();
-                $userRoleName = $this->_user->getRelevantRole('name');
-                $isSubContractor = false;
-                if (array_key_exists($userRoleName, $subcontractors)) {
-//                    echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($subcontractors[$userRoleName]); echo "</pre>"; exit;
-                    if($userRoleName === 'project_general_subcontractor') {
-                        $this->_responseData['user']['isGeneralSubcontractor'] = true;
-                    } else {
-                        $this->_responseData['user']['isSubcontractor'] = true;
-                    }
-
-                    $this->_responseData['user']['subcontractorSpecialities'] = $subcontractors[$userRoleName]['specialties'];
-                }
-
-                $this->_responseData['user']['permissions'] = $permissions;
-
-                $this->_responseData['user']['professions'] = [];
-                foreach($this->_user->professions->where('status','=','enabled')->find_all() as $prof){
-                    $this->_responseData['user']['professions'][] = $prof->name;
-                }
+                $appToken = Model_UToken::makeApplicationToken($this->_user->id);
+                $this->_responseData['user'] = $this->getUserData($this->_user, $appToken->as_array()['token']);
             }
         }else{
             throw API_Exception::factory(500,'Incorrect login data');
@@ -131,5 +70,54 @@ class Controller_Api_Auth extends HDVP_Controller_API
         $permissions = array_diff($permissions,array(''));
 
         $this->_responseData['user']['permissions'] = $permissions;
+    }
+
+    public static function getUserData($user, $token) {
+        $userArray = $user->as_array();
+        $permissions = [];
+        unset($userArray['client']);
+        $response = Arr::toCamelCase($userArray);
+        unset($response['id'], $response['password'], $response['logins']);
+        $response['token'] = $token;
+        $response['role'] = $user->getRelevantRole()->as_array();
+//        unset($this->_responseData['role']['id']);
+
+        $acl = HDVP_Core::instance()->acl();
+        $privileges = ORM::factory('ACL_Privilege')->find_all();
+        foreach ($privileges as $priv) {
+            foreach ($acl->getResources() as $res) {
+                if ($user->can($priv->alias, $res)) {
+                    $permissions[$priv->alias][] = strtolower(str_ireplace('Controller_','',$res));
+                }
+            }
+        }
+        $permissions = array_diff($permissions,array(''));
+
+        $emails = Kohana::$config->load('deliveryPermissionsEmails')->as_array();
+
+        $response['hasSpecialDeliveryPermission'] = ((Usr::can(Usr::READ_PERM,'Controller_DeliveryReports',Enum_UserPriorityLevel::General))  || (in_array(strtolower(Auth::instance()->get_user()->email), $emails))) ? "1" : "0";
+        $response['forceUpdateVersionCode'] = 319;
+
+        $subcontractors = Kohana::$config->load('subcontractors')->as_array();
+        $userRoleName = $user->getRelevantRole('name');
+        $isSubContractor = false;
+        if (array_key_exists($userRoleName, $subcontractors)) {
+//                    echo "line: ".__LINE__." ".__FILE__."<pre>"; print_r($subcontractors[$userRoleName]); echo "</pre>"; exit;
+            if($userRoleName === 'project_general_subcontractor') {
+                $response['isGeneralSubcontractor'] = true;
+            } else {
+                $response['isSubcontractor'] = true;
+            }
+
+            $response['subcontractorSpecialities'] = $subcontractors[$userRoleName]['specialties'];
+        }
+
+        $response['permissions'] = $permissions;
+
+        $response['professions'] = [];
+        foreach($user->professions->where('status','=','enabled')->find_all() as $prof){
+            $response['professions'][] = $prof->name;
+        }
+        return $response;
     }
 }

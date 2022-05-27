@@ -27,11 +27,15 @@ class Controller_Acceptance extends HDVP_Controller_Template
 
     public function action_get_rms_list(){
         $this->auto_render = false;
-        $id = (int)$this->request->param('id');
+        $id = (int)$this->request->param('projectId');
+        $type = Arr::get($_GET, 'type');;
+        if(!in_array($type, Enum_ReserveMaterialTypes::toArray())) {
+            throw API_ValidationException::factory(500, 'invalid param type');
+        }
 
         $model = ORM::factory('ReserveMaterial');
-        $count = $model->where('project_id','=', $id ? $id : null)->count_all();
-        $items = $model->where('project_id','=', $id ? $id : null)->find_all();
+        $count = $model->where('project_id','=', $id ? $id : null)->and_where('type', '=', $type)->count_all();
+        $items = $model->where('project_id','=', $id ? $id : null)->and_where('type', '=', $type)->find_all();
         $response = [
             'items' => [],
             'count' => $count
@@ -47,6 +51,7 @@ class Controller_Acceptance extends HDVP_Controller_Template
                     'inEditMode' => false,
                     'isNew' => false,
                     'edited' => false,
+                    'type' => $item->type
                 );
             }
         }
@@ -62,6 +67,9 @@ class Controller_Acceptance extends HDVP_Controller_Template
         $model = ORM::factory('ReserveMaterial');
         if(count($items)){
             foreach ($items as $d){
+                if(!in_array($d['type'], Enum_ReserveMaterialTypes::toArray())) {
+                    throw API_ValidationException::factory(500, 'invalid param type');
+                }
                 if($d['isNew']){
                     $create[] = array(
                         'text' => $d['text'],
@@ -69,6 +77,7 @@ class Controller_Acceptance extends HDVP_Controller_Template
                         'quantity' => $d['quantity'],
                         'size' => $d['size'],
                         'project_id' => $data['project'] ? $data['project'] : null,
+                        'type' => $d['type']
                     );
                 }else{
                     $update[] = array(
@@ -77,6 +86,7 @@ class Controller_Acceptance extends HDVP_Controller_Template
                         'quantity' => $d['quantity'],
                         'size' => $d['size'],
                         'project_id' => $data['project'] ? $data['project'] : null,
+                        'type' => $d['type']
                     );
                 }
             }
@@ -84,8 +94,8 @@ class Controller_Acceptance extends HDVP_Controller_Template
         $resp = [];
         if(count($create)){
             foreach ($create as $c){
-                $query = DB::insert($model->table_name(),array('text','project_id','quantity','size'));
-                $query->values(Arr::extract($c,['text','project_id','quantity','size']));
+                $query = DB::insert($model->table_name(),array('text','project_id','quantity','size','type'));
+                $query->values(Arr::extract($c,['text','project_id','quantity','size','type']));
                 $res = $query->execute();
                 $resp[] = ['id' => $res[0], 'oldId' => $c['id']];
             }
@@ -95,7 +105,7 @@ class Controller_Acceptance extends HDVP_Controller_Template
         if(count($update)){
             foreach ($update as $u){
                 $query = DB::update($model->table_name());
-                $query->set(array('text' => $u['text'],'quantity' => $u['quantity'],'size' => $u['size']))
+                $query->set(array('text' => $u['text'],'quantity' => $u['quantity'],'size' => $u['size'], 'type' => $u['type']))
                     ->where('id', '=', $u['id'])
                     ->execute();
                 $resp[] = ['id' => $u['id'], 'oldId' => $u['id']];
@@ -114,14 +124,17 @@ class Controller_Acceptance extends HDVP_Controller_Template
         DB::delete($model->table_name())->where('id','IN',DB::expr($ids))->execute();
     }
 
-
     public function action_get_ti_list(){
         $this->auto_render = false;
-        $id = (int)$this->request->param('id');
+        $id = (int)$this->request->param('projectId');
+        $type = Arr::get($_GET, 'type');
+        if(!in_array($type, Enum_TransferableItemsTypes::toArray())) {
+            throw API_ValidationException::factory(500, 'invalid param type');
+        }
 
         $model = ORM::factory('TransferableItems');
-        $count = $model->where('project_id','=', $id ? $id : null)->count_all();
-        $items = $model->where('project_id','=', $id ? $id : null)->find_all();
+        $count = $model->where('project_id','=', $id ? $id : null)->and_where('type', '=', $type)->count_all();
+        $items = $model->where('project_id','=', $id ? $id : null)->and_where('type', '=', $type)->find_all();
         $response = [
             'items' => [],
             'count' => $count
@@ -136,13 +149,14 @@ class Controller_Acceptance extends HDVP_Controller_Template
                     'inEditMode' => false,
                     'isNew' => false,
                     'edited' => false,
+                    'type' => $item->type
                 );
             }
         }
         $this->_responseData = $response;
     }
 
-    public function action_update_ti_list(){//var_dump($this->post());die;
+    public function action_update_ti_list(){
         $this->auto_render = false;
         $data = $this->post();
         $items = $data['items'];
@@ -151,12 +165,17 @@ class Controller_Acceptance extends HDVP_Controller_Template
         $model = ORM::factory('TransferableItems');
         if(count($items)){
             foreach ($items as $d){
+                if(!in_array($d['type'], Enum_ReserveMaterialTypes::toArray())) {
+                    throw API_ValidationException::factory(500, 'invalid param type');
+                }
                 if($d['isNew']){
+
                     $create[] = array(
                         'text' => $d['text'],
                         'id' => $d['id'],
                         'quantity' => $d['quantity'],
                         'project_id' => $data['project'] ? $data['project'] : null,
+                        'type' => $d['type']
                     );
                 }else{
                     $update[] = array(
@@ -164,6 +183,7 @@ class Controller_Acceptance extends HDVP_Controller_Template
                         'text' => $d['text'],
                         'quantity' => $d['quantity'],
                         'project_id' => $data['project'] ? $data['project'] : null,
+                        'type' => $d['type']
                     );
                 }
             }
@@ -171,8 +191,8 @@ class Controller_Acceptance extends HDVP_Controller_Template
         $resp = [];
         if(count($create)){
             foreach ($create as $c){
-                $query = DB::insert($model->table_name(),array('text','project_id','quantity'));
-                $query->values(Arr::extract($c,['text','project_id','quantity']));
+                $query = DB::insert($model->table_name(),array('text','project_id','quantity','type'));
+                $query->values(Arr::extract($c,['text','project_id','quantity','type']));
                 $res = $query->execute();
                 $resp[] = ['id' => $res[0], 'oldId' => $c['id']];
             }
@@ -182,7 +202,7 @@ class Controller_Acceptance extends HDVP_Controller_Template
         if(count($update)){
             foreach ($update as $u){
                 $query = DB::update($model->table_name());
-                $query->set(array('text' => $u['text'],'quantity' => $u['quantity']))
+                $query->set(array('text' => $u['text'],'quantity' => $u['quantity'], 'type' => $u['type']))
                     ->where('id', '=', $u['id'])
                     ->execute();
                 $resp[] = ['id' => $u['id'], 'oldId' => $u['id']];
@@ -200,7 +220,6 @@ class Controller_Acceptance extends HDVP_Controller_Template
 
         DB::delete($model->table_name())->where('id','IN',DB::expr($ids))->execute();
     }
-
 
     public function action_get_companies(){
         $this->auto_render = false;
@@ -283,7 +302,7 @@ class Controller_Acceptance extends HDVP_Controller_Template
 
     public function action_get_te_list(){
         $this->auto_render = false;
-        $id = (int)$this->request->param('id');
+        $id = (int)$this->request->param('projectId');
 
         $model = ORM::factory('STexts');
         $count = $model->where('project_id','=', $id ? $id : null)->count_all();

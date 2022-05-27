@@ -29,10 +29,18 @@ class Controller_Settings extends HDVP_Controller_Template
         //(new Job_Settings_ProcessNewData())->perform();
         VueJs::instance()->addComponent('tabs');
         VueJs::instance()->addComponent('reserve-materials');
+        VueJs::instance()->addComponent('public-reserve-materials');
         VueJs::instance()->addComponent('transferable-items');
+        VueJs::instance()->addComponent('public-transferable-items');
         VueJs::instance()->addComponent('texts');
         VueJs::instance()->addComponent('regulations/regulations');
         VueJs::instance()->includeMultiselect();
+
+        $translations = [
+            'public_types_of_materials' => __('public_types_of_materials'),
+            'public_transferable_items' => __('public_transferable_items')
+        ];
+
         $this->template->content = View::make('settings/update',
             [
                 'crafts' => ORM::factory('Craft')->order_by('id','DESC')->find_all(),
@@ -40,7 +48,8 @@ class Controller_Settings extends HDVP_Controller_Template
                 'professionsSelectedCrafts' =>  ORM::factory('Profession')->getProfCraftsIdsKeyValPairArray(),
                 'tasksSelectedCrafts' =>  ORM::factory('Task')->getTaskCraftsIdsKeyValPairArray(),
                 'tasks' => ORM::factory('Task')->order_by('id','DESC')->find_all(),
-                'tabsDisabled' => Settings::getValue('settingsMode') !== Enum_Status::Enabled
+                'tabsDisabled' => Settings::getValue('settingsMode') !== Enum_Status::Enabled,
+                'translations' => $translations
             ]
         );
     }

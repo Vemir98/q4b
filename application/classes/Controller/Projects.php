@@ -524,14 +524,19 @@ class Controller_Projects extends HDVP_Controller_Template
                     VueJs::instance()->addComponent('q4b-confirm-popup');
                     VueJs::instance()->addComponent('q4b-print-pdf');
                 break;
+                case 'delivery-items':
+                    VueJs::instance()->addComponent('tabs');
+                    VueJs::instance()->addComponent('reserve-materials');
+                    VueJs::instance()->addComponent('public-reserve-materials');
+                    VueJs::instance()->addComponent('transferable-items');
+                    VueJs::instance()->addComponent('public-transferable-items');
+                    VueJs::instance()->addComponent('texts');
+                break;
             }
 
             VueJs::instance()->includeMultiselect();
 
-            VueJs::instance()->addComponent('tabs');
-            VueJs::instance()->addComponent('reserve-materials');
-            VueJs::instance()->addComponent('transferable-items');
-            VueJs::instance()->addComponent('texts');
+
 
             $translations = [
                 'delete' => __('Delete'),
@@ -582,7 +587,8 @@ class Controller_Projects extends HDVP_Controller_Template
                 "project_id" => __('Project ID'),
                 "project_status" => __('project status'),
                 "address" => __('Address'),
-
+                "public_types_of_materials" => __('public_types_of_materials'),
+                "public_transferable_items" => __('public_transferable_items')
             ];
 
             if($tab) {
@@ -3496,15 +3502,19 @@ class Controller_Projects extends HDVP_Controller_Template
             "select_all" => __('select all'),
             "unselect_all" => __('unselect all'),
             "confirm" => __('Confirm'),
+            'cancel' => __('Cancel'),
             "close" => __('Close'),
             "quality_control" => __('Quality control'),
             "delivery_report" => __('task_deliver_report'),
             "lab_control" => __('Lab control'),
             "approve_element" => __('Approve element'),
+            "are_you_sure_you_want_to_disable_this_task" => __('are_you_sure_you_want_to_disable_this_task'),
+
         ];
 
         VueJs::instance()->addComponent('tasks/tasks-list');
         VueJs::instance()->addComponent('tasks/task-item');
+        VueJs::instance()->addComponent('q4b-confirm-popup');
         VueJs::instance()->includeMultiselect();
         Breadcrumbs::add(Breadcrumb::factory()->set_title($project->name)->set_url(URL::site('projects/update/'.$project->id)));
         Breadcrumbs::add(Breadcrumb::factory()->set_title(__("Tasks")));

@@ -230,6 +230,7 @@ Vue.component('tasks-list', {
                                     :companyCrafts="cmpCrafts"
                                     :modules="modules"
                                     @taskUpdated="taskUpdated"
+                                    @taskStatusChanged="taskStatusChanged($event)"
                                     @togglePopup="togglePopup"
                                     @taskChecked="taskChecked"
                                 />
@@ -270,6 +271,17 @@ Vue.component('tasks-list', {
         </div>
         </div>
             </div>
+            <confirm-popup
+                v-if="changeTaskStatusPopupDisplay"
+                :translations="translations"
+                :message="trans.are_you_sure_you_want_to_disable_this_task"
+                :item="taskToChangeStatus"
+                :confirmText="trans.confirm"
+                :cancelText="trans.cancel"
+                width="500px"
+                @onClose="changeTaskStatusPopupDisplay = false"
+                @onConfirm="changeTaskStatus($event)"
+            />
         </section>
 `,
     /** Props
@@ -313,7 +325,9 @@ Vue.component('tasks-list', {
             selectedModulesIds: [],
             checkedTasks: 0,
             firstFilterOfCrafts: false,
-            firstFilterOfModules: false
+            firstFilterOfModules: false,
+            changeTaskStatusPopupDisplay: false,
+            taskToChangeStatus: null
         }
     },
     computed: {
@@ -732,6 +746,23 @@ Vue.component('tasks-list', {
         },
         test() {
             return (!this.items.length || this.createTaskInProgress || this.showLoader || (this.activeTab !== 'enabled'))
+        },
+        openChangeTaskStatusPopup(taskData) {
+            this.taskToChangeStatus = taskData;
+            this.changeTaskStatusPopupDisplay = true;
+        },
+        taskStatusChanged(taskData) {
+            console.log('taskData', taskData)
+          if(taskData.task.status === 'enabled') {
+              this.openChangeTaskStatusPopup(taskData);
+          } else {
+              this.changeTaskStatus(taskData);
+          }
+        },
+        changeTaskStatus(taskData) {
+            taskData.task.status = taskData.task.status === 'enabled' ? 'disabled' : 'enabled'
+            this.taskUpdated(taskData)
+            this.changeTaskStatusPopupDisplay = false;
         }
     },
 });

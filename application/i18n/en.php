@@ -171,6 +171,7 @@ return [
     'pr_stage_16'=>'Status of upcoming works',
     'pr_stage_17'=> 'Pre-delivery entrepreneur',
     'pr_stage_18'=> 'Delivery entrepreneur',
+    'pr_stage_19'=> 'Public-delivery entrepreneur',
     'Tasks'=>'Tasks',
     'Project images'=>'Project images',
     'Main Image'=>'Main Image',
@@ -825,6 +826,9 @@ return [
     's_text_type_4' => 'Pre-delivery',
     's_text_type_5' => 'Equipment text',
     's_text_type_6' => 'Ceramics text',
+    's_text_type_7' => 'Public Ceramics text',
+    's_text_type_8' => 'Public Equipment text',
+    's_text_type_9' => 'Public Text before signature',
     'pre_delivery' => 'Pre-delivery',
     ':protocols Protocols out of :places Places (private)' => ':protocols Protocols out of :places Places (private)',
     ':protocols Protocols out of :places Places (public)' => ':protocols Protocols out of :places Places (public)',
@@ -1014,5 +1018,10 @@ return [
     'certificates_search_placeholder' => 'Search certificates',
     'no_search_results' => 'No search results',
     'search_by_element_number' => 'Search by element number',
+    'public_deliveries_done' => 'Public deliveries done',
+    'public_delivery' => 'Public-delivery',
+    'are_you_sure_you_want_to_disable_this_task' => 'Are you sure you want to disable this task?',
+    'public_types_of_materials' => 'Public types of materials',
+    'public_transferable_items' => 'Public transferable items',
     ''=>'',0
 ];

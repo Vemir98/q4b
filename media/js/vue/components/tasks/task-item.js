@@ -191,8 +191,12 @@ Vue.component('task-item', {
             })
         },
         changeType() {
-            this.task.status = this.task.status === 'enabled' ? 'disabled' : 'enabled'
-            this.updateTask()
+            this.$emit('taskStatusChanged', {
+                index: this.ind,
+                task: this.task
+            })
+            // this.task.status = this.task.status === 'enabled' ? 'disabled' : 'enabled'
+            // this.updateTask()
         },
         togglePopup(craft) {
             if(this.task.status === 'disabled' || this.activeTab === 'all') {
