@@ -152,31 +152,32 @@
                         </div>
                         <?endif?>
                             <?php
-                                $itemTasks = $q->tasks->find_all();
+//                                $itemTasks = $q->tasks->find_all();
                             ?>
                         <!--- Tasks-->
-                            <div class="qc-rep-images">
-                                <div class="pdf_main_content_description_headline fw-700"><?=__('Tasks')?></div>
-                                <div class="qc_tasks_wraper">
-                                <?foreach($itemTasks as $task):?>
-                                    <div class="qc_task_item selected">
-                                        <div class="task_title"><?=__('Task')?> <?=$task->id?></div>
-                                        <div class="task_desc_wrap">
-                                            <div class="task_descripticon">
-                                                <?$desc = explode("\n",$task->name);
-                                                foreach ($desc as $line) {?>
-                                                    <div><?=html_entity_decode($line)?></div>
-                                                <?}?>
-                                            </div>
-                                            <div class="report_task_status_print selected">
-                                                <img src="https://qforb.sunrisedvp.systems/media/img/qc_task_done.png" >
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                <?endforeach?>
-                            </div>
-                        </div>
+<!--                            <div class="qc-rep-images">-->
+<!--                                <div class="pdf_main_content_description_headline fw-700">--><?//=__('Tasks')?><!--</div>-->
+<!--                                <div class="qc_tasks_wraper">-->
+<!--                                    <h1>ALOOOOOOOOOOOOOOOOOO ALOOOOOOOOOOOOOOOOOOOO</h1>-->
+<!--                                --><?//foreach($itemTasks as $task):?>
+<!--                                    <div class="qc_task_item selected">-->
+<!--                                        <div class="task_title">--><?//=__('Task')?><!-- --><?//=$task->id?><!--</div>-->
+<!--                                        <div class="task_desc_wrap">-->
+<!--                                            <div class="task_descripticon">-->
+<!--                                                --><?//$desc = explode("\n",$task->name);
+//                                                foreach ($desc as $line) {?>
+<!--                                                    <div>--><?//=html_entity_decode($line)?><!--</div>-->
+<!--                                                --><?//}?>
+<!--                                            </div>-->
+<!--                                            <div class="report_task_status_print selected">-->
+<!--                                                <img src="https://qforb.sunrisedvp.systems/media/img/qc_task_done.png" >-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!---->
+<!--                                --><?//endforeach?>
+<!--                            </div>-->
+<!--                        </div>-->
                         <!-- end of taskas-->
 
                         <!--images-->

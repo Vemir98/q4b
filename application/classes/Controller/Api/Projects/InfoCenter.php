@@ -365,6 +365,8 @@ class Controller_Api_Projects_InfoCenter extends HDVP_Controller_API
 
     private function getProjectMessagesExpandedData($projectId): array
     {
+        $project = ORM::factory('Project',$projectId);
+
         $projectMessagesIds = array_column(Api_DBInfoCenter::getProjectMessagesIds($projectId), 'messageId');
 
         $projectMessagesData = [];
@@ -373,6 +375,8 @@ class Controller_Api_Projects_InfoCenter extends HDVP_Controller_API
             $projectMessagesHistoryData = Api_DBInfoCenter::getProjectMessagesHistory($projectMessagesIds);
 
             foreach ($projectMessagesData as &$message) {
+                $message['projectId'] = $projectId;
+                $message['projectName'] = $project->name;
                 $message['history'] = [];
                 foreach ($projectMessagesHistoryData as &$history) {
                     if((int)$history['pmId'] === (int)$message['id']) {

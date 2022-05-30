@@ -219,8 +219,8 @@ if($_APPROVAL_STATUS) return;
                             <div style="padding-bottom: 20px;color: #1ebae5;background-color: white;">
                             <?
                                 $sum = 100;
-                                $inv = $sum - $craftsParams['percents'][Enum_QualityControlStatus::Repaired]-$craftsParams['percents'][Enum_QualityControlStatus::Invalid];
-                                $other = $sum - $craftsParams['percents'][Enum_QualityControlStatus::Invalid];
+                                $inv = $sum - $craftsParams['percents'][Enum_QualityControlStatus::Repaired]-$craftsParams['percents'][Enum_QualityControlStatus::Invalid]-$craftsParams['percents'][QualityReport::STATUS_EXISTING_AND_FOR_REPAIR];
+                                $other = $sum - $craftsParams['percents'][Enum_QualityControlStatus::Invalid]-$craftsParams['percents'][QualityReport::STATUS_EXISTING_AND_FOR_REPAIR];
                                 $fixed = round($craftsParams['statuses'][Enum_QualityControlStatus::Repaired] * 100 / ($craftsParams['statuses'][Enum_QualityControlStatus::Invalid] + $craftsParams['statuses'][Enum_QualityControlStatus::Repaired]));
                             ?>
                             <?='A:'. $inv?>%&nbsp;&nbsp;
@@ -256,8 +256,8 @@ if($_APPROVAL_STATUS) return;
                             <div style="padding-bottom: 20px;color: #1ebae5;background-color: white;">
                                  <?
                                     $sum = 100;
-                                    $inv = $sum - $filteredCraftsParams['percents'][Enum_QualityControlStatus::Repaired]-$filteredCraftsParams['percents'][Enum_QualityControlStatus::Invalid];
-                                    $other = $sum - $filteredCraftsParams['percents'][Enum_QualityControlStatus::Invalid];
+                                    $inv = $sum - $filteredCraftsParams['percents'][Enum_QualityControlStatus::Repaired]-$filteredCraftsParams['percents'][Enum_QualityControlStatus::Invalid]-$filteredCraftsParams['percents'][QualityReport::STATUS_EXISTING_AND_FOR_REPAIR];
+                                    $other = $sum - $filteredCraftsParams['percents'][Enum_QualityControlStatus::Invalid]-$filteredCraftsParams['percents'][QualityReport::STATUS_EXISTING_AND_FOR_REPAIR];
                                  $fixed = ($filteredCraftsParams['statuses'][Enum_QualityControlStatus::Invalid] + $filteredCraftsParams['statuses'][Enum_QualityControlStatus::Repaired]) ? round($filteredCraftsParams['statuses'][Enum_QualityControlStatus::Repaired] * 100 / ($filteredCraftsParams['statuses'][Enum_QualityControlStatus::Invalid] + $filteredCraftsParams['statuses'][Enum_QualityControlStatus::Repaired])) : 0;
                                 ?>
                                <?='A:'. $inv?>%&nbsp;&nbsp;
