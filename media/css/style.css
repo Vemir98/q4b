@@ -21191,6 +21191,14 @@ html.rtl .labtest_filters1 .labtest_filter_input:nth-last-of-type(1), .labtest_f
   background-position: 15% center;
 }
 
+.rtl #pr-labtests-list .labtest_filters_export {
+  margin-right: 20px;
+}
+
+.ltr #pr-labtests-list .labtest_filters_export {
+  margin-left: 20px;
+}
+
 /* lab test edit page */
 
 .labtest_edit_container {

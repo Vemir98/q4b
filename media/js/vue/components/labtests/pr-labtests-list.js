@@ -113,7 +113,7 @@ Vue.component('pr-labtests-list', {
 <!--                        <div class="labtest_filter_input">-->
                             <button class="labtest_filter_show_btn" @click="getLabtests();getLabtestsStatistics();">{{ trans.show }}</button>
 <!--                        </div>-->
-                        <div class="labtest_filters_export" v-if="items.length" style="margin-left: 20px">
+                        <div class="labtest_filters_export" v-if="items.length">
                             <a :href="getExportHref" download="lab-reports.xls">{{ trans.export }}</a>
                         </div>
 
@@ -355,8 +355,9 @@ Vue.component('pr-labtests-list', {
                             :trans="trans"  
                             :project-id="selectedProject.id"
                             :from-projects="projectId ? true : false"
+                            :filters="getFilters()"
                             @toggleMore="toggleMore"             
-                            @deleteItem="deleteItem"             
+                            @deleteItem="deleteItem"
                             />                            
                         </template>
                        
@@ -721,11 +722,8 @@ Vue.component('pr-labtests-list', {
                     this.showLoader = false;
                 });
         },
-        getLabtestsStatistics() {
-            this.showLoader = true;
-            let url = '/projects/statistics/labtests';
-
-            let filters = {
+        getFilters() {
+            return {
                 projectIds: [this.selectedProject.id],
                 statuses: this.selectedStatus.map(status => status.name),
                 objectIds: this.selectedStructure.map(structure => structure.id),
@@ -737,6 +735,12 @@ Vue.component('pr-labtests-list', {
                 from: this.time && this.time[0] ? this.time[0].toLocaleDateString("en-GB") : '',
                 to: this.time && this.time[1] ? this.time[1].toLocaleDateString("en-GB") : ''
             }
+        },
+        getLabtestsStatistics() {
+            this.showLoader = true;
+            let url = '/projects/statistics/labtests';
+
+            let filters = this.getFilters();
 
             qfetch(url, {method: 'POST', headers: {}, body: filters})
                 .then(response => {

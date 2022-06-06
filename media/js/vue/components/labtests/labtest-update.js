@@ -483,6 +483,7 @@ Vue.component('labtest-update', {
                     }
                 }
             },
+            filters: null
         }
     },
     computed: {
@@ -521,6 +522,10 @@ Vue.component('labtest-update', {
         };
         Object.assign(config, window.EDITOR_CONFIG )
         this.editor = new PixelPerfect('#pixel-perfect-editor',config);
+        if(window.location.search) {
+            let filters = this.getFiltersFromUrl();
+            console.log(filters);
+        }
     },
     watch: {
         projectId(val) {
@@ -959,6 +964,21 @@ Vue.component('labtest-update', {
         },
         capitalizeFirstLetter(string) {
             return string.charAt(0).toUpperCase() + string.slice(1);
+        },
+        getFiltersFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+
+            return {
+                projectIds: urlParams.get('projectIds') ? urlParams.get('projectIds') : null,
+                objectIds: urlParams.get('objectIds') ? JSON.parse(urlParams.get('objectIds')) : null,
+                elementIds: urlParams.get('elementIds') ? JSON.parse(urlParams.get('elementIds')) : null,
+                craftIds: urlParams.get('craftIds') ? JSON.parse(urlParams.get('craftIds')) : null,
+                placeIds: urlParams.get('placeIds') ? JSON.parse(urlParams.get('placeIds')) : null,
+                floorIds: urlParams.get('floorIds') ? JSON.parse(urlParams.get('floorIds')) : null,
+                statuses: urlParams.get('statuses') ? JSON.parse(urlParams.get('statuses')) : null,
+                from: urlParams.get('from') ? urlParams.get('from') : null,
+                to: urlParams.get('to') ? urlParams.get('to') : null,
+            }
         }
     },
 

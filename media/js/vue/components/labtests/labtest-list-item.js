@@ -44,7 +44,8 @@ Vue.component('labtest-list-item', {
         trans: {required: true},
         itemData: {required: true},
         index: {required: true},
-        page: {required: true}
+        page: {required: true},
+        filters: {required: true}
     },
     components: {
 
@@ -100,9 +101,9 @@ Vue.component('labtest-list-item', {
         edit() {
             let url = '';
             if(this.fromProjects) {
-                url = `/labtests/project/${this.projectId}/edit/${this.item.id}`;
+                url = `/labtests/project/${this.projectId}/edit/${this.item.id}${this.getQueryParamsOfFiltersForUrl()}`;
             } else {
-                url = `/reports/labtests/${this.projectId}/edit/${this.item.id}`;
+                url = `/reports/labtests/${this.projectId}/edit/${this.item.id}${this.getQueryParamsOfFiltersForUrl()}`;
             }
             if (this.currentLang !== 'en') {
                 url = `/${this.currentLang}${url}`;
@@ -135,7 +136,29 @@ Vue.component('labtest-list-item', {
         deleteItem() {
             this.item.more = false;
             this.$emit('deleteItem', { index: this.index })
-        }
+        },
+        getQueryParamsOfFiltersForUrl() {
+            if(this.filters) {
+                console.log(this.filters)
+                let projectIds = encodeURIComponent(JSON.stringify(this.filters.projectIds));
+                let objectIds = encodeURIComponent(JSON.stringify(this.filters.objectIds));
+                let floorIds = encodeURIComponent(JSON.stringify(this.filters.floorIds));
+                let placeIds = encodeURIComponent(JSON.stringify(this.filters.placeIds));
+                let craftIds = encodeURIComponent(JSON.stringify(this.filters.craftIds));
+                let elementIds = encodeURIComponent(JSON.stringify(this.filters.elementIds));
+                let statuses = encodeURIComponent(JSON.stringify(this.filters.statuses));
+                let from = this.filters.from;
+                let to = this.filters.to;
+
+                return `?projectIds=${projectIds}&from=${from}&to=${to}&objectIds=${objectIds}&floorIds=${floorIds}&placeIds=${placeIds}&craftIds=${craftIds}&elementIds=${elementIds}&statuses=${statuses}`;
+            } else {
+                return '';
+            }
+        },
+
     },
+    mounted() {
+        console.log(this.filters)
+    }
 });
 
