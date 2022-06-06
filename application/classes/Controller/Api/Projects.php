@@ -844,9 +844,9 @@ class Controller_Api_Projects extends HDVP_Controller_API
                 'createdAt' => $q->created_at,
                 'updatedAt' => $q->updated_at,
                 'approvedAt' => $q->approved_at,
-                'createdBy' => $q->createUser->email,
-                'updatedBy' => $q->updateUser->email,
-                'approvedBy' => $q->approveUser->email,
+                'createdBy' => $q->createUser->name,
+                'updatedBy' => $q->updateUser->name,
+                'approvedBy' => $q->approveUser->name,
                 'approvalStatus' => $q->approval_status,
             ];
         }

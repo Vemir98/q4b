@@ -78,11 +78,11 @@
                 <?endif;?>
                 <div class="item">
                     <figure class="mobile-figure">
-                        <a href="<?=URL::site('reports/labtests')?>">
+                        <a href="<?=URL::site('reports/labtests')?>" onclick="sessionStorage.removeItem('labtests-page')">
                             <img src="/media/img/lab-control.svg" alt="<?=__('lab_control_reports')?>" style="width: 75% !important;">
                         </a>
                         <figcaption class="mobile-fig-caption">
-                            <a href="<?=URL::site('reports/labtests')?>"><?=__('lab_control_reports')?></a>
+                            <a href="<?=URL::site('reports/labtests')?>" onclick="sessionStorage.removeItem('labtests-page')"><?=__('lab_control_reports')?></a>
                         </figcaption>
                     </figure>
                 </div>

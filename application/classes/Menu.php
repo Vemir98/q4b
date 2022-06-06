@@ -186,7 +186,7 @@ class Menu
                 }
             }
 
-            $result .= "<a href='$href' class='$hasSubMenu sidebar-items $isChild $isActive $isDisabled' title='$item->tooltip'>";
+            $result .= "<a href='$href' onclick='sessionStorage.removeItem(\"labtests-page\")' class='$hasSubMenu sidebar-items $isChild $isActive $isDisabled' title='$item->tooltip'>";
             $result .=      "<i class='fw-600 icon $hasIcon' style='font-weight: 600'></i>";
             $result .=      "<div class='sidebar-items_content'>
                                 <span class='sidebar-items_title $isNestedChild'>".__($item->text)."</span>";

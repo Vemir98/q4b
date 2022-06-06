@@ -71,8 +71,8 @@
                 </li>
                 <li class="q4-list-item">
                     <figure>
-                        <a href="<?=URL::site('reports/labtests')?>"><img src="/media/img/lab-control.svg" alt="<?=__('lab_control_reports')?>" style="width: 75%"></a>
-                        <figcaption><a href="<?=URL::site('reports/labtests')?>"><?=__('lab_control_reports')?></a></figcaption>
+                        <a href="<?=URL::site('reports/labtests')?>" onclick="sessionStorage.removeItem('labtests-page')"><img src="/media/img/lab-control.svg" alt="<?=__('lab_control_reports')?>" style="width: 75%"></a>
+                        <figcaption><a href="<?=URL::site('reports/labtests')?>" onclick="sessionStorage.removeItem('labtests-page')"><?=__('lab_control_reports')?></a></figcaption>
                     </figure>
                 </li>
                 <?if(Usr::can(Usr::READ_PERM,'Controller_CertificatesReports')):?>

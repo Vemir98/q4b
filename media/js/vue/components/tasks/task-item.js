@@ -80,7 +80,7 @@ Vue.component('task-item', {
                             <template v-for="module in craft.modules">
                                 <div class="task-module">
                                     <button @click="togglePopup(craft)">   
-                                        <button><i :class="getModuleIconClass(module)"></i></button></i>
+                                        <button><i :class="getModuleIconClass(module)" :title="getTranslatedModuleName(module)"></i></button></i>
                                     </button>
                                 </div>
                             </template>
@@ -107,7 +107,8 @@ Vue.component('task-item', {
         trans: {required: true},
         companyCrafts: {required: true},
         modules: {required: true},
-        activeTab: {required: true}
+        activeTab: {required: true},
+        modulesData: {required: true}
     },
     components: {
         Multiselect: window.VueMultiselect.default,
@@ -259,7 +260,7 @@ Vue.component('task-item', {
                 case 4:
                     return 'q4bikon-element-module-icon';
             }
-        }
+        },
         // focusInput() {
         //     setTimeout(() => {
         //         document.getElementById('input_'+ this.index).focus();
@@ -293,6 +294,11 @@ Vue.component('task-item', {
         //     this.item.more = false;
         //     this.$emit('deleteItem', { index: this.index })
         // }
+        getTranslatedModuleName(moduleId) {
+            let moduleName = this.modulesData.filter(module => +module.id === +moduleId)[0].name;
+
+            return moduleName || ' ';
+        },
     },
     mounted() {
         this.renderCrafts();

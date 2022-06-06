@@ -13,14 +13,14 @@ Vue.component('tasks-list', {
                                 :class="[ 'flex-center enabled', {selected: activeTab === 'enabled' }]" 
                                 @click="activeTab = 'enabled'"
                                 >
-                                {{ trans.enabled }}
+                                {{ trans.enabled }} ({{ enabledItemsCount }})
                             </a>
                             <div style="width: 1px;background-color: rgba(0, 0, 0, 0.2);"></div>
                             <a 
                                  :class="[ 'flex-center disabled-module', { selected: activeTab === 'disabled' }]" 
                                  @click="activeTab = 'disabled'"
                                  >
-                                 {{ trans.disabled }}
+                                 {{ trans.disabled }} ({{ disabledItemsCount }})
                             </a>
                             <div style="width: 1px;background-color: rgba(0, 0, 0, 0.2);"></div>
                             <a 
@@ -229,6 +229,7 @@ Vue.component('tasks-list', {
                                     :activeTab="activeTab"
                                     :companyCrafts="cmpCrafts"
                                     :modules="modules"
+                                    :modulesData="modulesData"
                                     @taskUpdated="taskUpdated"
                                     @taskStatusChanged="taskStatusChanged($event)"
                                     @togglePopup="togglePopup"
@@ -373,6 +374,16 @@ Vue.component('tasks-list', {
 
                 return (shouldBeInList && craftsCheck && modulesCheck)
             });
+        },
+        enabledItemsCount() {
+          return this.items.filter((item) => {
+              return item.status === 'enabled'
+          }).length
+        },
+        disabledItemsCount() {
+            return this.items.filter((item) => {
+                return item.status === 'disabled'
+            }).length
         },
         createTaskInProgress() {
             let inProgress = false
