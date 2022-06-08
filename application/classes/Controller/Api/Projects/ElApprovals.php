@@ -223,8 +223,6 @@ class Controller_Api_Projects_ElApprovals extends HDVP_Controller_API
                     'deletedSignatures',
                     'tasks'
                 ]);
-            Kohana::$log->add(Log::ERROR,'AZAZAZA'.  json_encode($clientData, JSON_PRETTY_PRINT));
-
 
             if(!empty($clientData['specialities'])) {
                 foreach ($clientData['specialities'] as $speciality) {

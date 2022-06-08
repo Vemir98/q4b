@@ -168,7 +168,16 @@ class Controller_Api_Projects extends HDVP_Controller_API
                 $allClientIds[] = $this->getUIntParamOrDie($oId);
             }
         }
-        $this->_responseData['items'] = Api_DBHelper::getProjectObjectsList($project->id,$this->_client->id);
+        $objectsList = Api_DBHelper::getProjectObjectsList($project->id,$this->_client->id);
+        if(empty($objectsList)) {
+            $userProjectsIds = array_column(Api_DBProjects::getCurrentUserProjects(), 'projectId');
+            if(in_array($project->id, $userProjectsIds)) {
+                $objectsList = Api_DBHelper::getProjectObjectsList($project->id,null);
+            }
+        }
+        $this->_responseData['items'] = $objectsList;
+
+
         if(!empty($this->_responseData['items']) AND !empty($clientItems)){
             foreach ($this->_responseData['items'] as $key => $item){
                 if(empty($clientItems[$item['id']])){
@@ -195,6 +204,7 @@ class Controller_Api_Projects extends HDVP_Controller_API
 
             $this->_responseData['items'] = array_values($this->_responseData['items']);
         }
+
         $this->_responseData['updated'] = time();
     }
 

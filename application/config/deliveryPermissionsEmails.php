@@ -19,5 +19,9 @@ return array(
     'daniel@avney-derech.co.il',
     'shnir.yakuv@avney-derech.co.il',
     'tehila.gonen@avney-derech.co.il',
-    'beer7@avney-derech.co.il'
+    'beer7@avney-derech.co.il',
+    'dror.shohat@avney-derech.co.il',
+    'yakir.mamo@avney-derech.co.il',
+    'hila.shemesh@avney-derech.co.il',
+    'ortal.s@avney-derech.co.il'
 );

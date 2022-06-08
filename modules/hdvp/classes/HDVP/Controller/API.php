@@ -77,6 +77,7 @@ class HDVP_Controller_API extends Controller
         }
         $this->_auth = Auth::instance();
         $this->_user = $this->_auth->get_user();
+
         if(!$this->_user){
             $this->_user = ORM::factory('User');
         }
@@ -290,8 +291,12 @@ class HDVP_Controller_API extends Controller
             if( ! $tkn->loaded()){
                 throw API_Exception::factory(401,'Not Authorized');
             }
+
             $this->_auth->force_login($tkn->user);
             $this->_user = $this->_auth->get_user();
+            if($this->_user->getRelevantRole('outspread') != Enum_UserOutspread::General) {
+                $this->_client = $this->_user->client;
+            }
         }
     }
     public function b64ToFile($b64Str, $name, $path) {

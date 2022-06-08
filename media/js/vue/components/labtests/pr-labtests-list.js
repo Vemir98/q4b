@@ -442,7 +442,8 @@ Vue.component('pr-labtests-list', {
             needToConfirm: false,
             deletable: null,
             modalData: null,
-            msg: ""
+            msg: "",
+            filters: null
         }
     },
     computed: {
@@ -463,14 +464,20 @@ Vue.component('pr-labtests-list', {
         },
     },
     created() {
-        var date = new Date();
-        date.setDate(1);
-        date.setMonth(date.getMonth()-6);
-        let end = new Date();
-        end.setDate(end.getDate() + 1);
-        this.time = [date, end];
-        var url = window.location.pathname;
-        var id = url.substring(url.lastIndexOf('/') + 1);
+        if(window.location.search) {
+            this.filters = this.getFiltersFromUrl()
+            console.log('FILTERS',this.filters)
+            this.time = [this.convertStringToDate(this.filters.from), this.convertStringToDate(this.filters.to)];
+        } else {
+            var date = new Date();
+            date.setDate(1);
+            date.setMonth(date.getMonth()-6);
+            let end = new Date();
+            end.setDate(end.getDate() + 1);
+            this.time = [date, end];
+            var url = window.location.pathname;
+            var id = url.substring(url.lastIndexOf('/') + 1);
+        }
 
         this.getCompanies();
         if (this.projectId) {
@@ -478,7 +485,16 @@ Vue.component('pr-labtests-list', {
         }
     },
     mounted() {
-        this.toggleSelectAll('selectedStatus', 'ltStatuses');
+        if(window.location.search) {
+            this.selectedStatus = this.ltStatuses.filter(status => {
+                return this.filters.statuses.includes(status.name)
+            })
+            this.selectedStatus.forEach(status => {
+                this.onSelect(status, 'ltStatuses')
+            })
+        } else {
+            this.toggleSelectAll('selectedStatus', 'ltStatuses');
+        }
     },
     watch: {
         selectedProject(val) {
@@ -488,6 +504,7 @@ Vue.component('pr-labtests-list', {
                     await this.getElements();
                     await this.getCompanyCrafts();
                     if(this.projectId) {
+                        console.log('MTAV STE');
                         this.getLabtestsStatistics();
                         await this.getLabtests();
                     }
@@ -497,6 +514,14 @@ Vue.component('pr-labtests-list', {
         selectedCompany(val) {
             if(val) {
                 this.projects = Object.values(val.projects);
+                if(!this.projectId && this.filters?.projectIds?.length) {
+                    this.selectedProject = this.projects.filter(project => {
+                        return +project.id === +this.filters?.projectIds[0]
+                    })[0]
+
+                    this.filters.selectedProject = [];
+                    console.log('SELECTED_PROJECT', this.selectedProject)
+                }
             } else {
                 this.projects = null;
             }
@@ -528,10 +553,17 @@ Vue.component('pr-labtests-list', {
         getCompanies(){
             this.showLoader = true;
             let url = '/companies/entities/for_current_user';
-
+            console.log('API COMPANIES')
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
                     this.companies = response.items ? response.items : [];
+                    if(this.filters?.companyIds?.length) {
+                        this.selectedCompany = this.companies.filter(company => {
+                            return +company.id === +this.filters?.companyIds[0]
+                        })[0]
+                        console.log('SELECTED_COMPANY', this.selectedCompany)
+                        this.filters.companyIds = [];
+                    }
                     this.showLoader = false;
                 })
         },
@@ -613,27 +645,66 @@ Vue.component('pr-labtests-list', {
                     this.selectedProject = response.item;
                 })
         },
-        getStructures() {
+        async getStructures() {
             let url = `/projects/${this.selectedProject.id}/entities/objects?fields=id,name`;
-            qfetch(url, {method: 'GET', headers: {}})
-                .then(response => {
-                    this.structures = response.items;
-                    this.toggleSelectAll('selectedStructure', 'structures');
+            let response = await qfetch(url, {method: 'GET', headers: {}});
+            console.log('API STRUCTURES')
+                // .then(response => {
+            this.structures = response.items;
+            if(this.filters?.objectIds?.length) {
+                this.selectedStructure = this.structures.filter(structure => {
+                    return this.filters?.objectIds.includes(structure.id)
                 })
+                console.log('SELECTED_STRUCTURES', this.selectedStructure)
+                this.selectedStructure.forEach(structure => {
+                    this.onSelect(structure, 'structures')
+                })
+                this.filters.objectIds = [];
+            } else {
+                this.toggleSelectAll('selectedStructure', 'structures');
+            }
+                // })
         },
-        getObjectFloors() {
+        async getObjectFloors() {
             let url = `/projects/entities/objects/${this.selectedStructure[0].id}/floors?fields=id,name`;
-            qfetch(url, {method: 'GET', headers: {}})
-                .then(response => {
-                    this.floors = response.items;
+            let response = await qfetch(url, {method: 'GET', headers: {}});
+            console.log('API FLOORS')
+                // .then(response => {
+            this.floors = response.items;
+            if(this.filters?.floorIds?.length) {
+                this.selectedFloor = this.floors.filter(floor => {
+                    return this.filters?.floorIds.includes(floor.id)
                 })
+                console.log('SELECTED_FLOORS', this.selectedFloor)
+                this.selectedFloor.forEach(floor => {
+                    this.onSelect(floor, 'floors')
+                })
+                this.filters.floorIds = [];
+            } else {
+                this.toggleSelectAll('selectedFloor', 'floors');
+            }
+                // })
         },
-        getFloorPlaces() {
+        async getFloorPlaces() {
             let url = `/projects/entities/floors/${this.selectedFloor[0].id}/places?fields=id,name`;
-            qfetch(url, {method: 'GET', headers: {}})
-                .then(response => {
-                    this.places = response.items;
+            let response = await qfetch(url, {method: 'GET', headers: {}});
+            console.log('API PLACES')
+
+            // .then(response => {
+            this.places = response.items;
+            if(this.filters?.placeIds?.length) {
+                this.selectedPlace = this.places.filter(place => {
+                    return this.filters?.placeIds.includes(place.id)
                 })
+                console.log('SELECTED_PLACES', this.selectedPlace)
+                this.selectedPlace.forEach(place => {
+                    this.onSelect(place, 'places')
+                })
+                this.filters.placeIds = [];
+            } else {
+                this.toggleSelectAll('selectedPlace', 'places');
+            }
+                // })
         },
         deleteItem(data) {
             this.needToConfirm = true;
@@ -657,24 +728,48 @@ Vue.component('pr-labtests-list', {
             let url = `/projects/${this.selectedProject.id}/labtests/${id}`;
             qfetch(url, {method: 'DELETE', headers: {}});
         },
-        getElements(){
+        async getElements(){
             let url = `/projects/${this.selectedProject.id}/labtests/elements`;
             let param = encodeURIComponent('?search=')
             url +=  param;
-            qfetch(url, {method: 'GET', headers: {}})
-                .then(response => {
-                    this.elements = response.items;
-                    this.toggleSelectAll('selectedElement', 'elements');
+            let response = await qfetch(url, {method: 'GET', headers: {}});
+            console.log('API ELEMENTS')
+                // .then(response => {
+            this.elements = response.items;
+            if(this.filters?.elementIds?.length) {
+                this.selectedElement = this.elements.filter(element => {
+                    return this.filters?.elementIds.includes(element.id)
                 })
+                console.log('SELECTED_ELEMENTS', this.selectedElement)
+                this.selectedElement.forEach(element => {
+                    this.onSelect(element, 'elements')
+                })
+                this.filters.elementIds = [];
+            } else {
+                this.toggleSelectAll('selectedElement', 'elements');
+            }
+                // })
         },
-        getCompanyCrafts() {
+        async getCompanyCrafts() {
             let fields="id,name,companyId,catalogNumber,status,relatedId";
             let url = `/companies/${this.projectId ? this.selectedProject.company_id : this.selectedCompany.id}/entities/crafts?fields=${fields}`;
-            qfetch(url, {method: 'GET', headers: {}})
-                .then(response => {
-                    this.crafts = response.items;
-                    this.toggleSelectAll('selectedCraft', 'crafts');
+            let response = await qfetch(url, {method: 'GET', headers: {}});
+            console.log('API CRAFTS')
+                // .then(response => {
+            this.crafts = response.items;
+            if(this.filters?.craftIds?.length) {
+                this.selectedCraft = this.crafts.filter(craft => {
+                    return this.filters?.craftIds.includes(craft.id)
                 })
+                console.log('SELECTED_CRAFTS', this.selectedCraft)
+                this.selectedCraft.forEach(craft => {
+                    this.onSelect(craft, 'crafts')
+                })
+                this.filters.craftIds = [];
+            } else {
+                this.toggleSelectAll('selectedCraft', 'crafts');
+            }
+                // })
         },
         getUrlQueryParams() {
             let object = []
@@ -710,7 +805,7 @@ Vue.component('pr-labtests-list', {
                 url += '/page/' + page;
             }
             url += this.getUrlQueryParams();
-
+            console.log('API LABTESTS')
             qfetch(url, {method: 'GET', headers: {}})
                 .then(response => {
                     let items = response.items;
@@ -724,6 +819,7 @@ Vue.component('pr-labtests-list', {
         },
         getFilters() {
             return {
+                companyIds: [this.selectedCompany?.id],
                 projectIds: [this.selectedProject.id],
                 statuses: this.selectedStatus.map(status => status.name),
                 objectIds: this.selectedStructure.map(structure => structure.id),
@@ -747,6 +843,28 @@ Vue.component('pr-labtests-list', {
                     this.reportsStatistics = response.item;
                     this.showLoader = false;
                 });
+        },
+        getFiltersFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+
+            return {
+                companyIds: urlParams.get('companyIds') ? JSON.parse(urlParams.get('companyIds')) : null,
+                projectIds: urlParams.get('projectIds') ? JSON.parse(urlParams.get('projectIds')) : null,
+                objectIds: urlParams.get('objectIds') ? JSON.parse(urlParams.get('objectIds')) : null,
+                elementIds: urlParams.get('elementIds') ? JSON.parse(urlParams.get('elementIds')) : null,
+                craftIds: urlParams.get('craftIds') ? JSON.parse(urlParams.get('craftIds')) : null,
+                placeIds: urlParams.get('placeIds') ? JSON.parse(urlParams.get('placeIds')) : null,
+                floorIds: urlParams.get('floorIds') ? JSON.parse(urlParams.get('floorIds')) : null,
+                statuses: urlParams.get('statuses') ? JSON.parse(urlParams.get('statuses')) : null,
+                from: urlParams.get('from') ? urlParams.get('from') : null,
+                to: urlParams.get('to') ? urlParams.get('to') : null,
+            }
+        },
+        convertStringToDate(dateString) {
+            let dateParts = dateString.split("/");
+
+            // month is 0-based, that's why we need dataParts[1] - 1
+            return new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
         }
     },
 });

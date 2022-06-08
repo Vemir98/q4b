@@ -139,7 +139,7 @@ Vue.component('labtest-list-item', {
         },
         getQueryParamsOfFiltersForUrl() {
             if(this.filters) {
-                console.log(this.filters)
+                let companyIds = encodeURIComponent(JSON.stringify(this.filters.companyIds));
                 let projectIds = encodeURIComponent(JSON.stringify(this.filters.projectIds));
                 let objectIds = encodeURIComponent(JSON.stringify(this.filters.objectIds));
                 let floorIds = encodeURIComponent(JSON.stringify(this.filters.floorIds));
@@ -150,15 +150,12 @@ Vue.component('labtest-list-item', {
                 let from = this.filters.from;
                 let to = this.filters.to;
 
-                return `?projectIds=${projectIds}&from=${from}&to=${to}&objectIds=${objectIds}&floorIds=${floorIds}&placeIds=${placeIds}&craftIds=${craftIds}&elementIds=${elementIds}&statuses=${statuses}`;
+                return `?companyIds=${companyIds}&projectIds=${projectIds}&from=${from}&to=${to}&objectIds=${objectIds}&floorIds=${floorIds}&placeIds=${placeIds}&craftIds=${craftIds}&elementIds=${elementIds}&statuses=${statuses}`;
             } else {
                 return '';
             }
         },
 
-    },
-    mounted() {
-        console.log(this.filters)
     }
 });
 

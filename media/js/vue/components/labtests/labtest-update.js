@@ -522,10 +522,6 @@ Vue.component('labtest-update', {
         };
         Object.assign(config, window.EDITOR_CONFIG )
         this.editor = new PixelPerfect('#pixel-perfect-editor',config);
-        if(window.location.search) {
-            let filters = this.getFiltersFromUrl();
-            console.log(filters);
-        }
     },
     watch: {
         projectId(val) {
@@ -589,9 +585,9 @@ Vue.component('labtest-update', {
         },
         closePage(){
             if(window.location.pathname.startsWith('/reports')) {
-                window.location.href = this.siteUrl + "/reports/labtests"
+                window.location.href = this.siteUrl + `/reports/labtests${this.getQueryParamsOfFiltersForUrl()}`
             } else {
-                window.location.href = this.siteUrl + "/labtests/project/" + this.projectId
+                window.location.href = this.siteUrl + `/labtests/project/${this.projectId}${this.getQueryParamsOfFiltersForUrl()}`
             }
         },
         getPlanFilePath() {
@@ -842,9 +838,9 @@ Vue.component('labtest-update', {
             qfetch(url, {method: 'DELETE', headers: {}})
                 .then(response => {
                     if(window.location.pathname.startsWith('/reports')) {
-                        window.location = `/reports/labtests`
+                        window.location = `/reports/labtests${this.getQueryParamsOfFiltersForUrl()}`
                     } else {
-                        window.location = `/labtests/project/${this.projectId}`
+                        window.location = `/labtests/project/${this.projectId}${this.getQueryParamsOfFiltersForUrl()}`
                     }
                 })
         },
@@ -969,7 +965,8 @@ Vue.component('labtest-update', {
             const urlParams = new URLSearchParams(window.location.search);
 
             return {
-                projectIds: urlParams.get('projectIds') ? urlParams.get('projectIds') : null,
+                companyIds: urlParams.get('companyIds') ? JSON.parse(urlParams.get('companyIds')) : null,
+                projectIds: urlParams.get('projectIds') ? JSON.parse(urlParams.get('projectIds')) : null,
                 objectIds: urlParams.get('objectIds') ? JSON.parse(urlParams.get('objectIds')) : null,
                 elementIds: urlParams.get('elementIds') ? JSON.parse(urlParams.get('elementIds')) : null,
                 craftIds: urlParams.get('craftIds') ? JSON.parse(urlParams.get('craftIds')) : null,
@@ -979,7 +976,26 @@ Vue.component('labtest-update', {
                 from: urlParams.get('from') ? urlParams.get('from') : null,
                 to: urlParams.get('to') ? urlParams.get('to') : null,
             }
-        }
+        },
+        getQueryParamsOfFiltersForUrl() {
+            const filters = this.getFiltersFromUrl();
+            if(filters) {
+                let companyIds = encodeURIComponent(JSON.stringify(filters.companyIds));
+                let projectIds = encodeURIComponent(JSON.stringify(filters.projectIds));
+                let objectIds = encodeURIComponent(JSON.stringify(filters.objectIds));
+                let floorIds = encodeURIComponent(JSON.stringify(filters.floorIds));
+                let placeIds = encodeURIComponent(JSON.stringify(filters.placeIds));
+                let craftIds = encodeURIComponent(JSON.stringify(filters.craftIds));
+                let elementIds = encodeURIComponent(JSON.stringify(filters.elementIds));
+                let statuses = encodeURIComponent(JSON.stringify(filters.statuses));
+                let from = filters.from;
+                let to = filters.to;
+
+                return `?companyIds=${companyIds}&projectIds=${projectIds}&from=${from}&to=${to}&objectIds=${objectIds}&floorIds=${floorIds}&placeIds=${placeIds}&craftIds=${craftIds}&elementIds=${elementIds}&statuses=${statuses}`;
+            } else {
+                return '';
+            }
+        },
     },
 
 });

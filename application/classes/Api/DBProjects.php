@@ -151,4 +151,19 @@ class Api_DBProjects
 
         return $query->execute()->as_array();
     }
+
+    public static function getCurrentUserProjects() {
+
+        $query = 'SELECT
+            up.project_id as projectId
+            FROM users_projects up
+            WHERE up.user_id = :userId';
+        $query =  DB::query(Database::SELECT, $query);
+
+        $query->parameters(array(
+            ':userId' => Auth::instance()->get_user()->id,
+        ));
+
+        return $query->execute()->as_array();
+    }
 }

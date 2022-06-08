@@ -33,7 +33,9 @@ class Menu
         'labtests' => [
             'labtests/create/:projectId',
             'labtests/project/:projectId',
-            'labtests/project/:projectId/edit/:id'
+            'labtests/project/:projectId/{any}',
+            'labtests/project/:projectId/edit/:id',
+            'labtests/project/:projectId/edit/:id/{any}'
         ],
         'elements' => [
             'labtests/project/:projectId/elements_list',
